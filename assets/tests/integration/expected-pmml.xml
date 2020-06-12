@@ -30,21 +30,54 @@
       <!-- 
         If the start variable is categorical, then each category
         should be represented as a Value node. Look at the values of the recFrom
-        columns for this start variable to figure out all the categories.
+        columns for this start variable to figure out all the categories. For
+        range of values indicated by a :, create a Value node for each value
+        in the range. For eg., 6:9 would have 4 Value nodes.
+
         Attributes:
         value: Set to the value of the recFrom column
-        displayName: Set to the value of the catLabel column
+        displayValue: Set to the value of the catLabel column
         property: Set using the value of the recTo column
                   If its NA::a then its invalid
                   If its Na::b then its missing
                   Otherwise its valid
       -->
-      <Value value="1" displayName="Yes" property="valid"></Value>
-      <Value value="2" displayName="No" property="valid"></Value>
-      <Value value="6" displayName="not applicable" property="invalid"></Value>
-      <Value value="7" displayName="don't know(7)" property="missing"></Value>
-      <Value value="8" displayName="refusal(8)" property="missing"></Value>
-      <Value value="9" displayName="not stated(9)" property="missing"></Value>
+      <Value value="1" displayValue="Yes" property="valid"></Value>
+      <Value value="2" displayValue="No" property="valid"></Value>
+      <Value value="6" displayValue="not applicable" property="invalid"></Value>
+      <Value value="7" displayValue="don't know(7)" property="missing"></Value>
+      <Value value="8" displayValue="refusal(8)" property="missing"></Value>
+      <Value value="9" displayValue="not stated(9)" property="missing"></Value>
+    </DataField>
+
+    <!--
+      An example of a start variable that is a continuous field
+      Follows the same rules as the categorical RACA_6A data field except for
+      the optype and dataType attributes which are set to continuous and 
+      float respectively.
+    -->
+    <DataField name="ALCA_5A1" displayName="DailyConsumptionSunday" optype="continuous" dataType="float">
+      <Extension name="catStartLabel" value="Number of drinks on Sunday" />
+
+      <!--
+        The first row in variable details for ALCA_5A1 signifies the valid
+        range for this start variable. Use the recFrom to get this range.
+        Attributes:
+        closure: Set to closedClosed
+        leftMargin: Set to the number to the left of the colon
+        rightMargin: Set to the number to the right of the colon
+      -->
+      <Interval closure="closedClosed" leftMargin="1" rightMargin="40"/>
+
+      <!--
+        All the other rows for ALCA_5A1 define the invalid categories, we will
+        represent each one using a value node. Use the same rules as the RACA_6A
+        data field.
+      -->
+      <Value value="996" displayValue="not applicable" property="invalid" />
+      <Value value="997" displayValue="don't know(997)" property="missing" />
+      <Value value="998" displayValue="refusal(998)" property="missing" />
+      <Value value="999" displayValue="not stated(999)" property="missing" />
     </DataField>
   </DataDictionary>
   <!--
@@ -165,6 +198,71 @@
       <Value value="2" displayValue="No">
         <Extension name="catLabelLong" value="Yes" />
       </Value>
+    </DerivedField>
+    <!--
+      An example of transforming a continuous variable ALW_2A1
+    -->
+    <DerivedField name="ALW_2A1" displayName="# of drinks - Sunday" optype="continuous" dataType="float">
+      <Extension name="labelLong" value="Number of drinks on Sunday" />
+      <Extension name="units" value="drinks" />
+      <Apply function="if">
+        <Apply function="and">
+          <Apply function="or">
+            <Apply function="greaterThan">
+              <FieldRef="ALCA_5A1" />
+              <Constant dataType="integer">1</Constant>
+            </Apply>
+            <Apply function="equals">
+              <FieldRef="ALCA_5A1" />
+              <Constant dataType="integer">1</Constant>
+            </Apply>
+          </Apply>
+          <Apply function="or">
+            <Apply function="lessThan">
+              <FieldRef="ALCA_5A1" />
+              <Constant dataType="integer">40</Constant>
+            </Apply>
+            <Apply function="equals">
+              <FieldRef="ALCA_5A1" />
+              <Constant dataType="integer">40</Constant>
+            </Apply>
+          </Apply>
+        </Apply>
+        <FieldRef field="ALCA_5A1" />
+        <Apply function="if">
+          <Apply function="equals">
+            <FieldRef field="ALCA_5A1" />
+            <Constant dataType="integer">996</Constant>
+          </Apply>
+          <Constant missing="true"></Constant>
+          <Apply function="if">
+            <Apply function="and">
+              <Apply function="or">
+                <Apply function="greaterThan">
+                  <FieldRef="ALCA_5A1" />
+                  <Constant dataType="integer">997</Constant>
+                </Apply>
+                <Apply function="equals">
+                  <FieldRef="ALCA_5A1" />
+                  <Constant dataType="integer">997</Constant>
+                </Apply>
+              </Apply>
+              <Apply function="or">
+                <Apply function="lessThan">
+                  <FieldRef="ALCA_5A1" />
+                  <Constant dataType="integer">999</Constant>
+                </Apply>
+                <Apply function="equals">
+                  <FieldRef="ALCA_5A1" />
+                  <Constant dataType="integer">999</Constant>
+                </Apply>
+              </Apply>
+            </Apply>
+            <Constant missing="true"></Constant>
+            <Constant missing="true"></Constant>
+          </Apply>
+        </Apply>
+      </Apply>
     </DerivedField>
   </TransformationDictionary>
 </PMML>
