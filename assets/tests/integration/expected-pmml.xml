@@ -3,7 +3,7 @@
     The data dictionary defines all the variables which are not derived from other variables, which in the variable details sheet are all the start
     variables.
   -->
-  <DataDictionary numberOfFields="1">
+  <DataDictionary numberOfFields="2">
     <!-- 
       Every start variable should be represented by a DataField node. 
       Attributes:
@@ -31,7 +31,7 @@
         If the start variable is categorical, then each category
         should be represented as a Value node. Look at the values of the recFrom
         columns for this start variable to figure out all the categories. For
-        range of values indicated by a :, create a Value node for each value
+        range of values indicated by a ":", create a Value node for each value
         in the range. For eg., 6:9 would have 4 Value nodes.
 
         Attributes:
@@ -60,8 +60,12 @@
       <Extension name="catStartLabel" value="Number of drinks on Sunday" />
 
       <!--
-        The first row in variable details for ALCA_5A1 signifies the valid
-        range for this start variable. Use the recFrom to get this range.
+        To determine the valid ranges for a continuous variable look at the
+        recTo column values. If they are not NA::a or NA::b then its a valid
+        range. For eg., for ALC_5A1, only the first row has a valid recTo value
+        of copy, which means we will add an Interval node for this recFrom 
+        column value. An Interval node should be added for each valid row.
+
         Attributes:
         closure: Set to closedClosed
         leftMargin: Set to the number to the left of the colon
@@ -105,32 +109,36 @@
       Attributes:
       name: Set to units
       value: Set to the value of the units column
-
-      A node is added to represent how to transform the start variable
-      to the variable column.
-
-      For eg., of this look at the following resources
-      http://dmg.org/pmml/v4-4/Transformations.html#xsdGroup_EXPRESSION
-      http://dmg.org/pmml/v4-4/Functions.html
-      http://dmg.org/pmml/v4-4/BuiltinFunctions.html
-
-      For eg., for ADL_01 using the recFrom and recTo columns, the Apply
-      node is used to represent the transformations,
-      if(RACA_6A == 1) {
-        ADL_01 = 1
-      } elseif(RACA_6A == 2) {
-        ADL_01 = 2
-      } elseif(RACA_6A == 6) {
-        ADL_01 = NA
-      } elseif(RACA_6A >= 7 && RACA_6A <= 9) {
-        ADL_01 = NA
-      } else {
-        ADL_01 = NA
-      }
     -->
     <DerivedField name="ADL_01" displayName="Help preparing meals" optype="categorical" dataType="integer">
       <Extension name="labelLong" value="Needs help - preparing meals" />
       <Extension name="units" value="N/A" />
+      <!--
+        A node is added to represent how to transform the start variable
+        to the variable column.
+
+        For eg., of this look at the following resources
+        http://dmg.org/pmml/v4-4/Transformations.html#xsdGroup_EXPRESSION
+        http://dmg.org/pmml/v4-4/Functions.html
+        http://dmg.org/pmml/v4-4/BuiltinFunctions.html
+
+        This node is built by looking at the recFrom and recTo column values
+        for the rows for this variable.
+
+        For eg., for ADL_01 using the recFrom and recTo columns, the Apply
+        node is used to represent the transformations,
+        if(RACA_6A == 1) {
+          ADL_01 = 1
+        } elseif(RACA_6A == 2) {
+          ADL_01 = 2
+        } elseif(RACA_6A == 6) {
+          ADL_01 = NA
+        } elseif(RACA_6A >= 7 && RACA_6A <= 9) {
+          ADL_01 = NA
+        } else {
+          ADL_01 = NA
+        }
+      -->
       <Apply function="if">
         <Apply function="equals">
           <FieldRef field="RACA_6A"/>
@@ -196,7 +204,7 @@
         <Extension name="catLabelLong" value="Yes" />
       </Value>
       <Value value="2" displayValue="No">
-        <Extension name="catLabelLong" value="Yes" />
+        <Extension name="catLabelLong" value="No" />
       </Value>
     </DerivedField>
     <!--
@@ -205,6 +213,18 @@
     <DerivedField name="ALW_2A1" displayName="# of drinks - Sunday" optype="continuous" dataType="float">
       <Extension name="labelLong" value="Number of drinks on Sunday" />
       <Extension name="units" value="drinks" />
+      <!--
+        The represents the following R code,
+        if(ALW_5A1 >= 1 || ALW_5A1 <= 40) {
+          ALW_2A1 = ALW_5A1
+        } elseif(ALW_5A1 == 996) {
+          ALW_2A1 = NA
+        } elseif(ALW_5A1 >= 997 || ALW_5A1 <= 999) {
+          ALW_2A1 = NA
+        } else {
+          ALW_2A1 = NA
+        }
+      -->
       <Apply function="if">
         <Apply function="and">
           <Apply function="or">
