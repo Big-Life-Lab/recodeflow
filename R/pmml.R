@@ -2,7 +2,7 @@
 #'
 #' @param var_details_sheet A data frame representing a variable details sheet,
 #' @param vars_sheet A data frame representing a variables sheet.
-#' @param vars_sheet A string containing the name of the database that holds
+#' @param db_name A string containing the name of the database that holds
 #' the start variables. Should match up with one of the databases in the
 #' databaseStart column.
 #' @param vars_to_convert A vector of strings containing the names of variables
