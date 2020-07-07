@@ -9,12 +9,199 @@
 #' from the variable column in the variable details sheet that should be.
 #' converted to PMML. Passing in an empty vector will convert all the variables.
 #'
-#' @return A string continaing the PMML string
+#' @return A string containing the PMML string
 #' @export
 #'
 #' @examples
 pmml.xflow_to_pmml <- function(var_details_sheet, vars_sheet, db_name, vars_to_convert) {
-  pmml_str <- ""
+  doc <- xmlNode("PMML", attrs=c(xmlns="http://www.dmg.org/PMML-4_4", version="4.4"))
+  dict <- xmlNode("DataDictionary")
 
-  return("")
+  for (var_to_convert in vars_to_convert) {
+    indices <- which(var_details_sheet$variable == var_to_convert, arr.ind = TRUE)
+    var_details_rows <- var_details_sheet[indices,]
+
+    var_name <- get_new_var_name(var_details_rows, db_name)
+    data_field <- build_data_field(var_name, var_details_rows)
+    data_field <- add_data_field_children(data_field, var_name, var_details_rows)
+    dict <- append.xmlNode(dict, data_field)
+  }
+
+  xmlAttrs(dict) <- c(numberOfFields=xmlSize(dict))
+  doc <- append.xmlNode(doc, dict, build_trans_dict(vars_sheet, var_details_sheet, vars_to_convert, db_name))
+  # print(doc)
 }
+
+get_new_var_name <- function(var_details_rows, db_name) {
+  var_details_row = var_details_rows[1,]
+  var_prefix <- paste(db_name, "::", sep="")
+  var_regex <- paste(var_prefix, "(.+?)[,?]", sep="")
+  var_index <- attr(regexpr(var_regex, var_details_row$variableStart, TRUE), "match.length")
+  return (substr(var_details_row$variableStart, nchar(var_prefix) + 1, var_index - 1))
+}
+
+build_data_field <- function(var_name, var_details_rows) {
+  var_details_row <- var_details_rows[1,]
+  if (var_details_row$fromType == "cat") {
+    optype <- "categorical"
+    data_type <- "integer"
+  } else if(var_details_row$fromType == "cont") {
+    optype <- "continuous"
+    data_type <- "float"
+  }
+
+  return (xmlNode("DataField", attrs=c(name=var_name,
+                                       displayName=var_details_row$variableStartShortLabel,
+                                       optype=optype,
+                                       dataType=data_type)))
+}
+
+add_data_field_children <- function(data_field, var_name, var_details_rows) {
+  var_details_row <- var_details_rows[1,]
+  extension_node <- xmlNode("Extension", attrs=c(name="variableStartLabel", value=var_details_row$variableStartLabel))
+  data_field <- append.xmlNode(data_field, extension_node)
+
+  for (index in 1:nrow(var_details_rows)) {
+    row <- var_details_rows[index,]
+    if (row$toType == 'cat') data_field <- build_cat_value_nodes(row, data_field)
+    else data_field <- build_cont_value_nodes(row, data_field)
+  }
+
+  return (data_field)
+}
+
+build_cat_value_nodes <- function(row, data_field) {
+  if (row$recTo == "NA::a") property <- "invalid"
+  else if (row$recTo == "NA::b") property <- "missing"
+  else property <- "valid"
+
+  if(grepl(":", row$recFrom, fixed=TRUE)) {
+    data_field <- build_value_nodes(row, data_field)
+  } else if (suppressWarnings(!is.na(as.numeric(row$recFrom)))) {
+    value_node <- xmlNode("Value", attrs=c(value=row$recFrom, displayValue=row$catLabel, property=property))
+    data_field <- append.xmlNode(data_field, value_node)
+  }
+
+  return (data_field)
+}
+
+build_cont_value_nodes <- function(row, data_field) {
+  if (row$recTo == "copy") {
+    margins <- trimws(strsplit(row$recFrom, ":")[[1]])
+    interval_node <- xmlNode("Interval", attrs=c(closure="closedClosed", leftMargin=margins[1], rightMargin=margins[2]))
+    data_field <- append.xmlNode(data_field, interval_node)
+  } else if(grepl(":", row$recFrom, fixed=TRUE)) {
+    data_field <- build_value_nodes(row, data_field)
+  } else {
+    data_field <- build_cat_value_nodes(row, data_field)
+  }
+
+  return (data_field)
+}
+
+build_value_nodes <- function(row, data_field) {
+  range <- eval(parse(text=row$recFrom))
+  cat_start_labels <- trimws(strsplit(row$catStartLabel, ";")[[1]])
+
+  for (index in range) {
+    label <- cat_start_labels[index - range[1] + 1]
+    value_node <- xmlNode("Value", attrs=c(value=index, displayValue=label, property="missing"))
+    data_field <- append.xmlNode(data_field, value_node)
+  }
+
+  return (data_field)
+}
+
+build_trans_dict <- function(vars_sheet, var_details_sheet, vars_to_convert, db_name) {
+  trans_dict <- xmlNode("TransformationDictionary")
+
+  for (var_to_convert in vars_to_convert) {
+    trans_dict <- append.xmlNode(trans_dict, build_derived_field_node(vars_sheet, var_details_sheet, var_to_convert, db_name))
+  }
+
+  return (trans_dict)
+}
+
+build_derived_field_node <- function(vars_sheet, var_details_sheet, var_to_convert, db_name) {
+  indices <- which(vars_sheet$variable == var_to_convert, arr.ind = TRUE)
+  row <- vars_sheet[indices[1],]
+  data_type <- ifelse(row$variableType == "Categorical", "integer", "float")
+
+  derived_field_node <- xmlNode("DerivedField", attrs=c(name=var_to_convert, displayName=row$label, optype=tolower(row$variableType), dataType=data_type))
+  label_long_node <- xmlNode("Extension", attrs=c(name="labelLong", value=row$labelLong))
+  units_node <- xmlNode("Extension", attrs=c(name="units", value=row$units))
+  derived_field_node <- append.xmlNode(derived_field_node, label_long_node, units_node)
+  derived_field_node <- build_derived_field_children(derived_field_node, var_details_sheet, var_to_convert, db_name)
+
+  return (derived_field_node)
+}
+
+build_derived_field_children <- function(derived_field_node, var_details_sheet, var_to_convert, db_name) {
+  indices <- which(var_details_sheet$variable == var_to_convert, arr.ind = TRUE)
+  var_details_rows <- var_details_sheet[indices,]
+
+  apply_if_node <- xmlNode("Apply", attrs=c("function"="if"))
+  derived_field_node <- append.xmlNode(derived_field_node, build_apply_nodes(var_details_rows, apply_if_node, db_name))
+
+  for (index in 1:nrow(var_details_rows)) {
+    details_row <- var_details_rows[index,]
+
+    if (suppressWarnings(!is.na(as.numeric(details_row$recTo)))) {
+      value_node <- xmlNode("Value", attrs=c(value=details_row$recTo, displayValue=details_row$catLabel))
+      extension_node <- xmlNode("Extension", attrs=c(name="catLabelLong", value=details_row$catLabelLong))
+      value_node <- append.xmlNode(value_node, extension_node)
+      derived_field_node <- append.xmlNode(derived_field_node, value_node)
+    }
+  }
+
+  print(derived_field_node)
+  return (derived_field_node)
+}
+
+build_apply_nodes <- function(var_details_rows, parent_node, db_name) {
+  details_row <- var_details_rows[1,]
+  remaining_rows <- var_details_rows[-1,]
+  if (nrow(remaining_rows) == 0) return (parent_node)
+
+  if (suppressWarnings(!is.na(as.numeric(details_row$recFrom)))) {
+    if (details_row$recTo %in% c("NA::a", "NA::B")) const_val_node <- xmlNode("Constant", attrs=c(missing="true"))
+    else const_val_node <- xmlNode("Constant", attrs=c(missing="true"), value=details_row$recFrom)
+
+    if_node <- xmlNode("Apply", attrs=c("function"="if"),
+                       xmlNode("Apply", attrs=c("function"="equals"),
+                               xmlNode("FieldRef", attrs=c(field=get_new_var_name(details_row, db_name))),
+                               xmlNode("Constant", attrs=c(dataType="integer"), value=details_row$recFrom)),
+                       const_val_node)
+
+    return (append.xmlNode(parent_node, build_apply_nodes(remaining_rows, if_node, db_name)))
+  } else if (grepl(":", details_row$recFrom, fixed=TRUE)) {
+    margins <- trimws(strsplit(details_row$recFrom, ":")[[1]])
+    field_node <- xmlNode("FieldRef", attrs=c(field=get_new_var_name(details_row, db_name)))
+    const_node_gt <- xmlNode("Constant", attrs=c(dataType="integer"), value=margins[1])
+    const_node_lt <- xmlNode("Constant", attrs=c(dataType="integer"), value=margins[2])
+
+    and_node <- xmlNode("Apply", attrs=c("function"="and"))
+    or_node_1 <- xmlNode("Apply", attrs=c("function"="or"))
+    or_node_2 <- xmlNode("Apply", attrs=c("function"="or"))
+    gt_node <- xmlNode("Apply", attrs=c("function"="greaterThan"), field_node, const_node_gt)
+    lt_node <- xmlNode("Apply", attrs=c("function"="lessThan"), field_node, const_node_lt)
+    equals_node_1 <- xmlNode("Apply", attrs=c("function"="equals"), field_node, const_node_gt)
+    equals_node_2 <- xmlNode("Apply", attrs=c("function"="equals"), field_node, const_node_lt)
+
+    or_node_1 <- append.xmlNode(or_node_1, gt_node, equals_node_1)
+    or_node_2 <- append.xmlNode(or_node_2, lt_node, equals_node_2)
+
+    and_node <- append.xmlNode(and_node, or_node_1, or_node_2)
+    parent_node <- append.xmlNode(parent_node, and_node)
+
+    return (build_apply_nodes(remaining_rows, parent_node, db_name))
+  } else {
+    parent_node <- append.xmlNode(parent_node, xmlNode("Constant", attrs=c(missing="true")))
+    return (parent_node)
+  }
+}
+
+pmml.xflow_to_pmml(var_details_sheet = read.csv("./assets/tests/integration/cchsflow MSW - variable_details.csv"),
+                   vars_sheet = read.csv("./assets/tests/integration/cchsflow MSW - variables.csv"),
+                   db_name = "cchs2001_p",
+                   vars_to_convert = c("ADL_01", "ALW_2A1"))
