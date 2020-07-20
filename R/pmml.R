@@ -29,7 +29,7 @@ pmml.xflow_to_pmml <- function(var_details_sheet, vars_sheet, db_name, vars_to_c
 
   xmlAttrs(dict) <- c(numberOfFields=xmlSize(dict))
   doc <- append.xmlNode(doc, dict, build_trans_dict(vars_sheet, var_details_sheet, vars_to_convert, db_name))
-  # print(doc)
+  print(doc)
 }
 
 get_new_var_name <- function(var_details_rows, db_name) {
@@ -63,7 +63,7 @@ add_data_field_children <- function(data_field, var_name, var_details_rows) {
 
   for (index in 1:nrow(var_details_rows)) {
     row <- var_details_rows[index,]
-    if (row$toType == 'cat') data_field <- build_cat_value_nodes(row, data_field)
+    if (row$toType == "cat") data_field <- build_cat_value_nodes(row, data_field)
     else data_field <- build_cont_value_nodes(row, data_field)
   }
 
@@ -140,8 +140,7 @@ build_derived_field_children <- function(derived_field_node, var_details_sheet, 
   indices <- which(var_details_sheet$variable == var_to_convert, arr.ind = TRUE)
   var_details_rows <- var_details_sheet[indices,]
 
-  apply_if_node <- xmlNode("Apply", attrs=c("function"="if"))
-  derived_field_node <- append.xmlNode(derived_field_node, build_apply_nodes(var_details_rows, apply_if_node, db_name))
+  derived_field_node <- build_apply_nodes(var_details_rows, derived_field_node, db_name)
 
   for (index in 1:nrow(var_details_rows)) {
     details_row <- var_details_rows[index,]
@@ -154,7 +153,6 @@ build_derived_field_children <- function(derived_field_node, var_details_sheet, 
     }
   }
 
-  print(derived_field_node)
   return (derived_field_node)
 }
 
@@ -187,17 +185,18 @@ build_apply_nodes <- function(var_details_rows, parent_node, db_name) {
     lt_node <- xmlNode("Apply", attrs=c("function"="lessThan"), field_node, const_node_lt)
     equals_node_1 <- xmlNode("Apply", attrs=c("function"="equals"), field_node, const_node_gt)
     equals_node_2 <- xmlNode("Apply", attrs=c("function"="equals"), field_node, const_node_lt)
+    missing_node <- xmlNode("Constant", attrs=c(missing="true"))
 
     or_node_1 <- append.xmlNode(or_node_1, gt_node, equals_node_1)
     or_node_2 <- append.xmlNode(or_node_2, lt_node, equals_node_2)
 
     and_node <- append.xmlNode(and_node, or_node_1, or_node_2)
-    parent_node <- append.xmlNode(parent_node, and_node)
+    if_node <- append.xmlNode(xmlNode("Apply", attrs=c("function"="if")), and_node, missing_node, missing_node)
+    parent_node <- append.xmlNode(parent_node, if_node)
 
     return (build_apply_nodes(remaining_rows, parent_node, db_name))
   } else {
-    parent_node <- append.xmlNode(parent_node, xmlNode("Constant", attrs=c(missing="true")))
-    return (parent_node)
+    return (append.xmlNode(parent_node, xmlNode("Constant", attrs=c(missing="true"))))
   }
 }
 
