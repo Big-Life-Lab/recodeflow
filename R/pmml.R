@@ -1,8 +1,8 @@
 #' Creates a PMML string from an xFlow document
 #'
-#' @param var_details_sheet A data frame representing a variable details sheet,
+#' @param var_details_sheet A data frame representing a variable details sheet.
 #' @param vars_sheet A data frame representing a variables sheet.
-#' @param vars_sheet A string containing the name of the database that holds
+#' @param db_name A string containing the name of the database that holds
 #' the start variables. Should match up with one of the databases in the
 #' databaseStart column.
 #' @param vars_to_convert A vector of strings containing the names of variables
@@ -23,7 +23,7 @@ pmml.xflow_to_pmml <- function(var_details_sheet, vars_sheet, db_name, vars_to_c
 
     var_name <- get_new_var_name(var_details_rows, db_name)
     data_field <- build_data_field(var_name, var_details_rows)
-    data_field <- add_data_field_children(data_field, var_name, var_details_rows)
+    data_field <- add_data_field_children(data_field, var_details_rows)
     dict <- append.xmlNode(dict, data_field)
   }
 
@@ -32,6 +32,15 @@ pmml.xflow_to_pmml <- function(var_details_sheet, vars_sheet, db_name, vars_to_c
   print(doc)
 }
 
+#' Get variable name from variableStart using database name
+#'
+#' @param var_details_rows Named vector as variable details sheet row.
+#' @param db_name Name of database to extract from.
+#'
+#' @return Variable name according to database name
+#' @export
+#'
+#' @examples
 get_new_var_name <- function(var_details_rows, db_name) {
   var_details_row = var_details_rows[1,]
   var_prefix <- paste(db_name, "::", sep="")
@@ -40,6 +49,15 @@ get_new_var_name <- function(var_details_rows, db_name) {
   return (substr(var_details_row$variableStart, nchar(var_prefix) + 1, var_index - 1))
 }
 
+#' Build data field node
+#'
+#' @param var_name Variable name.
+#' @param var_details_rows Variable details rows for `var_name` variable.
+#'
+#' @return DataField node with optype and dataType according to `fromType`
+#' @export
+#'
+#' @examples
 build_data_field <- function(var_name, var_details_rows) {
   var_details_row <- var_details_rows[1,]
   if (var_details_row$fromType == "cat") {
@@ -56,27 +74,45 @@ build_data_field <- function(var_name, var_details_rows) {
                                        dataType=data_type)))
 }
 
-add_data_field_children <- function(data_field, var_name, var_details_rows) {
+#' Add data field child nodes.
+#'
+#' @param data_field DataField node to attach child nodes.
+#' @param var_details_rows Variable details rows associated with current variable.
+#'
+#' @return Updated DataField node.
+#' @export
+#'
+#' @examples
+add_data_field_children <- function(data_field, var_details_rows) {
   var_details_row <- var_details_rows[1,]
   extension_node <- xmlNode("Extension", attrs=c(name="variableStartLabel", value=var_details_row$variableStartLabel))
   data_field <- append.xmlNode(data_field, extension_node)
 
   for (index in 1:nrow(var_details_rows)) {
     row <- var_details_rows[index,]
-    if (row$toType == "cat") data_field <- build_cat_value_nodes(row, data_field)
-    else data_field <- build_cont_value_nodes(row, data_field)
+    if (row$toType == "cat") data_field <- attach_cat_value_nodes(row, data_field)
+    else data_field <- attach_cont_value_nodes(row, data_field)
   }
 
   return (data_field)
 }
 
-build_cat_value_nodes <- function(row, data_field) {
+#' Attach categorical value nodes to DataField node.
+#'
+#' @param row Variable details sheet row.
+#' @param data_field DataField node to attach Value nodes.
+#'
+#' @return Updated DataField node.
+#' @export
+#'
+#' @examples
+attach_cat_value_nodes <- function(row, data_field) {
   if (row$recTo == "NA::a") property <- "invalid"
   else if (row$recTo == "NA::b") property <- "missing"
   else property <- "valid"
 
   if(grepl(":", row$recFrom, fixed=TRUE)) {
-    data_field <- build_value_nodes(row, data_field)
+    data_field <- attach_missing_value_nodes(row, data_field)
   } else if (suppressWarnings(!is.na(as.numeric(row$recFrom)))) {
     value_node <- xmlNode("Value", attrs=c(value=row$recFrom, displayValue=row$catLabel, property=property))
     data_field <- append.xmlNode(data_field, value_node)
@@ -85,21 +121,39 @@ build_cat_value_nodes <- function(row, data_field) {
   return (data_field)
 }
 
-build_cont_value_nodes <- function(row, data_field) {
+#' Attach continuous Value nodes.
+#'
+#' @param row Variable details sheet row.
+#' @param data_field DataField node to attach Value nodes.
+#'
+#' @return Updated DataField node.
+#' @export
+#'
+#' @examples
+attach_cont_value_nodes <- function(row, data_field) {
   if (row$recTo == "copy") {
     margins <- trimws(strsplit(row$recFrom, ":")[[1]])
     interval_node <- xmlNode("Interval", attrs=c(closure="closedClosed", leftMargin=margins[1], rightMargin=margins[2]))
     data_field <- append.xmlNode(data_field, interval_node)
   } else if(grepl(":", row$recFrom, fixed=TRUE)) {
-    data_field <- build_value_nodes(row, data_field)
+    data_field <- attach_missing_value_nodes(row, data_field)
   } else {
-    data_field <- build_cat_value_nodes(row, data_field)
+    data_field <- attach_cat_value_nodes(row, data_field)
   }
 
   return (data_field)
 }
 
-build_value_nodes <- function(row, data_field) {
+#' Attach Value nodes to DataField node. Used when `recFrom` has a range of missing values.
+#'
+#' @param row Variable details sheet row.
+#' @param data_field DataField node to attach Value nodes.
+#'
+#' @return Updated DataField node.
+#' @export
+#'
+#' @examples
+attach_missing_value_nodes <- function(row, data_field) {
   range <- eval(parse(text=row$recFrom))
   cat_start_labels <- trimws(strsplit(row$catStartLabel, ";")[[1]])
 
@@ -112,6 +166,17 @@ build_value_nodes <- function(row, data_field) {
   return (data_field)
 }
 
+#' Build a TransformationDictionary node.
+#'
+#' @param vars_sheet Variable sheet data frame.
+#' @param var_details_sheet Variable details sheet data frame.
+#' @param vars_to_convert Vector of variable names to convert.
+#' @param db_name Database name.
+#'
+#' @return TransformationDictionary node.
+#' @export
+#'
+#' @examples
 build_trans_dict <- function(vars_sheet, var_details_sheet, vars_to_convert, db_name) {
   trans_dict <- xmlNode("TransformationDictionary")
 
@@ -122,6 +187,17 @@ build_trans_dict <- function(vars_sheet, var_details_sheet, vars_to_convert, db_
   return (trans_dict)
 }
 
+#' Build DerivedField node.
+#'
+#' @param vars_sheet Variable sheet data frame.
+#' @param var_details_sheet Variable details sheet data frame.
+#' @param vars_to_convert Vector of variable names to convert.
+#' @param db_name Database name.
+#'
+#' @return DerivedField node.
+#' @export
+#'
+#' @examples
 build_derived_field_node <- function(vars_sheet, var_details_sheet, var_to_convert, db_name) {
   indices <- which(vars_sheet$variable == var_to_convert, arr.ind = TRUE)
   row <- vars_sheet[indices[1],]
@@ -131,16 +207,27 @@ build_derived_field_node <- function(vars_sheet, var_details_sheet, var_to_conve
   label_long_node <- xmlNode("Extension", attrs=c(name="labelLong", value=row$labelLong))
   units_node <- xmlNode("Extension", attrs=c(name="units", value=row$units))
   derived_field_node <- append.xmlNode(derived_field_node, label_long_node, units_node)
-  derived_field_node <- build_derived_field_children(derived_field_node, var_details_sheet, var_to_convert, db_name)
+  derived_field_node <- attach_derived_field_nodes(derived_field_node, var_details_sheet, var_to_convert, db_name)
 
   return (derived_field_node)
 }
 
-build_derived_field_children <- function(derived_field_node, var_details_sheet, var_to_convert, db_name) {
+#' Attach child nodes to DerivedField node.
+#'
+#' @param derived_field_node DerivedField node to attach child nodes.
+#' @param var_details_sheet Variable details sheet data frame.
+#' @param vars_to_convert Vector of variable names to convert.
+#' @param db_name Database name.
+#'
+#' @return Updated DerivedField node.
+#' @export
+#'
+#' @examples
+attach_derived_field_nodes <- function(derived_field_node, var_details_sheet, var_to_convert, db_name) {
   indices <- which(var_details_sheet$variable == var_to_convert, arr.ind = TRUE)
   var_details_rows <- var_details_sheet[indices,]
 
-  derived_field_node <- build_apply_nodes(var_details_rows, derived_field_node, db_name)
+  derived_field_node <- attach_apply_nodes(var_details_rows, derived_field_node, db_name)
 
   for (index in 1:nrow(var_details_rows)) {
     details_row <- var_details_rows[index,]
@@ -156,7 +243,17 @@ build_derived_field_children <- function(derived_field_node, var_details_sheet, 
   return (derived_field_node)
 }
 
-build_apply_nodes <- function(var_details_rows, parent_node, db_name) {
+#' Attach Apply nodes to a parent node.
+#'
+#' @param var_details_rows Variable details rows associated with current variable.
+#' @param parent_node An XML node.
+#' @param db_name Database name.
+#'
+#' @return Updated parent node.
+#' @export
+#'
+#' @examples
+attach_apply_nodes <- function(var_details_rows, parent_node, db_name) {
   details_row <- var_details_rows[1,]
   remaining_rows <- var_details_rows[-1,]
   if (nrow(remaining_rows) == 0) return (parent_node)
@@ -171,7 +268,7 @@ build_apply_nodes <- function(var_details_rows, parent_node, db_name) {
                                xmlNode("Constant", attrs=c(dataType="integer"), value=details_row$recFrom)),
                        const_val_node)
 
-    return (append.xmlNode(parent_node, build_apply_nodes(remaining_rows, if_node, db_name)))
+    return (append.xmlNode(parent_node, attach_apply_nodes(remaining_rows, if_node, db_name)))
   } else if (grepl(":", details_row$recFrom, fixed=TRUE)) {
     margins <- trimws(strsplit(details_row$recFrom, ":")[[1]])
     field_node <- xmlNode("FieldRef", attrs=c(field=get_new_var_name(details_row, db_name)))
@@ -194,7 +291,7 @@ build_apply_nodes <- function(var_details_rows, parent_node, db_name) {
     if_node <- append.xmlNode(xmlNode("Apply", attrs=c("function"="if")), and_node, missing_node, missing_node)
     parent_node <- append.xmlNode(parent_node, if_node)
 
-    return (build_apply_nodes(remaining_rows, parent_node, db_name))
+    return (attach_apply_nodes(remaining_rows, parent_node, db_name))
   } else {
     return (append.xmlNode(parent_node, xmlNode("Constant", attrs=c(missing="true"))))
   }
