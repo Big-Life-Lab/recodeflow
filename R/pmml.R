@@ -9,7 +9,7 @@
 #' from the variable column in the variable details sheet that should be.
 #' converted to PMML. Passing in an empty vector will convert all the variables.
 #'
-#' @return A string containing the PMML string.
+#' @return A PMML document.
 #' @export
 #'
 #' @examples
@@ -28,8 +28,8 @@ pmml.xflow_to_pmml <- function(var_details_sheet, vars_sheet, db_name, vars_to_c
   }
 
   xmlAttrs(dict) <- c(numberOfFields=xmlSize(dict))
-  doc <- XML::append.xmlNode(doc, dict, build_trans_dict(vars_sheet, var_details_sheet, vars_to_convert, db_name))
-  return (doc)
+  trans_dict <- build_trans_dict(vars_sheet, var_details_sheet, vars_to_convert, db_name)
+  return (XML::append.xmlNode(doc, dict, trans_dict))
 }
 
 #' Get variable name from variableStart using database name.
