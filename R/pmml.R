@@ -27,7 +27,7 @@ pmml.xflow_to_pmml <- function(var_details_sheet, vars_sheet, db_name, vars_to_c
     dict <- XML::append.xmlNode(dict, data_field)
   }
 
-  xmlAttrs(dict) <- c(numberOfFields=xmlSize(dict))
+  XML::xmlAttrs(dict) <- c(numberOfFields=XML::xmlSize(dict))
   trans_dict <- build_trans_dict(vars_sheet, var_details_sheet, vars_to_convert, db_name)
   return (XML::append.xmlNode(doc, dict, trans_dict))
 }
@@ -44,9 +44,20 @@ pmml.xflow_to_pmml <- function(var_details_sheet, vars_sheet, db_name, vars_to_c
 get_start_var_name <- function(var_details_rows, db_name) {
   var_details_row = var_details_rows[1,]
   var_prefix <- paste(db_name, "::", sep="")
+
+  # Create regex using database name and double-colon infix
   var_regex <- paste(var_prefix, "(.+?)[,?]", sep="")
+
+  # Get index of database name from `variableStart`
+
+  # Get the index of the database
+  db_index <- attr(regexpr(db_name, var_details_row$variableStart, TRUE), "match.length")
+
+  # Get the index of the variable start
   var_index <- attr(regexpr(var_regex, var_details_row$variableStart, TRUE), "match.length")
-  return (substr(var_details_row$variableStart, nchar(var_prefix) + 1, var_index - 1))
+
+  # Extract the substring using the index of the database name and the infix, and the length of the variable name
+  return (substr(var_details_row$variableStart, db_index + nchar(var_prefix) + 1, var_index - 1))
 }
 
 #' Build DataField node for start variable.
