@@ -38,26 +38,24 @@ pmml.xflow_to_pmml <- function(var_details_sheet, vars_sheet, db_name, vars_to_c
 #' @param db_name Name of database to extract from.
 #'
 #' @return Variable name according to database name.
-#' @export
 #'
 #' @examples
 get_start_var_name <- function(var_details_rows, db_name) {
   var_details_row = var_details_rows[1,]
-  var_prefix <- paste(db_name, "::", sep="")
+  db_var_infix <- "::"
+  var_prefix <- paste(db_name, db_var_infix, sep="")
 
   # Create regex using database name and double-colon infix
   var_regex <- paste(var_prefix, "(.+?)[,?]", sep="")
 
-  # Get index of database name from `variableStart`
-
   # Get the index of the database
-  db_index <- attr(regexpr(db_name, var_details_row$variableStart, TRUE), "match.length")
+  db_index <- attr(regexpr(var_prefix, var_details_row$variableStart, TRUE), "match.length")
 
   # Get the index of the variable start
   var_index <- attr(regexpr(var_regex, var_details_row$variableStart, TRUE), "match.length")
 
   # Extract the substring using the index of the database name and the infix, and the length of the variable name
-  return (substr(var_details_row$variableStart, db_index + nchar(var_prefix) + 1, var_index - 1))
+  return (substr(var_details_row$variableStart, db_index + 1, var_index - 1))
 }
 
 #' Build DataField node for start variable.
@@ -66,7 +64,6 @@ get_start_var_name <- function(var_details_rows, db_name) {
 #' @param var_details_rows Variable details rows for `var_name` variable.
 #'
 #' @return DataField node with optype and dataType according to `fromType`.
-#' @export
 #'
 #' @examples
 build_data_field_for_start_var <- function(var_name, var_details_rows) {
@@ -91,7 +88,6 @@ build_data_field_for_start_var <- function(var_name, var_details_rows) {
 #' @param var_details_rows Variable details rows associated with current variable.
 #'
 #' @return Updated DataField node.
-#' @export
 #'
 #' @examples
 add_data_field_children_for_start_var <- function(data_field, var_details_rows) {
@@ -114,7 +110,6 @@ add_data_field_children_for_start_var <- function(data_field, var_details_rows) 
 #' @param data_field DataField node to attach Value nodes.
 #'
 #' @return Updated DataField node.
-#' @export
 #'
 #' @examples
 attach_cat_value_nodes_for_start_var <- function(row, data_field) {
@@ -138,7 +133,6 @@ attach_cat_value_nodes_for_start_var <- function(row, data_field) {
 #' @param data_field DataField node to attach Value nodes.
 #'
 #' @return Updated DataField node.
-#' @export
 #'
 #' @examples
 attach_cont_value_nodes_for_start_var <- function(row, data_field) {
@@ -161,7 +155,6 @@ attach_cont_value_nodes_for_start_var <- function(row, data_field) {
 #' @param data_field DataField node to attach Value nodes.
 #'
 #' @return Updated DataField node.
-#' @export
 #'
 #' @examples
 attach_missing_value_nodes <- function(row, data_field) {
@@ -185,7 +178,6 @@ attach_missing_value_nodes <- function(row, data_field) {
 #' @param db_name Database name.
 #'
 #' @return TransformationDictionary node.
-#' @export
 #'
 #' @examples
 build_trans_dict <- function(vars_sheet, var_details_sheet, vars_to_convert, db_name) {
@@ -206,7 +198,6 @@ build_trans_dict <- function(vars_sheet, var_details_sheet, vars_to_convert, db_
 #' @param db_name Database name.
 #'
 #' @return DerivedField node.
-#' @export
 #'
 #' @examples
 build_derived_field_node <- function(vars_sheet, var_details_sheet, var_to_convert, db_name) {
@@ -231,7 +222,6 @@ build_derived_field_node <- function(vars_sheet, var_details_sheet, var_to_conve
 #' @param db_name Database name.
 #'
 #' @return Updated DerivedField node.
-#' @export
 #'
 #' @examples
 attach_derived_field_nodes <- function(derived_field_node, var_details_sheet, var_to_convert, db_name) {
@@ -261,7 +251,6 @@ attach_derived_field_nodes <- function(derived_field_node, var_details_sheet, va
 #' @param db_name Database name.
 #'
 #' @return Updated parent node.
-#' @export
 #'
 #' @examples
 attach_apply_nodes <- function(var_details_rows, parent_node, db_name) {
