@@ -1,11 +1,11 @@
 <PMML>
-  <!-- 
+  <!--
     The data dictionary defines all the variables which are not derived from other variables, which in the variable details sheet are all the start
     variables.
   -->
   <DataDictionary numberOfFields="2">
-    <!-- 
-      Every start variable should be represented by a DataField node. 
+    <!--
+      Every start variable should be represented by a DataField node.
       Attributes:
       name: Comes from the variableStart column
       displayName: Comes from the variableStartShortLabel column
@@ -27,7 +27,7 @@
         More info on Extension nodes http://dmg.org/pmml/v4-4/GeneralStructure.html#xsdElement_Extension
       -->
       <Extension name="variableStartLabel" value="Because of any condition or health problem, do you need the help of another person in preparing meals?" />
-      <!-- 
+      <!--
         If the start variable is categorical, then each category
         should be represented as a Value node. Look at the values of the recFrom
         columns for this start variable to figure out all the categories. For
@@ -53,7 +53,7 @@
     <!--
       An example of a start variable that is a continuous field
       Follows the same rules as the categorical RACA_6A data field except for
-      the optype and dataType attributes which are set to continuous and 
+      the optype and dataType attributes which are set to continuous and
       float respectively.
     -->
     <DataField name="ALCA_5A1" displayName="DailyConsumptionSunday" optype="continuous" dataType="float">
@@ -63,7 +63,7 @@
         To determine the valid ranges for a continuous variable look at the
         recTo column values. If they are not NA::a or NA::b then its a valid
         range. For eg., for ALC_5A1, only the first row has a valid recTo value
-        of copy, which means we will add an Interval node for this recFrom 
+        of copy, which means we will add an Interval node for this recFrom
         column value. An Interval node should be added for each valid row.
 
         Attributes:
@@ -87,12 +87,12 @@
   <!--
     Defines the transformations that can be used by all other models in a PMML
     file. For our case it will be used to define how to transform a start
-    variable into a variable. 
+    variable into a variable.
   -->
   <TransformationDictionary>
     <!--
       Each variable in the variable column should have a DerivedField node
-      attached to it. 
+      attached to it.
       Attriubutes:
       name: Set to the value in the variable column
       displayName: Set to the label column in the variables sheet
@@ -161,21 +161,21 @@
               <Apply function="and">
                 <Apply function="or">
                   <Apply function="greaterThan">
-                    <FieldRef="RACA_61" />
+                    <FieldRef="RACA_6A" />
                     <Constant dataType="integer">7</Constant>
                   </Apply>
                   <Apply function="equals">
-                    <FieldRef="RACA_61" />
+                    <FieldRef="RACA_6A" />
                     <Constant dataType="integer">7</Constant>
                   </Apply>
                 </Apply>
                 <Apply function="or">
                   <Apply function="lessThan">
-                    <FieldRef="RACA_61" />
+                    <FieldRef="RACA_6A" />
                     <Constant dataType="integer">9</Constant>
                   </Apply>
                   <Apply function="equals">
-                    <FieldRef="RACA_61" />
+                    <FieldRef="RACA_6A" />
                     <Constant dataType="integer">9</Constant>
                   </Apply>
                 </Apply>
@@ -195,7 +195,7 @@
         displayValue: Set ot eh value of the catLabel column
       -->
       <Value value="1" displayValue="Yes">
-        <!-- 
+        <!--
           An extension node is added for the catLabelLong column
           Attributes:
           name: Set to catLabelLong
