@@ -43,10 +43,10 @@ pmml.xflow_to_pmml <- function(var_details_sheet, vars_sheet, db_name, vars_to_c
 get_start_var_name <- function(var_details_rows, db_name) {
   var_details_row = var_details_rows[1,]
   db_var_infix <- "::"
-  var_prefix <- paste(db_name, db_var_infix, sep="")
+  var_prefix <- paste0(db_name, db_var_infix)
 
   # Create regex using database name and double-colon infix
-  var_regex <- paste(var_prefix, "(.+?)[,?]", sep="")
+  var_regex <- paste0(var_prefix, "(.+?)[,?]")
 
   # Get the index of the database
   db_index <- attr(regexpr(var_prefix, var_details_row$variableStart, TRUE), "match.length")
@@ -54,7 +54,7 @@ get_start_var_name <- function(var_details_rows, db_name) {
   # Get the index of the variable start
   var_index <- attr(regexpr(var_regex, var_details_row$variableStart, TRUE), "match.length")
 
-  # Extract the substring using the index of the database name and the infix, and the length of the variable name
+  # Extract the substring using the index of the database name and the infix
   return (substr(var_details_row$variableStart, db_index + 1, var_index - 1))
 }
 
