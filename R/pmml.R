@@ -54,7 +54,7 @@ pmml.xflow_to_pmml <- function(var_details_sheet, vars_sheet, db_name, vars_to_c
 #' @examples
 get_start_var_name <- function(var_details_rows, db_name) {
   var_details_row = var_details_rows[1,]
-  db_var_infix <- "::"
+  db_var_infix <- pkg.env$db_var_start_infix
   var_prefix <- paste0(db_name, db_var_infix)
 
   # Create regex using database name and double-colon infix
@@ -80,10 +80,10 @@ get_start_var_name <- function(var_details_rows, db_name) {
 #' @examples
 build_data_field_for_start_var <- function(var_name, var_details_rows) {
   var_details_row <- var_details_rows[1,]
-  if (var_details_row$fromType == "cat") {
+  if (var_details_row$fromType == pkg.env$var_details_cat) {
     optype <- "categorical"
     data_type <- "integer"
-  } else if(var_details_row$fromType == "cont") {
+  } else if(var_details_row$fromType == pkg.env$var_details_cont) {
     optype <- "continuous"
     data_type <- "float"
   } else {
@@ -111,7 +111,7 @@ add_data_field_children_for_start_var <- function(data_field, var_details_rows) 
 
   for (index in 1:nrow(var_details_rows)) {
     row <- var_details_rows[index,]
-    if (row$toType == "cat") data_field <- attach_cat_value_nodes_for_start_var(row, data_field)
+    if (row$toType == pkg.env$var_details_cat) data_field <- attach_cat_value_nodes_for_start_var(row, data_field)
     else data_field <- attach_cont_value_nodes_for_start_var(row, data_field)
   }
 
@@ -127,8 +127,8 @@ add_data_field_children_for_start_var <- function(data_field, var_details_rows) 
 #'
 #' @examples
 attach_cat_value_nodes_for_start_var <- function(row, data_field) {
-  if (row$recTo == "NA::a") property <- "invalid"
-  else if (row$recTo == "NA::b") property <- "missing"
+  if (row$recTo == pkg.env$NA_invalid) property <- "invalid"
+  else if (row$recTo == pkg.env$NA_missing) property <- "missing"
   else property <- "valid"
 
   if(grepl(":", row$recFrom, fixed=TRUE)) {
@@ -150,7 +150,7 @@ attach_cat_value_nodes_for_start_var <- function(row, data_field) {
 #'
 #' @examples
 attach_cont_value_nodes_for_start_var <- function(row, data_field) {
-  if (row$recTo == "copy") {
+  if (row$recTo == pkg.env$rec_to_copy) {
     margins <- trimws(strsplit(row$recFrom, ":")[[1]])
     interval_node <- XML::xmlNode("Interval", attrs=c(closure="closedClosed", leftMargin=margins[1], rightMargin=margins[2]))
     data_field <- XML::append.xmlNode(data_field, interval_node)
@@ -217,7 +217,7 @@ build_trans_dict <- function(vars_sheet, var_details_sheet, vars_to_convert, db_
 build_derived_field_node <- function(vars_sheet, var_details_sheet, var_to_convert, db_name) {
   indices <- which(vars_sheet$variable == var_to_convert, arr.ind = TRUE)
   row <- vars_sheet[indices[1],]
-  data_type <- ifelse(row$variableType == "Categorical", "integer", "float")
+  data_type <- ifelse(row$variableType == pkg.env$var_cat, "integer", "float")
 
   derived_field_node <- XML::xmlNode("DerivedField", attrs=c(name=var_to_convert, displayName=row$label, optype=tolower(row$variableType), dataType=data_type))
   label_long_node <- XML::xmlNode("Extension", attrs=c(name="labelLong", value=row$labelLong))
@@ -273,7 +273,7 @@ attach_apply_nodes <- function(var_details_rows, parent_node, db_name) {
   if (nrow(remaining_rows) == 0) return (parent_node)
 
   if (suppressWarnings(!is.na(as.numeric(details_row$recFrom)))) {
-    if (details_row$recTo %in% c("NA::a", "NA::B")) const_val_node <- XML::xmlNode("Constant", attrs=c(missing="true"))
+    if (details_row$recTo %in% c(pkg.env$NA_invalid, pkg.env$NA_missing)) const_val_node <- XML::xmlNode("Constant", attrs=c(missing="true"))
     else const_val_node <- XML::xmlNode("Constant", attrs=c(missing="true"), value=details_row$recFrom)
 
     if_node <- XML::xmlNode("Apply", attrs=c("function"="if"),
@@ -289,19 +289,16 @@ attach_apply_nodes <- function(var_details_rows, parent_node, db_name) {
     const_node_gt <- XML::xmlNode("Constant", attrs=c(dataType="integer"), value=margins[1])
     const_node_lt <- XML::xmlNode("Constant", attrs=c(dataType="integer"), value=margins[2])
 
-    and_node <- XML::xmlNode("Apply", attrs=c("function"="and"))
-    or_node_1 <- XML::xmlNode("Apply", attrs=c("function"="or"))
-    or_node_2 <- XML::xmlNode("Apply", attrs=c("function"="or"))
-    gt_node <- XML::xmlNode("Apply", attrs=c("function"="greaterThan"), field_node, const_node_gt)
-    lt_node <- XML::xmlNode("Apply", attrs=c("function"="lessThan"), field_node, const_node_lt)
-    equals_node_1 <- XML::xmlNode("Apply", attrs=c("function"="equals"), field_node, const_node_gt)
-    equals_node_2 <- XML::xmlNode("Apply", attrs=c("function"="equals"), field_node, const_node_lt)
     missing_node <- XML::xmlNode("Constant", attrs=c(missing="true"))
 
-    or_node_1 <- XML::append.xmlNode(or_node_1, gt_node, equals_node_1)
-    or_node_2 <- XML::append.xmlNode(or_node_2, lt_node, equals_node_2)
+    or_node_1 <- XML::append.xmlNode(XML::xmlNode("Apply", attrs=c("function"="or")),
+                                     XML::xmlNode("Apply", attrs=c("function"="greaterThan"), field_node, const_node_gt),
+                                     XML::xmlNode("Apply", attrs=c("function"="equals"), field_node, const_node_gt))
+    or_node_2 <- XML::append.xmlNode(XML::xmlNode("Apply", attrs=c("function"="or")),
+                                     XML::xmlNode("Apply", attrs=c("function"="lessThan"), field_node, const_node_lt),
+                                     XML::xmlNode("Apply", attrs=c("function"="equals"), field_node, const_node_lt))
 
-    and_node <- XML::append.xmlNode(and_node, or_node_1, or_node_2)
+    and_node <- XML::append.xmlNode(XML::xmlNode("Apply", attrs=c("function"="and")), or_node_1, or_node_2)
     if_node <- XML::append.xmlNode(XML::xmlNode("Apply", attrs=c("function"="if")), and_node, missing_node, missing_node)
     parent_node <- XML::append.xmlNode(parent_node, if_node)
 
