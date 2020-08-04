@@ -1,4 +1,4 @@
-#' Creates a PMML string from an xFlow document.
+#' Creates a PMML document from an xFlow document.
 #'
 #' @param var_details_sheet A data frame representing a variable details sheet.
 #' @param vars_sheet A data frame representing a variables sheet.
@@ -6,25 +6,37 @@
 #' the start variables. Should match up with one of the databases in the
 #' databaseStart column.
 #' @param vars_to_convert A vector of strings containing the names of variables
-#' from the variable column in the variable details sheet that should be.
+#' from the variable column in the variable details sheet that should be
 #' converted to PMML. Passing in an empty vector will convert all the variables.
 #'
 #' @return A PMML document.
-#' @export
 #'
 #' @examples
-pmml.xflow_to_pmml <- function(var_details_sheet, vars_sheet, db_name, vars_to_convert) {
+#'
+#' @export
+pmml.xflow_to_pmml <- function(var_details_sheet, vars_sheet, db_name, vars_to_convert = NULL) {
   doc <- XML::xmlNode("PMML", attrs=c(xmlns="http://www.dmg.org/PMML-4_4", version="4.4"))
   dict <- XML::xmlNode("DataDictionary")
+
+  if (is.null(vars_to_convert)) vars_to_convert <- vars_sheet$variable
 
   for (var_to_convert in vars_to_convert) {
     indices <- which(var_details_sheet$variable == var_to_convert, arr.ind = TRUE)
     var_details_rows <- var_details_sheet[indices,]
-
     var_start_name <- get_start_var_name(var_details_rows, db_name)
-    data_field <- build_data_field_for_start_var(var_start_name, var_details_rows)
-    data_field <- add_data_field_children_for_start_var(data_field, var_details_rows)
-    dict <- XML::append.xmlNode(dict, data_field)
+
+    if (var_start_name == '') {
+      print(paste("Can't find start variable for", var_to_convert))
+    } else {
+      data_field <- build_data_field_for_start_var(var_start_name, var_details_rows)
+
+      if (is.null(data_field)) {
+        print(paste("Unable to determine fromType for", var_to_convert))
+      } else {
+        data_field <- add_data_field_children_for_start_var(data_field, var_details_rows)
+        dict <- XML::append.xmlNode(dict, data_field)
+      }
+    }
   }
 
   XML::xmlAttrs(dict) <- c(numberOfFields=XML::xmlSize(dict))
@@ -74,6 +86,8 @@ build_data_field_for_start_var <- function(var_name, var_details_rows) {
   } else if(var_details_row$fromType == "cont") {
     optype <- "continuous"
     data_type <- "float"
+  } else {
+    return (NULL);
   }
 
   return (XML::xmlNode("DataField", attrs=c(name=var_name,
