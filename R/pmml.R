@@ -14,7 +14,7 @@
 #' @examples
 #'
 #' @export
-pmml.xflow_to_pmml <- function(var_details_sheet, vars_sheet, db_name, vars_to_convert = NULL) {
+xflow_to_pmml <- function(var_details_sheet, vars_sheet, db_name, vars_to_convert = NULL) {
   doc <- XML::xmlNode("PMML", attrs=c(xmlns="http://www.dmg.org/PMML-4_4", version="4.4"))
   dict <- XML::xmlNode("DataDictionary")
 
