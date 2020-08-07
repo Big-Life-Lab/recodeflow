@@ -54,20 +54,15 @@ xflow_to_pmml <- function(var_details_sheet, vars_sheet, db_name, vars_to_conver
 #' @examples
 get_start_var_name <- function(var_details_rows, db_name) {
   var_details_row = var_details_rows[1,]
-  db_var_infix <- pkg.env$db_var_start_infix
-  var_prefix <- paste0(db_name, db_var_infix)
 
-  # Create regex using database name and double-colon infix
-  var_regex <- paste0(var_prefix, "(.+?)[,?]")
+  # Create regex using database name, database variable start infix, followed by variable start
+  var_regex <- paste0(db_name, pkg.env$db_var_start_infix, "(.+?)[,?]")
 
-  # Get the index of the database
-  db_index <- attr(regexpr(var_prefix, var_details_row$variableStart, TRUE), "match.length")
+  # Get regex match for variable start
+  match <- regexec(var_regex, var_details_row$variableStart)
 
-  # Get the index of the variable start
-  var_index <- attr(regexpr(var_regex, var_details_row$variableStart, TRUE), "match.length")
-
-  # Extract the substring using the index of the database name and the infix
-  return (substr(var_details_row$variableStart, db_index + 1, var_index - 1))
+  # Extract variable start from column
+  return (regmatches(var_details_row$variableStart, match)[[1]][2])
 }
 
 #' Build DataField node for start variable.
