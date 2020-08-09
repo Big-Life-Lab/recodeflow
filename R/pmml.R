@@ -3,11 +3,11 @@
 #' @param var_details_sheet A data frame representing a variable details sheet.
 #' @param vars_sheet A data frame representing a variables sheet.
 #' @param db_name A string containing the name of the database that holds
-#' the start variables. Should match up with one of the databases in the
-#' databaseStart column.
+#'  the start variables. Should match up with one of the databases in the
+#'  databaseStart column.
 #' @param vars_to_convert A vector of strings containing the names of variables
-#' from the variable column in the variable details sheet that should be
-#' converted to PMML. Passing in an empty vector will convert all the variables.
+#'  from the variable column in the variable details sheet that should be
+#'  converted to PMML. Passing in an empty vector will convert all the variables.
 #'
 #' @return A PMML document.
 #'
@@ -105,9 +105,9 @@ add_data_field_children_for_start_var <- function(data_field, var_details_rows) 
   data_field <- XML::append.xmlNode(data_field, extension_node)
 
   for (index in 1:nrow(var_details_rows)) {
-    row <- var_details_rows[index,]
-    if (row$toType == pkg.env$var_details_cat) data_field <- attach_cat_value_nodes_for_start_var(row, data_field)
-    else data_field <- attach_cont_value_nodes_for_start_var(row, data_field)
+    var_details_row <- var_details_rows[index,]
+    if (var_details_row$toType == pkg.env$var_details_cat) data_field <- attach_cat_value_nodes_for_start_var(var_details_row, data_field)
+    else data_field <- attach_cont_value_nodes_for_start_var(var_details_row, data_field)
   }
 
   return (data_field)
@@ -115,21 +115,21 @@ add_data_field_children_for_start_var <- function(data_field, var_details_rows) 
 
 #' Attach categorical value nodes to DataField node.
 #'
-#' @param row Variable details sheet row.
+#' @param var_details_row Variable details sheet row.
 #' @param data_field DataField node to attach Value nodes.
 #'
 #' @return Updated DataField node.
 #'
 #' @examples
-attach_cat_value_nodes_for_start_var <- function(row, data_field) {
-  if (row$recTo == pkg.env$NA_invalid) property <- "invalid"
-  else if (row$recTo == pkg.env$NA_missing) property <- "missing"
+attach_cat_value_nodes_for_start_var <- function(var_details_row, data_field) {
+  if (var_details_row$recTo == pkg.env$NA_invalid) property <- "invalid"
+  else if (var_details_row$recTo == pkg.env$NA_missing) property <- "missing"
   else property <- "valid"
 
-  if(grepl(":", row$recFrom, fixed=TRUE)) {
-    data_field <- attach_missing_value_nodes(row, data_field)
-  } else if (suppressWarnings(!is.na(as.numeric(row$recFrom)))) {
-    value_node <- XML::xmlNode("Value", attrs=c(value=row$recFrom, displayValue=row$catLabel, property=property))
+  if(grepl(":", var_details_row$recFrom, fixed=TRUE)) {
+    data_field <- attach_missing_value_nodes(var_details_row, data_field)
+  } else if (suppressWarnings(!is.na(as.numeric(var_details_row$recFrom)))) {
+    value_node <- XML::xmlNode("Value", attrs=c(value=var_details_row$recFrom, displayValue=var_details_row$catLabel, property=property))
     data_field <- XML::append.xmlNode(data_field, value_node)
   }
 
@@ -138,21 +138,21 @@ attach_cat_value_nodes_for_start_var <- function(row, data_field) {
 
 #' Attach continuous Value nodes.
 #'
-#' @param row Variable details sheet row.
+#' @param var_details_row Variable details sheet row.
 #' @param data_field DataField node to attach Value nodes.
 #'
 #' @return Updated DataField node.
 #'
 #' @examples
-attach_cont_value_nodes_for_start_var <- function(row, data_field) {
-  if (row$recTo == pkg.env$rec_to_copy) {
-    margins <- trimws(strsplit(row$recFrom, ":")[[1]])
+attach_cont_value_nodes_for_start_var <- function(var_details_row, data_field) {
+  if (var_details_row$recTo == pkg.env$rec_to_copy) {
+    margins <- trimws(strsplit(var_details_row$recFrom, ":")[[1]])
     interval_node <- XML::xmlNode("Interval", attrs=c(closure="closedClosed", leftMargin=margins[1], rightMargin=margins[2]))
     data_field <- XML::append.xmlNode(data_field, interval_node)
-  } else if(grepl(":", row$recFrom, fixed=TRUE)) {
-    data_field <- attach_missing_value_nodes(row, data_field)
+  } else if(grepl(":", var_details_row$recFrom, fixed=TRUE)) {
+    data_field <- attach_missing_value_nodes(var_details_row, data_field)
   } else {
-    data_field <- attach_cat_value_nodes_for_start_var(row, data_field)
+    data_field <- attach_cat_value_nodes_for_start_var(var_details_row, data_field)
   }
 
   return (data_field)
@@ -160,15 +160,15 @@ attach_cont_value_nodes_for_start_var <- function(row, data_field) {
 
 #' Attach Value nodes to DataField node. Used when `recFrom` has a range of missing values.
 #'
-#' @param row Variable details sheet row.
+#' @param var_details_row Variable details sheet row.
 #' @param data_field DataField node to attach Value nodes.
 #'
 #' @return Updated DataField node.
 #'
 #' @examples
-attach_missing_value_nodes <- function(row, data_field) {
-  range <- eval(parse(text=row$recFrom))
-  cat_start_labels <- trimws(strsplit(row$catStartLabel, ";")[[1]])
+attach_missing_value_nodes <- function(var_details_row, data_field) {
+  range <- eval(parse(text=var_details_row$recFrom))
+  cat_start_labels <- trimws(strsplit(var_details_row$catStartLabel, ";")[[1]])
 
   for (index in range) {
     label <- cat_start_labels[index - range[1] + 1]
@@ -201,7 +201,7 @@ build_trans_dict <- function(vars_sheet, var_details_sheet, vars_to_convert, db_
 
 #' Build DerivedField node.
 #'
-#' @param vars_sheet Variable sheet data frame.
+#' @param vars_sheet Variables sheet data frame.
 #' @param var_details_sheet Variable details sheet data frame.
 #' @param vars_to_convert Vector of variable names to convert.
 #' @param db_name Database name.
