@@ -23,12 +23,13 @@ xflow_to_pmml <- function(var_details_sheet, vars_sheet, db_name, vars_to_conver
   for (var_to_convert in vars_to_convert) {
     indices <- which(var_details_sheet$variable == var_to_convert, arr.ind = TRUE)
     var_details_rows <- var_details_sheet[indices,]
-    var_start_name <- get_start_var_name(var_details_rows, db_name)
+    first_var_details_row <- var_details_rows[1,]
+    var_start_name <- get_start_var_name(first_var_details_row, db_name)
 
     if (var_start_name == '') {
       print(paste("Can't find start variable for", var_to_convert))
     } else {
-      data_field <- build_data_field_for_start_var(var_start_name, var_details_rows)
+      data_field <- build_data_field_for_start_var(var_start_name, first_var_details_row)
 
       if (is.null(data_field)) {
         print(paste("Unable to determine fromType for", var_to_convert))
@@ -46,15 +47,13 @@ xflow_to_pmml <- function(var_details_sheet, vars_sheet, db_name, vars_to_conver
 
 #' Get variable name from variableStart using database name.
 #'
-#' @param var_details_rows Named vector as variable details sheet row.
+#' @param var_details_row A variable details row.
 #' @param db_name Name of database to extract from.
 #'
 #' @return Variable name according to database name.
 #'
 #' @examples
-get_start_var_name <- function(var_details_rows, db_name) {
-  var_details_row = var_details_rows[1,]
-
+get_start_var_name <- function(var_details_row, db_name) {
   # Create regex using database name, database variable start infix, followed by variable start
   var_regex <- paste0(db_name, pkg.env$db_var_start_infix, "(.+?)[,?]")
 
@@ -68,13 +67,12 @@ get_start_var_name <- function(var_details_rows, db_name) {
 #' Build DataField node for start variable.
 #'
 #' @param var_name Variable name.
-#' @param var_details_rows Variable details rows for `var_name` variable.
+#' @param var_details_row A variable details row for the `var_name` variable.
 #'
 #' @return DataField node with optype and dataType according to `fromType`.
 #'
 #' @examples
-build_data_field_for_start_var <- function(var_name, var_details_rows) {
-  var_details_row <- var_details_rows[1,]
+build_data_field_for_start_var <- function(var_name, var_details_row) {
   if (var_details_row$fromType == pkg.env$var_details_cat) {
     optype <- "categorical"
     data_type <- "integer"
