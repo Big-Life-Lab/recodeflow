@@ -209,12 +209,12 @@ build_trans_dict <- function(vars_sheet, var_details_sheet, vars_to_convert, db_
 #' @examples
 build_derived_field_node <- function(vars_sheet, var_details_sheet, var_to_convert, db_name) {
   indices <- which(vars_sheet$variable == var_to_convert, arr.ind = TRUE)
-  row <- vars_sheet[indices[1],]
-  data_type <- ifelse(row$variableType == pkg.env$var_cat, "integer", "float")
+  var_row <- vars_sheet[indices[1],]
+  data_type <- ifelse(var_row$variableType == pkg.env$var_cat, "integer", "float")
 
-  derived_field_node <- XML::xmlNode("DerivedField", attrs=c(name=var_to_convert, displayName=row$label, optype=tolower(row$variableType), dataType=data_type))
-  label_long_node <- XML::xmlNode("Extension", attrs=c(name="labelLong", value=row$labelLong))
-  units_node <- XML::xmlNode("Extension", attrs=c(name="units", value=row$units))
+  derived_field_node <- XML::xmlNode("DerivedField", attrs=c(name=var_to_convert, displayName=var_row$label, optype=tolower(var_row$variableType), dataType=data_type))
+  label_long_node <- XML::xmlNode("Extension", attrs=c(name="labelLong", value=var_row$labelLong))
+  units_node <- XML::xmlNode("Extension", attrs=c(name="units", value=var_row$units))
   derived_field_node <- XML::append.xmlNode(derived_field_node, label_long_node, units_node)
   derived_field_node <- attach_derived_field_nodes(derived_field_node, var_details_sheet, var_to_convert, db_name)
 
@@ -253,7 +253,7 @@ attach_derived_field_nodes <- function(derived_field_node, var_details_sheet, va
 
 #' Attach Apply nodes to a parent node.
 #'
-#' @param var_details_rows Variable details rows associated with current variable.
+#' @param var_details_rows Variable details rows associated with a variable.
 #' @param parent_node An XML node.
 #' @param db_name Database name.
 #'
@@ -261,24 +261,24 @@ attach_derived_field_nodes <- function(derived_field_node, var_details_sheet, va
 #'
 #' @examples
 attach_apply_nodes <- function(var_details_rows, parent_node, db_name) {
-  details_row <- var_details_rows[1,]
+  var_details_row <- var_details_rows[1,]
   remaining_rows <- var_details_rows[-1,]
   if (nrow(remaining_rows) == 0) return (parent_node)
 
-  if (suppressWarnings(!is.na(as.numeric(details_row$recFrom)))) {
-    if (details_row$recTo %in% c(pkg.env$NA_invalid, pkg.env$NA_missing)) const_val_node <- XML::xmlNode("Constant", attrs=c(missing="true"))
-    else const_val_node <- XML::xmlNode("Constant", attrs=c(missing="true"), value=details_row$recFrom)
+  if (suppressWarnings(!is.na(as.numeric(var_details_row$recFrom)))) {
+    if (var_details_row$recTo %in% c(pkg.env$NA_invalid, pkg.env$NA_missing)) const_val_node <- XML::xmlNode("Constant", attrs=c(missing="true"))
+    else const_val_node <- XML::xmlNode("Constant", attrs=c(missing="true"), value=var_details_row$recFrom)
 
     if_node <- XML::xmlNode("Apply", attrs=c("function"="if"),
                             XML::xmlNode("Apply", attrs=c("function"="equals"),
-                                         XML::xmlNode("FieldRef", attrs=c(field=get_start_var_name(details_row, db_name))),
-                                         XML::xmlNode("Constant", attrs=c(dataType="integer"), value=details_row$recFrom)),
+                                         XML::xmlNode("FieldRef", attrs=c(field=get_start_var_name(var_details_row, db_name))),
+                                         XML::xmlNode("Constant", attrs=c(dataType="integer"), value=var_details_row$recFrom)),
                        const_val_node)
 
     return (XML::append.xmlNode(parent_node, attach_apply_nodes(remaining_rows, if_node, db_name)))
-  } else if (grepl(":", details_row$recFrom, fixed=TRUE)) {
-    margins <- trimws(strsplit(details_row$recFrom, ":")[[1]])
-    field_node <- XML::xmlNode("FieldRef", attrs=c(field=get_start_var_name(details_row, db_name)))
+  } else if (grepl(":", var_details_row$recFrom, fixed=TRUE)) {
+    margins <- trimws(strsplit(var_details_row$recFrom, ":")[[1]])
+    field_node <- XML::xmlNode("FieldRef", attrs=c(field=get_start_var_name(var_details_row, db_name)))
     const_node_gt <- XML::xmlNode("Constant", attrs=c(dataType="integer"), value=margins[1])
     const_node_lt <- XML::xmlNode("Constant", attrs=c(dataType="integer"), value=margins[2])
 
