@@ -75,18 +75,31 @@ get_start_var_name <- function(var_details_row, db_name) {
 build_data_field_for_start_var <- function(var_name, var_details_row) {
   if (var_details_row$fromType == pkg.env$var_details_cat) {
     optype <- "categorical"
-    data_type <- "integer"
   } else if(var_details_row$fromType == pkg.env$var_details_cont) {
     optype <- "continuous"
-    data_type <- "float"
   } else {
     return (NULL);
   }
+
+  data_type <- get_variable_type_data_type(var_details_row$fromType)
 
   return (XML::xmlNode("DataField", attrs=c(name=var_name,
                                        displayName=var_details_row$variableStartShortLabel,
                                        optype=optype,
                                        dataType=data_type)))
+}
+
+
+#' Get data type for variable type.
+#'
+#' @param var_type Variable type
+#'
+#' @return `var_type` data type.
+#'
+#' @examples
+get_variable_type_data_type <- function (var_type) {
+  is_categorical <- var_type %in% c(pkg.env$var_details_cat, pkg.env$var_cat)
+  return (ifelse(is_categorical, 'integer', 'float'))
 }
 
 #' Add DataField child nodes.
@@ -210,7 +223,7 @@ build_trans_dict <- function(vars_sheet, var_details_sheet, vars_to_convert, db_
 build_derived_field_node <- function(vars_sheet, var_details_sheet, var_to_convert, db_name) {
   indices <- which(vars_sheet$variable == var_to_convert, arr.ind = TRUE)
   var_row <- vars_sheet[indices[1],]
-  data_type <- ifelse(var_row$variableType == pkg.env$var_cat, "integer", "float")
+  data_type <- get_variable_type_data_type(var_row$variableType)
 
   derived_field_node <- XML::xmlNode("DerivedField", attrs=c(name=var_to_convert, displayName=var_row$label, optype=tolower(var_row$variableType), dataType=data_type))
   label_long_node <- XML::xmlNode("Extension", attrs=c(name="labelLong", value=var_row$labelLong))
