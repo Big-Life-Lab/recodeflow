@@ -17,6 +17,7 @@
 xflow_to_pmml <- function(var_details_sheet, vars_sheet, db_name, vars_to_convert = NULL) {
   doc <- XML::xmlNode("PMML", attrs=c(xmlns="http://www.dmg.org/PMML-4_4", version="4.4"))
   dict <- XML::xmlNode("DataDictionary")
+  recognized_vars_to_convert <- c(character(0))
 
   if (is.null(vars_to_convert)) vars_to_convert <- vars_sheet$variable
 
@@ -25,9 +26,10 @@ xflow_to_pmml <- function(var_details_sheet, vars_sheet, db_name, vars_to_conver
     first_var_details_row <- var_details_rows[1,]
     var_start_name <- get_start_var_name(first_var_details_row, db_name)
 
-    if (var_start_name == '') {
+    if (is.na(var_start_name)) {
       print(paste("Can't find start variable for", var_to_convert))
     } else {
+      recognized_vars_to_convert <- c(recognized_vars_to_convert, var_to_convert)
       data_field <- build_data_field_for_start_var(var_start_name, var_details_rows)
 
       if (is.null(data_field)) {
@@ -39,9 +41,17 @@ xflow_to_pmml <- function(var_details_sheet, vars_sheet, db_name, vars_to_conver
     }
   }
 
-  XML::xmlAttrs(dict) <- c(numberOfFields=XML::xmlSize(dict))
-  trans_dict <- build_trans_dict(vars_sheet, var_details_sheet, vars_to_convert, db_name)
-  return (XML::append.xmlNode(doc, dict, trans_dict))
+  number_of_fields <- XML::xmlSize(dict)
+  XML::xmlAttrs(dict) <- c(numberOfFields=number_of_fields)
+
+  if (number_of_fields == 0) {
+    print('Unable to recognize any requested variables.')
+  } else {
+    trans_dict <- build_trans_dict(vars_sheet, var_details_sheet, recognized_vars_to_convert, db_name)
+    doc <- XML::append.xmlNode(doc, dict, trans_dict)
+  }
+
+  return (doc)
 }
 
 #' Get all variable details rows for a variable.
@@ -91,7 +101,7 @@ build_data_field_for_start_var <- function(var_name, var_details_rows) {
   } else if(first_var_details_row$fromType == pkg.env$var_details_cont) {
     optype <- "continuous"
   } else {
-    return (NULL);
+    return (NULL)
   }
 
   data_type <- get_variable_type_data_type(var_details_rows, first_var_details_row$fromType)
@@ -335,3 +345,4 @@ attach_apply_nodes <- function(var_details_rows, parent_node, db_name) {
     return (XML::append.xmlNode(parent_node, XML::xmlNode("Constant", attrs=c(missing="true"))))
   }
 }
+
