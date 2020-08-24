@@ -202,7 +202,10 @@ attach_range_value_nodes <- function(var_details_row, data_field) {
 
   for (index in range) {
     label <- cat_start_labels[index - range[1] + 1]
-    value_node <- XML::xmlNode("Value", attrs=c(value=index, displayValue=label, property="missing"))
+    is_missing <- var_details_row$recTo %in% pkg.env$all_NAs
+    property <- ifelse(is_missing, pkg.env$missing, var_details_row$recTo)
+
+    value_node <- XML::xmlNode("Value", attrs=c(value=index, displayValue=label, property=property))
     data_field <- XML::append.xmlNode(data_field, value_node)
   }
 
