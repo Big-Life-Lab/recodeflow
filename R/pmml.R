@@ -21,15 +21,14 @@ xflow_to_pmml <- function(var_details_sheet, vars_sheet, db_name, vars_to_conver
   if (is.null(vars_to_convert)) vars_to_convert <- vars_sheet$variable
 
   for (var_to_convert in vars_to_convert) {
-    indices <- which(var_details_sheet$variable == var_to_convert, arr.ind = TRUE)
-    var_details_rows <- var_details_sheet[indices,]
+    var_details_rows <- get_var_details_rows(var_details_sheet, var_to_convert)
     first_var_details_row <- var_details_rows[1,]
     var_start_name <- get_start_var_name(first_var_details_row, db_name)
 
     if (var_start_name == '') {
       print(paste("Can't find start variable for", var_to_convert))
     } else {
-      data_field <- build_data_field_for_start_var(var_start_name, first_var_details_row)
+      data_field <- build_data_field_for_start_var(var_start_name, var_details_rows)
 
       if (is.null(data_field)) {
         print(paste("Unable to determine fromType for", var_to_convert))
@@ -43,6 +42,19 @@ xflow_to_pmml <- function(var_details_sheet, vars_sheet, db_name, vars_to_conver
   XML::xmlAttrs(dict) <- c(numberOfFields=XML::xmlSize(dict))
   trans_dict <- build_trans_dict(vars_sheet, var_details_sheet, vars_to_convert, db_name)
   return (XML::append.xmlNode(doc, dict, trans_dict))
+}
+
+#' Get all variable details rows for a variable.
+#'
+#' @param var_details_sheet A data frame representing a variable details sheet.
+#' @param var_name Variable name.
+#'
+#' @return All variable details rows for the variable.
+#'
+#' @examples
+get_var_details_rows <- function (var_details_sheet, var_name) {
+  indices <- which(var_details_sheet$variable == var_name, arr.ind = TRUE)
+  return (var_details_sheet[indices,])
 }
 
 #' Get variable name from variableStart using database name.
@@ -67,24 +79,25 @@ get_start_var_name <- function(var_details_row, db_name) {
 #' Build DataField node for start variable.
 #'
 #' @param var_name Variable name.
-#' @param var_details_row A variable details row for the `var_name` variable.
+#' @param var_details_rows All variable details rows for the `var_name` variable.
 #'
 #' @return DataField node with optype and dataType according to `fromType`.
 #'
 #' @examples
-build_data_field_for_start_var <- function(var_name, var_details_row) {
-  if (var_details_row$fromType == pkg.env$var_details_cat) {
+build_data_field_for_start_var <- function(var_name, var_details_rows) {
+  first_var_details_row <- var_details_rows[1,]
+  if (first_var_details_row$fromType == pkg.env$var_details_cat) {
     optype <- "categorical"
-  } else if(var_details_row$fromType == pkg.env$var_details_cont) {
+  } else if(first_var_details_row$fromType == pkg.env$var_details_cont) {
     optype <- "continuous"
   } else {
     return (NULL);
   }
 
-  data_type <- get_variable_type_data_type(var_details_row$fromType)
+  data_type <- get_variable_type_data_type(var_details_rows, first_var_details_row$fromType)
 
   return (XML::xmlNode("DataField", attrs=c(name=var_name,
-                                       displayName=var_details_row$variableStartShortLabel,
+                                       displayName=first_var_details_row$variableStartShortLabel,
                                        optype=optype,
                                        dataType=data_type)))
 }
@@ -92,14 +105,20 @@ build_data_field_for_start_var <- function(var_name, var_details_row) {
 
 #' Get data type for variable type.
 #'
+#' @param var_details_rows All variable details rows for the `var_name` variable.
 #' @param var_type Variable type
 #'
 #' @return `var_type` data type.
 #'
 #' @examples
-get_variable_type_data_type <- function (var_type) {
+get_variable_type_data_type <- function (var_details_rows, var_type) {
   is_categorical <- var_type %in% c(pkg.env$var_details_cat, pkg.env$var_cat)
-  return (ifelse(is_categorical, 'integer', 'float'))
+  if (is_categorical) {
+    char_var_details_rows <- var_details_rows[suppressWarnings(!is.na(as.numeric(var_details_rows$recTo)))]
+    if (length(char_var_details_rows) > 0) return ('string')
+    return ('float')
+  }
+  return ('integer')
 }
 
 #' Add DataField child nodes.
@@ -138,7 +157,7 @@ attach_cat_value_nodes_for_start_var <- function(var_details_row, data_field) {
   else property <- "valid"
 
   if(grepl(":", var_details_row$recFrom, fixed=TRUE)) {
-    data_field <- attach_missing_value_nodes(var_details_row, data_field)
+    data_field <- attach_range_value_nodes(var_details_row, data_field)
   } else if (suppressWarnings(!is.na(as.numeric(var_details_row$recFrom)))) {
     value_node <- XML::xmlNode("Value", attrs=c(value=var_details_row$recFrom, displayValue=var_details_row$catLabel, property=property))
     data_field <- XML::append.xmlNode(data_field, value_node)
@@ -161,7 +180,7 @@ attach_cont_value_nodes_for_start_var <- function(var_details_row, data_field) {
     interval_node <- XML::xmlNode("Interval", attrs=c(closure="closedClosed", leftMargin=margins[1], rightMargin=margins[2]))
     data_field <- XML::append.xmlNode(data_field, interval_node)
   } else if(grepl(":", var_details_row$recFrom, fixed=TRUE)) {
-    data_field <- attach_missing_value_nodes(var_details_row, data_field)
+    data_field <- attach_range_value_nodes(var_details_row, data_field)
   } else {
     data_field <- attach_cat_value_nodes_for_start_var(var_details_row, data_field)
   }
@@ -169,7 +188,7 @@ attach_cont_value_nodes_for_start_var <- function(var_details_row, data_field) {
   return (data_field)
 }
 
-#' Attach Value nodes to DataField node. Used when `recFrom` has a range of missing values.
+#' Attach Value nodes to DataField node. Used when `recFrom` has a value range.
 #'
 #' @param var_details_row Variable details sheet row.
 #' @param data_field DataField node to attach Value nodes.
@@ -177,7 +196,7 @@ attach_cont_value_nodes_for_start_var <- function(var_details_row, data_field) {
 #' @return Updated DataField node.
 #'
 #' @examples
-attach_missing_value_nodes <- function(var_details_row, data_field) {
+attach_range_value_nodes <- function(var_details_row, data_field) {
   range <- eval(parse(text=var_details_row$recFrom))
   cat_start_labels <- trimws(strsplit(var_details_row$catStartLabel, ";")[[1]])
 
@@ -194,17 +213,17 @@ attach_missing_value_nodes <- function(var_details_row, data_field) {
 #'
 #' @param vars_sheet Variable sheet data frame.
 #' @param var_details_sheet Variable details sheet data frame.
-#' @param vars_to_convert Vector of variable names to convert.
+#' @param var_names Vector of variable names.
 #' @param db_name Database name.
 #'
 #' @return TransformationDictionary node.
 #'
 #' @examples
-build_trans_dict <- function(vars_sheet, var_details_sheet, vars_to_convert, db_name) {
+build_trans_dict <- function(vars_sheet, var_details_sheet, var_names, db_name) {
   trans_dict <- XML::xmlNode("TransformationDictionary")
 
-  for (var_to_convert in vars_to_convert) {
-    trans_dict <- XML::append.xmlNode(trans_dict, build_derived_field_node(vars_sheet, var_details_sheet, var_to_convert, db_name))
+  for (var_name in var_names) {
+    trans_dict <- XML::append.xmlNode(trans_dict, build_derived_field_node(vars_sheet, var_details_sheet, var_name, db_name))
   }
 
   return (trans_dict)
@@ -214,22 +233,23 @@ build_trans_dict <- function(vars_sheet, var_details_sheet, vars_to_convert, db_
 #'
 #' @param vars_sheet Variables sheet data frame.
 #' @param var_details_sheet Variable details sheet data frame.
-#' @param vars_to_convert Vector of variable names to convert.
+#' @param var_name Variable name.
 #' @param db_name Database name.
 #'
 #' @return DerivedField node.
 #'
 #' @examples
-build_derived_field_node <- function(vars_sheet, var_details_sheet, var_to_convert, db_name) {
-  indices <- which(vars_sheet$variable == var_to_convert, arr.ind = TRUE)
+build_derived_field_node <- function(vars_sheet, var_details_sheet, var_name, db_name) {
+  indices <- which(vars_sheet$variable == var_name, arr.ind = TRUE)
   var_row <- vars_sheet[indices[1],]
-  data_type <- get_variable_type_data_type(var_row$variableType)
+  var_details_rows <- get_var_details_rows(var_details_sheet, var_name)
+  data_type <- get_variable_type_data_type(var_details_rows, var_row$variableType)
 
-  derived_field_node <- XML::xmlNode("DerivedField", attrs=c(name=var_to_convert, displayName=var_row$label, optype=tolower(var_row$variableType), dataType=data_type))
+  derived_field_node <- XML::xmlNode("DerivedField", attrs=c(name=var_name, displayName=var_row$label, optype=tolower(var_row$variableType), dataType=data_type))
   label_long_node <- XML::xmlNode("Extension", attrs=c(name="labelLong", value=var_row$labelLong))
   units_node <- XML::xmlNode("Extension", attrs=c(name="units", value=var_row$units))
   derived_field_node <- XML::append.xmlNode(derived_field_node, label_long_node, units_node)
-  derived_field_node <- attach_derived_field_nodes(derived_field_node, var_details_sheet, var_to_convert, db_name)
+  derived_field_node <- attach_derived_field_nodes(derived_field_node, var_details_sheet, var_name, db_name)
 
   return (derived_field_node)
 }
@@ -238,15 +258,14 @@ build_derived_field_node <- function(vars_sheet, var_details_sheet, var_to_conve
 #'
 #' @param derived_field_node DerivedField node to attach child nodes.
 #' @param var_details_sheet Variable details sheet data frame.
-#' @param vars_to_convert Vector of variable names to convert.
+#' @param var_name Variable name.
 #' @param db_name Database name.
 #'
 #' @return Updated DerivedField node.
 #'
 #' @examples
-attach_derived_field_nodes <- function(derived_field_node, var_details_sheet, var_to_convert, db_name) {
-  indices <- which(var_details_sheet$variable == var_to_convert, arr.ind = TRUE)
-  var_details_rows <- var_details_sheet[indices,]
+attach_derived_field_nodes <- function(derived_field_node, var_details_sheet, var_name, db_name) {
+  var_details_rows <- get_var_details_rows(var_details_sheet, var_name)
 
   derived_field_node <- attach_apply_nodes(var_details_rows, derived_field_node, db_name)
 
