@@ -22,19 +22,19 @@ xflow_to_pmml <- function(var_details_sheet, vars_sheet, db_name, vars_to_conver
   if (is.null(vars_to_convert)) vars_to_convert <- vars_sheet$variable
 
   for (var_to_convert in vars_to_convert) {
-    var_details_rows <- get_var_details_rows(var_details_sheet, var_to_convert)
+    var_details_rows <- get_var_details_rows(var_details_sheet, var_to_convert, db_name)
     first_var_details_row <- var_details_rows[1,]
     var_start_name <- get_start_var_name(first_var_details_row, db_name)
 
     if (is.na(var_start_name)) {
-      print(paste("Can't find start variable for", var_to_convert))
+      print(paste("Unable to find start variable for", var_to_convert))
     } else {
-      recognized_vars_to_convert <- c(recognized_vars_to_convert, var_to_convert)
       data_field <- build_data_field_for_start_var(var_start_name, var_details_rows)
 
       if (is.null(data_field)) {
         print(paste("Unable to determine fromType for", var_to_convert))
       } else {
+        recognized_vars_to_convert <- c(recognized_vars_to_convert, var_to_convert)
         data_field <- add_data_field_children_for_start_var(data_field, var_details_rows)
         dict <- XML::append.xmlNode(dict, data_field)
       }
@@ -45,7 +45,7 @@ xflow_to_pmml <- function(var_details_sheet, vars_sheet, db_name, vars_to_conver
   XML::xmlAttrs(dict) <- c(numberOfFields=number_of_fields)
 
   if (number_of_fields == 0) {
-    print('Unable to recognize any requested variables.')
+    print("Unable to recognize any requested variables.")
   } else {
     trans_dict <- build_trans_dict(vars_sheet, var_details_sheet, recognized_vars_to_convert, db_name)
     doc <- XML::append.xmlNode(doc, dict, trans_dict)
@@ -62,9 +62,11 @@ xflow_to_pmml <- function(var_details_sheet, vars_sheet, db_name, vars_to_conver
 #' @return All variable details rows for the variable.
 #'
 #' @examples
-get_var_details_rows <- function (var_details_sheet, var_name) {
-  indices <- which(var_details_sheet$variable == var_name, arr.ind = TRUE)
-  return (var_details_sheet[indices,])
+get_var_details_rows <- function (var_details_sheet, var_name, db_name) {
+  var_name_indices <- which(var_details_sheet$variable == var_name, arr.ind = TRUE)
+  db_indices <- which(grepl(db_name, var_details_sheet$databaseStart), arr.ind = TRUE)
+  intersect_indices <- intersect(var_name_indices, db_indices)
+  return (var_details_sheet[intersect_indices,])
 }
 
 #' Get variable name from variableStart using database name.
@@ -125,10 +127,10 @@ get_variable_type_data_type <- function (var_details_rows, var_type) {
   is_categorical <- var_type %in% c(pkg.env$var_details_cat, pkg.env$var_cat)
   if (is_categorical) {
     char_var_details_rows <- var_details_rows[suppressWarnings(!is.na(as.numeric(var_details_rows$recTo)))]
-    if (length(char_var_details_rows) > 0) return ('string')
-    return ('float')
+    if (length(char_var_details_rows) > 0) return ("string")
+    return ("float")
   }
-  return ('integer')
+  return ("integer")
 }
 
 #' Add DataField child nodes.
@@ -255,7 +257,7 @@ build_trans_dict <- function(vars_sheet, var_details_sheet, var_names, db_name) 
 build_derived_field_node <- function(vars_sheet, var_details_sheet, var_name, db_name) {
   indices <- which(vars_sheet$variable == var_name, arr.ind = TRUE)
   var_row <- vars_sheet[indices[1],]
-  var_details_rows <- get_var_details_rows(var_details_sheet, var_name)
+  var_details_rows <- get_var_details_rows(var_details_sheet, var_name, db_name)
   data_type <- get_variable_type_data_type(var_details_rows, var_row$variableType)
 
   derived_field_node <- XML::xmlNode("DerivedField", attrs=c(name=var_name, displayName=var_row$label, optype=tolower(var_row$variableType), dataType=data_type))
@@ -278,7 +280,7 @@ build_derived_field_node <- function(vars_sheet, var_details_sheet, var_name, db
 #'
 #' @examples
 attach_derived_field_nodes <- function(derived_field_node, var_details_sheet, var_name, db_name) {
-  var_details_rows <- get_var_details_rows(var_details_sheet, var_name)
+  var_details_rows <- get_var_details_rows(var_details_sheet, var_name, db_name)
 
   derived_field_node <- attach_apply_nodes(var_details_rows, derived_field_node, db_name)
 
