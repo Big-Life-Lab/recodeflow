@@ -27,7 +27,7 @@ xflow_to_pmml <- function(var_details_sheet, vars_sheet, db_name, vars_to_conver
     var_start_name <- get_start_var_name(first_var_details_row, db_name)
 
     if (is.na(var_start_name)) {
-      print(paste("Unable to find start variable for", var_to_convert))
+      print(paste("Unable to find start variable for", var_to_convert, 'for database', db_name))
     } else {
       data_field <- build_data_field_for_start_var(var_start_name, var_details_rows)
 
@@ -58,6 +58,7 @@ xflow_to_pmml <- function(var_details_sheet, vars_sheet, db_name, vars_to_conver
 #'
 #' @param var_details_sheet A data frame representing a variable details sheet.
 #' @param var_name Variable name.
+#' @param db_name Database name.
 #'
 #' @return All variable details rows for the variable.
 #'
@@ -74,7 +75,7 @@ get_var_details_rows <- function (var_details_sheet, var_name, db_name) {
 #' @param var_details_row A variable details row.
 #' @param db_name Name of database to extract from.
 #'
-#' @return Variable name according to database name.
+#' @return character The name of the start variable.
 #'
 #' @examples
 get_start_var_name <- function(var_details_row, db_name) {
@@ -103,7 +104,7 @@ build_data_field_for_start_var <- function(var_name, var_details_rows) {
   } else if(first_var_details_row$fromType == pkg.env$var_details_cont) {
     optype <- "continuous"
   } else {
-    return (NULL)
+    stop(paste("Unable to determine optype for"), var_name)
   }
 
   data_type <- get_variable_type_data_type(var_details_rows, first_var_details_row$fromType)
@@ -126,7 +127,7 @@ build_data_field_for_start_var <- function(var_name, var_details_rows) {
 get_variable_type_data_type <- function (var_details_rows, var_type) {
   is_categorical <- var_type %in% c(pkg.env$var_details_cat, pkg.env$var_cat)
   if (is_categorical) {
-    char_var_details_rows <- var_details_rows[suppressWarnings(!is.na(as.numeric(var_details_rows$recTo)))]
+    char_var_details_rows <- var_details_rows[is_numeric(var_details_rows$recTo)]
     if (length(char_var_details_rows) > 0) return ("string")
     return ("float")
   }
@@ -170,12 +171,23 @@ attach_cat_value_nodes_for_start_var <- function(var_details_row, data_field) {
 
   if(grepl(":", var_details_row$recFrom, fixed=TRUE)) {
     data_field <- attach_range_value_nodes(var_details_row, data_field)
-  } else if (suppressWarnings(!is.na(as.numeric(var_details_row$recFrom)))) {
+  } else if (is_numeric(var_details_row$recFrom)) {
     value_node <- XML::xmlNode("Value", attrs=c(value=var_details_row$recFrom, displayValue=var_details_row$catLabel, property=property))
     data_field <- XML::append.xmlNode(data_field, value_node)
   }
 
   return (data_field)
+}
+
+#' Check if a character object can be converted to a number.
+#'
+#' @param chars Character object.
+#'
+#' @return Whether `chars` can be converted to a numeric value.
+#'
+#' @examples
+is_numeric <- function(chars) {
+  return (suppressWarnings(!is.na(as.numeric(chars))))
 }
 
 #' Attach continuous Value nodes.
@@ -285,11 +297,11 @@ attach_derived_field_nodes <- function(derived_field_node, var_details_sheet, va
   derived_field_node <- attach_apply_nodes(var_details_rows, derived_field_node, db_name)
 
   for (index in 1:nrow(var_details_rows)) {
-    details_row <- var_details_rows[index,]
+    var_details_row <- var_details_rows[index,]
 
-    if (suppressWarnings(!is.na(as.numeric(details_row$recTo)))) {
-      value_node <- XML::xmlNode("Value", attrs=c(value=details_row$recTo, displayValue=details_row$catLabel))
-      extension_node <- XML::xmlNode("Extension", attrs=c(name="catLabelLong", value=details_row$catLabelLong))
+    if (is_numeric(var_details_row$recTo)) {
+      value_node <- XML::xmlNode("Value", attrs=c(value=var_details_row$recTo, displayValue=var_details_row$catLabel))
+      extension_node <- XML::xmlNode("Extension", attrs=c(name="catLabelLong", value=var_details_row$catLabelLong))
       value_node <- XML::append.xmlNode(value_node, extension_node)
       derived_field_node <- XML::append.xmlNode(derived_field_node, value_node)
     }
@@ -312,20 +324,20 @@ attach_apply_nodes <- function(var_details_rows, parent_node, db_name) {
   remaining_rows <- var_details_rows[-1,]
   if (nrow(remaining_rows) == 0) return (parent_node)
 
-  if (suppressWarnings(!is.na(as.numeric(var_details_row$recFrom)))) {
+  if (is_numeric(var_details_row$recFrom)) {
     if (var_details_row$recTo %in% c(pkg.env$NA_invalid, pkg.env$NA_missing)) const_val_node <- XML::xmlNode("Constant", attrs=c(missing="true"))
     else const_val_node <- XML::xmlNode("Constant", attrs=c(missing="true"), value=var_details_row$recFrom)
 
     if_node <- XML::xmlNode("Apply", attrs=c("function"="if"),
                             XML::xmlNode("Apply", attrs=c("function"="equals"),
-                                         XML::xmlNode("FieldRef", attrs=c(field=get_start_var_name(var_details_row, db_name))),
+                                         build_variable_field_ref_node(var_details_row, db_name),
                                          XML::xmlNode("Constant", attrs=c(dataType="integer"), value=var_details_row$recFrom)),
                        const_val_node)
 
     return (XML::append.xmlNode(parent_node, attach_apply_nodes(remaining_rows, if_node, db_name)))
   } else if (grepl(":", var_details_row$recFrom, fixed=TRUE)) {
     margins <- trimws(strsplit(var_details_row$recFrom, ":")[[1]])
-    field_node <- XML::xmlNode("FieldRef", attrs=c(field=get_start_var_name(var_details_row, db_name)))
+    field_node <- build_variable_field_ref_node(var_details_row, db_name)
     const_node_gt <- XML::xmlNode("Constant", attrs=c(dataType="integer"), value=margins[1])
     const_node_lt <- XML::xmlNode("Constant", attrs=c(dataType="integer"), value=margins[2])
 
@@ -348,3 +360,14 @@ attach_apply_nodes <- function(var_details_rows, parent_node, db_name) {
   }
 }
 
+#' Build FieldRef node for variable.
+#'
+#' @param var_details_row Variable details sheet row.
+#' @param db_name Database name.
+#'
+#' @return FieldRef node.
+#'
+#' @examples
+build_variable_field_ref_node <- function (var_details_row, db_name) {
+  return (XML::xmlNode(paste0("FieldRef=\"", get_start_var_name(var_details_row, db_name), "\"")))
+}
