@@ -224,12 +224,11 @@ attach_range_value_nodes <- function(var_details_row, data_field) {
   range <- eval(parse(text=var_details_row$recFrom))
   cat_start_labels <- trimws(strsplit(var_details_row$catStartLabel, ";")[[1]])
 
-  for (index in range) {
-    label <- cat_start_labels[index - range[1] + 1]
+  for (index in 1:length(range)) {
     is_missing <- var_details_row$recTo %in% pkg.env$all_NAs
     property <- ifelse(is_missing, pkg.env$missing, var_details_row$recTo)
 
-    value_node <- XML::xmlNode("Value", attrs=c(value=index, displayValue=label, property=property))
+    value_node <- XML::xmlNode("Value", attrs=c(value=range[index], displayValue=cat_start_labels[index], property=property))
     data_field <- XML::append.xmlNode(data_field, value_node)
   }
 
@@ -267,8 +266,7 @@ build_trans_dict <- function(vars_sheet, var_details_sheet, var_names, db_name) 
 #'
 #' @examples
 build_derived_field_node <- function(vars_sheet, var_details_sheet, var_name, db_name) {
-  indices <- which(vars_sheet$variable == var_name, arr.ind = TRUE)
-  var_row <- vars_sheet[indices[1],]
+  var_row <- vars_sheet[which(vars_sheet$variable == var_name, arr.ind = TRUE)[1],]
   var_details_rows <- get_var_details_rows(var_details_sheet, var_name, db_name)
   data_type <- get_variable_type_data_type(var_details_rows, var_row$variableType)
 
@@ -276,7 +274,7 @@ build_derived_field_node <- function(vars_sheet, var_details_sheet, var_name, db
   label_long_node <- XML::xmlNode("Extension", attrs=c(name="labelLong", value=var_row$labelLong))
   units_node <- XML::xmlNode("Extension", attrs=c(name="units", value=var_row$units))
   derived_field_node <- XML::append.xmlNode(derived_field_node, label_long_node, units_node)
-  derived_field_node <- attach_derived_field_nodes(derived_field_node, var_details_sheet, var_name, db_name)
+  derived_field_node <- attach_derived_field_child_nodes(derived_field_node, var_details_sheet, var_name, db_name)
 
   return (derived_field_node)
 }
@@ -291,7 +289,7 @@ build_derived_field_node <- function(vars_sheet, var_details_sheet, var_name, db
 #' @return Updated DerivedField node.
 #'
 #' @examples
-attach_derived_field_nodes <- function(derived_field_node, var_details_sheet, var_name, db_name) {
+attach_derived_field_child_nodes <- function(derived_field_node, var_details_sheet, var_name, db_name) {
   var_details_rows <- get_var_details_rows(var_details_sheet, var_name, db_name)
 
   derived_field_node <- attach_apply_nodes(var_details_rows, derived_field_node, db_name)
