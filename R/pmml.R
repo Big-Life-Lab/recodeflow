@@ -118,7 +118,7 @@ build_data_field_for_start_var <- function(var_name, var_details_rows) {
 
 #' Get data type for variable type.
 #'
-#' @param var_details_rows All variable details rows for the `var_name` variable.
+#' @param var_details_rows All variable details rows for the variable.
 #' @param var_type Variable type
 #'
 #' @return `var_type` data type.
@@ -129,9 +129,9 @@ get_variable_type_data_type <- function (var_details_rows, var_type) {
   if (is_categorical) {
     char_var_details_rows <- var_details_rows[is_numeric(var_details_rows$recTo)]
     if (length(char_var_details_rows) > 0) return ("string")
-    return ("float")
+    return ("integer")
   }
-  return ("integer")
+  return ("float")
 }
 
 #' Add DataField child nodes.
