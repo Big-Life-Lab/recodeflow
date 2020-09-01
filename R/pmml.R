@@ -200,7 +200,7 @@ is_numeric <- function(chars) {
 #' @examples
 attach_cont_value_nodes_for_start_var <- function(var_details_row, data_field) {
   if (var_details_row$recTo == pkg.env$rec_to_copy) {
-    margins <- trimws(strsplit(var_details_row$recFrom, ":")[[1]])
+    margins <- get_margins(var_details_row$recFrom)
     interval_node <- XML::xmlNode("Interval", attrs=c(closure="closedClosed", leftMargin=margins[1], rightMargin=margins[2]))
     data_field <- XML::append.xmlNode(data_field, interval_node)
   } else if(grepl(":", var_details_row$recFrom, fixed=TRUE)) {
@@ -334,7 +334,7 @@ attach_apply_nodes <- function(var_details_rows, parent_node, db_name) {
 
     return (XML::append.xmlNode(parent_node, attach_apply_nodes(remaining_rows, if_node, db_name)))
   } else if (grepl(":", var_details_row$recFrom, fixed=TRUE)) {
-    margins <- trimws(strsplit(var_details_row$recFrom, ":")[[1]])
+    margins <- get_margins(var_details_row$recFrom)
     field_node <- build_variable_field_ref_node(var_details_row, db_name)
     const_node_gt <- XML::xmlNode("Constant", attrs=c(dataType="integer"), value=margins[1])
     const_node_lt <- XML::xmlNode("Constant", attrs=c(dataType="integer"), value=margins[2])
@@ -368,4 +368,15 @@ attach_apply_nodes <- function(var_details_rows, parent_node, db_name) {
 #' @examples
 build_variable_field_ref_node <- function (var_details_row, db_name) {
   return (XML::xmlNode(paste0("FieldRef=\"", get_start_var_name(var_details_row, db_name), "\"")))
+}
+
+#' Extract margins from character vector.
+#'
+#' @param chars Character vector.
+#'
+#' @return Margins as character vector.
+#'
+#' @examples
+get_margins <- function (chars) {
+  return (trimws(strsplit(chars, ":")[[1]]))
 }
