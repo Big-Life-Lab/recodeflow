@@ -134,7 +134,7 @@ get_variable_type_data_type <- function (var_details_rows, var_type) {
   return ("float")
 }
 
-#' Add DataField child nodes.
+#' Add DataField child nodes for start variable.
 #'
 #' @param data_field DataField node to attach child nodes.
 #' @param var_details_rows Variable details rows associated with current variable.
@@ -149,14 +149,14 @@ add_data_field_children_for_start_var <- function(data_field, var_details_rows) 
 
   for (index in 1:nrow(var_details_rows)) {
     var_details_row <- var_details_rows[index,]
-    if (var_details_row$toType == pkg.env$var_details_cat) data_field <- attach_cat_value_nodes_for_start_var(var_details_row, data_field)
+    if (var_details_row$fromType == pkg.env$var_details_cat) data_field <- attach_cat_value_nodes_for_start_var(var_details_row, data_field)
     else data_field <- attach_cont_value_nodes_for_start_var(var_details_row, data_field)
   }
 
   return (data_field)
 }
 
-#' Attach categorical value nodes to DataField node.
+#' Attach categorical value nodes to DataField node for start variable.
 #'
 #' @param var_details_row Variable details sheet row.
 #' @param data_field DataField node to attach Value nodes.
@@ -190,7 +190,7 @@ is_numeric <- function(chars) {
   return (suppressWarnings(!is.na(as.numeric(chars))))
 }
 
-#' Attach continuous Value nodes.
+#' Attach continuous Value nodes for start variable.
 #'
 #' @param var_details_row Variable details sheet row.
 #' @param data_field DataField node to attach Value nodes.
