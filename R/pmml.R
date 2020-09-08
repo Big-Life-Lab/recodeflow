@@ -326,14 +326,22 @@ attach_apply_nodes <- function(var_details_rows, parent_node, db_name) {
 
   if (is_numeric(var_details_row$recFrom)) {
     field_node <- build_variable_field_ref_node(var_details_row, db_name)
-    const_val_node <- XML::xmlNode("Constant", attrs=c(missing="true"))
-    if (var_details_row$recTo %in% c(pkg.env$NA_invalid, pkg.env$NA_missing)) XML::xmlValue(const_val_node) <- var_details_row$recFrom
+    const_equal_node <- XML::xmlNode("Constant", attrs=c(dataType="integer"), value=var_details_row$recFrom)
+    const_val_node <- XML::xmlNode("Constant")
+
+    if (var_details_row$recTo %in% pkg.env$all_NAs) {
+      XML::xmlAttrs(const_val_node) <- c(missing="true")
+    } else {
+      XML::xmlAttrs(const_val_node) <- c(dataType="integer")
+      XML::xmlValue(const_val_node) <- var_details_row$recFrom
+    }
 
     if_node <- XML::xmlNode("Apply", attrs=c("function"="if"),
                             XML::xmlNode("Apply", attrs=c("function"="equals"),
                                          field_node,
-                                         XML::xmlNode("Constant", attrs=c(dataType="integer"), value=var_details_row$recFrom)),
-                       const_val_node)
+                                         const_equal_node))
+
+    if_node <- XML::append.xmlNode(if_node, const_val_node)
 
     return (XML::append.xmlNode(parent_node, attach_apply_nodes(remaining_rows, if_node, db_name)))
   } else if (grepl(":", var_details_row$recFrom, fixed=TRUE)) {
