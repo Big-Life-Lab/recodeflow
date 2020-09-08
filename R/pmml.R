@@ -107,7 +107,7 @@ build_data_field_for_start_var <- function(var_name, var_details_rows) {
     stop(paste("Unable to determine optype for"), var_name)
   }
 
-  data_type <- get_variable_type_data_type(var_details_rows, first_var_details_row$fromType)
+  data_type <- get_variable_type_data_type(var_details_rows, first_var_details_row$fromType, is_start_var = TRUE)
 
   return (XML::xmlNode("DataField", attrs=c(name=var_name,
                                        displayName=first_var_details_row$variableStartShortLabel,
@@ -124,10 +124,12 @@ build_data_field_for_start_var <- function(var_name, var_details_rows) {
 #' @return `var_type` data type.
 #'
 #' @examples
-get_variable_type_data_type <- function (var_details_rows, var_type) {
+get_variable_type_data_type <- function (var_details_rows, var_type, is_start_var) {
   is_categorical <- var_type %in% c(pkg.env$var_details_cat, pkg.env$var_cat)
   if (is_categorical) {
-    char_var_details_rows <- var_details_rows[!is_numeric(var_details_rows$recTo), ]
+    char_var_details_rows <- ifelse(is_start_var,
+                                    var_details_rows[!is_numeric(var_details_rows$recFrom), ],
+                                    var_details_rows[!is_numeric(var_details_rows$recTo), ])
     if (length(char_var_details_rows) > 0) return ("string")
     return ("integer")
   }
@@ -268,7 +270,7 @@ build_trans_dict <- function(vars_sheet, var_details_sheet, var_names, db_name) 
 build_derived_field_node <- function(vars_sheet, var_details_sheet, var_name, db_name) {
   var_row <- vars_sheet[which(vars_sheet$variable == var_name, arr.ind = TRUE)[1],]
   var_details_rows <- get_var_details_rows(var_details_sheet, var_name, db_name)
-  data_type <- get_variable_type_data_type(var_details_rows, var_row$variableType)
+  data_type <- get_variable_type_data_type(var_details_rows, var_row$variableType, is_start_var = FALSE)
 
   derived_field_node <- XML::xmlNode("DerivedField", attrs=c(name=var_name, displayName=var_row$label, optype=tolower(var_row$variableType), dataType=data_type))
   label_long_node <- XML::xmlNode("Extension", attrs=c(name="labelLong", value=var_row$labelLong))
@@ -323,21 +325,22 @@ attach_apply_nodes <- function(var_details_rows, parent_node, db_name) {
   if (nrow(remaining_rows) == 0) return (parent_node)
 
   if (is_numeric(var_details_row$recFrom)) {
-    if (var_details_row$recTo %in% c(pkg.env$NA_invalid, pkg.env$NA_missing)) const_val_node <- XML::xmlNode("Constant", attrs=c(missing="true"))
-    else const_val_node <- XML::xmlNode("Constant", attrs=c(missing="true"), value=var_details_row$recFrom)
+    field_node <- build_variable_field_ref_node(var_details_row, db_name)
+    const_val_node <- XML::xmlNode("Constant", attrs=c(missing="true"))
+    if (var_details_row$recTo %in% c(pkg.env$NA_invalid, pkg.env$NA_missing)) XML::xmlValue(const_val_node) <- var_details_row$recFrom
 
     if_node <- XML::xmlNode("Apply", attrs=c("function"="if"),
                             XML::xmlNode("Apply", attrs=c("function"="equals"),
-                                         build_variable_field_ref_node(var_details_row, db_name),
+                                         field_node,
                                          XML::xmlNode("Constant", attrs=c(dataType="integer"), value=var_details_row$recFrom)),
                        const_val_node)
 
     return (XML::append.xmlNode(parent_node, attach_apply_nodes(remaining_rows, if_node, db_name)))
   } else if (grepl(":", var_details_row$recFrom, fixed=TRUE)) {
     margins <- get_margins(var_details_row$recFrom)
-    field_node <- build_variable_field_ref_node(var_details_row, db_name)
     const_node_gt <- XML::xmlNode("Constant", attrs=c(dataType="integer"), value=margins[1])
     const_node_lt <- XML::xmlNode("Constant", attrs=c(dataType="integer"), value=margins[2])
+    field_node <- build_variable_field_ref_node(var_details_row, db_name)
 
     missing_node <- XML::xmlNode("Constant", attrs=c(missing="true"))
 
@@ -367,7 +370,7 @@ attach_apply_nodes <- function(var_details_rows, parent_node, db_name) {
 #'
 #' @examples
 build_variable_field_ref_node <- function (var_details_row, db_name) {
-  return (XML::xmlNode(paste0("FieldRef=\"", get_start_var_name(var_details_row, db_name), "\"")))
+  return (XML::xmlNode("FieldRef", attrs=c(field=get_start_var_name(var_details_row, db_name))))
 }
 
 #' Extract margins from character vector.
