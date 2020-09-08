@@ -161,21 +161,21 @@
               <Apply function="and">
                 <Apply function="or">
                   <Apply function="greaterThan">
-                    <FieldRef="RACA_6A" />
+                    <FieldRef field="RACA_6A" />
                     <Constant dataType="integer">7</Constant>
                   </Apply>
                   <Apply function="equals">
-                    <FieldRef="RACA_6A" />
+                    <FieldRef field="RACA_6A" />
                     <Constant dataType="integer">7</Constant>
                   </Apply>
                 </Apply>
                 <Apply function="or">
                   <Apply function="lessThan">
-                    <FieldRef="RACA_6A" />
+                    <FieldRef field="RACA_6A" />
                     <Constant dataType="integer">9</Constant>
                   </Apply>
                   <Apply function="equals">
-                    <FieldRef="RACA_6A" />
+                    <FieldRef field="RACA_6A" />
                     <Constant dataType="integer">9</Constant>
                   </Apply>
                 </Apply>
@@ -229,21 +229,21 @@
         <Apply function="and">
           <Apply function="or">
             <Apply function="greaterThan">
-              <FieldRef="ALCA_5A1" />
+              <FieldRef field="ALCA_5A1" />
               <Constant dataType="integer">1</Constant>
             </Apply>
             <Apply function="equals">
-              <FieldRef="ALCA_5A1" />
+              <FieldRef field="ALCA_5A1" />
               <Constant dataType="integer">1</Constant>
             </Apply>
           </Apply>
           <Apply function="or">
             <Apply function="lessThan">
-              <FieldRef="ALCA_5A1" />
+              <FieldRef field="ALCA_5A1" />
               <Constant dataType="integer">40</Constant>
             </Apply>
             <Apply function="equals">
-              <FieldRef="ALCA_5A1" />
+              <FieldRef field="ALCA_5A1" />
               <Constant dataType="integer">40</Constant>
             </Apply>
           </Apply>
@@ -259,21 +259,21 @@
             <Apply function="and">
               <Apply function="or">
                 <Apply function="greaterThan">
-                  <FieldRef="ALCA_5A1" />
+                  <FieldRef field="ALCA_5A1" />
                   <Constant dataType="integer">997</Constant>
                 </Apply>
                 <Apply function="equals">
-                  <FieldRef="ALCA_5A1" />
+                  <FieldRef field="ALCA_5A1" />
                   <Constant dataType="integer">997</Constant>
                 </Apply>
               </Apply>
               <Apply function="or">
                 <Apply function="lessThan">
-                  <FieldRef="ALCA_5A1" />
+                  <FieldRef field="ALCA_5A1" />
                   <Constant dataType="integer">999</Constant>
                 </Apply>
                 <Apply function="equals">
-                  <FieldRef="ALCA_5A1" />
+                  <FieldRef field="ALCA_5A1" />
                   <Constant dataType="integer">999</Constant>
                 </Apply>
               </Apply>
