@@ -127,7 +127,7 @@ build_data_field_for_start_var <- function(var_name, var_details_rows) {
 get_variable_type_data_type <- function (var_details_rows, var_type) {
   is_categorical <- var_type %in% c(pkg.env$var_details_cat, pkg.env$var_cat)
   if (is_categorical) {
-    char_var_details_rows <- var_details_rows[is_numeric(var_details_rows$recTo)]
+    char_var_details_rows <- var_details_rows[is_numeric(var_details_rows$recTo), ]
     if (length(char_var_details_rows) > 0) return ("string")
     return ("integer")
   }
