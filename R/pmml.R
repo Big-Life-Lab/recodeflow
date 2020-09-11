@@ -15,7 +15,7 @@
 #'
 #' @export
 xflow_to_pmml <- function(var_details_sheet, vars_sheet, db_name, vars_to_convert = NULL) {
-  doc <- XML::xmlNode("PMML", attrs=c(xmlns="http://www.dmg.org/PMML-4_4", version="4.4"))
+  doc <- XML::xmlNode("PMML", namespaceDefinitions=c("http://www.dmg.org/PMML-4_4"), attrs=c(version="4.4"))
   dict <- XML::xmlNode("DataDictionary")
   recognized_vars_to_convert <- c(character(0))
 
@@ -27,7 +27,7 @@ xflow_to_pmml <- function(var_details_sheet, vars_sheet, db_name, vars_to_conver
     var_start_name <- get_start_var_name(first_var_details_row, db_name)
 
     if (is.na(var_start_name)) {
-      print(paste("Unable to find start variable for", var_to_convert, 'for database', db_name))
+      print(paste("Unable to find start variable for", var_to_convert, "for database", db_name))
     } else {
       data_field <- build_data_field_for_start_var(var_start_name, var_details_rows)
 
@@ -350,8 +350,6 @@ attach_apply_nodes <- function(var_details_rows, parent_node, db_name) {
     const_node_lt <- XML::xmlNode("Constant", attrs=c(dataType="integer"), value=margins[2])
     field_node <- build_variable_field_ref_node(var_details_row, db_name)
 
-    missing_node <- XML::xmlNode("Constant", attrs=c(missing="true"))
-
     or_node_1 <- XML::append.xmlNode(XML::xmlNode("Apply", attrs=c("function"="or")),
                                      XML::xmlNode("Apply", attrs=c("function"="greaterThan"), field_node, const_node_gt),
                                      XML::xmlNode("Apply", attrs=c("function"="equals"), field_node, const_node_gt))
@@ -360,7 +358,13 @@ attach_apply_nodes <- function(var_details_rows, parent_node, db_name) {
                                      XML::xmlNode("Apply", attrs=c("function"="equals"), field_node, const_node_lt))
 
     and_node <- XML::append.xmlNode(XML::xmlNode("Apply", attrs=c("function"="and")), or_node_1, or_node_2)
-    if_node <- XML::append.xmlNode(XML::xmlNode("Apply", attrs=c("function"="if")), and_node, missing_node, missing_node)
+    if_node <- XML::append.xmlNode(XML::xmlNode("Apply", attrs=c("function"="if")), and_node)
+
+    if (var_details_row$recTo %in% pkg.env$all_NAs) {
+      missing_node <- XML::xmlNode("Constant", attrs=c(missing="true"))
+      if_node <- XML::append.xmlNode(if_node, missing_node, missing_node)
+    }
+
     parent_node <- XML::append.xmlNode(parent_node, if_node)
 
     return (attach_apply_nodes(remaining_rows, parent_node, db_name))
