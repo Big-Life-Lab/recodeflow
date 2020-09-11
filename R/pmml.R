@@ -367,9 +367,7 @@ attach_apply_nodes <- function(var_details_rows, parent_node, db_name) {
       if_node <- XML::append.xmlNode(if_node, field_node)
     }
 
-    parent_node <- XML::append.xmlNode(parent_node, if_node)
-
-    return (attach_apply_nodes(remaining_rows, parent_node, db_name))
+    return(XML::append.xmlNode(parent_node, attach_apply_nodes(remaining_rows, if_node, db_name)))
   } else {
     return (XML::append.xmlNode(parent_node, XML::xmlNode("Constant", attrs=c(missing="true"))))
   }
