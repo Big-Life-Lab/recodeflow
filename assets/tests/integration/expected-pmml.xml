@@ -1,142 +1,142 @@
 <PMML version="4.4" xmlns="http://www.dmg.org/PMML-4_4">
-  <DataDictionary numberOfFields="2">
-    <DataField name="RACA_6A" displayName="Needs help - preparing meals" optype="categorical" dataType="string">
-      <Extension name="variableStartLabel" value="Because of any condition or health problem, do you need the help of another person in preparing meals?" />
-      <Value value="1" displayValue="Yes" property="valid"></Value>
-      <Value value="2" displayValue="No" property="valid"></Value>
-      <Value value="6" displayValue="not applicable" property="invalid"></Value>
-      <Value value="7" displayValue="don&apos;t know (7)" property="missing"></Value>
-      <Value value="8" displayValue="refusal (8)" property="missing"></Value>
-      <Value value="9" displayValue="not stated (9)" property="missing"></Value>
-    </DataField>
-    <DataField name="ALCA_5A1" displayName="DailyConsumptionSunday" optype="continuous" dataType="float">
-      <Extension name="variableStartLabel" value="Number of drinks on Sunday" />
-      <Interval closure="closedClosed" leftMargin="1" rightMargin="40"/>
-      <Value value="996" displayValue="not applicable" property="invalid" />
-      <Value value="997" displayValue="don&apos;t know (997)" property="missing" />
-      <Value value="998" displayValue="refusal (998)" property="missing" />
-      <Value value="999" displayValue="not stated (999)" property="missing" />
-    </DataField>
-  </DataDictionary>
-  <TransformationDictionary>
-    <DerivedField name="ADL_01" displayName="Help preparing meals" optype="categorical" dataType="string">
-      <Extension name="labelLong" value="Needs help - preparing meals" />
-      <Extension name="units" value="N/A" />
+ <DataDictionary numberOfFields="2">
+  <DataField name="RACA_6A" displayName="Needs help - preparing meals" optype="categorical" dataType="string">
+   <Extension name="variableStartLabel" value="Because of any condition or health problem, do you need the help of another person in preparing meals?"/>
+   <Value value="1" displayValue="Yes" property="valid"/>
+   <Value value="2" displayValue="No" property="valid"/>
+   <Value value="6" displayValue="not applicable" property="invalid"/>
+   <Value value="7" displayValue="don&apos;t know (7)" property="missing"/>
+   <Value value="8" displayValue="refusal (8)" property="missing"/>
+   <Value value="9" displayValue="not stated (9)" property="missing"/>
+  </DataField>
+  <DataField name="ALCA_5A1" displayName="DailyConsumptionSunday" optype="continuous" dataType="float">
+   <Extension name="variableStartLabel" value="Number of drinks on Sunday"/>
+   <Interval closure="closedClosed" leftMargin="1" rightMargin="40"/>
+   <Value value="996" displayValue="not applicable" property="invalid"/>
+   <Value value="997" displayValue="don&apos;t know (997)" property="missing"/>
+   <Value value="998" displayValue="refusal (998)" property="missing"/>
+   <Value value="999" displayValue="not stated (999)" property="missing"/>
+  </DataField>
+ </DataDictionary>
+ <TransformationDictionary>
+  <DerivedField name="ADL_01" displayName="Help preparing meals" optype="categorical" dataType="string">
+   <Extension name="labelLong" value="Needs help - preparing meals"/>
+   <Extension name="units" value="N/A"/>
+   <Apply function="if">
+    <Apply function="equals">
+     <FieldRef field="RACA_6A"/>
+     <Constant dataType="integer">1</Constant>
+    </Apply>
+    <Constant dataType="integer">1</Constant>
+    <Apply function="if">
+     <Apply function="equals">
+      <FieldRef field="RACA_6A"/>
+      <Constant dataType="integer">2</Constant>
+     </Apply>
+     <Constant dataType="integer">2</Constant>
+     <Apply function="if">
+      <Apply function="equals">
+       <FieldRef field="RACA_6A"/>
+       <Constant dataType="integer">6</Constant>
+      </Apply>
+      <Constant missing="true"/>
       <Apply function="if">
-        <Apply function="equals">
+       <Apply function="and">
+        <Apply function="or">
+         <Apply function="greaterThan">
           <FieldRef field="RACA_6A"/>
-          <Constant dataType="integer">1</Constant>
+          <Constant dataType="integer">7</Constant>
+         </Apply>
+         <Apply function="equals">
+          <FieldRef field="RACA_6A"/>
+          <Constant dataType="integer">7</Constant>
+         </Apply>
         </Apply>
-        <Constant dataType="integer">1</Constant>
-        <Apply function="if">
-          <Apply function="equals">
-            <FieldRef field="RACA_6A"/>
-            <Constant dataType="integer">2</Constant>
-          </Apply>
-          <Constant dataType="integer">2</Constant>
-          <Apply function="if">
-            <Apply function="equals">
-              <FieldRef field="RACA_6A"/>
-              <Constant dataType="integer">6</Constant>
-            </Apply>
-            <Constant missing="true"/>
-            <Apply function="if">
-              <Apply function="and">
-                <Apply function="or">
-                  <Apply function="greaterThan">
-                    <FieldRef="RACA_6A" />
-                    <Constant dataType="integer">7</Constant>
-                  </Apply>
-                  <Apply function="equals">
-                    <FieldRef="RACA_6A" />
-                    <Constant dataType="integer">7</Constant>
-                  </Apply>
-                </Apply>
-                <Apply function="or">
-                  <Apply function="lessThan">
-                    <FieldRef="RACA_6A" />
-                    <Constant dataType="integer">9</Constant>
-                  </Apply>
-                  <Apply function="equals">
-                    <FieldRef="RACA_6A" />
-                    <Constant dataType="integer">9</Constant>
-                  </Apply>
-                </Apply>
-              </Apply>
-              <Constant missing="true"/>
-              <Constant missing="true"/>
-            </Apply>
-          </Apply>
+        <Apply function="or">
+         <Apply function="lessThan">
+          <FieldRef field="RACA_6A"/>
+          <Constant dataType="integer">9</Constant>
+         </Apply>
+         <Apply function="equals">
+          <FieldRef field="RACA_6A"/>
+          <Constant dataType="integer">9</Constant>
+         </Apply>
         </Apply>
+       </Apply>
+       <Constant missing="true"/>
+       <Constant missing="true"/>
       </Apply>
-      <Value value="1" displayValue="Yes">
-        <Extension name="catLabelLong" value="Yes" />
-      </Value>
-      <Value value="2" displayValue="No">
-        <Extension name="catLabelLong" value="No" />
-      </Value>
-    </DerivedField>
-    <DerivedField name="ALW_2A1" displayName="# of drinks - Sunday" optype="continuous" dataType="float">
-      <Extension name="labelLong" value="Number of drinks on Sunday" />
-      <Extension name="units" value="drinks" />
-      <Apply function="if">
-        <Apply function="and">
-          <Apply function="or">
-            <Apply function="greaterThan">
-              <FieldRef="ALCA_5A1" />
-              <Constant dataType="integer">1</Constant>
-            </Apply>
-            <Apply function="equals">
-              <FieldRef="ALCA_5A1" />
-              <Constant dataType="integer">1</Constant>
-            </Apply>
-          </Apply>
-          <Apply function="or">
-            <Apply function="lessThan">
-              <FieldRef="ALCA_5A1" />
-              <Constant dataType="integer">40</Constant>
-            </Apply>
-            <Apply function="equals">
-              <FieldRef="ALCA_5A1" />
-              <Constant dataType="integer">40</Constant>
-            </Apply>
-          </Apply>
-        </Apply>
-        <FieldRef field="ALCA_5A1" />
-        <Apply function="if">
-          <Apply function="equals">
-            <FieldRef field="ALCA_5A1" />
-            <Constant dataType="integer">996</Constant>
-          </Apply>
-          <Constant missing="true"></Constant>
-          <Apply function="if">
-            <Apply function="and">
-              <Apply function="or">
-                <Apply function="greaterThan">
-                  <FieldRef="ALCA_5A1" />
-                  <Constant dataType="integer">997</Constant>
-                </Apply>
-                <Apply function="equals">
-                  <FieldRef="ALCA_5A1" />
-                  <Constant dataType="integer">997</Constant>
-                </Apply>
-              </Apply>
-              <Apply function="or">
-                <Apply function="lessThan">
-                  <FieldRef="ALCA_5A1" />
-                  <Constant dataType="integer">999</Constant>
-                </Apply>
-                <Apply function="equals">
-                  <FieldRef="ALCA_5A1" />
-                  <Constant dataType="integer">999</Constant>
-                </Apply>
-              </Apply>
-            </Apply>
-            <Constant missing="true"></Constant>
-            <Constant missing="true"></Constant>
-          </Apply>
-        </Apply>
+     </Apply>
+    </Apply>
+   </Apply>
+   <Value value="1" displayValue="Yes">
+    <Extension name="catLabelLong" value="Yes"/>
+   </Value>
+   <Value value="2" displayValue="No">
+    <Extension name="catLabelLong" value="No"/>
+   </Value>
+  </DerivedField>
+  <DerivedField name="ALW_2A1" displayName="# of drinks - Sunday" optype="continuous" dataType="float">
+   <Extension name="labelLong" value="Number of drinks on Sunday"/>
+   <Extension name="units" value="drinks"/>
+   <Apply function="if">
+    <Apply function="and">
+     <Apply function="or">
+      <Apply function="greaterThan">
+       <FieldRef field="ALCA_5A1"/>
+       <Constant dataType="integer">1</Constant>
       </Apply>
-    </DerivedField>
-  </TransformationDictionary>
+      <Apply function="equals">
+       <FieldRef field="ALCA_5A1"/>
+       <Constant dataType="integer">1</Constant>
+      </Apply>
+     </Apply>
+     <Apply function="or">
+      <Apply function="lessThan">
+       <FieldRef field="ALCA_5A1"/>
+       <Constant dataType="integer">40</Constant>
+      </Apply>
+      <Apply function="equals">
+       <FieldRef field="ALCA_5A1"/>
+       <Constant dataType="integer">40</Constant>
+      </Apply>
+     </Apply>
+    </Apply>
+    <FieldRef field="ALCA_5A1"/>
+    <Apply function="if">
+     <Apply function="equals">
+      <FieldRef field="ALCA_5A1"/>
+      <Constant dataType="integer">996</Constant>
+     </Apply>
+     <Constant missing="true"/>
+     <Apply function="if">
+      <Apply function="and">
+       <Apply function="or">
+        <Apply function="greaterThan">
+         <FieldRef field="ALCA_5A1"/>
+         <Constant dataType="integer">997</Constant>
+        </Apply>
+        <Apply function="equals">
+         <FieldRef field="ALCA_5A1"/>
+         <Constant dataType="integer">997</Constant>
+        </Apply>
+       </Apply>
+       <Apply function="or">
+        <Apply function="lessThan">
+         <FieldRef field="ALCA_5A1"/>
+         <Constant dataType="integer">999</Constant>
+        </Apply>
+        <Apply function="equals">
+         <FieldRef field="ALCA_5A1"/>
+         <Constant dataType="integer">999</Constant>
+        </Apply>
+       </Apply>
+      </Apply>
+      <Constant missing="true"/>
+      <Constant missing="true"/>
+     </Apply>
+    </Apply>
+   </Apply>
+  </DerivedField>
+ </TransformationDictionary>
 </PMML>
