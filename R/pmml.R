@@ -363,6 +363,8 @@ attach_apply_nodes <- function(var_details_rows, parent_node, db_name) {
     if (var_details_row$recTo %in% pkg.env$all_NAs) {
       missing_node <- XML::xmlNode("Constant", attrs=c(missing="true"))
       if_node <- XML::append.xmlNode(if_node, missing_node, missing_node)
+    } else if (var_details_row$recTo == pkg.env$rec_to_copy) {
+      if_node <- XML::append.xmlNode(if_node, field_node)
     }
 
     parent_node <- XML::append.xmlNode(parent_node, if_node)
