@@ -1,25 +1,25 @@
-<PMML>
+<PMML version="4.4" xmlns="http://www.dmg.org/PMML-4_4">
   <DataDictionary numberOfFields="2">
-    <DataField name="RACA_6A" displayName="Needs help - preparing meals" optype="categorical" dataType="integer">
+    <DataField name="RACA_6A" displayName="Needs help - preparing meals" optype="categorical" dataType="string">
       <Extension name="variableStartLabel" value="Because of any condition or health problem, do you need the help of another person in preparing meals?" />
       <Value value="1" displayValue="Yes" property="valid"></Value>
       <Value value="2" displayValue="No" property="valid"></Value>
       <Value value="6" displayValue="not applicable" property="invalid"></Value>
-      <Value value="7" displayValue="don't know(7)" property="missing"></Value>
-      <Value value="8" displayValue="refusal(8)" property="missing"></Value>
-      <Value value="9" displayValue="not stated(9)" property="missing"></Value>
+      <Value value="7" displayValue="don&apos;t know (7)" property="missing"></Value>
+      <Value value="8" displayValue="refusal (8)" property="missing"></Value>
+      <Value value="9" displayValue="not stated (9)" property="missing"></Value>
     </DataField>
     <DataField name="ALCA_5A1" displayName="DailyConsumptionSunday" optype="continuous" dataType="float">
-      <Extension name="catStartLabel" value="Number of drinks on Sunday" />
+      <Extension name="variableStartLabel" value="Number of drinks on Sunday" />
       <Interval closure="closedClosed" leftMargin="1" rightMargin="40"/>
       <Value value="996" displayValue="not applicable" property="invalid" />
-      <Value value="997" displayValue="don't know(997)" property="missing" />
-      <Value value="998" displayValue="refusal(998)" property="missing" />
-      <Value value="999" displayValue="not stated(999)" property="missing" />
+      <Value value="997" displayValue="don&apos;t know (997)" property="missing" />
+      <Value value="998" displayValue="refusal (998)" property="missing" />
+      <Value value="999" displayValue="not stated (999)" property="missing" />
     </DataField>
   </DataDictionary>
   <TransformationDictionary>
-    <DerivedField name="ADL_01" displayName="Help preparing meals" optype="categorical" dataType="integer">
+    <DerivedField name="ADL_01" displayName="Help preparing meals" optype="categorical" dataType="string">
       <Extension name="labelLong" value="Needs help - preparing meals" />
       <Extension name="units" value="N/A" />
       <Apply function="if">
