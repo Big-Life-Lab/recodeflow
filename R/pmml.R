@@ -23,21 +23,26 @@ xflow_to_pmml <- function(var_details_sheet, vars_sheet, db_name, vars_to_conver
 
   for (var_to_convert in vars_to_convert) {
     var_details_rows <- get_var_details_rows(var_details_sheet, var_to_convert, db_name)
+    is_start_var <- nrow(var_details_rows) > 0
+    if (!is_start_var) var_details_rows <- get_var_details_rows(var_details_sheet, var_to_convert)
+
     first_var_details_row <- var_details_rows[1,]
-    var_start_name <- get_start_var_name(first_var_details_row, db_name)
+    var_start_name <- ifelse(is_start_var, get_start_var_name(first_var_details_row, db_name), NA)
+    found_start_var <- !is.na(var_start_name)
 
-    if (is.na(var_start_name)) {
-      print(paste("Unable to find start variable for", var_to_convert, "for database", db_name))
+    data_field_var <- ifelse(found_start_var, var_start_name, var_to_convert)
+    data_field <- build_data_field_for_var(data_field_var, var_details_rows)
+
+    if (is.null(data_field)) {
+      print(paste0("Skipping ", var_to_convert, ": Unable to determine fromType."))
     } else {
-      data_field <- build_data_field_for_start_var(var_start_name, var_details_rows)
-
-      if (is.null(data_field)) {
-        print(paste("Unable to determine fromType for", var_to_convert))
-      } else {
+      if (found_start_var) {
         recognized_vars_to_convert <- c(recognized_vars_to_convert, var_to_convert)
-        data_field <- add_data_field_children_for_start_var(data_field, var_details_rows)
-        dict <- XML::append.xmlNode(dict, data_field)
+      } else {
+        print(paste0("Unable to find start variable for ", var_to_convert, " for database ", db_name, ". It will be added to the DataDictionary."))
       }
+      data_field <- add_data_field_children_for_start_var(data_field, var_details_rows)
+      dict <- XML::append.xmlNode(dict, data_field)
     }
   }
 
@@ -63,11 +68,25 @@ xflow_to_pmml <- function(var_details_sheet, vars_sheet, db_name, vars_to_conver
 #' @return All variable details rows for the variable.
 #'
 #' @examples
-get_var_details_rows <- function (var_details_sheet, var_name, db_name) {
-  var_name_indices <- which(var_details_sheet$variable == var_name, arr.ind = TRUE)
+get_var_details_rows <- function (var_details_sheet, var_name, db_name = NULL) {
+  var_name_indices <- get_var_details_row_indices(var_details_sheet, var_name)
+  if (is.null(db_name)) return (var_details_sheet[var_name_indices,])
+
   db_indices <- which(grepl(db_name, var_details_sheet$databaseStart), arr.ind = TRUE)
   intersect_indices <- intersect(var_name_indices, db_indices)
   return (var_details_sheet[intersect_indices,])
+}
+
+#' Get all variable details row indices for a variable.
+#'
+#' @param var_details_sheet A data frame representing a variable details sheet.
+#' @param var_name Variable name.
+#'
+#' @return All variable details row indices for a variable.
+#'
+#' @examples
+get_var_details_row_indices <- function (var_details_sheet, var_name) {
+  return (which(var_details_sheet$variable == var_name, arr.ind = TRUE))
 }
 
 #' Get variable name from variableStart using database name.
@@ -89,7 +108,7 @@ get_start_var_name <- function(var_details_row, db_name) {
   return (regmatches(var_details_row$variableStart, match)[[1]][2])
 }
 
-#' Build DataField node for start variable.
+#' Build DataField node for variable.
 #'
 #' @param var_name Variable name.
 #' @param var_details_rows All variable details rows for the `var_name` variable.
@@ -97,7 +116,7 @@ get_start_var_name <- function(var_details_row, db_name) {
 #' @return DataField node with optype and dataType according to `fromType`.
 #'
 #' @examples
-build_data_field_for_start_var <- function(var_name, var_details_rows) {
+build_data_field_for_var <- function(var_name, var_details_rows) {
   first_var_details_row <- var_details_rows[1,]
   if (first_var_details_row$fromType == pkg.env$var_details_cat) {
     optype <- "categorical"

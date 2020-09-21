@@ -1,7 +1,16 @@
 <PMML version="4.4" xmlns="http://www.dmg.org/PMML-4_4">
- <DataDictionary numberOfFields="2">
+ <DataDictionary numberOfFields="3">
   <DataField name="RACA_6A" displayName="Needs help - preparing meals" optype="categorical" dataType="string">
    <Extension name="variableStartLabel" value="Because of any condition or health problem, do you need the help of another person in preparing meals?"/>
+   <Value value="1" displayValue="Yes" property="valid"/>
+   <Value value="2" displayValue="No" property="valid"/>
+   <Value value="6" displayValue="not applicable" property="invalid"/>
+   <Value value="7" displayValue="don&apos;t know (7)" property="missing"/>
+   <Value value="8" displayValue="refusal (8)" property="missing"/>
+   <Value value="9" displayValue="not stated (9)" property="missing"/>
+  </DataField>
+  <DataField name="ADL_06" displayName="Needs help - looking after finances" optype="categorical" dataType="string">
+   <Extension name="variableStartLabel" value="Because of any physical condition or mental condition or health problem, do you need the help of another person with looking after your personal finances such as making bank transactions or paying bills?"/>
    <Value value="1" displayValue="Yes" property="valid"/>
    <Value value="2" displayValue="No" property="valid"/>
    <Value value="6" displayValue="not applicable" property="invalid"/>
