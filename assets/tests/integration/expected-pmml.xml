@@ -9,14 +9,8 @@
    <Value value="8" displayValue="refusal (8)" property="missing"/>
    <Value value="9" displayValue="not stated (9)" property="missing"/>
   </DataField>
-  <DataField name="ADL_06" displayName="Needs help - looking after finances" optype="categorical" dataType="string">
-   <Extension name="variableStartLabel" value="Because of any physical condition or mental condition or health problem, do you need the help of another person with looking after your personal finances such as making bank transactions or paying bills?"/>
-   <Value value="1" displayValue="Yes" property="valid"/>
-   <Value value="2" displayValue="No" property="valid"/>
-   <Value value="6" displayValue="not applicable" property="invalid"/>
-   <Value value="7" displayValue="don&apos;t know (7)" property="missing"/>
-   <Value value="8" displayValue="refusal (8)" property="missing"/>
-   <Value value="9" displayValue="not stated (9)" property="missing"/>
+  <DataField name="ADL_06" displayName="Help personal finances">
+   <Extension name="labelLong" value="Needs help - looking after finances"/>
   </DataField>
   <DataField name="ALCA_5A1" displayName="DailyConsumptionSunday" optype="continuous" dataType="float">
    <Extension name="variableStartLabel" value="Number of drinks on Sunday"/>

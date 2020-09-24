@@ -22,28 +22,25 @@ xflow_to_pmml <- function(var_details_sheet, vars_sheet, db_name, vars_to_conver
   if (is.null(vars_to_convert)) vars_to_convert <- vars_sheet$variable
 
   for (var_to_convert in vars_to_convert) {
-    var_details_rows <- get_var_details_rows(var_details_sheet, var_to_convert, db_name)
-    is_start_var <- nrow(var_details_rows) > 0
-    if (!is_start_var) var_details_rows <- get_var_details_rows(var_details_sheet, var_to_convert)
-
-    first_var_details_row <- var_details_rows[1,]
-    var_start_name <- ifelse(is_start_var, get_start_var_name(first_var_details_row, db_name), NA)
-    found_start_var <- !is.na(var_start_name)
-
-    data_field_var <- ifelse(found_start_var, var_start_name, var_to_convert)
-    data_field <- build_data_field_for_var(data_field_var, var_details_rows)
-
-    if (is.null(data_field)) {
-      print(paste0("Skipping ", var_to_convert, ": Unable to determine fromType."))
-    } else {
-      if (found_start_var) {
-        recognized_vars_to_convert <- c(recognized_vars_to_convert, var_to_convert)
-      } else {
-        print(paste0("Unable to find start variable for ", var_to_convert, " for database ", db_name, ". It will be added to the DataDictionary."))
-      }
-      data_field <- add_data_field_children_for_start_var(data_field, var_details_rows)
-      dict <- XML::append.xmlNode(dict, data_field)
+    var_details_rows <- var_details_sheet[get_var_details_row_indices(var_details_sheet, var_to_convert),]
+    if (nrow(var_details_rows) == 0) {
+      print(paste0("Skipping ", var_to_convert, ": No rows with that name found in var_details_sheet."))
+      next
     }
+
+    var_db_details_rows <- get_var_details_rows(var_details_sheet, var_to_convert, db_name)
+
+    if (nrow(var_db_details_rows) > 0) {
+      var_start_name <- get_start_var_name(var_db_details_rows[1,], db_name)
+      data_field <- build_data_field_for_start_var(var_start_name, var_db_details_rows)
+      data_field <- add_data_field_children_for_start_var(data_field, var_db_details_rows)
+      recognized_vars_to_convert <- c(recognized_vars_to_convert, var_to_convert)
+    } else {
+      data_field <- build_data_field_for_var(var_to_convert, vars_sheet)
+    }
+
+    if (is.null(data_field)) print(paste0("Skipping ", var_to_convert, ": Unable to determine fromType."))
+    else dict <- XML::append.xmlNode(dict, data_field)
   }
 
   number_of_fields <- XML::xmlSize(dict)
@@ -59,19 +56,17 @@ xflow_to_pmml <- function(var_details_sheet, vars_sheet, db_name, vars_to_conver
   return (doc)
 }
 
-#' Get all variable details rows for a variable.
+#' Get all variable details rows for a variable and database combination.
 #'
 #' @param var_details_sheet A data frame representing a variable details sheet.
 #' @param var_name Variable name.
 #' @param db_name Database name.
 #'
-#' @return All variable details rows for the variable.
+#' @return All variable details rows for the variable and database combination.
 #'
 #' @examples
-get_var_details_rows <- function (var_details_sheet, var_name, db_name = NULL) {
+get_var_details_rows <- function (var_details_sheet, var_name, db_name) {
   var_name_indices <- get_var_details_row_indices(var_details_sheet, var_name)
-  if (is.null(db_name)) return (var_details_sheet[var_name_indices,])
-
   db_indices <- which(grepl(db_name, var_details_sheet$databaseStart), arr.ind = TRUE)
   intersect_indices <- intersect(var_name_indices, db_indices)
   return (var_details_sheet[intersect_indices,])
@@ -87,6 +82,18 @@ get_var_details_rows <- function (var_details_sheet, var_name, db_name = NULL) {
 #' @examples
 get_var_details_row_indices <- function (var_details_sheet, var_name) {
   return (which(var_details_sheet$variable == var_name, arr.ind = TRUE))
+}
+
+#' Get variable row from variable sheet.
+#'
+#' @param var_name Variable name.
+#' @param vars_sheet Variable sheet data frame.
+#'
+#' @return Variable row.
+#'
+#' @examples
+get_var_sheet_row <- function (var_name, var_details_sheet) {
+  return (vars_sheet[which(vars_sheet$variable == var_name, arr.ind = TRUE)[1],])
 }
 
 #' Get variable name from variableStart using database name.
@@ -108,7 +115,7 @@ get_start_var_name <- function(var_details_row, db_name) {
   return (regmatches(var_details_row$variableStart, match)[[1]][2])
 }
 
-#' Build DataField node for variable.
+#' Build DataField node for start variable.
 #'
 #' @param var_name Variable name.
 #' @param var_details_rows All variable details rows for the `var_name` variable.
@@ -116,7 +123,7 @@ get_start_var_name <- function(var_details_row, db_name) {
 #' @return DataField node with optype and dataType according to `fromType`.
 #'
 #' @examples
-build_data_field_for_var <- function(var_name, var_details_rows) {
+build_data_field_for_start_var <- function(var_name, var_details_rows) {
   first_var_details_row <- var_details_rows[1,]
   if (first_var_details_row$fromType == pkg.env$var_details_cat) {
     optype <- "categorical"
@@ -132,6 +139,21 @@ build_data_field_for_var <- function(var_name, var_details_rows) {
                                        displayName=first_var_details_row$variableStartShortLabel,
                                        optype=optype,
                                        dataType=data_type)))
+}
+
+#' Build DataField node for variable.
+#'
+#' @param var_name Variable name.
+#' @param vars_sheet Variable sheet data frame.
+#'
+#' @return DataField node for variable.
+#'
+#' @examples
+build_data_field_for_var <- function(var_name, vars_sheet) {
+  var_row <- get_var_sheet_row(var_name, vars_sheet)
+  data_field_node <- XML::xmlNode("DataField", attrs=c(name=var_name, displayName=var_row$label))
+  extension_node <- XML::xmlNode("Extension", attrs=c(name="labelLong", value=var_row$labelLong))
+  return (XML::append.xmlNode(data_field_node, extension_node))
 }
 
 
@@ -287,7 +309,7 @@ build_trans_dict <- function(vars_sheet, var_details_sheet, var_names, db_name) 
 #'
 #' @examples
 build_derived_field_node <- function(vars_sheet, var_details_sheet, var_name, db_name) {
-  var_row <- vars_sheet[which(vars_sheet$variable == var_name, arr.ind = TRUE)[1],]
+  var_row <- get_var_sheet_row(var_name, vars_sheet)
   var_details_rows <- get_var_details_rows(var_details_sheet, var_name, db_name)
   data_type <- get_variable_type_data_type(var_details_rows, var_row$variableType, is_start_var = FALSE)
 
