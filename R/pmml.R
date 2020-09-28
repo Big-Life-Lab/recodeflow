@@ -92,7 +92,7 @@ get_var_details_row_indices <- function (var_details_sheet, var_name) {
 #' @return Variable row.
 #'
 #' @examples
-get_var_sheet_row <- function (var_name, var_details_sheet) {
+get_var_sheet_row <- function (var_name, vars_sheet) {
   return (vars_sheet[which(vars_sheet$variable == var_name, arr.ind = TRUE)[1],])
 }
 
