@@ -6,7 +6,13 @@
 #'
 #' @examples
 get_margins <- function (chars) {
-  return (trimws(strsplit(chars, ":")[[1]]))
+  left_is_exclusive <- substr(chars, 1, 1) == "("
+  right_is_exclusive <- substr(chars, nchar(chars), nchar(chars) + 1) == ")"
+
+  margins <- trimws(strsplit(substr(chars, 2, nchar(chars) - 1), ",")[[1]])
+  if (left_is_exclusive) margins[1] = as.character(as.numeric(margins[1]) + 1);
+  if (right_is_exclusive) margins[2] = as.character(as.numeric(margins[2]) - 1);
+  return (margins)
 }
 
 #' Check if a character object can be converted to a number.
@@ -28,7 +34,7 @@ is_numeric <- function(chars) {
 #'
 #' @examples
 is_rec_from_range <- function(var_details_row) {
-  return (grepl(":", var_details_row$recFrom, fixed=TRUE))
+  return (grepl(",", var_details_row$recFrom, fixed = TRUE))
 }
 
 
