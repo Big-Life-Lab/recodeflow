@@ -6,10 +6,11 @@
 #'
 #' @examples
 get_margins <- function (chars) {
+  chars <- trimws(chars)
   left_is_exclusive <- substr(chars, 1, 1) == "("
   right_is_exclusive <- substr(chars, nchar(chars), nchar(chars) + 1) == ")"
 
-  margins <- trimws(strsplit(substr(chars, 2, nchar(chars) - 1), ",")[[1]])
+  margins <- strsplit(substr(chars, 2, nchar(chars) - 1), ",")[[1]]
   if (left_is_exclusive) margins[1] = as.character(as.numeric(margins[1]) + 1);
   if (right_is_exclusive) margins[2] = as.character(as.numeric(margins[2]) - 1);
   return (margins)
