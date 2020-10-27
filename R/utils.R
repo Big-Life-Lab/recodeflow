@@ -110,3 +110,188 @@ get_variable_type_data_type <- function (var_details_rows, var_type, is_start_va
   }
   return (pkg.env$node_attr.dataType.float)
 }
+
+# ID role creation
+create_id_row <- function(data, id_role_name, database_name, variables){
+  # Check for role or variables
+  id_cols <- c()
+  if(!is.null(id_role_name$feeder_vars)){
+    id_cols <- append(id_cols,id_role_name$feeder_vars)
+  }else if (!is.null(id_role_name$feeder_roles)){
+    id_cols <- append(id_cols, select_vars_by_role(roles = id_role_name$feeder_roles, variables = variables))
+  }else {
+    message("id_role_name does not contain feeder_roles or feeder_vars.
+                  No id column was created")
+  }
+  if("data_name" %in% id_role_name$feeder_vars && is.null(data[["data_name"]])){
+    data[["data_name"]] <- database_name
+  }
+  tmp_data <- tidyr::unite(data = data, tmp, sep = "_", id_cols)
+  data[[id_role_name$var_name]] <- tmp_data$tmp
+
+  return(data)
+}
+
+create_label_list_element <- function(variable_rows) {
+  ret_list <- list(
+    # Variable type
+    type = NULL,
+    # Variable value units
+    unit = NULL,
+    # variable label long
+    label_long = NULL,
+    # variable label
+    label = NULL,
+    # Variable value label
+    values = c(),
+    # Variable value label long
+    values_long = c()
+  )
+  first_row <- variable_rows[1, ]
+  ret_list$type <-
+    as.character(first_row[[pkg.env$columns.ToType]])
+  ret_list$unit <-
+    as.character(first_row[[pkg.env$columns.Units]])
+  ret_list$label_long <-
+    as.character(first_row[[pkg.env$columns.VariableLabel]])
+  ret_list$label <-
+    as.character(first_row[[pkg.env$columns.VariableLabelShort]])
+  if (is_equal(ret_list$type, pkg.env$columns.value.CatType)) {
+    for (row_index in seq_len(nrow(variable_rows))) {
+      single_row <- variable_rows[row_index, ]
+      # Verify type stays the same
+      if (!is_equal(
+        ret_list$type,
+        as.character(single_row[[pkg.env$columns.ToType]])
+      )) {
+        stop(
+          paste(
+            as.character(single_row[[pkg.env$columns.Variables]]),
+            "does not contain all identical",
+            pkg.env$columns.ToType,
+            "variable cant change variable type for different values"
+          )
+        )
+      }
+      # Verify unit is identical
+      if (!is_equal(
+        ret_list$unit,
+        as.character(single_row[[pkg.env$columns.Units]])
+      )) {
+        stop(
+          paste(
+            as.character(single_row[[pkg.env$columns.Variables]]),
+            "does not contain all identical",
+            pkg.env$columns.Units,
+            "variable cant change unit type for different values"
+          )
+        )
+      }
+      # Verify variable label is identical
+      if (!is_equal(
+        ret_list$label_long,
+        as.character(single_row[[pkg.env$columns.VariableLabel]])
+      )) {
+        stop(
+          paste(
+            as.character(single_row[[pkg.env$columns.Variables]]),
+            "does not contain all identical",
+            pkg.env$columns.VariableLabel,
+            "variable cant change variableLabel for different values. VAL1:",
+            ret_list$label_long,
+            "VAL2:",
+            as.character(single_row[[pkg.env$columns.VariableLabel]])
+          )
+        )
+      }
+      value_being_labeled <-
+        as.character(single_row[[pkg.env$columns.CatValue]])
+      value_being_labeled <-
+        recode_variable_NA_formating(value_being_labeled, ret_list$type)
+      ret_list$values[[as.character(single_row[[
+        pkg.env$columns.CatLabel]])]] <-
+        value_being_labeled
+      ret_list$values_long[[as.character(single_row[[
+        pkg.env$columns.CatLabelLong]])]] <-
+        value_being_labeled
+    }
+  }
+
+  return(ret_list)
+}
+
+#' @title label_data
+#'
+#' @description Attaches labels to the data_to_label to preserve metadata
+#'
+#' @param label_list the label list object that contains extracted labels
+#' from variable details
+#' @param data_to_label The data that is to be labeled
+#' @importFrom sjlabelled set_labels set_label set_label<-
+#'
+#' @return Returns labeled data
+label_data <- function(label_list, data_to_label) {
+  for (variable_name in names(label_list)) {
+    if (is.na(label_list[[variable_name]]$type)) {
+      warning(
+        paste(
+          variable_name,
+          "is missing from variable_details or variables
+          (if it was also passed) please verify correct spelling"
+        )
+      )
+      next()
+    }
+    if (label_list[[variable_name]]$type == pkg.env$columns.value.CatType) {
+      if (class(data_to_label[[variable_name]]) != "factor") {
+        data_to_label[[variable_name]] <-
+          factor(data_to_label[[variable_name]])
+      }
+      data_to_label[[variable_name]] <-
+        sjlabelled::set_labels(data_to_label[[variable_name]],
+                               labels = label_list[[variable_name]]$values
+        )
+      attr(data_to_label[[variable_name]], "labels_long") <-
+        label_list[[variable_name]]$values_long
+    } else {
+      if (class(data_to_label[[variable_name]]) == "factor") {
+        data_to_label[[variable_name]] <-
+          as.numeric(levels(data_to_label[[variable_name]])
+                     [data_to_label[[variable_name]]])
+      } else {
+        tmp <- as.numeric(data_to_label[[variable_name]])
+        if(sum(is.na(tmp))!= length(tmp)){
+          data_to_label[[variable_name]] <-
+            as.numeric(data_to_label[[variable_name]])
+        }
+      }
+    }
+    sjlabelled::set_label(data_to_label[[variable_name]]) <-
+      label_list[[variable_name]]$label
+    attr(data_to_label[[variable_name]], "unit") <-
+      label_list[[variable_name]]$unit
+    attr(data_to_label[[variable_name]], "label_long") <-
+      label_list[[variable_name]]$label_long
+  }
+
+  return(data_to_label)
+}
+
+#' Vars selected by role
+select_vars_by_role <- function(roles, variables){
+  # Reduce row looping by only looping over only unique combinations
+  unique_roles <- unique(variables[[pkg.env$columns.Role]])
+  valid_patern <- c()
+  for (role_patern in unique_roles) {
+    # Split by commas to avoid partial matches being false positives
+    role_list <- strsplit(role_patern, ",")[[1]]
+    for (role in role_list){
+      if(role %in% roles){
+        valid_patern <- append(valid_patern, role_patern)
+      }
+    }
+  }
+  ret <- as.character(variables[variables[[pkg.env$columns.Role]] == valid_patern, pkg.env$columns.Variables][[pkg.env$columns.Variables]])
+
+  return(ret)
+}
