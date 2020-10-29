@@ -351,7 +351,7 @@ get_data_variable_name <-
            variable_being_checked) {
     data_variable_being_checked <- character()
     var_start_names <-
-      as.character(row_being_checked[[pkg.env$columns.Variablestart]])
+      as.character(row_being_checked[[pkg.env$columns.VariableStart]])
 
     if (grepl(data_name, var_start_names)) {
       var_start_names_list <- as.list(strsplit(var_start_names, ",")[[1]])
@@ -425,7 +425,7 @@ recode_columns <-
     rec_variables_to_process <-
       variables_to_process[(!grepl("Func::|map::|id_from::", variables_to_process[[pkg.env$columns.CatValue]])) &
                              (!grepl("DerivedVar::",
-                                     variables_to_process[[pkg.env$columns.Variablestart]])),]
+                                     variables_to_process[[pkg.env$columns.VariableStart]])),]
 
     label_list <- list()
     # Set interval if none is present
@@ -665,7 +665,7 @@ recode_columns <-
 
       # Extract the variables
       id_feeder_vars <-
-        as.character(current_id[[pkg.env$columns.Variablestart]])
+        as.character(current_id[[pkg.env$columns.VariableStart]])
       id_feeder_vars <- strsplit(id_feeder_vars, "::")[[1]][[2]]
       id_feeder_vars <-  gsub("\\[|\\]", "", id_feeder_vars)
       id_feeder_vars <- strsplit(id_feeder_vars, ",")[[1]]
@@ -830,7 +830,7 @@ recode_derived_variables <-
       # Check for presence of feeder variables in data and in the
       # variable being processed stack
       feeder_vars <-
-        as.list(strsplit(as.character(variable_rows[row_num,][[pkg.env$columns.Variablestart]]), "::"))[[1]][[2]]
+        as.list(strsplit(as.character(variable_rows[row_num,][[pkg.env$columns.VariableStart]]), "::"))[[1]][[2]]
       feeder_vars <- gsub("\\[|\\]", "", feeder_vars)
       feeder_vars <- as.list(strsplit(feeder_vars, ","))[[1]]
       feeder_vars <- sapply(feeder_vars, trimws)
