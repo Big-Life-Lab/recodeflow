@@ -1,6 +1,6 @@
-Package: xflow
+Package: recodeflow
 Type: Package
-Title: Converting xFlow Documents to PMML
+Title: Recode documents to PMML
 Version: 0.1.1
 Authors@R: c(
     person(given = "Yulric", family = "Sequeira", role = c("aut"), email = "ysequeira@ohri.ca"),
@@ -12,8 +12,8 @@ Depends:
 Imports:
     XML (>= 3.99.0.4)
 License: MIT + file LICENSE
-URL: https://github.com/Big-Life-Lab/xflow
-BugReports: https://github.com/Big-Life-Lab/xflow/issues
+URL: https://github.com/Big-Life-Lab/recodeflow
+BugReports: https://github.com/Big-Life-Lab/recodeflow/issues
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1

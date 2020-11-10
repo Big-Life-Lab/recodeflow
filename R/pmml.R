@@ -1,4 +1,4 @@
-#' Creates a PMML document from an xFlow document.
+#' Creates a PMML document from an document.
 #'
 #' @param var_details_sheet A data frame representing a variable details sheet.
 #' @param vars_sheet A data frame representing a variables sheet.
@@ -14,7 +14,7 @@
 #' @examples
 #'
 #' @export
-xflow_to_pmml <- function(var_details_sheet, vars_sheet, db_name, vars_to_convert = NULL) {
+recode_to_pmml <- function(var_details_sheet, vars_sheet, db_name, vars_to_convert = NULL) {
   doc <- XML::xmlNode(pkg.env$node_name.pmml, namespaceDefinitions=c(pkg.env$node_namespace.pmml), attrs=c(version=pkg.env$node_attr.pmml_version))
   dict <- XML::xmlNode(pkg.env$node_name.data_dict)
   recognized_vars_to_convert <- c(character(0))
