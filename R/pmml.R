@@ -1,4 +1,4 @@
-#' Creates a PMML document from variable and variable details for specified database.
+#' Creates a PMML document from variable and variable details sheets for specified database.
 #'
 #' @param var_details_sheet A data frame representing a variable details sheet.
 #' @param vars_sheet A data frame representing a variables sheet.
