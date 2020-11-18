@@ -1,6 +1,6 @@
-Package: xflow
+Package: recodeflow
 Type: Package
-Title: Converting xFlow Documents to PMML
+Title: Contains functions to interface with variable details sheets, including recoding variables and converting them to PMML
 Version: 0.1.1
 Authors@R: c(
     person(given = "Yulric", family = "Sequeira", role = c("aut"), email = "ysequeira@ohri.ca"),
@@ -10,7 +10,7 @@ Description: Creates PMML documents using variable and variable details sheets.
 Depends:
     R (>= 3.1.0)
 Imports:
-    XML (>= 3.99.0.3),
+    XML (>= 3.98-1.11),
     sjlabelled,
     stringr,
     tidyr,
@@ -18,8 +18,8 @@ Imports:
     dplyr,
     magrittr
 License: MIT + file LICENSE
-URL: https://github.com/Big-Life-Lab/xflow
-BugReports: https://github.com/Big-Life-Lab/xflow/issues
+URL: https://github.com/Big-Life-Lab/recodeflow
+BugReports: https://github.com/Big-Life-Lab/recodeflow/issues
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1

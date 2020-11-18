@@ -13,7 +13,7 @@ test_that("The PMML file is correctly generated", {
   db_name <- "cchs2001_p"
   vars <- c("ADL_01", "ADL_06", "ALW_2A1")
 
-  actual_pmml <- xflow_to_pmml(
+  actual_pmml <- recode_to_pmml(
     var_details_sheet,
     vars_sheet,
     db_name,
