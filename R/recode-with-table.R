@@ -510,6 +510,7 @@ recode_columns <-
         else {
           recoded_data[variable_being_checked] <- else_default
         }
+        else_rows <- nrow(recoded_data)
         rows_being_checked <-
           rows_being_checked[!rows_being_checked[[pkg.env$columns.From]] == "else",]
         if (nrow(rows_being_checked) > 0) {
@@ -587,6 +588,7 @@ recode_columns <-
               as.character(row_being_checked[[pkg.env$columns.From]])
             log_table[row, "rows_recoded"] <-
               sum(valid_row_index, na.rm = TRUE)
+            else_rows <- else_rows - log_table[row, "rows_recoded"]
 
             value_recorded <-
               recode_variable_NA_formating(value_recorded, label_list[[variable_being_checked]]$type)
@@ -621,7 +623,14 @@ recode_columns <-
               " the following recodes were made: "
             )
             # Reset rowCount to avoid confusion
+            extra_row <- nrow(log_table)+1
+            log_table[extra_row , "value_to"] <- else_value
+            log_table[extra_row , "From"] <-
+              "else"
+            log_table[extra_row , "rows_recoded"] <-
+              else_rows
             rownames(log_table) <- NULL
+
             print(log_table)
           }
         }
