@@ -10,6 +10,8 @@ get_variable_type_data_type(var_details_rows, var_type, is_start_var)
 \item{var_details_rows}{All variable details rows for the variable.}
 
 \item{var_type}{Variable type}
+
+\item{is_start_var}{boolean if the passed variable is variable start}
 }
 \value{
 `var_type` data type.

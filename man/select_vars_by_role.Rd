@@ -6,6 +6,14 @@
 \usage{
 select_vars_by_role(roles, variables)
 }
+\arguments{
+\item{roles}{a vector containing a single or multiple roles to match by}
+
+\item{variables}{the variables sheet containing variable info}
+}
+\value{
+a vector containing the variable names that match the passed roles
+}
 \description{
-Vars selected by role
+Selects variables from variables sheet based on passed roles
 }

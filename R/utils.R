@@ -3,8 +3,6 @@
 #' @param chars Character vector.
 #'
 #' @return Margins as character vector.
-#'
-#' @examples
 get_margins <- function (chars) {
   return (trimws(strsplit(chars, ":")[[1]]))
 }
@@ -14,8 +12,6 @@ get_margins <- function (chars) {
 #' @param chars Character object.
 #'
 #' @return Whether `chars` can be converted to a numeric value.
-#'
-#' @examples
 is_numeric <- function(chars) {
   return (suppressWarnings(!is.na(as.numeric(chars))))
 }
@@ -25,8 +21,6 @@ is_numeric <- function(chars) {
 #' @param var_details_row Variable details sheet row.
 #'
 #' @return Whether recFrom is a range.
-#'
-#' @examples
 is_rec_from_range <- function(var_details_row) {
   return (grepl(":", var_details_row$recFrom, fixed=TRUE))
 }
@@ -39,8 +33,6 @@ is_rec_from_range <- function(var_details_row) {
 #' @param db_name Database name.
 #'
 #' @return All variable details rows for the variable and database combination.
-#'
-#' @examples
 get_var_details_rows <- function (var_details_sheet, var_name, db_name) {
   var_name_indices <- get_var_details_row_indices(var_details_sheet, var_name)
   db_indices <- which(grepl(db_name, var_details_sheet$databaseStart), arr.ind = TRUE)
@@ -54,8 +46,6 @@ get_var_details_rows <- function (var_details_sheet, var_name, db_name) {
 #' @param var_name Variable name.
 #'
 #' @return All variable details row indices for a variable.
-#'
-#' @examples
 get_var_details_row_indices <- function (var_details_sheet, var_name) {
   return (which(var_details_sheet$variable == var_name, arr.ind = TRUE))
 }
@@ -66,8 +56,6 @@ get_var_details_row_indices <- function (var_details_sheet, var_name) {
 #' @param vars_sheet Variable sheet data frame.
 #'
 #' @return Variable row.
-#'
-#' @examples
 get_var_sheet_row <- function (var_name, vars_sheet) {
   return (vars_sheet[which(vars_sheet$variable == var_name, arr.ind = TRUE)[1],])
 }
@@ -78,8 +66,6 @@ get_var_sheet_row <- function (var_name, vars_sheet) {
 #' @param db_name Name of database to extract from.
 #'
 #' @return character The name of the start variable.
-#'
-#' @examples
 get_start_var_name <- function(var_details_row, db_name) {
   # Create regex using database name, database variable start infix, followed by variable start
   var_regex <- paste0(db_name, pkg.env$db_var_start_infix, "(.+?)[,?]")
@@ -95,10 +81,9 @@ get_start_var_name <- function(var_details_row, db_name) {
 #'
 #' @param var_details_rows All variable details rows for the variable.
 #' @param var_type Variable type
+#' @param is_start_var boolean if the passed variable is variable start
 #'
 #' @return `var_type` data type.
-#'
-#' @examples
 get_variable_type_data_type <- function (var_details_rows, var_type, is_start_var) {
   is_categorical <- var_type %in% c(pkg.env$var_details_cat, pkg.env$var_cat)
   if (is_categorical) {
@@ -111,7 +96,16 @@ get_variable_type_data_type <- function (var_details_rows, var_type, is_start_va
   return (pkg.env$node_attr.dataType.float)
 }
 
-# ID role creation
+#' ID role creation
+#'
+#' Creates Id row for rec_with_table
+#'
+#' @param data the data that the id role row is created for
+#' @param id_role_name name for the role that id is created from
+#' @param database_name the name of the database
+#' @param variables variables sheet containing variable information
+#'
+#' @return data with the id row attached
 create_id_row <- function(data, id_role_name, database_name, variables){
   # Check for role or variables
   id_cols <- c()
@@ -126,12 +120,20 @@ create_id_row <- function(data, id_role_name, database_name, variables){
   if("data_name" %in% id_role_name$feeder_vars && is.null(data[["data_name"]])){
     data[["data_name"]] <- database_name
   }
-  tmp_data <- tidyr::unite(data = data, tmp, sep = "_", id_cols)
-  data[[id_role_name$var_name]] <- tmp_data$tmp
+  # tmp_column is a column name it cannot be passed as a string as it breaks the unite function
+  tmp_data <- tidyr::unite(data = data, tmp_column, sep = "_", id_cols)
+  data[[id_role_name$var_name]] <- tmp_data$tmp_column
 
   return(data)
 }
 
+#' Create label list element
+#'
+#' A data labeling utility function for creating individual variable labels
+#'
+#' @param variable_rows all variable details rows containing 1 variable information
+#'
+#' @return a list containing labels for the passed variable
 create_label_list_element <- function(variable_rows) {
   ret_list <- list(
     # Variable type
@@ -278,6 +280,13 @@ label_data <- function(label_list, data_to_label) {
 }
 
 #' Vars selected by role
+#'
+#' Selects variables from variables sheet based on passed roles
+#'
+#' @param roles a vector containing a single or multiple roles to match by
+#' @param variables the variables sheet containing variable info
+#'
+#' @return a vector containing the variable names that match the passed roles
 select_vars_by_role <- function(roles, variables){
   # Reduce row looping by only looping over only unique combinations
   unique_roles <- unique(variables[[pkg.env$columns.Role]])

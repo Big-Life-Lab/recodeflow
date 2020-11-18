@@ -2,7 +2,7 @@
 
 export(is_equal)
 export(rec_with_table)
-export(xflow_to_pmml)
+export(recode_to_pmml)
 importFrom(dplyr,do)
 importFrom(dplyr,rowwise)
 importFrom(dplyr,select)
