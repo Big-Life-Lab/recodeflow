@@ -39,84 +39,98 @@ is_equal <- function(v1, v2) {
 }
 #' Recode with Table
 #'
-#' Recode with Table is responsible for recoding values of a dataset based on
-#' the specifications in variable_details.
+#' Creates new variables by recoding variables in a dataset using the rules
+#' specified in a variables details sheet
 #'
 #' The \href{https://github.com/Big-Life-Lab/bllflow/blob/master/inst/extdata/PBC-variableDetails.csv}{variable_details}
-#'  dataframe needs the following variables to function:
+#'  dataframe needs the following columns:
 #'  \describe{
-#'   \item{variable}{name of new (mutated) variable that is recoded}
-#'   \item{toType}{type the variable is being recoded to
+#'   \item{variable}{Name of the new variable created. The name of the new
+#'   variable can be the same as the original variable if it does not change the original variable definition}
+#'   \item{toType}{type the new variable
 #'   \emph{cat = categorical, cont = continuous}}
-#'   \item{databaseStart}{name of dataframe with original variables to be
-#'   recoded}
-#'   \item{variableStart}{name of variable to be recoded}
+#'   \item{databaseStart}{Names of the databases that the original variable can
+#'   come from. Each database name should be seperated by a comma. For eg.,
+#'   "cchs2001_p, cchs2003_p,cchs2005_p,cchs2007_p"}
+#'   \item{variableStart}{Names of the original variables within each database
+#'   specified in the databaseStart column. For eg. ,
+#'   "cchs2001_p::RACA_6A,cchs2003_p::RACC_6A,ADL_01". The final variable
+#'   specified is the name of the variable for all other databases specified in
+#'   databaseStart but not in this column. For eg., ADL_01 would be the original
+#'   variable name in the cchs2005_p and cchs2007_p databases.}
 #'   \item{fromType}{variable type of start variable.
 #'   \emph{cat = categorical or factor variable}
 #'   \emph{cont = continuous variable (real number or integer)}}
 #'   \item{recTo}{Value to recode to}
 #'   \item{recFrom}{Value/range being recoded from}
 #'  }
-#'  Each row in \emph{variable_details} comprises one category in a
-#'  newly transformed variable. The rules for each category the new variable
-#'  are a string in \emph{recFrom} and value in \emph{recTo}.
-#'  These recode pairs are the same syntax as \emph{sjmisc::rec()},
-#'  except in \emph{sjmisc::rec()} the pairs are a string for the function
-#'  attribute \emph{rec =}, separated by '\emph{=}'.
-#'  For example in \emph{rec_w_table}
-#'  \emph{variable_details$recFrom = 2; variable_details$recTo = 4}
-#'  is the same as \emph{sjmisc::rec(rec = "2=4")}.
-#'  the pairs are obtained from the RecFrom and RecTo columns
+#'  Each row in the \emph{variables details} sheet encodes the rule for recoding
+#'  value(s) of the original variable to a category in the new variable. The
+#'  categories of the new variable are encoded in the \emph{recTo} column and the
+#'  value(s) of the original variable that recode to this new value are encoded
+#'  in the \emph{recFrom} column. These recode columns follow a syntax
+#'  similar to the \emph{sjmisc::rec()} function. Whereas in the \emph{sjmisc::rec()}
+#'  function the recoding rules are in one string, in the variables details sheet
+#'  they are encoded over multiple rows and columns (recFrom an recTo). For eg.,
+#'  a recoding rule in the sjmisc function would like like "1=2;2=3" whereas
+#'  in the variables details sheet this would be encoded over two rows with
+#'  recFrom and recTo values of the first row being 1 and 2 and similarly for
+#'  the second row it would be 2 and 3. The rules for describing recoding
+#'  pairs are shown below:
 #'   \describe{
-#'     \item{recode pairs}{each recode pair is row. see above example
-#'     or \emph{PBC-variableDetails.csv}}
-#'     \item{multiple values}{multiple old values that should be recoded into
-#'     a new single value may be separated with comma, e.g.
-#'     \emph{recFrom = "1,2"; recTo = 1}}
-#'     \item{value range}{a value range is indicated by a colon, e.g.
-#'     \emph{recFrom= "1:4"; recTo = 1} (recodes all values from 1 to 4 into 1)}
-#'     \item{value range for doubles}{for double vectors (with fractional part),
-#'      all values within the specified range are recoded; e.g.
-#'      \emph{recFrom = "1:2.5'; recTo = 1} recodes 1 to 2.5 into 1,
-#'      but 2.55 would not be recoded
-#'      (since it's not included in the specified range)}
-#'     \item{\emph{"min"} and \emph{"max"}}{minimum and maximum values
-#'     are indicates by \emph{min} (or \emph{lo}) and \emph{max} (or \emph{hi}),
-#'      e.g. \emph{recFrom = "min:4"; recTo = 1} (recodes all values from
-#'      minimum values of \emph{x} to 4 into 1)}
-#'     \item{\emph{"else"}}{all other values, which have not been specified yet,
+#'     \item{recode pairs}{Each recode pair is a row}
+#'     \item{multiple values}{Multiple values from the old variable that should
+#'     be recoded into a new category of the new variable should be separated
+#'     with a comma. e.g.,
+#'     \emph{recFrom = "1,2"; recTo = 1}} will recode values of 1 and 2 in the
+#'     original variable to 1 in the new variable
+#'     \item{value range}{A value range is indicated by a colon, e.g.
+#'     \emph{recFrom= "1:4"; recTo = 1} will recode all values from 1 to 4 into 1}
+#'     \item{\emph{min} and \emph{max}}{minimum and maximum values
+#'     are indicated by \emph{min} (or \emph{lo}) and \emph{max} (or \emph{hi}),
+#'      e.g. \emph{recFrom = "min:4"; recTo = 1} will recode all values from the
+#'      minimum value of the original variable to 4 into 1}
+#'     \item{\emph{"else"}}{All other values, which have not been specified yet,
 #'      are indicated by \emph{else}, e.g. \emph{recFrom = "else"; recTo = NA}
-#'      (recode all other values (not specified in other rows) to "NA")}
-#'     \item{\emph{"copy"}}{the \emph{"else"}-token can be combined with
+#'      will recode all other values (not specified in other rows) of the
+#'      original variable to "NA")}
+#'     \item{\emph{"copy"}}{the \emph{else} token can be combined with
 #'     \emph{copy}, indicating that all remaining, not yet recoded values should
 #'      stay the same (are copied from the original value), e.g.
 #'      \emph{recFrom = "else"; recTo = "copy"}}
-#'     \item{\emph{NA}'s}{\emph{NA} values are allowed both as old and
-#'     new value, e.g.
+#'     \item{\emph{NA}'s}{\emph{NA} values are allowed both for the original
+#'     and the new variable, e.g.
 #'     \emph{recFrom "NA"; recTo = 1. or "recFrom = "3:5"; recTo = "NA"}
 #'     (recodes all NA into 1,
 #'     and all values from 3 to 5 into NA in the new variable)}
 #' }
 #'
-#' @param data A dataframe containing the variables to be recoded. Can also be a list of dataframes
-#' @param variables character vector containing variable names to recode or
-#' a variables csv containing additional variable info
-#' @param database_name String, the name of the dataset containing the variables
-#' to be recoded. Can also be a vector of strings if data is a list
-#' @param variable_details A dataframe containing the specifications (rules)
+#' @param data A dataframe containing the variables to be recoded.
+#' Can also be a named list of dataframes.
+#' @param variables Character vector containing the names of the new variables
+#' to recode to or a dataframe containing a variables sheet.
+#' @param database_name A String containing the name of the database containing
+#' the original variables which should match up with a database from the
+#' databaseStart column in the variables details sheet. Should be a character
+#' vector if data is a named list where each vector item matches a name in the
+#' data list and also matches with a value in the databaseStart column of a
+#' variable details sheet.
+#' @param variable_details A dataframe containing the specifications
 #' for recoding.
 #' @param else_value Value (string, number, integer, logical or NA) that is used
 #' to replace any values that are outside the specified ranges
 #' (no rules for recoding).
-#' @param append_to_data Logical, if \code{TRUE} (default), recoded variables
-#' will be appended to the data.
-#' @param log Logical, if \code{FALSE} (default), a log of recoding will
-#' not be printed.
+#' @param append_to_data Logical, if \code{TRUE} (default), the newly
+#' created variables will be appended to the original dataset.
+#' @param log Logical, if \code{FALSE} (default), a log containing information
+#' about the recoding will not be printed.
 #' @param notes Logical, if \code{FALSE} (default), will not print the
 #' content inside the `Note`` column of the variable being recoded.
 #' @param var_labels labels vector to attach to variables in variables
-#' @param custom_function_path path to location of the function to load
-#' @param attach_data_name to attach name of database to end table
+#' @param custom_function_path string containing the path to the file
+#' containing functions to run for derived variables. This file will be sourced
+#' and its functions loaded into the R environment.
+#' @param attach_data_name logical to attach name of database to end table
 #' @param id_role_name name for the role to be used to generate id column
 #' @param load_from_environment Name of package to load variables and variable_details from
 #'
