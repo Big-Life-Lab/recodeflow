@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 
 ## Introduction
 
-This vignette describes how the `variables.csv` worksheet is organized and how to find variables that you can transform. See also the vignette `variable_details.csv`. The [Get Started](https://big-life-lab.github.io/cchsflow/articles/get_started.html) vignette provides examples of how to use the two worksheets. 
+This vignette describes how the `variables.csv` worksheet is organized and how to find variables that you can transform. See also the vignette `variable_details.csv`. The [Get Started](https://big-life-lab.github.io/recodeflow/articles/get_started.html) vignette provides examples of how to use the two worksheets. 
 
 Read `variables.csv`
 
@@ -26,7 +26,7 @@ variables <- read.csv(file.path(getwd(), '../inst/extdata/variables.csv'))
 
 cat("There are", nrow(variables), "variables, grouped in", sum(!duplicated(variables$subject)),
     "subjects and", sum(!duplicated(variables$section)), "sections that are available for
-    transformation in CCHS cycles from 2001 to 2014.", "\n\n")
+    transformation", "\n\n")
 
 ```
 
@@ -65,16 +65,16 @@ In each row there are 7 columns in this worksheet and they are as follows:
 
 7. **units:** any units for the final variable.
 
-8. **databaseStart:** the list of CCHS surveys that contain the variable of interest
+8. **databaseStart:** the list of surveys that contain the variable of interest
 
-9. **variableStart:** the original names of the variables as they are listed in each respective CCHS cycle
+9. **variableStart:** the original names of the variables as they are listed in each respective survey cycle
 
 ## Derived Variables
 
-Derived variables follow the same naming conventions as CCHS variables when being listed in `variables.csv`. 
+Derived variables follow the same naming conventions as transformed variables when being listed in `variables.csv`. 
 
 ## Contributing or customizing `variables.csv`
 
-We recommend that you copy `variables.csv` with the variables that you use for your project. You can include only the variables that you use for your project, thereby providing a reference for your project. `variables.csv` is a CSV file to allow use `cchsflow` within teams that do not use R or have programming experience. 
+We recommend that you copy `variables.csv` with the variables that you use for your project. You can include only the variables that you use for your project, thereby providing a reference for your project. `variables.csv` is a CSV file to allow use of `recodeflow` within teams that do not use R or have programming experience. 
 
-You can create your own transformed or derived variables by using the cchsflow `variables.csv` as a template. We welcome [issues](https://github.com/Big-Life-Lab/cchsflow/issues) for comments to existing variables in `variables.csv. Also welcomed are PR for new transformations that you feel are helpful for others who use the CCHS data. See [Contributing](https://big-life-lab.github.io/cchsflow/CONTRIBUTING.html).
+You can create your own transformed or derived variables by using the _recodeflow_ `variables.csv` as a template. We welcome [issues](https://github.com/Big-Life-Lab/recodeflow/issues) for comments to existing variables in `variables.csv. See [Contributing](https://big-life-lab.github.io/recodeflow/CONTRIBUTING.html).

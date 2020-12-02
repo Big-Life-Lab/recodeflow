@@ -14,14 +14,14 @@ knitr::opts_chunk$set(echo = TRUE, collapse = TRUE, comment = "#>")
 
 ```{r eval= FALSE}
 # Install release version from CRAN
-install.packages("cchsflow")
+install.packages("recodeflow")
 
 # Install the most recent version from GitHub
-devtools::install_github("Big-Life-Lab/cchsflow")
+devtools::install_github("Big-Life-Lab/recodeflow")
 ```
 
 ```{r results= 'hide', message = FALSE, warning=FALSE}
-library(cchsflow)
+library(recodeflow)
 ```
 
 The vignettes use the `bind_rows` function in the
@@ -34,12 +34,12 @@ library(dplyr)
 
 # Transform variables into harmonized versions
 
-Use `rec_with_table()` to transform the variables of a CCHS dataset.
+Use `rec_with_table()` to transform the variables of a dataset.
 
 ## Example 1. Transform a single variable from a single database
 
-In this example, the `sex` variable in the 2001 CCHS cycle is transformed into a
-harmonized `sex` variable that is consistent all CCHS cycles.
+In this example, the `status` variable in the test1 cycle is transformed into a
+harmonized `status` variable that is consistent all datasets.
 
 ```{r}
 sex2001 <- rec_with_table(cchs2001_p, "DHH_SEX",
@@ -52,39 +52,16 @@ sex2001 <- rec_with_table(cchs2001_p, "DHH_SEX",
 head(sex2001)
 ```
 
-`cchs2001_p` is the name of test CCHS data that is included in the _cchsflow_
-library. _cchsflow_ includes test CCHS data for the public use microdata file
-(PUMF) for all general household survey (.1 versions) between 2001 and 2013.
-Each survey cycle has a sample of 200 respondents. `cchs2000_p` indicates this 
-isthe CCHS 2001 PUMF file. See [Reference](../reference/index.html) for more
-information of each CCHS cycle.
-
-You'll want to use _cchsflow_ on your own CCHS data that you'll need to first
-load: something like `cchs2001 <- read.csv("~/data/cchs2001.csv")`. CCHS PUMF 
-data can be obtained from Statistics Canada. 
-
-`DHH_SEX` is the name of the harmonized variable for sex. Up to 2007, the
-variable names in CCHS changed every cycle. Since 2007, there has _generally_
-been a consistent name. _cchsflow_ uses the variable name from the 2007 cycle
-whenever possible. For example, in the CCHS 2001, the variable for sex is
-`DHHA_SEX` and in CCHS 2007 the same variable is `DHH_SEX`. This name, `DHH_SEX`
-is the harmonized name for sex, meaning `DHHA_SEX` is transformed to `DHH_SEX`
-using `rec_with_table()`.
-
 The rules for the transformation and harmonization are in two dataframes that
-are included in `variables` and `variable_details`, both included in _cchsflow_.
-There are vignettes that further describe `variables` and `variable_details`,
-including how to add or customize transformed variables.
+are included in `variables` and `variable_details`, both included in
+_recodeflow_. There are vignettes that further describe `variables` and
+`variable_details`, including how to add or customize transformed variables.
 
 ## Which variables are transformed? How "good" is the transformation?
 
-_cchsflow_ includes commonly used sociodemographic, health behaviour and health
-status variables. In general, variables across CCHS cycles can be grouped into
-five categories:
-
-1. Consistent and unchanged across all cycles. These variables have no changes
-   to the wording of the question that was asked, the response values and who
-   was asked the question (same inclusion criteria and skip pattern).
+1. Consistent and unchanged across all data cycles. These variables have no
+   changes to the wording of the question that was asked, the response values
+   and who was asked the question (same inclusion criteria and skip pattern).
 
 2. Mostly consistent across cycles. These variables may have a small change in
    wording or response category. Notes for these variables are printed to the
@@ -94,7 +71,7 @@ five categories:
    be used in your study. See [Example 2](#example2).
 
 3. Either not collected in all cycles or have major changes between cycles.
-   These variable may be included in _cchsflow_ with a note that says which
+   These variable may be included in _recodeflow_ with a note that says which
    cycles include the variable and can be transformed to a common variable. See
    [Example 4](#example4).
 
@@ -103,9 +80,9 @@ five categories:
    problematic variables". See [Example 7](#example7).
 
 5. Not consistent between cycles. Variable that are inconsistent or not asked in
-   most cycles are not included in _cchsflow_. In the future, we hope to include
+   most cycles are not included in _recodeflow_. In the future, we hope to include
    these variables with an marker that they've been reviewed but rejected from
-   inclusion in _cchsflow_.
+   inclusion in _recodeflow_.
 
 ## Example 2. Variable transformation with a note {#example2}
 
@@ -114,44 +91,15 @@ affect your decision to use a harmonized variable.
 
 ```{r}
 warning(
-  "cchsflow includes ", length(unique(variable_details$notes)),
+  "recodeflow includes ", length(unique(variable_details$notes)),
   " variables with notes."
 )
 ```
-
-For example, for `DHHGAGE_A` the category `NA::b` has the following `note`:
-
-`Not applicable, don't know, refusal, not stated (96-99) were options only in CCHS 2003, but had zero responses`.
-
-This note informs the decision to combine values 96 to 99 in `DHHGAGE_A` for
-CCHS2003 into one common missing value `NA::b`. The label for the `NA::b`
-category is, "`don't know (97); refusal (98); not stated (99)`".
 
 By default, `rec_with_table()` prints notes to the console.
 
 ```{r}
 BMI2001 <- rec_with_table(cchs2001_p, "HWTGBMI", log = TRUE)
-```
-
-### Notes with guidance or additional information
-
-Several variables such as BMI have a quite a few notes reflecting a range of
-changes that occurred over CCHS cycles. Variables with notes can usually be used
-after reviewing and considering whether or how the variable changes affect your
-use. There can also be further guidance in notes. For example, BMI notes include
-advice to use `HWTGBMI_der`. Despite the large number of changes, BMI can be
-used for most studies because the common transformed variable `HWTGBMI_der` was
-derived from height and weight variables that are included and largely unchanged
-across CCHS cycles. However, to use `HWTGBMI_der` you'll also need to include
-the transformed measures for height (`HWTGHTM`) and weight (`HWTGWTK`). More
-information about `HWTGBMI_der` can be found in the documentation reference for
-'derived variable functions' or by typing `?BMI_fun` in the R console.
-
-```{r}
-BMI2001C <- rec_with_table(cchs2001_p,
-  c("HWTGHTM", "HWTGWTK", "HWTGBMI_der"),
-  log = TRUE
-)
 ```
 
 ### Warning messages
@@ -189,12 +137,11 @@ barplot(
 
 ### Missing data
 
-If you've been watching, you may have noticed that _cchsflow_ recodes the values
-in factor or categorical variables for 6 ("not applicable"), 7 ("don’t know"),
-and 8 ("refusal"), 9 ("not stated") into `tagged_NA` values NA(a) ("not
-applicable") and NA (b) ("missing"). There are two reasons. First, the typical
-uses of CCHS consider the two values "not applicable" and "missing" for most
-situations. Second, R and other open languages typically support only one NA.
+If you've been watching, you may have noticed that _recodeflow_ recodes the
+values in factor or categorical variables for 6 ("not applicable"), 7
+("don’t know"), and 8 ("refusal"), 9 ("not stated") into `tagged_NA` values
+NA(a) ("not applicable") and NA (b) ("missing"). The reason being is that R and
+other open languages typically support only one NA.
 
 Be careful when use use `NA` in your study. See
 [`missing data (tagged_na)`](../articles/tagged_na_usage.html)for more
@@ -227,7 +174,7 @@ called unless you would like to modify them.
   modified if want use your own `variable_details.csv` sheet.
 - `else_value` defaults to NA. Values out of range set to NA.
 - `append_to_data` defaults to FALSE. Transformed variables will not be appended
-  to the original CCHS dataset.
+  to the original dataset.
 - `log` defaults to FALSE. Logs of the variable transformations will not be
   displayed.
 - `notes` defaults to TRUE. Information in the `Notes` column from
@@ -240,12 +187,12 @@ called unless you would like to modify them.
   column that denotes the name of the dataset each transformed row came from.
   See [Example 8](#example8).
 
-## Example 3. Transform a single variable from multiple CCHS datasets
+## Example 3. Transform a single variable from multiple datasets
 
 This example shows how you can transform and combine a variable across multiple
-CCHS cycles. The sex variable in CCHS 2001 (`DHHA_SEX`) and CCHS 2012
+survey cycles. The sex variable in CCHS 2001 (`DHHA_SEX`) and CCHS 2012
 (`DHH_SEX`) is transformed a common variable (`DHH_SEX`) and combined into a
-single dataset. In _cchsflow_ the CCHS 2007 variable name is used as the common
+single dataset. In _recodeflow_ the CCHS 2007 variable name is used as the common
 variable name. See the [variable_details vignette](variable_details.html) for
 more information.
 
@@ -268,11 +215,11 @@ tail(combined_sex)
 
 ## Example 4. Transform a single variable from multiple databases that changes categories between cycles. {#example4}
 
-There are many variables in the CCHS that changes in categories between cycles
-in a way that the variable cannot preserve all categories for all CCHS cycles.
-An example is the categorical variable for `age`. _cchsflow_ offers three
-options to facilitate the use of these variables with inconsistent categories
-across cycles.
+There are many variables in a survey cycle that can changes in categories
+between cycles in a way that the variable cannot preserve all categories for all
+CCHS cycles. An example is the categorical variable for `age`. _recodeflow_
+offers three options to facilitate the use of these variables with inconsistent
+categories across cycles.
 
 ### Option 1: transform category `age` variable into a common variable for only cycles with the same category responses
 

@@ -32,7 +32,7 @@ cat("In the `variable_details.csv` worksheet there are", nrow(variable_details),
 
 ### Rows
 
-Each row in `variable_details.csv` holds the recode rules for transforming a single category for a variable in `variables.csv`. An exception to this rule are the "don't know", "refusal", and "not stated" categories, which are combined as a single missing category. For each unique variable, an `else` row is used to assign values not identified in other rows and are outside identified ranges. We recommend not combining variables across the CCHS if variable has an important change between CCHS cycles `variable_details$notes` is used to identify issues that may be relevant when transforming the variable or category.
+Each row in `variable_details.csv` holds the recode rules for transforming a single category for a variable in `variables.csv`. An exception to this rule are the "don't know", "refusal", and "not stated" categories, which are combined as a single missing category. For each unique variable, an `else` row is used to assign values not identified in other rows and are outside identified ranges. We recommend not combining variables if the variable has an important change between survey cycles. `variable_details$notes` is used to identify issues that may be relevant when transforming the variable or category.
 
 If a categorical variable has 4 distinct categories, along with a "not applicable" category and the 3 missing categories, there will be 7 rows: 
 
@@ -49,9 +49,10 @@ If a categorical variable has 4 distinct categories, along with a "not applicabl
 `rec_with_table()` uses the `tagged_na()` function from the [haven](https://www.rdocumentation.org/packages/haven/versions/2.1.1) package to tag not applicable responses as `NA(a)`, and missing values (don't know, refusal, not stated) as `NA(b)`. As you will see later, not applicable values are transformed to `NA::a`, and missing values are transformed to `NA::b`. See [here](tagged_na_usage.html) for more information about `tagged_na()`.
 
 ### Columns
+
 The following are the columns that are listed in `variable_details.csv`. Many of these columns need to be specified in order for `rec_with_table()` to be functional. We will use the `sex` variable to illustrate how each column is specified:
 
-1. **variable:** the name of the final transformed variable. In `variable_details.csv`, we have designated the variable names used in CCHS cycles from 2007 to 2014 as the final transformed variable name.
+1. **variable:** the name of the final transformed variable.
 
 ```{r, echo=FALSE, warning=FALSE}
 kable(variable_details[c(198:202), 1], col.names = 'variable')
@@ -69,23 +70,19 @@ kable(variable_details[c(198:202), c(1:2)])
 kable(variable_details[c(198:202), c(1:3)])
 ```
 
-4. **databaseStart:** the CCHS surveys that contain the variable of interest, separated by commas. If the PUMF dataset from the CCHS is used, the survey names will have a _p suffix. If the Shared dataset from the CCHS is used, the survey names will have a _s suffix.
+4. **databaseStart:** the surveys that contain the variable of interest, separated by commas.
 
 ```{r, echo=FALSE, warning=FALSE}
 kable(variable_details[c(198:202), c(1:4)])
 ```
 
-5. **variableStart:** the original names of the variables as they are listed in each respective CCHS cycle, separated by commas. If the variable name in a particular CCHS survey is different from the transformed variable name, write out the CCHS survey identifier, add two colons, and write out the original variable name for that cycle. If the variable name in a particular CCHS survey is the same as the transformed variable name, the variable name is written out surrounded by square brackets. Note: this only needs to be written out **once**.
+5. **variableStart:** the original names of the variables as they are listed in each respective survey cycle, separated by commas. If the variable name in a particular survey is different from the transformed variable name, write out the survey identifier, add two colons, and write out the original variable name for that cycle. If the variable name in a particular survey is the same as the transformed variable name, the variable name is written out surrounded by square brackets. Note: this only needs to be written out **once**.
 
 ```{r, echo=FALSE, warning=FALSE}
 kable(variable_details[c(198:202), c(1:5)])
 ```
 
-+ The categorical `age` variable in the 2001 CCHS survey is `DHHAGAGE`. If the final variable name for categorical age in the **variable** column is `DHHGAGE`, you would write the following in this column: `cchs2001::DHHAGAGE`
-
-+ The categorical age variable in the CCHS surveys from 2007 to 2014 is `DHHGAGE`. Since it is the same as the final variable name, you would write in this column `[DHHGAGE]` **once**. The variable name that is denoted within the square brackets is the default variable name.
-
-6. **fromType:** the variable type as indicated in the CCHS surveys. As indicated in the **toType** column, categorical variables are denoted as `cat` and continuous variables are denoted as `cont`.
+6. **fromType:** the variable type as indicated in surveys. As indicated in the **toType** column, categorical variables are denoted as `cat` and continuous variables are denoted as `cont`.
 
 ```{r, echo=FALSE, warning=FALSE}
 kable(variable_details[c(198:202), c(1:6)])
@@ -97,7 +94,7 @@ kable(variable_details[c(198:202), c(1:6)])
 kable(variable_details[c(198:202), c(1:7)])
 ```
 
-+ For categorical variables that are not changing variable types (i.e. cat to cat), it is ideal to retain the same values as indicated in each CCHS survey. But for transformed categorical variables that have changed in type (i.e cat to cont), you will have to develop values that make the most sense to your analysis. In `variable_details.csv`, variables that have gone from cat to cont have used midpoints of each category.
++ For categorical variables that are not changing variable types (i.e. cat to cat), it is ideal to retain the same values as indicated in each survey. But for transformed categorical variables that have changed in type (i.e cat to cont), you will have to develop values that make the most sense to your analysis. In `variable_details.csv`, variables that have gone from cat to cont have used midpoints of each category.
 
 8. **numValidCat:** the number of categories for a variable. This only applies to variables in which the **toType** is cat. For continuous variables, `numValidCat = N/A`. Not applicable, missing, and else categories are not included in the category count. Note that this column is not necessary for `rec_with_table()`.
 
@@ -111,7 +108,7 @@ kable(variable_details[c(198:202), c(1:8)])
 kable(variable_details[c(198:202), c(1:9)])
 ```
 
-10. **catLabelLong:** more detailed label describing the category of a particular variable. This label should be identical to what is shown in the CCHS data documentation, unless you are creating derived variables and would like to create your own label for it.
+10. **catLabelLong:** more detailed label describing the category of a particular variable. This label should be identical to what is shown in the survey data documentation, unless you are creating derived variables and would like to create your own label for it.
 
 ```{r, echo=FALSE, warning=FALSE}
 kable(variable_details[c(198:202), c(1:10)])
@@ -123,7 +120,7 @@ kable(variable_details[c(198:202), c(1:10)])
 kable(variable_details[c(198:202), c(1:11)])
 ```
 
-12. **recFrom:** the range of values for a particular category in a variable as indicated in the CCHS. See CCHS data documentation for each survey cycle and use the smallest and large values as your range to capture all values between the survey years. 
+12. **recFrom:** the range of values for a particular category in a variable as indicated in the survey. See data documentation for each survey cycle and use the smallest and large values as your range to capture all values between the survey years. 
 
 The rules for each category of a new variable are a string in `recFrom` and value in `recTo`. These recode pairs are the same syntax as interval notation in which a closed range of values are specified using square brackets. See [here](https://en.wikipedia.org/wiki/Interval_(mathematics)#Notations_for_intervals) for more information on interval notation. Recode pairs are obtained from the RecFrom and RecTo columns
   *value range* is indicated by a comma, e.g. `recFrom= [1,4]; recTo = 1` (recodes all values from 1 to 4 into 1}
@@ -137,7 +134,7 @@ The rules for each category of a new variable are a string in `recFrom` and valu
 kable(variable_details[c(198:202), c(1:12)])
 ```
 
-13. **catStartLabel:** label describing each category. This label should be identical to what is shown in the CCHS data documentation. For the missing row, each missing category is described along with their coded values. You can import labels from the CCHS DDI files using `bllflow` helper functions. See [bllflow documentation](http://bllflow.projectbiglife.ca).
+13. **catStartLabel:** label describing each category. This label should be identical to what is shown in the CCHS data documentation. For the missing row, each missing category is described along with their coded values. You can import labels from a survey's DDI files using `bllflow` helper functions. See [bllflow documentation](http://bllflow.projectbiglife.ca).
 
 ```{r, echo=FALSE, warning=FALSE}
 kable(variable_details[c(198:202), c(1:13)])
@@ -149,13 +146,13 @@ kable(variable_details[c(198:202), c(1:13)])
 kable(variable_details[c(198:202), c(1:14)])
 ```
 
-15. **variableStartLabel:** more detailed label describing the variable. This label should be identical to what is shown in the CCHS data documentation.
+15. **variableStartLabel:** more detailed label describing the variable. This label should be identical to what is shown in the survey data documentation.
 
 ```{r, echo=FALSE, warning=FALSE}
 kable(variable_details[c(198:202), c(1:15)])
 ```
 
-16. **notes:** any relevant notes to inform the user running the `recode-with-table` function. Things to include here would be changes in wording between CCHS surveys, missing/changes in categories, and changes in variable type between CCHS surveys.
+16. **notes:** any relevant notes to inform the user running the `recode-with-table` function. Things to include here would be changes in wording between surveys, missing/changes in categories, and changes in variable type between survey cycles.
 
 ```{r, echo=FALSE, warning=FALSE}
 kable(variable_details[c(198:202), c(1:16)])
