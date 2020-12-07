@@ -6,13 +6,13 @@
 #'
 #' @examples
 get_margins <- function (chars) {
-  chars <- trimws(chars)
-  left_is_exclusive <- substr(chars, 1, 1) == "("
-  right_is_exclusive <- substr(chars, nchar(chars), nchar(chars) + 1) == ")"
+  trimmed_chars <- trimws(chars)
+  is_left_open <- substr(trimmed_chars, 1, 1) == "("
+  is_right_open <- substr(trimmed_chars, nchar(trimmed_chars), nchar(trimmed_chars) + 1) == ")"
 
-  margins <- strsplit(substr(chars, 2, nchar(chars) - 1), ",")[[1]]
-  if (left_is_exclusive) margins[1] = as.character(as.numeric(margins[1]) + 1);
-  if (right_is_exclusive) margins[2] = as.character(as.numeric(margins[2]) - 1);
+  margins <- strsplit(substr(trimmed_chars, 2, nchar(trimmed_chars) - 1), ",")[[1]]
+  if (is_left_open) margins[1] = as.character(as.numeric(margins[1]) + 1)
+  if (is_right_open) margins[2] = as.character(as.numeric(margins[2]) - 1)
   return (margins)
 }
 
