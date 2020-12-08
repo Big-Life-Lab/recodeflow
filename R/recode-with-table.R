@@ -214,15 +214,25 @@ rec_with_table <-
     }
     if (!is.null(load_from_environment)) {
       if (is.null(variable_details)) {
-        message(paste0("No variable_details detected.
-              Loading",load_from_environment ,"variable_details"))
+        message(
+          paste0(
+            "No variable_details detected.
+              Loading",
+            load_from_environment ,
+            "variable_details"
+          )
+        )
         data(variable_details,
              package = load_from_environment,
              envir = environment())
       }
       if (is.null(variables)) {
-        message(paste0("No variables detected.
-              Loading" ,load_from_environment, "variables"))
+        message(paste0(
+          "No variables detected.
+              Loading" ,
+          load_from_environment,
+          "variables"
+        ))
         data(variables, package = load_from_environment, envir = environment())
       }
     }
@@ -324,7 +334,7 @@ recode_call <-
     } else {
       if (!is.null(variables)) {
         variable_details <-
-          variable_details[trimws(variable_details[[pkg.env$columns.Variables]]) %in% variables,]
+          variable_details[trimws(variable_details[[pkg.env$columns.Variables]]) %in% variables, ]
         vars_being_recoded <-
           as.character(unique(variable_details[[pkg.env$columns.Variables]]))
         if (length(vars_being_recoded) != length(variables)) {
@@ -366,7 +376,7 @@ recode_call <-
     all_possible_var_names <-
       unique(as.character(variable_details[[pkg.env$columns.Variables]]))
     all_variables_detected <-
-      variable_details[grepl(database_name, variable_details[[pkg.env$columns.DatabaseStart]]),]
+      variable_details[grepl(database_name, variable_details[[pkg.env$columns.DatabaseStart]]), ]
 
     rec_data <-
       recode_columns(
@@ -480,18 +490,18 @@ recode_columns <-
            else_default) {
     # Split variables to process into recode map and func
     map_variables_to_process <-
-      variables_to_process[grepl("map::", variables_to_process[[pkg.env$columns.CatValue]]),]
+      variables_to_process[grepl("map::", variables_to_process[[pkg.env$columns.CatValue]]), ]
 
     id_variables_to_process <-
-      variables_to_process[grepl("id_from::", variables_to_process[[pkg.env$columns.CatValue]]),]
+      variables_to_process[grepl("id_from::", variables_to_process[[pkg.env$columns.CatValue]]), ]
 
     func_variables_to_process <-
-      variables_to_process[grepl("Func::", variables_to_process[[pkg.env$columns.CatValue]]),]
+      variables_to_process[grepl("Func::", variables_to_process[[pkg.env$columns.CatValue]]), ]
 
     rec_variables_to_process <-
       variables_to_process[(!grepl("Func::|map::|id_from::", variables_to_process[[pkg.env$columns.CatValue]])) &
                              (!grepl("DerivedVar::",
-                                     variables_to_process[[pkg.env$columns.VariableStart]])),]
+                                     variables_to_process[[pkg.env$columns.VariableStart]])), ]
 
     label_list <- list()
     # Set interval if none is present
@@ -505,10 +515,10 @@ recode_columns <-
         as.character(rec_variables_to_process[1,
                                               pkg.env$columns.Variables])
       rows_being_checked <-
-        rec_variables_to_process[rec_variables_to_process[[pkg.env$columns.Variables]] == variable_being_checked,]
+        rec_variables_to_process[rec_variables_to_process[[pkg.env$columns.Variables]] == variable_being_checked, ]
       rec_variables_to_process <-
-        rec_variables_to_process[!rec_variables_to_process[[pkg.env$columns.Variables]] == variable_being_checked,]
-      first_row <- rows_being_checked[1,]
+        rec_variables_to_process[!rec_variables_to_process[[pkg.env$columns.Variables]] == variable_being_checked, ]
+      first_row <- rows_being_checked[1, ]
       # Check for varialbe existance in data
       data_variable_being_checked <-
         get_data_variable_name(
@@ -578,7 +588,7 @@ recode_columns <-
         }
         else_rows <- nrow(recoded_data)
         rows_being_checked <-
-          rows_being_checked[!rows_being_checked[[pkg.env$columns.From]] == "else",]
+          rows_being_checked[!rows_being_checked[[pkg.env$columns.From]] == "else", ]
         if (nrow(rows_being_checked) > 0) {
           log_table <- rows_being_checked[, 0]
           log_table$value_to <- NA
@@ -589,7 +599,7 @@ recode_columns <-
               levels(rows_being_checked[[pkg.env$columns.CatValue]]))
 
           for (row in seq_len(nrow(rows_being_checked))) {
-            row_being_checked <- rows_being_checked[row,]
+            row_being_checked <- rows_being_checked[row, ]
             # If cat go check for label and obtain it
 
             # regardless obtain unit and attach
@@ -688,13 +698,15 @@ recode_columns <-
               data_name,
               " the following recodes were made: "
             )
+            if (length(else_value) > 0) {
+              extra_row <- nrow(log_table) + 1
+              log_table[extra_row , "value_to"] <- else_value
+              log_table[extra_row , "From"] <-
+                "else"
+              log_table[extra_row , "rows_recoded"] <-
+                else_rows
+            }
             # Reset rowCount to avoid confusion
-            extra_row <- nrow(log_table)+1
-            log_table[extra_row , "value_to"] <- else_value
-            log_table[extra_row , "From"] <-
-              "else"
-            log_table[extra_row , "rows_recoded"] <-
-              else_rows
             rownames(log_table) <- NULL
 
             print(log_table)
@@ -705,7 +717,7 @@ recode_columns <-
 
     # Process funcVars
     while (nrow(func_variables_to_process) > 0) {
-      first_row <- func_variables_to_process[1,]
+      first_row <- func_variables_to_process[1, ]
       first_row_variable_name <-
         as.character(first_row[[pkg.env$columns.Variables]])
       # get name of var pass to
@@ -730,8 +742,8 @@ recode_columns <-
     top_function_frame <- parent.frame(2)
     while (nrow(id_variables_to_process) > 0) {
       # Extract type of id creation
-      current_id <- id_variables_to_process[1,]
-      id_variables_to_process <- id_variables_to_process[-1,]
+      current_id <- id_variables_to_process[1, ]
+      id_variables_to_process <- id_variables_to_process[-1, ]
       id_creation_function <-
         as.character(current_id[[pkg.env$columns.CatValue]])
       id_creation_function <-
@@ -818,7 +830,7 @@ update_variable_details_based_on_variable_sheet <-
   function(variable_sheet, variable_details) {
     # remove conflicting columns from variable details
     variable_details <-
-      variable_details[,!(
+      variable_details[, !(
         names(variable_details) %in% c(
           pkg.env$columns.VariableType,
           pkg.env$columns.VariableLabelShort,
@@ -847,7 +859,7 @@ update_variable_details_based_on_variable_sheet <-
     # remove variables not present in variable_sheet
     variable_details <-
       variable_details[variable_details[[pkg.env$columns.Variables]] %in%
-                         variable_sheet[[pkg.env$columns.Variables]],]
+                         variable_sheet[[pkg.env$columns.Variables]], ]
 
     return(variable_details)
   }
@@ -898,14 +910,14 @@ recode_derived_variables <-
     var_stack <- c(var_stack, variable_being_processed)
     # obtain rows to process and updated variables to Process
     variable_rows <-
-      variables_to_process[variables_to_process[[pkg.env$columns.Variables]] == variable_being_processed,]
+      variables_to_process[variables_to_process[[pkg.env$columns.Variables]] == variable_being_processed, ]
     variables_to_process <-
-      variables_to_process[variables_to_process[[pkg.env$columns.Variables]] != variable_being_processed,]
+      variables_to_process[variables_to_process[[pkg.env$columns.Variables]] != variable_being_processed, ]
     for (row_num in seq_len(nrow(variable_rows))) {
       # Check for presence of feeder variables in data and in the
       # variable being processed stack
       feeder_vars <-
-        as.list(strsplit(as.character(variable_rows[row_num,][[pkg.env$columns.VariableStart]]), "::"))[[1]][[2]]
+        as.list(strsplit(as.character(variable_rows[row_num, ][[pkg.env$columns.VariableStart]]), "::"))[[1]][[2]]
       feeder_vars <- gsub("\\[|\\]", "", feeder_vars)
       feeder_vars <- as.list(strsplit(feeder_vars, ","))[[1]]
       feeder_vars <- sapply(feeder_vars, trimws)
@@ -979,7 +991,7 @@ recode_derived_variables <-
       # Obtain the function for each row
       append(label_list, create_label_list_element(variable_rows))
 
-      row_being_checked <- variable_rows[row_num,]
+      row_being_checked <- variable_rows[row_num, ]
       func_cell <-
         as.character(row_being_checked[[pkg.env$columns.CatValue]])
       function_being_used <-
