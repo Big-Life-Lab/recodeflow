@@ -7,6 +7,9 @@
 #' @examples
 get_margins <- function (chars) {
   trimmed_chars <- trimws(chars)
+  is_singleton <- is_numeric(trimmed_chars)
+  if (is_singleton) return (c(trimmed_chars, trimmed_chars))
+
   is_left_open <- substr(trimmed_chars, 1, 1) == "("
   is_right_open <- substr(trimmed_chars, nchar(trimmed_chars), nchar(trimmed_chars) + 1) == ")"
 
@@ -35,7 +38,9 @@ is_numeric <- function(chars) {
 #'
 #' @examples
 is_rec_from_range <- function(var_details_row) {
-  return (grepl(",", var_details_row$recFrom, fixed = TRUE))
+  margins <- get_margins(var_details_row$recFrom)
+  # only consider margins as a range if the endpoints are different
+  return (margins[1] != margins[2])
 }
 
 
