@@ -42,14 +42,14 @@ In this example, the `status` variable in the test1 cycle is transformed into a
 harmonized `status` variable that is consistent all datasets.
 
 ```{r}
-sex2001 <- rec_with_table(cchs2001_p, "DHH_SEX",
+status <- rec_with_table(tester, "status",
   log = TRUE,
-  var_labels = c(DHH_SEX = "SEX")
+  var_labels = c(status = "Status")
 )
 ```
 
 ```{r, echo=FALSE}
-head(sex2001)
+head(status)
 ```
 
 The rules for the transformation and harmonization are in two dataframes that
@@ -98,10 +98,6 @@ warning(
 
 By default, `rec_with_table()` prints notes to the console.
 
-```{r}
-BMI2001 <- rec_with_table(cchs2001_p, "HWTGBMI", log = TRUE)
-```
-
 ### Warning messages
 
 Warning messages will appear when your dataset is missing variables in your
@@ -115,23 +111,9 @@ include all labels if then all variables in `variables` are recoded. See
 [Example 6](#example6).
 
 ```{r, warning=FALSE}
-sex2001 <- rec_with_table(cchs2001_p, "DHH_SEX",
+status <- rec_with_table(tester, "status",
   log = TRUE,
-  var_labels = c("DHH_SEX" = "Sex")
-)
-```
-
-Labels can then be used in plots and tables.
-
-```{r fig1, fig.height = 5, fig.width = 7, warning=FALSE}
-
-barplot(
-  table(as_label(sex2001$DHH_SEX)),
-  col = cm.colors(5),
-  ylim = c(0, 140),
-  legend = TRUE,
-  main = get_label(sex2001$DHH_SEX),
-  ylab = "Frequency (n)"
+  var_labels = c(status = "Status")
 )
 ```
 
@@ -190,22 +172,21 @@ called unless you would like to modify them.
 ## Example 3. Transform a single variable from multiple datasets
 
 This example shows how you can transform and combine a variable across multiple
-survey cycles. The sex variable in CCHS 2001 (`DHHA_SEX`) and CCHS 2012
-(`DHH_SEX`) is transformed a common variable (`DHH_SEX`) and combined into a
-single dataset. In _recodeflow_ the CCHS 2007 variable name is used as the common
-variable name. See the [variable_details vignette](variable_details.html) for
+survey cycles. The sex variable in tester1 (`sex_a`) and tester2
+(`sex_b`) is transformed a common variable (`sex`) and combined into a
+single dataset. See the [variable_details vignette](variable_details.html) for
 more information.
 
 ```{r, warning = FALSE}
-sex2001 <- rec_with_table(cchs2001_p, "DHH_SEX", log = TRUE)
-head(sex2001)
+sex_1 <- rec_with_table(tester1, "sex_a", log = TRUE)
+head(sex_1)
 
-sex2012 <- rec_with_table(cchs2012_p, "DHH_SEX", log = TRUE)
-tail(sex2012)
+sex_2 <- rec_with_table(tester2, "sex_b", log = TRUE)
+tail(sex_2)
 ```
 
 ```{r, warning=FALSE}
-combined_sex <- bind_rows(sex2001, sex2012)
+combined_sex <- bind_rows(sex_1, sex_2)
 ```
 
 ```{r, echo=FALSE}
@@ -227,9 +208,6 @@ Transform the `age` variable into variables that cannot be combined across
 cycles. The categories in `age` variable in the CCHS changed in 2005 and
 therefore it is not possible to have the same `age` categories across all CCHS
 cycles.
-
-`DHHGAGE_A` is the age variable for CCHS cycles 2001-2003, and `DHHGAGE_B` is
-the age variable for CCHS cycles 2005-2014.
 
 ```{r, warning=FALSE}
 age2001 <- rec_with_table(cchs2001_p, "DHHGAGE_A")
@@ -274,7 +252,7 @@ tail(combined_age_cont)
 
 ### Option 3: transform the categorical `age` variable into a harmonized categorical variable
 
-_cchsflow_ often includes a common harmonized categorical variable that has new,
+_recodeflow_ often includes a common harmonized categorical variable that has new,
 consistent categories across all cycles. These new categorical variables
 generally have fewer category levels than the original variables, reflecting the
 need to combine categories. Read the `Notes` variable for details.
@@ -286,7 +264,7 @@ lost during the database merging. `set_data_labels()` set labels with the
 original information in `variables` and `variable_details`.
 
 ```{r}
-labeled_combined_cchs <- set_data_labels(
+labeled_combined <- set_data_labels(
   data_to_label = combined_age_cont,
   variable_details = variable_details,
   variables_sheet = variables
@@ -296,33 +274,33 @@ labeled_combined_cchs <- set_data_labels(
 ## Example 5. Transform multiple variables from multiple datasets
 
 The variables argument in `rec_with_table()` allows multiple variables to be
-transformed from a CCHS dataset. In this example, the age and sex variables from
-the 2001 and 2012 CCHS datasets will be transformed and labeled using
+transformed from a dataset. In this example, the age and sex variables from
+the tester1 and tester2 datasets will be transformed and labeled using
 `rec_with_table()`. They will then be combined into a single dataset and labeled
 using `set_data_labels()`.
 
 ```{r, warning=FALSE}
-age_sex_2001 <- rec_with_table(cchs2001_p, c("DHHGAGE_cont", "DHH_SEX"),
+age_sex_1 <- rec_with_table(tester1, c("DHHGAGE_cont", "DHH_SEX"),
   var_labels = c(DHHGAGE_cont = "Age", DHH_SEX = "Sex")
 )
 
-get_label(age_sex_2001)
+get_label(age_sex_1)
 
-age_sex_2012 <- rec_with_table(cchs2012_p, c("DHHGAGE_cont", "DHH_SEX"),
+age_sex_2 <- rec_with_table(tester1, c("DHHGAGE_cont", "DHH_SEX"),
   var_labels = c(DHHGAGE_cont = "Age", DHH_SEX = "Sex")
 )
 
-get_label(age_sex_2012)
+get_label(age_sex_2)
 ```
 
 In the above example, `var_labels` is called in `rec_with_table()` to label the
-age and sex variables in the 2001 and 2012 datasets. Use `get_label()` to view
+age and sex variables in the tester1 and tester2 datasets. Use `get_label()` to view
 the variable labels in your transformed dataset. As mentioned previously,
 `var_labels` can be used all the variables in `variables.csv` or a subset of
 variables.
 
 ```{r, warning=FALSE}
-combined_age_sex <- bind_rows(age_sex_2001, age_sex_2012)
+combined_age_sex <- bind_rows(age_sex_1, age_sex_2)
 labeled_combined_age_sex <- set_data_labels(
   data_to_label = combined_age_sex,
   variable_details = variable_details, variables_sheet = variables
@@ -346,20 +324,20 @@ package.
 All the variables listed in `variables.csv` & `variable_details.csv` will be
 transformed if the variables argument in `rec_with_table()` is not specified. In
 this example, all variables specified in the two worksheets will be transformed,
-combined, and labeled for the 2001 and 2012 CCHS cycles.
+combined, and labeled for the tester1 and tester2 datasets.
 
 ```{r, echo=FALSE}
 options(htmlwidgets.TOJSON_ARGS = list(na = "string"))
 ```
 
 ```{r, warning=FALSE}
-transformed2001 <- rec_with_table(data = cchs2001_p, notes = FALSE)
+transformed1 <- rec_with_table(data = tester1, notes = FALSE)
 
-transformed2012 <- rec_with_table(data = cchs2012_p, notes = FALSE)
+transformed2 <- rec_with_table(data = tester2, notes = FALSE)
 
-combined_cchs <- bind_rows(transformed2001, transformed2012)
+combined_dataset <- bind_rows(transformed1, transformed2)
 labeled_combined_cchs <- set_data_labels(
-  data_to_label = combined_cchs,
+  data_to_label = combined_dataset,
   variable_details = variable_details, variables_sheet = variables
 )
 ```
