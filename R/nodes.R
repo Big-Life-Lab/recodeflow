@@ -116,7 +116,8 @@ attach_cont_value_nodes_for_start_var <- function(var_details_row, data_field) {
 #'
 #' @examples
 attach_range_value_nodes <- function(var_details_row, data_field) {
-  range <- eval(parse(text=var_details_row$recFrom))
+  margins <- get_margins(var_details_row$recFrom)
+  range <- margins[1]:margins[2]
   cat_start_labels <- trimws(strsplit(var_details_row$catStartLabel, ";")[[1]])
 
   for (index in 1:length(range)) {
