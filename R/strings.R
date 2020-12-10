@@ -4,6 +4,8 @@ pkg.env$NA_invalid <- "NA::a"
 pkg.env$NA_missing <- "NA::b"
 pkg.env$all_NAs <- c(pkg.env$NA_invalid, pkg.env$NA_missing)
 
+pkg.env$margin_separator <- ","
+
 pkg.env$missing <- "missing"
 
 pkg.env$db_var_start_infix <- "::"

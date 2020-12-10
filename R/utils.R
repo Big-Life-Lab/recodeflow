@@ -10,10 +10,13 @@ get_margins <- function (chars) {
   is_singleton <- is_numeric(trimmed_chars)
   if (is_singleton) return (c(trimmed_chars, trimmed_chars))
 
+  is_range <- grepl(pkg.env$margin_separator, trimmed_chars, fixed = TRUE)
+  if (!is_range) return (c(0, 0))
+
   is_left_open <- substr(trimmed_chars, 1, 1) == "("
   is_right_open <- substr(trimmed_chars, nchar(trimmed_chars), nchar(trimmed_chars) + 1) == ")"
 
-  margins <- strsplit(substr(trimmed_chars, 2, nchar(trimmed_chars) - 1), ",")[[1]]
+  margins <- strsplit(substr(trimmed_chars, 2, nchar(trimmed_chars) - 1), pkg.env$margin_separator)[[1]]
   if (is_left_open) margins[1] = as.character(as.numeric(margins[1]) + 1)
   if (is_right_open) margins[2] = as.character(as.numeric(margins[2]) - 1)
   return (margins)
