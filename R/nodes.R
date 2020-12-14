@@ -71,13 +71,13 @@ add_data_field_children_for_start_var <- function(data_field, var_details_rows) 
 #'
 #' @examples
 attach_cat_value_nodes_for_start_var <- function(var_details_row, data_field) {
-  if (var_details_row$recTo == pkg.env$NA_invalid) property <- pkg.env$node_attr.property.invalid
-  else if (var_details_row$recTo == pkg.env$NA_missing) property <- pkg.env$node_attr.property.missing
-  else property <- pkg.env$node_attr.property.valid
-
   if(is_rec_from_range(var_details_row)) {
     data_field <- attach_range_value_nodes(var_details_row, data_field)
   } else if (is_numeric(var_details_row$recFrom)) {
+    if (var_details_row$recTo == pkg.env$NA_invalid) property <- pkg.env$node_attr.property.invalid
+    else if (var_details_row$recTo == pkg.env$NA_missing) property <- pkg.env$node_attr.property.missing
+    else property <- pkg.env$node_attr.property.valid
+
     value_node <- XML::xmlNode(pkg.env$node_name.value, attrs=c(value=var_details_row$recFrom, displayValue=var_details_row$catStartLabel, property=property))
     data_field <- XML::append.xmlNode(data_field, value_node)
   }
