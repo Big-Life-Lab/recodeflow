@@ -13,13 +13,32 @@ get_margins <- function (chars) {
   is_range <- grepl(pkg.env$margin_separator, trimmed_chars, fixed = TRUE)
   if (!is_range) return (c(0, 0))
 
-  is_left_open <- substr(trimmed_chars, 1, 1) == "("
-  is_right_open <- substr(trimmed_chars, nchar(trimmed_chars), nchar(trimmed_chars) + 1) == ")"
-
   margins <- strsplit(substr(trimmed_chars, 2, nchar(trimmed_chars) - 1), pkg.env$margin_separator)[[1]]
-  if (is_left_open) margins[1] = as.character(as.numeric(margins[1]) + 1)
-  if (is_right_open) margins[2] = as.character(as.numeric(margins[2]) - 1)
   return (margins)
+}
+
+#' Extract margins from character vector.
+#'
+#' @param chars Character vector.
+#'
+#' @return Whether the left endpoint of an interval is open.
+#'
+#' @examples
+is_left_open <- function (chars) {
+  trimmed_chars <- trimws(chars)
+  return (substr(trimmed_chars, 1, 1) == "(")
+}
+
+#' Extract margins from character vector.
+#'
+#' @param chars Character vector.
+#'
+#' @return Whether the right endpoint of an interval is open.
+#'
+#' @examples
+is_right_open <- function (chars) {
+  trimmed_chars <- trimws(chars)
+  return (substr(trimmed_chars, nchar(trimmed_chars), nchar(trimmed_chars) + 1) == ")")
 }
 
 #' Check if a character object can be converted to a number.
