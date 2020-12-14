@@ -219,27 +219,27 @@ attach_apply_nodes <- function(var_details_rows, parent_node, db_name) {
   if (nrow(remaining_rows) == 0) return (parent_node)
 
   if (is_numeric(var_details_row$recFrom)) {
-    apply_node <- build_cat_apply_node(var_details_row, db_name)
+    apply_node <- build_numeric_derived_field_apply_node(var_details_row, db_name)
 
     return (XML::append.xmlNode(parent_node, attach_apply_nodes(remaining_rows, apply_node, db_name)))
   } else if (is_rec_from_range(var_details_row)) {
-    apply_node <- build_ranged_interval_apply_node(var_details_row, db_name)
+    apply_node <- build_ranged_derived_field_apply_node(var_details_row, db_name)
 
-    return(XML::append.xmlNode(parent_node, attach_apply_nodes(remaining_rows, apply_node, db_name)))
+    return (XML::append.xmlNode(parent_node, attach_apply_nodes(remaining_rows, apply_node, db_name)))
   } else {
     return (XML::append.xmlNode(parent_node, XML::xmlNode(pkg.env$node_name.constant, attrs=c(missing=pkg.env$node_attr.missing.true))))
   }
 }
 
-#' Build Apply node with categorical for DerivedField node.
+#' Build Apply node with singleton numeric for DerivedField node.
 #'
 #' @param var_details_row Variable details sheet row.
 #' @param db_name Database name.
 #'
-#' @return Apply node with categories.
+#' @return Apply node for DerivedField node.
 #'
 #' @examples
-build_cat_apply_node <- function (var_details_row, db_name) {
+build_numeric_derived_field_apply_node <- function (var_details_row, db_name) {
   field_node <- build_variable_field_ref_node(var_details_row, db_name)
   const_equal_node <- XML::xmlNode(pkg.env$node_name.constant, attrs=c(dataType=pkg.env$node_attr.dataType.integer), value=var_details_row$recFrom)
   const_val_node <- XML::xmlNode(pkg.env$node_name.constant)
@@ -266,10 +266,10 @@ build_cat_apply_node <- function (var_details_row, db_name) {
 #' @param var_details_row Variable details sheet row.
 #' @param db_name Database name.
 #'
-#' @return Apply node with intervals.
+#' @return Apply node with intervals for DerivedField node.
 #'
 #' @examples
-build_ranged_interval_apply_node <- function (var_details_row, db_name) {
+build_ranged_derived_field_apply_node <- function (var_details_row, db_name) {
   margins <- get_margins(var_details_row$recFrom)
 
   field_node <- build_variable_field_ref_node(var_details_row, db_name)
