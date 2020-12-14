@@ -219,52 +219,96 @@ attach_apply_nodes <- function(var_details_rows, parent_node, db_name) {
   if (nrow(remaining_rows) == 0) return (parent_node)
 
   if (is_numeric(var_details_row$recFrom)) {
-    field_node <- build_variable_field_ref_node(var_details_row, db_name)
-    const_equal_node <- XML::xmlNode(pkg.env$node_name.constant, attrs=c(dataType=pkg.env$node_attr.dataType.integer), value=var_details_row$recFrom)
-    const_val_node <- XML::xmlNode(pkg.env$node_name.constant)
+    apply_node <- build_cat_apply_node(var_details_row, db_name)
 
-    if (var_details_row$recTo %in% pkg.env$all_NAs) {
-      XML::xmlAttrs(const_val_node) <- c(missing=pkg.env$node_attr.missing.true)
-    } else {
-      XML::xmlAttrs(const_val_node) <- c(dataType=pkg.env$node_attr.dataType.integer)
-      XML::xmlValue(const_val_node) <- var_details_row$recFrom
-    }
-
-    if_node <- XML::xmlNode(pkg.env$node_name.apply, attrs=c("function"=pkg.env$node_attr.function.if),
-                            XML::xmlNode(pkg.env$node_name.apply, attrs=c("function"=pkg.env$node_attr.function.equals),
-                                         field_node,
-                                         const_equal_node))
-
-    if_node <- XML::append.xmlNode(if_node, const_val_node)
-
-    return (XML::append.xmlNode(parent_node, attach_apply_nodes(remaining_rows, if_node, db_name)))
+    return (XML::append.xmlNode(parent_node, attach_apply_nodes(remaining_rows, apply_node, db_name)))
   } else if (is_rec_from_range(var_details_row)) {
-    margins <- get_margins(var_details_row$recFrom)
-    const_node_gt <- XML::xmlNode(pkg.env$node_name.constant, attrs=c(dataType=pkg.env$node_attr.dataType.integer), value=margins[1])
-    const_node_lt <- XML::xmlNode(pkg.env$node_name.constant, attrs=c(dataType=pkg.env$node_attr.dataType.integer), value=margins[2])
-    field_node <- build_variable_field_ref_node(var_details_row, db_name)
+    apply_node <- build_ranged_interval_apply_node(var_details_row, db_name)
 
-    or_node_1 <- XML::append.xmlNode(XML::xmlNode(pkg.env$node_name.apply, attrs=c("function"=pkg.env$node_attr.function.or)),
-                                     XML::xmlNode(pkg.env$node_name.apply, attrs=c("function"=pkg.env$node_attr.function.greater_than), field_node, const_node_gt),
-                                     XML::xmlNode(pkg.env$node_name.apply, attrs=c("function"=pkg.env$node_attr.function.equals), field_node, const_node_gt))
-    or_node_2 <- XML::append.xmlNode(XML::xmlNode(pkg.env$node_name.apply, attrs=c("function"=pkg.env$node_attr.function.or)),
-                                     XML::xmlNode(pkg.env$node_name.apply, attrs=c("function"=pkg.env$node_attr.function.less_than), field_node, const_node_lt),
-                                     XML::xmlNode(pkg.env$node_name.apply, attrs=c("function"=pkg.env$node_attr.function.equals), field_node, const_node_lt))
-
-    and_node <- XML::append.xmlNode(XML::xmlNode(pkg.env$node_name.apply, attrs=c("function"=pkg.env$node_attr.function.and)), or_node_1, or_node_2)
-    if_node <- XML::append.xmlNode(XML::xmlNode(pkg.env$node_name.apply, attrs=c("function"=pkg.env$node_attr.function.if)), and_node)
-
-    if (var_details_row$recTo %in% pkg.env$all_NAs) {
-      missing_node <- XML::xmlNode(pkg.env$node_name.constant, attrs=c(missing=pkg.env$node_attr.missing.true))
-      if_node <- XML::append.xmlNode(if_node, missing_node, missing_node)
-    } else if (var_details_row$recTo == pkg.env$rec_to_copy) {
-      if_node <- XML::append.xmlNode(if_node, field_node)
-    }
-
-    return(XML::append.xmlNode(parent_node, attach_apply_nodes(remaining_rows, if_node, db_name)))
+    return(XML::append.xmlNode(parent_node, attach_apply_nodes(remaining_rows, apply_node, db_name)))
   } else {
     return (XML::append.xmlNode(parent_node, XML::xmlNode(pkg.env$node_name.constant, attrs=c(missing=pkg.env$node_attr.missing.true))))
   }
+}
+
+#' Build Apply node with categorical for DerivedField node.
+#'
+#' @param var_details_row Variable details sheet row.
+#' @param db_name Database name.
+#'
+#' @return Apply node with categories.
+#'
+#' @examples
+build_cat_apply_node <- function (var_details_row, db_name) {
+  field_node <- build_variable_field_ref_node(var_details_row, db_name)
+  const_equal_node <- XML::xmlNode(pkg.env$node_name.constant, attrs=c(dataType=pkg.env$node_attr.dataType.integer), value=var_details_row$recFrom)
+  const_val_node <- XML::xmlNode(pkg.env$node_name.constant)
+
+  if (var_details_row$recTo %in% pkg.env$all_NAs) {
+    XML::xmlAttrs(const_val_node) <- c(missing=pkg.env$node_attr.missing.true)
+  } else {
+    XML::xmlAttrs(const_val_node) <- c(dataType=pkg.env$node_attr.dataType.integer)
+    XML::xmlValue(const_val_node) <- var_details_row$recFrom
+  }
+
+  apply_node <- XML::xmlNode(pkg.env$node_name.apply, attrs=c("function"=pkg.env$node_attr.function.if),
+                          XML::xmlNode(pkg.env$node_name.apply, attrs=c("function"=pkg.env$node_attr.function.equals),
+                                       field_node,
+                                       const_equal_node))
+
+  apply_node <- XML::append.xmlNode(apply_node, const_val_node)
+
+  return (apply_node)
+}
+
+#' Build Apply node with interval nodes for DerivedField node.
+#'
+#' @param var_details_row Variable details sheet row.
+#' @param db_name Database name.
+#'
+#' @return Apply node with intervals.
+#'
+#' @examples
+build_ranged_interval_apply_node <- function (var_details_row, db_name) {
+  margins <- get_margins(var_details_row$recFrom)
+
+  field_node <- build_variable_field_ref_node(var_details_row, db_name)
+
+  const_node_gt <- XML::xmlNode(pkg.env$node_name.constant, attrs=c(dataType=pkg.env$node_attr.dataType.integer), value=margins[1])
+  const_node_lt <- XML::xmlNode(pkg.env$node_name.constant, attrs=c(dataType=pkg.env$node_attr.dataType.integer), value=margins[2])
+
+  apply_node_gt <- XML::xmlNode(pkg.env$node_name.apply, attrs=c("function"=pkg.env$node_attr.function.greater_than), field_node, const_node_gt)
+  apply_node_lt <- XML::xmlNode(pkg.env$node_name.apply, attrs=c("function"=pkg.env$node_attr.function.less_than), field_node, const_node_lt)
+
+  if (is_left_open(var_details_row$recFrom)) {
+    left_node <- apply_node_gt
+  } else {
+    or_node <- XML::xmlNode(pkg.env$node_name.apply, attrs=c("function"=pkg.env$node_attr.function.or))
+    equals_node <- XML::xmlNode(pkg.env$node_name.apply, attrs=c("function"=pkg.env$node_attr.function.equals), field_node, const_node_gt)
+
+    left_node <- XML::append.xmlNode(or_node, apply_node_gt, equals_node)
+  }
+
+  if (is_right_open(var_details_row$recFrom)) {
+    right_node <- apply_node_lt
+  } else {
+    or_node <- XML::xmlNode(pkg.env$node_name.apply, attrs=c("function"=pkg.env$node_attr.function.or))
+    equals_node <- XML::xmlNode(pkg.env$node_name.apply, attrs=c("function"=pkg.env$node_attr.function.equals), field_node, const_node_lt)
+
+    right_node <- XML::append.xmlNode(or_node, apply_node_lt, equals_node)
+  }
+
+  and_node <- XML::append.xmlNode(XML::xmlNode(pkg.env$node_name.apply, attrs=c("function"=pkg.env$node_attr.function.and)), left_node, right_node)
+  apply_node <- XML::append.xmlNode(XML::xmlNode(pkg.env$node_name.apply, attrs=c("function"=pkg.env$node_attr.function.if)), and_node)
+
+  if (var_details_row$recTo %in% pkg.env$all_NAs) {
+    missing_node <- XML::xmlNode(pkg.env$node_name.constant, attrs=c(missing=pkg.env$node_attr.missing.true))
+    apply_node <- XML::append.xmlNode(apply_node, missing_node, missing_node)
+  } else if (var_details_row$recTo == pkg.env$rec_to_copy) {
+    apply_node <- XML::append.xmlNode(apply_node, field_node)
+  }
+
+  return (apply_node)
 }
 
 #' Build FieldRef node for variable.
