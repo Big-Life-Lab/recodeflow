@@ -118,7 +118,7 @@ attach_cont_value_nodes_for_start_var <- function(var_details_row, data_field) {
 attach_range_value_nodes <- function(var_details_row, data_field) {
   margins <- get_margins(var_details_row$recFrom)
   range <- margins[1]:margins[2]
-  cat_start_labels <- trimws(strsplit(var_details_row$catStartLabel, ";")[[1]])
+  cat_start_labels <- trimws(strsplit(var_details_row$catStartLabel, pkg.env$cat_start_label_separator)[[1]])
 
   for (index in 1:length(range)) {
     is_missing <- var_details_row$recTo %in% pkg.env$all_NAs

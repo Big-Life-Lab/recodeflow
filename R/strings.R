@@ -5,6 +5,7 @@ pkg.env$NA_missing <- "NA::b"
 pkg.env$all_NAs <- c(pkg.env$NA_invalid, pkg.env$NA_missing)
 
 pkg.env$margin_separator <- ","
+pkg.env$cat_start_label_separator <- ";"
 
 pkg.env$missing <- "missing"
 
