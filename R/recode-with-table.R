@@ -1,9 +1,9 @@
-# Removing Note
+# Removing Note for undeclared variable. This is necessary because it is used
+# in the magritr package for piping however it is not exported so cran check throws a note.
 . <- NULL
-#' @title is equal
-#' @description Function to compare even with NA present
-#' This function returns TRUE wherever elements are the same, including NA's,
-#' and false everywhere else.
+#' @title NA present if modification
+#' @description Compared to the base "==" operator in R, this function returns true if the two values are NA
+#' whereas the base "==" operator returns NA
 #'
 #' @param v1 variable 1
 #' @param v2 variable 2
@@ -132,7 +132,8 @@ is_equal <- function(v1, v2) {
 #' and its functions loaded into the R environment.
 #' @param attach_data_name logical to attach name of database to end table
 #' @param id_role_name name for the role to be used to generate id column
-#' @param load_from_environment Name of package to load variables and variable_details from
+#' @param name_of_environment_to_load Name of package to load variables and variable_details from
+#' @param append_non_db_columns boolean determening if data not present in this cycle should be appended as NA
 #'
 #' @return a dataframe that is recoded according to rules in variable_details.
 #' @importFrom haven tagged_na
@@ -140,56 +141,51 @@ is_equal <- function(v1, v2) {
 #' @importFrom dplyr rowwise select do
 #' @importFrom magrittr %>%
 #' @examples
-#' var_details_sheet <-
-#'data.frame(
-#'  "variable" = rep(c("A", "B", "C"), each = 3),
-#'  "dummyVariable" = c("AY", "AN", "ANA", "BY", "BN", "BNA", "CY", "CN", "CNA"),
-#'  "toType" = rep("cat", times = 9),
-#'  "databaseStart" = rep("tester", times = 9),
-#'  "variableStart" = rep(
-#'    c("tester::startA", "tester::startB", "tester::startC"),
-#'    each = 3
-#'  ),
-#'  "fromType" = rep("cat", times = 9),
-#'  "recTo" = rep(c("1", "2", "NA::a"), times = 3),
-#'  "numValidCat" = rep("2", times = 9),
-#'  "catLabel" = rep(c("Yes", "No", "Not answered"), times = 3),
-#'  "catLabelLong" = rep(c("Yes", "No", "Not answered"), times =
-#'                         3),
-#'  "recFrom" = rep(c("1", "2", "9"), times = 3),
-#'  "catStartLabel" = rep(c("Yes", "No", "Not answered"), times =
-#'                          3),
-#'  "variableStartShortLabel" = rep(c("Group A", "Group B", "Group C"), each =
-#'                                    3),
-#'  "variableStartLabel" = rep(c("Group A", "Group B", "Group C"), each =
-#'                               3),
-#'  "units" = rep("NA", times = 9),
-#'  "notes" = rep("This is not real data", times = 9)
-#')
-#'vars_sheet <-
-#'  data.frame(
-#'    "variable" = c("A", "B", "C"),
-#'    "label" = c("Group A", "Group B", "Group C"),
-#'    "labelLong" = c("Group A", "Group B", "Group C"),
-#'    "section" = rep("tester", times=3),
-#'    "subject" = rep("tester",times = 3),
-#'    "variableType" = rep("Categorical", times=3),
-#'    "databaseStart" = rep("tester", times = 3),
-#'    "units" = rep("NA", times = 3),
-#'    "variableStart" = c("tester::startA", "tester::startB", "tester::startC")
-#'  )
-#'  sample_data <-
-#'data.frame(
-#'  "startA" = sample(1:3, 100, replace = TRUE),
-#'  "startB" = sample(1:3, 100, replace = TRUE),
-#'  "startC" = sample(1:3, 100, replace = TRUE)
-#')
-#' db_name <- "tester"
+#' var_details <-
+#'   data.frame(
+#'     "variable" = c("time", rep("status", times = 3), rep("trt", times = 2), "age", rep("sex", times = 2), rep("ascites", times = 2), rep("hepato", times = 2), rep("spiders", times = 2), rep("edema", times = 3), "bili", "chol", "albumin", "copper", "alk.phos", "ast", "trig", "platelet", "protime", rep("stage", times = 4)),
+#'     "dummyVariable" = c("NA", "status0", "status1","status2", "trt1","trt2","NA","sexM","sexF", "ascites0", "ascites1","hepato0","hepato1","spiders0","spiders1","edema0.0","edema0.5","edema1.0",rep("NA",times = 9), "stage1", "stage2","stage3","stage4"),
+#'     "toType" = c("cont", rep("cat", times = 3), rep("cat", times = 2), "cont", rep("cat", times = 2), rep("cat", times = 2), rep("cat", times = 2),rep("cat", times = 2), rep("cat", times = 3), rep("cont", times = 9), rep("cat", times = 4)),
+#'     "databaseStart" = rep("tester1, tester2", times = 31),
+#'     "variableStart" = c("[time]", rep("[status]", times = 3), rep("[trt]", times = 2), "[age]", rep("[sex]", times = 2), rep("[ascites]", times = 2), rep("[hepato]", times = 2), rep("[spiders]", times = 2), rep("[edema]", times = 3), "[bili]", "[chol]", "[albumin]", "[copper]", "[alk.phos]", "[ast]", "[trig]", "[platelet]", "[protime]", rep("[stage]", times = 4)),
+#'     "fromType" = c("cont", rep("cat", times = 3), rep("cat", times = 2), "cont", rep("cat", times = 2), rep("cat", times = 2), rep("cat", times = 2),rep("cat", times = 2), rep("cat", times = 3), rep("cont", times = 9), rep("cat", times = 4)),
+#'     "recTo" = c("copy", "0", "1","2", "1","2","copy","m","f", "0", "1","0","1","0","1","0.0","0.5","1.0",rep("copy",times = 9), "1", "2","3","4"),
+#'     "catLabel" = c("", "status 0", "status 1","status 2", "trt 1","trt 2","","sex m","sex f", "ascites 0", "ascites 1","hepato 0","hepato 1","spiders 0","spiders 1","edema 0.0","edema 0.5","edema 1.0",rep("",times = 9), "stage 1", "stage 2","stage 3","stage 4"),
+#'     "catLabelLong" = c("", "status 0", "status 1","status 2", "trt 1","trt 2","","sex m","sex f", "ascites 0", "ascites 1","hepato 0","hepato 1","spiders 0","spiders 1","edema 0.0","edema 0.5","edema 1.0",rep("",times = 9), "stage 1", "stage 2","stage 3","stage 4"),
+#'     "recFrom" = c("else", "0", "1","2", "1","2","else","m","f", "0", "1","0","1","0","1","0.0","0.5","1.0",rep("else",times = 9), "1", "2","3","4"),
+#'     "catStartLabel" = c("", "status 0", "status 1","status 2", "trt 1","trt 2","","sex m","sex f", "ascites 0", "ascites 1","hepato 0","hepato 1","spiders 0","spiders 1","edema 0.0","edema 0.5","edema 1.0",rep("",times = 9), "stage 1", "stage 2","stage 3","stage 4"),
+#'     "variableStartShortLabel" = c("time", rep("status", times = 3), rep("trt", times = 2), "age", rep("sex", times = 2), rep("ascites", times = 2), rep("hepato", times = 2), rep("spiders", times = 2), rep("edema", times = 3), "bili", "chol", "albumin", "copper", "alk.phos", "ast", "trig", "platelet", "protime", rep("stage", times = 4)),
+#'     "variableStartLabel" = c("time", rep("status", times = 3), rep("trt", times = 2), "age", rep("sex", times = 2), rep("ascites", times = 2), rep("hepato", times = 2), rep("spiders", times = 2), rep("edema", times = 3), "bili", "chol", "albumin", "copper", "alk.phos", "ast", "trig", "platelet", "protime", rep("stage", times = 4)),
+#'     "units" = rep("NA", times = 31),
+#'     "notes" = rep("This is sample survival pbc data", times = 31)
+#'   )
+#' var_sheet <-
+#'   data.frame(
+#'     "variable" = c("time","status","trt", "age","sex","ascites","hepato", "spiders", "edema", "bili", "chol", "albumin", "copper", "alk.phos", "ast", "trig", "platelet", "protime", "stage"),
+#'     "label" = c("time","status","trt", "age","sex","ascites","hepato", "spiders", "edema", "bili", "chol", "albumin", "copper", "alk.phos", "ast", "trig", "platelet", "protime", "stage"),
+#'     "labelLong" = c("time","status","trt", "age","sex","ascites","hepato", "spiders", "edema", "bili", "chol", "albumin", "copper", "alk.phos", "ast", "trig", "platelet", "protime", "stage"),
+#'     "section" = rep("tester", times=19),
+#'     "subject" = rep("tester",times = 19),
+#'     "variableType" = c("cont", "cat", "cat", "cont","cat", "cat", "cat","cat", "cat", rep("cont", times = 9), "cat"),
+#'     "databaseStart" = rep("tester1, tester2", times = 19),
+#'     "units" = rep("NA", times = 19),
+#'     "variableStart" = c("[time]","[status]", "[trt]", "[age]", "[sex]", "[ascites]","[hepato]","[spiders]","[edema]", "[bili]", "[chol]", "[albumin]", "[copper]", "[alk.phos]", "[ast]", "[trig]", "[platelet]", "[protime]","[stage]")
+#'   )
+#' library(survival)
+#' tester1 <- survival::pbc[1:209,]
+#' tester2 <- survival::pbc[210:418,]
+#' db_name1 <- "tester1"
+#' db_name2 <- "tester2"
 #'
-#' rec_sample <- rec_with_table(data = sample_data,
-#' variables = vars_sheet,
-#' variable_details = var_details_sheet,
-#' database_name = db_name)
+#' rec_sample1 <- rec_with_table(data = tester1,
+#' variables = var_sheet,
+#' variable_details = var_details,
+#' database_name = db_name1)
+#'
+#' rec_sample2 <- rec_with_table(data = tester2,
+#' variables = var_sheet,
+#' variable_details = var_details,
+#' database_name = db_name2)
 #'
 #' @export
 
@@ -206,42 +202,56 @@ rec_with_table <-
            custom_function_path = NULL,
            attach_data_name = FALSE,
            id_role_name = NULL,
-           load_from_environment = NULL) {
+           name_of_environment_to_load = NULL,
+           append_non_db_columns = FALSE) {
+    # Convert passed id_role_name to list in case only a single id_role_name is passed as a string rather then list
+    # This makes it work with the select_vars_by_role function
     id_role_name <- list(id_role_name)
-    # If custom Functions are passed create new environment and source
+
+    # If custom Functions are passed source the R file from path
     if (!is.null(custom_function_path)) {
       source(custom_function_path)
     }
-    if (!is.null(load_from_environment)) {
+
+    if (!is.null(name_of_environment_to_load)) {
       if (is.null(variable_details)) {
         message(
           paste0(
             "No variable_details detected.
               Loading",
-            load_from_environment ,
+            name_of_environment_to_load ,
             "variable_details"
           )
         )
         data(variable_details,
-             package = load_from_environment,
+             package = name_of_environment_to_load,
              envir = environment())
       }
+
       if (is.null(variables)) {
-        message(paste0(
-          "No variables detected.
+        message(
+          paste0(
+            "No variables detected.
               Loading" ,
-          load_from_environment,
-          "variables"
-        ))
-        data(variables, package = load_from_environment, envir = environment())
+            name_of_environment_to_load,
+            "variables"
+          )
+        )
+        data(variables, package = name_of_environment_to_load, envir = environment())
       }
+
+    } else if (is.null(variables) || is.null(variable_details)) {
+      stop(
+        "No name_of_environment_to_load was passed to load variables and variable details from,
+           as well as no variables or variable details was passed. Stopping execution"
+      )
     }
     if (is.null(database_name)) {
       message("Using the passed data variable name as database_name")
       database_name <- deparse(substitute(data))
     }
+
     # ---- Step 1: Detemine if the passed data is a list or single database
-    append_non_db_columns <- FALSE
     if (class(data) == "list" &&
         length(database_name) == length(data)) {
       for (data_name in database_name) {
@@ -323,36 +333,37 @@ recode_call <-
            append_non_db_columns,
            log,
            var_labels) {
-    variable_details[[pkg.env$columns.Variables]] <-
-      trimws(variable_details[[pkg.env$columns.Variables]])
-    if (!is.null(variables) && "data.frame" %in% class(variables)) {
-      variables[[pkg.env$columns.Variables]] <-
-        trimws(variables[[pkg.env$columns.Variables]])
+    variable_details[[pkg.env$columns.Variable]] <-
+      trimws(variable_details[[pkg.env$columns.Variable]])
+    # Check whether variables sheet was passed or a vector containing variables to recode
+    if ("data.frame" %in% class(variables)) {
+      variables[[pkg.env$columns.Variable]] <-
+        trimws(variables[[pkg.env$columns.Variable]])
       variable_details <-
         update_variable_details_based_on_variable_sheet(variable_sheet = variables,
                                                         variable_details = variable_details)
     } else {
-      if (!is.null(variables)) {
-        variable_details <-
-          variable_details[trimws(variable_details[[pkg.env$columns.Variables]]) %in% variables, ]
-        vars_being_recoded <-
-          as.character(unique(variable_details[[pkg.env$columns.Variables]]))
-        if (length(vars_being_recoded) != length(variables)) {
-          missing_vars <- setdiff(variables, vars_being_recoded)
-          warning(
-            paste(
-              missing_vars,
-              "is missing from variable details therefore cannot be recoded"
-            )
+      vars_being_recoded <-
+        as.character(unique(variable_details[[pkg.env$columns.Variable]]))
+      if (length(vars_being_recoded) != length(variables)) {
+        missing_vars <- setdiff(variables, vars_being_recoded)
+        warning(
+          paste(
+            missing_vars,
+            "is missing from variable details therefore cannot be recoded"
           )
-        }
+        )
       }
+
+      # Create empty columns to later populate from variables sheet
       if (is.null(variable_details[[pkg.env$columns.VariableLabel]])) {
         variable_details[[pkg.env$columns.VariableLabel]] <- NA
       }
-      if (is.null(variable_details[[pkg.env$columns.VariableLabelShort]])) {
-        variable_details[[pkg.env$columns.VariableLabelShort]] <- NA
+
+      if (is.null(variable_details[[pkg.env$columns.label]])) {
+        variable_details[[pkg.env$columns.label]] <- NA
       }
+
     }
     if (!is.null(var_labels)) {
       if (is.null(names(var_labels))) {
@@ -361,27 +372,28 @@ recode_call <-
           the c(var_name = varLalbel) format"
         )
       } else {
-        if (is.factor(variable_details[[pkg.env$columns.VariableLabelShort]])) {
-          variable_details[[pkg.env$columns.VariableLabelShort]] <-
-            as.character(variable_details[[pkg.env$columns.VariableLabelShort]])
+        if (is.factor(variable_details[[pkg.env$columns.label]])) {
+          variable_details[[pkg.env$columns.label]] <-
+            as.character(variable_details[[pkg.env$columns.label]])
         }
         for (var_name in names(var_labels)) {
-          variable_details[variable_details[[pkg.env$columns.Variables]] == var_name,
-                           pkg.env$columns.VariableLabelShort] <-
+          variable_details[variable_details[[pkg.env$columns.Variable]] == var_name,
+                           pkg.env$columns.label] <-
             var_labels[[var_name]]
         }
       }
     }
 
+    # Vector containing all variable names present in variable details
     all_possible_var_names <-
-      unique(as.character(variable_details[[pkg.env$columns.Variables]]))
-    all_variables_detected <-
+      unique(as.character(variable_details[[pkg.env$columns.Variable]]))
+    names_of_all_variables_detected <-
       variable_details[grepl(database_name, variable_details[[pkg.env$columns.DatabaseStart]]), ]
 
     rec_data <-
       recode_columns(
         data = data,
-        variables_to_process = all_variables_detected,
+        variables_details_rows_to_process = names_of_all_variables_detected,
         data_name = database_name,
         log = log,
         print_note = print_note,
@@ -390,8 +402,8 @@ recode_call <-
     if (append_non_db_columns) {
       missed_variables <-
         all_possible_var_names[!all_possible_var_names %in%
-                                 unique(as.character(all_variables_detected[,
-                                                                            pkg.env$columns.Variables]))]
+                                 unique(as.character(names_of_all_variables_detected[,
+                                                                                     pkg.env$columns.Variable]))]
       for (missed_variable_name in missed_variables) {
         rec_data[[missed_variable_name]] <- NA
       }
@@ -464,6 +476,7 @@ get_data_variable_name <-
     }
     data_variable_being_checked <-
       trimws(data_variable_being_checked)
+
     return(data_variable_being_checked)
   }
 
@@ -473,7 +486,7 @@ get_data_variable_name <-
 #' and same rows as the data
 #'
 #' @param data The source database
-#' @param variables_to_process rows from variable details that are applicable
+#' @param variables_details_rows_to_process rows from variable details that are applicable
 #' to this DB
 #' @param data_name Name of the database being passed
 #' @param log The option of printing log
@@ -483,43 +496,44 @@ get_data_variable_name <-
 #' @return Returns recoded and labeled data
 recode_columns <-
   function(data,
-           variables_to_process,
+           variables_details_rows_to_process,
            data_name,
            log,
            print_note,
            else_default) {
     # Split variables to process into recode map and func
     map_variables_to_process <-
-      variables_to_process[grepl("map::", variables_to_process[[pkg.env$columns.CatValue]]), ]
+      variables_details_rows_to_process[grepl("map::", variables_details_rows_to_process[[pkg.env$columns.recTo]]), ]
+    if (nrow(map_variables_to_process) > 0) {
+      stop("map:: variables were detected however this feature is not yet supported")
+    }
 
     id_variables_to_process <-
-      variables_to_process[grepl("id_from::", variables_to_process[[pkg.env$columns.CatValue]]), ]
+      variables_details_rows_to_process[grepl("id_from::", variables_details_rows_to_process[[pkg.env$columns.recTo]]), ]
 
     func_variables_to_process <-
-      variables_to_process[grepl("Func::", variables_to_process[[pkg.env$columns.CatValue]]), ]
+      variables_details_rows_to_process[grepl("Func::", variables_details_rows_to_process[[pkg.env$columns.recTo]]), ]
 
     rec_variables_to_process <-
-      variables_to_process[(!grepl("Func::|map::|id_from::", variables_to_process[[pkg.env$columns.CatValue]])) &
+      variables_details_rows_to_process[(!grepl("Func::|map::|id_from::", variables_details_rows_to_process[[pkg.env$columns.recTo]])) &
                              (!grepl("DerivedVar::",
-                                     variables_to_process[[pkg.env$columns.VariableStart]])), ]
+                                     variables_details_rows_to_process[[pkg.env$columns.VariableStart]])), ]
 
     label_list <- list()
     # Set interval if none is present
-    valid_intervals <- c("[,]", "[,)", "(,]")
-    interval_default <- "[,]"
+    valid_intervals <- c("[,]", "[,)", "(,], (,)")
+    interval_default <- valid_intervals[[1]]
     recoded_data <- data[, 0]
 
     # Loop through the rows of recode vars
     while (nrow(rec_variables_to_process) > 0) {
       variable_being_checked <-
         as.character(rec_variables_to_process[1,
-                                              pkg.env$columns.Variables])
+                                              pkg.env$columns.Variable])
       rows_being_checked <-
-        rec_variables_to_process[rec_variables_to_process[[pkg.env$columns.Variables]] == variable_being_checked, ]
-      rec_variables_to_process <-
-        rec_variables_to_process[!rec_variables_to_process[[pkg.env$columns.Variables]] == variable_being_checked, ]
+        rec_variables_to_process[rec_variables_to_process[[pkg.env$columns.Variable]] == variable_being_checked, ]
       first_row <- rows_being_checked[1, ]
-      # Check for varialbe existance in data
+      # The name of the variable start
       data_variable_being_checked <-
         get_data_variable_name(
           data_name = data_name,
@@ -536,196 +550,207 @@ recode_columns <-
             data_variable_being_checked
           )
         )
-      } else {
-        # Check for From column duplicates
-        all_from_values_for_variable <-
-          rows_being_checked[[pkg.env$columns.From]]
-        if (length(unique(all_from_values_for_variable)) != length(all_from_values_for_variable)) {
-          for (single_from in all_from_values_for_variable) {
-            # Check if value is repeated more then once
-            if (sum(all_from_values_for_variable == single_from) > 1) {
-              stop(
-                paste(
-                  single_from,
-                  "was detected more then once in",
-                  variable_being_checked,
-                  "please make sure only one from value is being recoded"
-                )
-              )
-            }
-          }
-        }
-
-        # Set factor for all recode values
-        label_list[[variable_being_checked]] <-
-          create_label_list_element(rows_being_checked)
-        else_value <-
-          as.character(rows_being_checked[rows_being_checked[[pkg.env$columns.From]] == "else",
-                                          pkg.env$columns.CatValue])
-        if (length(else_value) == 1 &&
-            !is_equal(else_value, "character(0)")) {
-          else_value <-
-            recode_variable_NA_formating(else_value, label_list[[variable_being_checked]]$type)
-          if (is_equal(else_value, "copy")) {
-            recoded_data[variable_being_checked] <-
-              data[data_variable_being_checked]
-          } else {
-            recoded_data[variable_being_checked] <- else_value
-          }
-          # Catch multiple else rows
-        } else if (length(else_value) > 1) {
-          stop(
-            paste(
-              variable_being_checked,
-              " contains",
-              length(else_value),
-              "rows of else only one else value is allowed"
-            )
-          )
-        }
-        else {
-          recoded_data[variable_being_checked] <- else_default
-        }
-        else_rows <- nrow(recoded_data)
-        rows_being_checked <-
-          rows_being_checked[!rows_being_checked[[pkg.env$columns.From]] == "else", ]
-        if (nrow(rows_being_checked) > 0) {
-          log_table <- rows_being_checked[, 0]
-          log_table$value_to <- NA
-          log_table$From <- NA
-          log_table$rows_recoded <- NA
-          levels(recoded_data[[variable_being_checked]]) <-
-            c(levels(recoded_data[[variable_being_checked]]),
-              levels(rows_being_checked[[pkg.env$columns.CatValue]]))
-
-          for (row in seq_len(nrow(rows_being_checked))) {
-            row_being_checked <- rows_being_checked[row, ]
-            # If cat go check for label and obtain it
-
-            # regardless obtain unit and attach
-
-            # find var name for this database
-            data_variable_being_checked <-
-              get_data_variable_name(
-                data_name = data_name,
-                row_being_checked = row_being_checked,
-                variable_being_checked = variable_being_checked,
-                data = data
-              )
-
-            # Recode the variable
-            from_values <- list()
-            if (grepl("\\[*\\]", as.character(row_being_checked[[pkg.env$columns.From]]))) {
-              from_values <-
-                strsplit(as.character(row_being_checked[[pkg.env$columns.From]]), ",")[[1]]
-              from_values[[1]] <- trimws(from_values[[1]])
-              from_values[[2]] <- trimws(from_values[[2]])
-              interval_left <- substr(from_values[[1]], 1, 1)
-              interval_right <-
-                substr(from_values[[2]],
-                       nchar(from_values[[2]]),
-                       nchar(from_values[[2]]))
-              interval <- paste0(interval_left, ",", interval_right)
-              from_values[[1]] <-
-                gsub("\\[|\\]", "", from_values[[1]])
-              from_values[[2]] <-
-                gsub("\\[|\\]", "", from_values[[2]])
-            } else {
-              temp_from <-
-                as.character(row_being_checked[[pkg.env$columns.From]])
-              from_values[[1]] <- temp_from
-              from_values[[2]] <- from_values[[1]]
-            }
-            value_recorded <-
-              as.character(row_being_checked[[pkg.env$columns.CatValue]])
-            if (from_values[[1]] == from_values[[2]]) {
-              interval <- "[,]"
-            } else if (!interval %in% valid_intervals) {
-              message(
-                paste(
-                  "For variable",
-                  variable_being_checked,
-                  "invalid interval was passed.\nDefault interval will be used:",
-                  interval_default
-                )
-              )
-              interval <- interval_default
-            }
-            valid_row_index <- compare_value_based_on_interval(
-              compare_columns = data_variable_being_checked,
-              data = data,
-              left_boundary = from_values[[1]],
-              right_boundary = from_values[[2]],
-              interval = interval
-            )
-            # Start construction of dataframe for log
-            log_table[row, "value_to"] <- value_recorded
-            log_table[row, "From"] <-
-              as.character(row_being_checked[[pkg.env$columns.From]])
-            log_table[row, "rows_recoded"] <-
-              sum(valid_row_index, na.rm = TRUE)
-            else_rows <- else_rows - log_table[row, "rows_recoded"]
-
-            value_recorded <-
-              recode_variable_NA_formating(value_recorded, label_list[[variable_being_checked]]$type)
-            if (is_equal(value_recorded, "copy")) {
-              value_recorded <-
-                data[valid_row_index, data_variable_being_checked]
-            }
-            recoded_data[valid_row_index, variable_being_checked] <-
-              value_recorded
-            if (print_note &&
-                !is.null(row_being_checked[[pkg.env$columns.Notes]]) &&
-                !is_equal(row_being_checked[[pkg.env$columns.Notes]],
-                          "") &&
-                !is.na(row_being_checked[[pkg.env$columns.Notes]])) {
-              message(
-                "NOTE for ",
+        next
+      }
+      # Check for From column duplicates
+      all_from_values_for_variable <-
+        rows_being_checked[[pkg.env$columns.recFrom]]
+      if (length(unique(all_from_values_for_variable)) != length(all_from_values_for_variable)) {
+        for (single_from in all_from_values_for_variable) {
+          # Check if value is repeated more then once
+          if (sum(all_from_values_for_variable == single_from) > 1) {
+            stop(
+              paste(
+                single_from,
+                "was detected more then once in",
                 variable_being_checked,
-                ": ",
-                as.character(row_being_checked[[pkg.env$columns.Notes]])
+                "please make sure only one from value is being recoded"
               )
-            }
-          }
-          # if log was requested print it
-          if (log) {
-            message(
-              "The variable ",
-              data_variable_being_checked,
-              " was recoded into ",
-              variable_being_checked,
-              " for the database ",
-              data_name,
-              " the following recodes were made: "
             )
-            if (length(else_value) > 0) {
-              extra_row <- nrow(log_table) + 1
-              log_table[extra_row , "value_to"] <- else_value
-              log_table[extra_row , "From"] <-
-                "else"
-              log_table[extra_row , "rows_recoded"] <-
-                else_rows
-            }
-            # Reset rowCount to avoid confusion
-            rownames(log_table) <- NULL
-
-            print(log_table)
           }
         }
       }
+
+      # Set factor for all recode values
+      label_list[[variable_being_checked]] <-
+        create_label_list_element(rows_being_checked)
+      else_value <-
+        as.character(rows_being_checked[rows_being_checked[[pkg.env$columns.recFrom]] == "else",
+                                        pkg.env$columns.recTo])
+      if (length(else_value) == 1 &&
+          !is_equal(else_value, "character(0)")) {
+        else_value <-
+          format_recoded_value(else_value, label_list[[variable_being_checked]]$type)
+        if (is_equal(else_value, "copy")) {
+          recoded_data[variable_being_checked] <-
+            data[data_variable_being_checked]
+        } else {
+          recoded_data[variable_being_checked] <- else_value
+        }
+        # Catch multiple else rows
+      } else if (length(else_value) > 1) {
+        stop(
+          paste(
+            variable_being_checked,
+            " contains",
+            length(else_value),
+            "rows of else only one else value is allowed"
+          )
+        )
+      }
+      else {
+        recoded_data[variable_being_checked] <- else_default
+      }
+      num_else_rows <- nrow(recoded_data)
+      # Remove else rows from rows_being_checked
+      rows_being_checked <-
+        rows_being_checked[!rows_being_checked[[pkg.env$columns.recFrom]] == "else", ]
+      if (nrow(rows_being_checked) > 0) {
+        log_table <- rows_being_checked[, 0]
+        log_table$value_to <- NA
+        log_table$From <- NA
+        log_table$rows_recoded <- NA
+        levels(recoded_data[[variable_being_checked]]) <-
+          c(levels(recoded_data[[variable_being_checked]]),
+            levels(rows_being_checked[[pkg.env$columns.recTo]]))
+
+        for (row in seq_len(nrow(rows_being_checked))) {
+          row_being_checked <- rows_being_checked[row, ]
+          # If cat go check for label and obtain it
+
+          # regardless obtain unit and attach
+
+          # find var name for this database
+          data_variable_being_checked <-
+            get_data_variable_name(
+              data_name = data_name,
+              row_being_checked = row_being_checked,
+              variable_being_checked = variable_being_checked,
+              data = data
+            )
+
+          # Recode the variable
+          from_values <- list()
+          # Check for presence of interval in the recFrom column
+          # Catches any values as long as they are surrounded by the specific intervals
+          if (grepl("\\[*\\]|\\[*\\)|\\(*\\]|\\(*\\)",
+                    as.character(row_being_checked[[pkg.env$columns.recFrom]]))) {
+            # This splits the value in 2 parts [1] being first half the interval and value and [2] being second half and closing interval
+            from_values <-
+              strsplit(as.character(row_being_checked[[pkg.env$columns.recFrom]]), ",")[[1]]
+            # This just trims white space from both in case a space is present before or after the ,
+            from_values[[1]] <- trimws(from_values[[1]])
+            from_values[[2]] <- trimws(from_values[[2]])
+            # Extracts the interval brackets themselves
+            interval_left <- substr(from_values[[1]], 1, 1)
+            interval_right <-
+              substr(from_values[[2]],
+                     nchar(from_values[[2]]),
+                     nchar(from_values[[2]]))
+            interval <- paste0(interval_left, ",", interval_right)
+            # Remove the interval leaving only values
+            from_values[[1]] <-
+              gsub("\\[|\\]|\\(|\\)", "", from_values[[1]])
+            from_values[[2]] <-
+              gsub("\\[|\\]|\\(|\\)", "", from_values[[2]])
+          } else {
+            temp_from <-
+              as.character(row_being_checked[[pkg.env$columns.recFrom]])
+            from_values[[1]] <- temp_from
+            from_values[[2]] <- from_values[[1]]
+          }
+          value_to_recode_to <-
+            as.character(row_being_checked[[pkg.env$columns.recTo]])
+          if (from_values[[1]] == from_values[[2]]) {
+            interval <- "[,]"
+          } else if (!interval %in% valid_intervals) {
+            message(
+              paste(
+                "For variable",
+                variable_being_checked,
+                "invalid interval was passed.\nDefault interval will be used:",
+                interval_default
+              )
+            )
+            interval <- interval_default
+          }
+          valid_row_index <- compare_value_based_on_interval(
+            compare_columns = data_variable_being_checked,
+            data = data,
+            left_boundary = from_values[[1]],
+            right_boundary = from_values[[2]],
+            interval = interval
+          )
+          # Start construction of dataframe for log
+          log_table[row, "value_to"] <- value_to_recode_to
+          log_table[row, "From"] <-
+            as.character(row_being_checked[[pkg.env$columns.recFrom]])
+          log_table[row, "rows_recoded"] <-
+            sum(valid_row_index, na.rm = TRUE)
+          num_else_rows <-
+            num_else_rows - log_table[row, "rows_recoded"]
+
+          value_to_recode_to <-
+            format_recoded_value(value_to_recode_to, label_list[[variable_being_checked]]$type)
+          if (is_equal(value_to_recode_to, "copy")) {
+            value_to_recode_to <-
+              data[valid_row_index, data_variable_being_checked]
+          }
+          recoded_data[valid_row_index, variable_being_checked] <-
+            value_to_recode_to
+          if (print_note &&
+              !is.null(row_being_checked[[pkg.env$columns.Notes]]) &&
+              !is_equal(row_being_checked[[pkg.env$columns.Notes]],
+                        "") &&
+              !is.na(row_being_checked[[pkg.env$columns.Notes]])) {
+            message(
+              "NOTE for ",
+              variable_being_checked,
+              ": ",
+              as.character(row_being_checked[[pkg.env$columns.Notes]])
+            )
+          }
+        }
+        # if log was requested print it
+        if (log) {
+          message(
+            "The variable ",
+            data_variable_being_checked,
+            " was recoded into ",
+            variable_being_checked,
+            " for the database ",
+            data_name,
+            " the following recodes were made: "
+          )
+          if (length(else_value) > 0) {
+            extra_row <- nrow(log_table) + 1
+            log_table[extra_row , "value_to"] <- else_value
+            log_table[extra_row , "From"] <-
+              "else"
+            log_table[extra_row , "rows_recoded"] <-
+              num_else_rows
+          }
+          # Reset rowCount to avoid confusion
+          rownames(log_table) <- NULL
+
+          print(log_table)
+        }
+      }
+      rec_variables_to_process <-
+        rec_variables_to_process[!rec_variables_to_process[[pkg.env$columns.Variable]] == variable_being_checked, ]
     }
 
     # Process funcVars
     while (nrow(func_variables_to_process) > 0) {
       first_row <- func_variables_to_process[1, ]
       first_row_variable_name <-
-        as.character(first_row[[pkg.env$columns.Variables]])
+        as.character(first_row[[pkg.env$columns.Variable]])
       # get name of var pass to
       derived_return <-
         recode_derived_variables(
           variable_being_processed = first_row_variable_name,
           recoded_data = recoded_data,
-          variables_to_process = func_variables_to_process,
+          variables_details_rows_to_process = func_variables_to_process,
           log = log,
           print_note = print_note,
           else_default = else_default,
@@ -735,7 +760,7 @@ recode_columns <-
       label_list <- derived_return$label_list
       recoded_data <- derived_return$recoded_data
       func_variables_to_process <-
-        derived_return$variables_to_process
+        derived_return$variables_details_rows_to_process
     }
 
     #Process Id Vars
@@ -745,7 +770,7 @@ recode_columns <-
       current_id <- id_variables_to_process[1, ]
       id_variables_to_process <- id_variables_to_process[-1, ]
       id_creation_function <-
-        as.character(current_id[[pkg.env$columns.CatValue]])
+        as.character(current_id[[pkg.env$columns.recTo]])
       id_creation_function <-
         strsplit(id_creation_function, "::")[[1]][[2]]
       id_creation_function <- trimws(id_creation_function)
@@ -764,7 +789,7 @@ recode_columns <-
 
       # Extract Id Name
       id_name <-
-        as.character(current_id[[pkg.env$columns.Variables]])
+        as.character(current_id[[pkg.env$columns.Variable]])
 
       # Create id_object to append at the end
       tmp_list <-
@@ -800,29 +825,34 @@ compare_value_based_on_interval <-
            data,
            compare_columns,
            interval) {
-    return_boolean <- vector()
+    valid_row_index <- vector()
+    # In case of strings this handles it the suppress warnings is to get rid of the warning when string is checked as numeric
     if (suppressWarnings(is.na(as.numeric(left_boundary)))) {
-      return_boolean <-
+      valid_row_index <-
         data[[compare_columns]] %in% data[[compare_columns]][which(left_boundary == data[[compare_columns]])]
     } else {
       if (interval == "[,]") {
-        return_boolean <-
+        valid_row_index <-
           data[[compare_columns]] %in% data[[compare_columns]][which(as.numeric(left_boundary) <= data[[compare_columns]] &
                                                                        data[[compare_columns]] <= as.numeric(right_boundary))]
       } else if (interval == "[,)") {
-        return_boolean <-
+        valid_row_index <-
           data[[compare_columns]] %in% data[[compare_columns]][which(as.numeric(left_boundary) <= data[[compare_columns]] &
                                                                        data[[compare_columns]] < as.numeric(right_boundary))]
       } else if (interval == "(,]") {
-        return_boolean <-
+        valid_row_index <-
           data[[compare_columns]] %in% data[[compare_columns]][which(as.numeric(left_boundary) < data[[compare_columns]] &
                                                                        data[[compare_columns]] <= as.numeric(right_boundary))]
+      } else if (interval == "(,)") {
+        valid_row_index <-
+          data[[compare_columns]] %in% data[[compare_columns]][which(as.numeric(left_boundary) < data[[compare_columns]] &
+                                                                       data[[compare_columns]] < as.numeric(right_boundary))]
       } else {
         stop("Invalid Argument was passed")
       }
     }
 
-    return(return_boolean)
+    return(valid_row_index)
   }
 
 # Parse out variables csv
@@ -833,7 +863,7 @@ update_variable_details_based_on_variable_sheet <-
       variable_details[, !(
         names(variable_details) %in% c(
           pkg.env$columns.VariableType,
-          pkg.env$columns.VariableLabelShort,
+          pkg.env$columns.label,
           pkg.env$columns.VariableLabel,
           pkg.env$columns.Units
         )
@@ -841,9 +871,9 @@ update_variable_details_based_on_variable_sheet <-
     # Only keep the needed columns
     variable_sheet <-
       variable_sheet[, c(
-        pkg.env$columns.Variables,
+        pkg.env$columns.Variable,
         pkg.env$columns.VariableType,
-        pkg.env$columns.VariableLabelShort,
+        pkg.env$columns.label,
         pkg.env$columns.VariableLabel,
         pkg.env$columns.Units
       )]
@@ -852,14 +882,14 @@ update_variable_details_based_on_variable_sheet <-
       merge(
         variable_details,
         variable_sheet,
-        by.x = pkg.env$columns.Variables,
-        by.y = pkg.env$columns.Variables,
+        by.x = pkg.env$columns.Variable,
+        by.y = pkg.env$columns.Variable,
         all.x = TRUE
       )
     # remove variables not present in variable_sheet
     variable_details <-
-      variable_details[variable_details[[pkg.env$columns.Variables]] %in%
-                         variable_sheet[[pkg.env$columns.Variables]], ]
+      variable_details[variable_details[[pkg.env$columns.Variable]] %in%
+                         variable_sheet[[pkg.env$columns.Variable]], ]
 
     return(variable_details)
   }
@@ -872,7 +902,7 @@ update_variable_details_based_on_variable_sheet <-
 #' @param var_type the toType of a variable
 #'
 #' @return an appropriately coded tagged NA
-recode_variable_NA_formating <- function(cell_value, var_type) {
+format_recoded_value <- function(cell_value, var_type) {
   recode_value <- NULL
   if (grepl("NA", cell_value)) {
     na_value_list <- strsplit(cell_value, ":")[[1]]
@@ -895,13 +925,13 @@ recode_variable_NA_formating <- function(cell_value, var_type) {
 recode_derived_variables <-
   function(recoded_data,
            variable_being_processed,
-           variables_to_process,
+           variables_details_rows_to_process,
            log,
            print_note,
            else_default,
            label_list,
            var_stack) {
-    if (nrow(variables_to_process) <= 0) {
+    if (nrow(variables_details_rows_to_process) <= 0) {
       stop(paste(
         variable_being_processed,
         "is missing from variable_details"
@@ -910,23 +940,25 @@ recode_derived_variables <-
     var_stack <- c(var_stack, variable_being_processed)
     # obtain rows to process and updated variables to Process
     variable_rows <-
-      variables_to_process[variables_to_process[[pkg.env$columns.Variables]] == variable_being_processed, ]
-    variables_to_process <-
-      variables_to_process[variables_to_process[[pkg.env$columns.Variables]] != variable_being_processed, ]
+      variables_details_rows_to_process[variables_details_rows_to_process[[pkg.env$columns.Variable]] == variable_being_processed, ]
+    variables_details_rows_to_process <-
+      variables_details_rows_to_process[variables_details_rows_to_process[[pkg.env$columns.Variable]] != variable_being_processed, ]
     for (row_num in seq_len(nrow(variable_rows))) {
       # Check for presence of feeder variables in data and in the
       # variable being processed stack
       feeder_vars <-
         as.list(strsplit(as.character(variable_rows[row_num, ][[pkg.env$columns.VariableStart]]), "::"))[[1]][[2]]
+      # Extract the variable names used in the function
       feeder_vars <- gsub("\\[|\\]", "", feeder_vars)
       feeder_vars <- as.list(strsplit(feeder_vars, ","))[[1]]
       feeder_vars <- sapply(feeder_vars, trimws)
       used_feeder_vars <- feeder_vars
+      # Verify that those variables have been recoded
       feeder_vars <- setdiff(feeder_vars, names(recoded_data))
 
       # Check if the variable has a function to recode
       non_func_missing_variables <-
-        setdiff(feeder_vars, unique(as.character(variables_to_process[[pkg.env$columns.Variables]])))
+        setdiff(feeder_vars, unique(as.character(variables_details_rows_to_process[[pkg.env$columns.Variable]])))
       if (length(non_func_missing_variables) > 0) {
         warning(
           paste(
@@ -945,7 +977,7 @@ recode_derived_variables <-
             var_stack = var_stack,
             label_list = label_list,
             recoded_data = recoded_data,
-            variables_to_process = variables_to_process
+            variables_details_rows_to_process = variables_details_rows_to_process
           )
         )
       }
@@ -973,7 +1005,7 @@ recode_derived_variables <-
             recode_derived_variables(
               variable_being_processed = one_feeder,
               recoded_data = recoded_data,
-              variables_to_process = variables_to_process,
+              variables_details_rows_to_process = variables_details_rows_to_process,
               log = log,
               print_note = print_note,
               else_default = else_default,
@@ -983,8 +1015,8 @@ recode_derived_variables <-
           var_stack <- derived_return$var_stack
           label_list <- derived_return$label_list
           recoded_data <- derived_return$recoded_data
-          variables_to_process <-
-            derived_return$variables_to_process
+          variables_details_rows_to_process <-
+            derived_return$variables_details_rows_to_process
         }
       }
 
@@ -993,7 +1025,7 @@ recode_derived_variables <-
 
       row_being_checked <- variable_rows[row_num, ]
       func_cell <-
-        as.character(row_being_checked[[pkg.env$columns.CatValue]])
+        as.character(row_being_checked[[pkg.env$columns.recTo]])
       function_being_used <-
         as.list(strsplit(func_cell, "::"))[[1]][[2]]
 
@@ -1029,10 +1061,11 @@ recode_derived_variables <-
         var_stack = var_stack,
         label_list = label_list,
         recoded_data = recoded_data,
-        variables_to_process = variables_to_process
+        variables_details_rows_to_process = variables_details_rows_to_process
       )
     )
   }
+
 calculate_custom_function_row_value <-
   function(row_values,
            variable_names,

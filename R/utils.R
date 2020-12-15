@@ -98,14 +98,14 @@ get_variable_type_data_type <- function (var_details_rows, var_type, is_start_va
 
 #' ID role creation
 #'
-#' Creates Id row for rec_with_table
+#' Creates ID row for rec_with_table
 #'
-#' @param data the data that the id role row is created for
-#' @param id_role_name name for the role that id is created from
+#' @param data the data that the ID role row is created for
+#' @param id_role_name name for the role that ID is created from
 #' @param database_name the name of the database
 #' @param variables variables sheet containing variable information
 #'
-#' @return data with the id row attached
+#' @return data with the ID row attached
 create_id_row <- function(data, id_role_name, database_name, variables){
   # Check for role or variables
   id_cols <- c()
@@ -115,7 +115,7 @@ create_id_row <- function(data, id_role_name, database_name, variables){
     id_cols <- append(id_cols, select_vars_by_role(roles = id_role_name$feeder_roles, variables = variables))
   }else {
     message("id_role_name does not contain feeder_roles or feeder_vars.
-                  No id column was created")
+                  No ID column was created")
   }
   if("data_name" %in% id_role_name$feeder_vars && is.null(data[["data_name"]])){
     data[["data_name"]] <- database_name
@@ -157,7 +157,7 @@ create_label_list_element <- function(variable_rows) {
   ret_list$label_long <-
     as.character(first_row[[pkg.env$columns.VariableLabel]])
   ret_list$label <-
-    as.character(first_row[[pkg.env$columns.VariableLabelShort]])
+    as.character(first_row[[pkg.env$columns.label]])
   if (is_equal(ret_list$type, pkg.env$columns.value.CatType)) {
     for (row_index in seq_len(nrow(variable_rows))) {
       single_row <- variable_rows[row_index, ]
@@ -168,7 +168,7 @@ create_label_list_element <- function(variable_rows) {
       )) {
         stop(
           paste(
-            as.character(single_row[[pkg.env$columns.Variables]]),
+            as.character(single_row[[pkg.env$columns.Variable]]),
             "does not contain all identical",
             pkg.env$columns.ToType,
             "variable cant change variable type for different values"
@@ -182,7 +182,7 @@ create_label_list_element <- function(variable_rows) {
       )) {
         stop(
           paste(
-            as.character(single_row[[pkg.env$columns.Variables]]),
+            as.character(single_row[[pkg.env$columns.Variable]]),
             "does not contain all identical",
             pkg.env$columns.Units,
             "variable cant change unit type for different values"
@@ -196,7 +196,7 @@ create_label_list_element <- function(variable_rows) {
       )) {
         stop(
           paste(
-            as.character(single_row[[pkg.env$columns.Variables]]),
+            as.character(single_row[[pkg.env$columns.Variable]]),
             "does not contain all identical",
             pkg.env$columns.VariableLabel,
             "variable cant change variableLabel for different values. VAL1:",
@@ -207,9 +207,9 @@ create_label_list_element <- function(variable_rows) {
         )
       }
       value_being_labeled <-
-        as.character(single_row[[pkg.env$columns.CatValue]])
+        as.character(single_row[[pkg.env$columns.recTo]])
       value_being_labeled <-
-        recode_variable_NA_formating(value_being_labeled, ret_list$type)
+        format_recoded_value(value_being_labeled, ret_list$type)
       ret_list$values[[as.character(single_row[[
         pkg.env$columns.CatLabel]])]] <-
         value_being_labeled
@@ -300,7 +300,7 @@ select_vars_by_role <- function(roles, variables){
       }
     }
   }
-  ret <- as.character(variables[variables[[pkg.env$columns.Role]] == valid_patern, pkg.env$columns.Variables][[pkg.env$columns.Variables]])
+  ret <- as.character(variables[variables[[pkg.env$columns.Role]] == valid_patern, pkg.env$columns.Variable][[pkg.env$columns.Variable]])
 
   return(ret)
 }
