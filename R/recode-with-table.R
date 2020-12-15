@@ -343,6 +343,15 @@ recode_call <-
         update_variable_details_based_on_variable_sheet(variable_sheet = variables,
                                                         variable_details = variable_details)
     } else {
+      # Create empty columns to later populate from variables sheet
+      if (is.null(variable_details[[pkg.env$columns.VariableLabel]])) {
+        variable_details[[pkg.env$columns.VariableLabel]] <- NA
+      }
+
+      if (is.null(variable_details[[pkg.env$columns.label]])) {
+        variable_details[[pkg.env$columns.label]] <- NA
+      }
+
       vars_being_recoded <-
         as.character(unique(variable_details[[pkg.env$columns.Variable]]))
       if (length(vars_being_recoded) != length(variables)) {
@@ -353,15 +362,6 @@ recode_call <-
             "is missing from variable details therefore cannot be recoded"
           )
         )
-      }
-
-      # Create empty columns to later populate from variables sheet
-      if (is.null(variable_details[[pkg.env$columns.VariableLabel]])) {
-        variable_details[[pkg.env$columns.VariableLabel]] <- NA
-      }
-
-      if (is.null(variable_details[[pkg.env$columns.label]])) {
-        variable_details[[pkg.env$columns.label]] <- NA
       }
 
     }
