@@ -7,17 +7,17 @@
 create_id_row(data, id_role_name, database_name, variables)
 }
 \arguments{
-\item{data}{the data that the id role row is created for}
+\item{data}{the data that the ID role row is created for}
 
-\item{id_role_name}{name for the role that id is created from}
+\item{id_role_name}{name for the role that ID is created from}
 
 \item{database_name}{the name of the database}
 
 \item{variables}{variables sheet containing variable information}
 }
 \value{
-data with the id row attached
+data with the ID row attached
 }
 \description{
-Creates Id row for rec_with_table
+Creates ID row for rec_with_table
 }

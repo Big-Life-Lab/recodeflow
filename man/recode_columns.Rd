@@ -6,7 +6,7 @@
 \usage{
 recode_columns(
   data,
-  variables_to_process,
+  variables_details_rows_to_process,
   data_name,
   log,
   print_note,
@@ -16,7 +16,7 @@ recode_columns(
 \arguments{
 \item{data}{The source database}
 
-\item{variables_to_process}{rows from variable details that are applicable
+\item{variables_details_rows_to_process}{rows from variable details that are applicable
 to this DB}
 
 \item{data_name}{Name of the database being passed}

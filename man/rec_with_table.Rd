@@ -17,158 +17,170 @@ rec_with_table(
   custom_function_path = NULL,
   attach_data_name = FALSE,
   id_role_name = NULL,
-  load_from_environment = NULL
+  name_of_environment_to_load = NULL,
+  append_non_db_columns = FALSE
 )
 }
 \arguments{
-\item{data}{A dataframe containing the variables to be recoded. Can also be a list of dataframes}
+\item{data}{A dataframe containing the variables to be recoded.
+Can also be a named list of dataframes.}
 
-\item{variables}{character vector containing variable names to recode or
-a variables csv containing additional variable info}
+\item{variables}{Character vector containing the names of the new variables
+to recode to or a dataframe containing a variables sheet.}
 
-\item{database_name}{String, the name of the dataset containing the variables
-to be recoded. Can also be a vector of strings if data is a list}
+\item{database_name}{A String containing the name of the database containing
+the original variables which should match up with a database from the
+databaseStart column in the variables details sheet. Should be a character
+vector if data is a named list where each vector item matches a name in the
+data list and also matches with a value in the databaseStart column of a
+variable details sheet.}
 
-\item{variable_details}{A dataframe containing the specifications (rules)
+\item{variable_details}{A dataframe containing the specifications
 for recoding.}
 
 \item{else_value}{Value (string, number, integer, logical or NA) that is used
 to replace any values that are outside the specified ranges
 (no rules for recoding).}
 
-\item{append_to_data}{Logical, if \code{TRUE} (default), recoded variables
-will be appended to the data.}
+\item{append_to_data}{Logical, if \code{TRUE} (default), the newly
+created variables will be appended to the original dataset.}
 
-\item{log}{Logical, if \code{FALSE} (default), a log of recoding will
-not be printed.}
+\item{log}{Logical, if \code{FALSE} (default), a log containing information
+about the recoding will not be printed.}
 
 \item{notes}{Logical, if \code{FALSE} (default), will not print the
 content inside the `Note`` column of the variable being recoded.}
 
 \item{var_labels}{labels vector to attach to variables in variables}
 
-\item{custom_function_path}{path to location of the function to load}
+\item{custom_function_path}{string containing the path to the file
+containing functions to run for derived variables. This file will be sourced
+and its functions loaded into the R environment.}
 
-\item{attach_data_name}{to attach name of database to end table}
+\item{attach_data_name}{logical to attach name of database to end table}
 
 \item{id_role_name}{name for the role to be used to generate id column}
 
-\item{load_from_environment}{Name of package to load variables and variable_details from}
+\item{name_of_environment_to_load}{Name of package to load variables and variable_details from}
+
+\item{append_non_db_columns}{boolean determening if data not present in this cycle should be appended as NA}
 }
 \value{
 a dataframe that is recoded according to rules in variable_details.
 }
 \description{
-Recode with Table is responsible for recoding values of a dataset based on
-the specifications in variable_details.
+Creates new variables by recoding variables in a dataset using the rules
+specified in a variables details sheet
 }
 \details{
 The \href{https://github.com/Big-Life-Lab/bllflow/blob/master/inst/extdata/PBC-variableDetails.csv}{variable_details}
- dataframe needs the following variables to function:
+ dataframe needs the following columns:
  \describe{
-  \item{variable}{name of new (mutated) variable that is recoded}
-  \item{toType}{type the variable is being recoded to
+  \item{variable}{Name of the new variable created. The name of the new
+  variable can be the same as the original variable if it does not change the original variable definition}
+  \item{toType}{type the new variable
   \emph{cat = categorical, cont = continuous}}
-  \item{databaseStart}{name of dataframe with original variables to be
-  recoded}
-  \item{variableStart}{name of variable to be recoded}
+  \item{databaseStart}{Names of the databases that the original variable can
+  come from. Each database name should be seperated by a comma. For eg.,
+  "cchs2001_p, cchs2003_p,cchs2005_p,cchs2007_p"}
+  \item{variableStart}{Names of the original variables within each database
+  specified in the databaseStart column. For eg. ,
+  "cchs2001_p::RACA_6A,cchs2003_p::RACC_6A,ADL_01". The final variable
+  specified is the name of the variable for all other databases specified in
+  databaseStart but not in this column. For eg., ADL_01 would be the original
+  variable name in the cchs2005_p and cchs2007_p databases.}
   \item{fromType}{variable type of start variable.
   \emph{cat = categorical or factor variable}
   \emph{cont = continuous variable (real number or integer)}}
   \item{recTo}{Value to recode to}
   \item{recFrom}{Value/range being recoded from}
  }
- Each row in \emph{variable_details} comprises one category in a
- newly transformed variable. The rules for each category the new variable
- are a string in \emph{recFrom} and value in \emph{recTo}.
- These recode pairs are the same syntax as \emph{sjmisc::rec()},
- except in \emph{sjmisc::rec()} the pairs are a string for the function
- attribute \emph{rec =}, separated by '\emph{=}'.
- For example in \emph{rec_w_table}
- \emph{variable_details$recFrom = 2; variable_details$recTo = 4}
- is the same as \emph{sjmisc::rec(rec = "2=4")}.
- the pairs are obtained from the RecFrom and RecTo columns
+ Each row in the \emph{variables details} sheet encodes the rule for recoding
+ value(s) of the original variable to a category in the new variable. The
+ categories of the new variable are encoded in the \emph{recTo} column and the
+ value(s) of the original variable that recode to this new value are encoded
+ in the \emph{recFrom} column. These recode columns follow a syntax
+ similar to the \emph{sjmisc::rec()} function. Whereas in the \emph{sjmisc::rec()}
+ function the recoding rules are in one string, in the variables details sheet
+ they are encoded over multiple rows and columns (recFrom an recTo). For eg.,
+ a recoding rule in the sjmisc function would like like "1=2;2=3" whereas
+ in the variables details sheet this would be encoded over two rows with
+ recFrom and recTo values of the first row being 1 and 2 and similarly for
+ the second row it would be 2 and 3. The rules for describing recoding
+ pairs are shown below:
   \describe{
-    \item{recode pairs}{each recode pair is row. see above example
-    or \emph{PBC-variableDetails.csv}}
-    \item{multiple values}{multiple old values that should be recoded into
-    a new single value may be separated with comma, e.g.
-    \emph{recFrom = "1,2"; recTo = 1}}
-    \item{value range}{a value range is indicated by a colon, e.g.
-    \emph{recFrom= "1:4"; recTo = 1} (recodes all values from 1 to 4 into 1)}
-    \item{value range for doubles}{for double vectors (with fractional part),
-     all values within the specified range are recoded; e.g.
-     \emph{recFrom = "1:2.5'; recTo = 1} recodes 1 to 2.5 into 1,
-     but 2.55 would not be recoded
-     (since it's not included in the specified range)}
-    \item{\emph{"min"} and \emph{"max"}}{minimum and maximum values
-    are indicates by \emph{min} (or \emph{lo}) and \emph{max} (or \emph{hi}),
-     e.g. \emph{recFrom = "min:4"; recTo = 1} (recodes all values from
-     minimum values of \emph{x} to 4 into 1)}
-    \item{\emph{"else"}}{all other values, which have not been specified yet,
+    \item{recode pairs}{Each recode pair is a row}
+    \item{multiple values}{Multiple values from the old variable that should
+    be recoded into a new category of the new variable should be separated
+    with a comma. e.g.,
+    \emph{recFrom = "1,2"; recTo = 1}} will recode values of 1 and 2 in the
+    original variable to 1 in the new variable
+    \item{value range}{A value range is indicated by a colon, e.g.
+    \emph{recFrom= "1:4"; recTo = 1} will recode all values from 1 to 4 into 1}
+    \item{\emph{min} and \emph{max}}{minimum and maximum values
+    are indicated by \emph{min} (or \emph{lo}) and \emph{max} (or \emph{hi}),
+     e.g. \emph{recFrom = "min:4"; recTo = 1} will recode all values from the
+     minimum value of the original variable to 4 into 1}
+    \item{\emph{"else"}}{All other values, which have not been specified yet,
      are indicated by \emph{else}, e.g. \emph{recFrom = "else"; recTo = NA}
-     (recode all other values (not specified in other rows) to "NA")}
-    \item{\emph{"copy"}}{the \emph{"else"}-token can be combined with
+     will recode all other values (not specified in other rows) of the
+     original variable to "NA")}
+    \item{\emph{"copy"}}{the \emph{else} token can be combined with
     \emph{copy}, indicating that all remaining, not yet recoded values should
      stay the same (are copied from the original value), e.g.
      \emph{recFrom = "else"; recTo = "copy"}}
-    \item{\emph{NA}'s}{\emph{NA} values are allowed both as old and
-    new value, e.g.
+    \item{\emph{NA}'s}{\emph{NA} values are allowed both for the original
+    and the new variable, e.g.
     \emph{recFrom "NA"; recTo = 1. or "recFrom = "3:5"; recTo = "NA"}
     (recodes all NA into 1,
     and all values from 3 to 5 into NA in the new variable)}
 }
 }
 \examples{
-var_details_sheet <-
-data.frame(
- "variable" = rep(c("A", "B", "C"), each = 3),
- "dummyVariable" = c("AY", "AN", "ANA", "BY", "BN", "BNA", "CY", "CN", "CNA"),
- "toType" = rep("cat", times = 9),
- "databaseStart" = rep("tester", times = 9),
- "variableStart" = rep(
-   c("tester::startA", "tester::startB", "tester::startC"),
-   each = 3
- ),
- "fromType" = rep("cat", times = 9),
- "recTo" = rep(c("1", "2", "NA::a"), times = 3),
- "numValidCat" = rep("2", times = 9),
- "catLabel" = rep(c("Yes", "No", "Not answered"), times = 3),
- "catLabelLong" = rep(c("Yes", "No", "Not answered"), times =
-                        3),
- "recFrom" = rep(c("1", "2", "9"), times = 3),
- "catStartLabel" = rep(c("Yes", "No", "Not answered"), times =
-                         3),
- "variableStartShortLabel" = rep(c("Group A", "Group B", "Group C"), each =
-                                   3),
- "variableStartLabel" = rep(c("Group A", "Group B", "Group C"), each =
-                              3),
- "units" = rep("NA", times = 9),
- "notes" = rep("This is not real data", times = 9)
-)
-vars_sheet <-
- data.frame(
-   "variable" = c("A", "B", "C"),
-   "label" = c("Group A", "Group B", "Group C"),
-   "labelLong" = c("Group A", "Group B", "Group C"),
-   "section" = rep("tester", times=3),
-   "subject" = rep("tester",times = 3),
-   "variableType" = rep("Categorical", times=3),
-   "databaseStart" = rep("tester", times = 3),
-   "units" = rep("NA", times = 3),
-   "variableStart" = c("tester::startA", "tester::startB", "tester::startC")
- )
- sample_data <-
-data.frame(
- "startA" = sample(1:3, 100, replace = TRUE),
- "startB" = sample(1:3, 100, replace = TRUE),
- "startC" = sample(1:3, 100, replace = TRUE)
-)
-db_name <- "tester"
+var_details <-
+  data.frame(
+    "variable" = c("time", rep("status", times = 3), rep("trt", times = 2), "age", rep("sex", times = 2), rep("ascites", times = 2), rep("hepato", times = 2), rep("spiders", times = 2), rep("edema", times = 3), "bili", "chol", "albumin", "copper", "alk.phos", "ast", "trig", "platelet", "protime", rep("stage", times = 4)),
+    "dummyVariable" = c("NA", "status0", "status1","status2", "trt1","trt2","NA","sexM","sexF", "ascites0", "ascites1","hepato0","hepato1","spiders0","spiders1","edema0.0","edema0.5","edema1.0",rep("NA",times = 9), "stage1", "stage2","stage3","stage4"),
+    "toType" = c("cont", rep("cat", times = 3), rep("cat", times = 2), "cont", rep("cat", times = 2), rep("cat", times = 2), rep("cat", times = 2),rep("cat", times = 2), rep("cat", times = 3), rep("cont", times = 9), rep("cat", times = 4)),
+    "databaseStart" = rep("tester1, tester2", times = 31),
+    "variableStart" = c("[time]", rep("[status]", times = 3), rep("[trt]", times = 2), "[age]", rep("[sex]", times = 2), rep("[ascites]", times = 2), rep("[hepato]", times = 2), rep("[spiders]", times = 2), rep("[edema]", times = 3), "[bili]", "[chol]", "[albumin]", "[copper]", "[alk.phos]", "[ast]", "[trig]", "[platelet]", "[protime]", rep("[stage]", times = 4)),
+    "fromType" = c("cont", rep("cat", times = 3), rep("cat", times = 2), "cont", rep("cat", times = 2), rep("cat", times = 2), rep("cat", times = 2),rep("cat", times = 2), rep("cat", times = 3), rep("cont", times = 9), rep("cat", times = 4)),
+    "recTo" = c("copy", "0", "1","2", "1","2","copy","m","f", "0", "1","0","1","0","1","0.0","0.5","1.0",rep("copy",times = 9), "1", "2","3","4"),
+    "catLabel" = c("", "status 0", "status 1","status 2", "trt 1","trt 2","","sex m","sex f", "ascites 0", "ascites 1","hepato 0","hepato 1","spiders 0","spiders 1","edema 0.0","edema 0.5","edema 1.0",rep("",times = 9), "stage 1", "stage 2","stage 3","stage 4"),
+    "catLabelLong" = c("", "status 0", "status 1","status 2", "trt 1","trt 2","","sex m","sex f", "ascites 0", "ascites 1","hepato 0","hepato 1","spiders 0","spiders 1","edema 0.0","edema 0.5","edema 1.0",rep("",times = 9), "stage 1", "stage 2","stage 3","stage 4"),
+    "recFrom" = c("else", "0", "1","2", "1","2","else","m","f", "0", "1","0","1","0","1","0.0","0.5","1.0",rep("else",times = 9), "1", "2","3","4"),
+    "catStartLabel" = c("", "status 0", "status 1","status 2", "trt 1","trt 2","","sex m","sex f", "ascites 0", "ascites 1","hepato 0","hepato 1","spiders 0","spiders 1","edema 0.0","edema 0.5","edema 1.0",rep("",times = 9), "stage 1", "stage 2","stage 3","stage 4"),
+    "variableStartShortLabel" = c("time", rep("status", times = 3), rep("trt", times = 2), "age", rep("sex", times = 2), rep("ascites", times = 2), rep("hepato", times = 2), rep("spiders", times = 2), rep("edema", times = 3), "bili", "chol", "albumin", "copper", "alk.phos", "ast", "trig", "platelet", "protime", rep("stage", times = 4)),
+    "variableStartLabel" = c("time", rep("status", times = 3), rep("trt", times = 2), "age", rep("sex", times = 2), rep("ascites", times = 2), rep("hepato", times = 2), rep("spiders", times = 2), rep("edema", times = 3), "bili", "chol", "albumin", "copper", "alk.phos", "ast", "trig", "platelet", "protime", rep("stage", times = 4)),
+    "units" = rep("NA", times = 31),
+    "notes" = rep("This is sample survival pbc data", times = 31)
+  )
+var_sheet <-
+  data.frame(
+    "variable" = c("time","status","trt", "age","sex","ascites","hepato", "spiders", "edema", "bili", "chol", "albumin", "copper", "alk.phos", "ast", "trig", "platelet", "protime", "stage"),
+    "label" = c("time","status","trt", "age","sex","ascites","hepato", "spiders", "edema", "bili", "chol", "albumin", "copper", "alk.phos", "ast", "trig", "platelet", "protime", "stage"),
+    "labelLong" = c("time","status","trt", "age","sex","ascites","hepato", "spiders", "edema", "bili", "chol", "albumin", "copper", "alk.phos", "ast", "trig", "platelet", "protime", "stage"),
+    "section" = rep("tester", times=19),
+    "subject" = rep("tester",times = 19),
+    "variableType" = c("cont", "cat", "cat", "cont","cat", "cat", "cat","cat", "cat", rep("cont", times = 9), "cat"),
+    "databaseStart" = rep("tester1, tester2", times = 19),
+    "units" = rep("NA", times = 19),
+    "variableStart" = c("[time]","[status]", "[trt]", "[age]", "[sex]", "[ascites]","[hepato]","[spiders]","[edema]", "[bili]", "[chol]", "[albumin]", "[copper]", "[alk.phos]", "[ast]", "[trig]", "[platelet]", "[protime]","[stage]")
+  )
+library(survival)
+tester1 <- survival::pbc[1:209,]
+tester2 <- survival::pbc[210:418,]
+db_name1 <- "tester1"
+db_name2 <- "tester2"
 
-rec_sample <- rec_with_table(data = sample_data,
-variables = vars_sheet,
-variable_details = var_details_sheet,
-database_name = db_name)
+rec_sample1 <- rec_with_table(data = tester1,
+variables = var_sheet,
+variable_details = var_details,
+database_name = db_name1)
+
+rec_sample2 <- rec_with_table(data = tester2,
+variables = var_sheet,
+variable_details = var_details,
+database_name = db_name2)
 
 }

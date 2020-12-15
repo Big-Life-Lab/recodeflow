@@ -2,7 +2,7 @@
 % Please edit documentation in R/recode-with-table.R
 \name{is_equal}
 \alias{is_equal}
-\title{is equal}
+\title{NA present if modification}
 \usage{
 is_equal(v1, v2)
 }
@@ -15,9 +15,8 @@ is_equal(v1, v2)
 boolean value of whether or not v1 and v2 are equal
 }
 \description{
-Function to compare even with NA present
-This function returns TRUE wherever elements are the same, including NA's,
-and false everywhere else.
+Compared to the base "==" operator in R, this function returns true if the two values are NA
+whereas the base "==" operator returns NA
 }
 \examples{
 is_equal(1,2)
