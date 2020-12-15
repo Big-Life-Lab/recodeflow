@@ -410,12 +410,10 @@ recode_call <-
     }
 
     if (append_to_data) {
-      data <- cbind(data, rec_data)
-    } else {
-      data <- rec_data
+      return(cbind(data, rec_data))
     }
 
-    return(data)
+    return(rec_data)
   }
 
 #' @title Get Data Variable Name
