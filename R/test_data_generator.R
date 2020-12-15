@@ -29,5 +29,7 @@ var_sheet <-
     "variableStart" = c("[time]","[status]", "[trt]", "[age]", "[sex]", "[ascites]","[hepato]","[spiders]","[edema]", "[bili]", "[chol]", "[albumin]", "[copper]", "[alk.phos]", "[ast]", "[trig]", "[platelet]", "[protime]","[stage]")
   )
 
-tester1 <- survival::pbc[1:209,]
-tester2 <- survival::pbc[210:418,]
+# library(survival)
+#
+# tester1 <- survival::pbc[1:209,]
+# tester2 <- survival::pbc[210:418,]
