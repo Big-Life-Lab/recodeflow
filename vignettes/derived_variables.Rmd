@@ -13,68 +13,33 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Introduction
 
-There are two types derived variables in the CCHS surveys. Both types of derived variables are supported in `cchsflow`. 
+recodeflow supports derived variables. This can be any custom function as long as the variable can be calculated on a per row bases. Currently functions requiring operations on the full data set are not supported. Two most common uses for derived variables are: 
 
 - Variable mapping - mapping two or more variables into a single variable.
-- Variables that derived using math equations - BMI is an example. where BMI = weight / height*height. 
+- Variables that derived using math equations - a simple example from survival pbc data is calculating copper*chol. 
 
-`cchsflow` calculates these more complex derived variables using functions that are referenced in `variable_details.csv` within `RecTo` section with the prefix 'Func::'. The variables used in the function are referenced in the `variableStart` section with the prefix 'DerivedVar::'. For example, BMI (`HWTGBMI_der`) includes `Func::bmi_fun` in the `RecTo` section; and `DerivedVar::[HWTGHTM, HWTGWTK]` in the `variableStart` section, which indicates the two starting variables (`HWTGHTM, HWTGWTK`).
+`recodeflow` is capable of calculating these more complex derived variables using functions that are referenced in `variable_details.csv` within `RecTo` section with the prefix 'Func::'. The variables used in the function are referenced in the `variableStart` section with the prefix 'DerivedVar::'. For example, (`example_der`) includes `Func::example_der_fun` in the `RecTo` section; and `DerivedVar::[chol, copper]` in the `variableStart` section, which indicates the two starting variables (`chol, copper`).
 
-## Example - Body Mass Index (BMI)
+## REMOVED bmi example due to it being too specific
 
-While BMI is calculated across all CCHS cycles, the method in which it is calculated varies across CCHS cycles, leading to misclassification error that might affect your study. As such, a derived variable for BMI has been created in `cchsflow` that uses harmonized height (HWTGHTM) and weight (HWTGWTK) variables across all CCHS cycles.
 
-Using `rec_with_table()` you can transform the derived BMI variable across multiple CCHS cycles and create a transformed dataset.
 
-In order derive variables, you must load the existing custom function associated with the derived variable
+In order to derive variables, you must load the existing custom function associated with the derived variable.
+Below example_der_fun is shown. NOTE: the function name must be identical to the function name in variables and variable details, and the order and the number of passed arguments must match. 
 ```{r, warning=FALSE, message=FALSE}
-# Custom ifelse for evaluating NA
-if_else2 <- function(x, a, b) {
-  falseifNA <- function(x) {
-    ifelse(is.na(x), FALSE, x)
-  }
-  ifelse(falseifNA(x), a, b)
+#example_der_fun caluclates chol*copper
+#@param chol the row value for chol
+#@param copper the row value for copper
+example_der_fun <- function(chol, copper){
+  # as numeric is used to coerce in case categorical numeric variables are used.
+  # Warning either chol or copper being NA will ressult in NA return
+  example_der <- as.numeric(chol)*as.numeric(copper)
+  
+  return(example_der)
 }
-
-#BMI derived variable
-# HWTGHTM: height (in meters)
-# HWTGWTK: weight (in kilograms)
-bmi_fun <- 
-  function(HWTGHTM, 
-           HWTGWTK) {
-    ifelse2((!is.na(HWTGHTM)) & (!is.na(HWTGWTK)), 
-            (HWTGWTK/(HWTGHTM*HWTGHTM)), NA)
-  }
 ```
 
-```{r, warning=FALSE, message=FALSE}
-library(cchsflow)
-```
 
-```{r, warning = FALSE}
-bmi2003 <- rec_with_table(cchs2003_p, variables = c("HWTGHTM", "HWTGWTK", 
-            "HWTGBMI_der"), log = TRUE)
+Final warning the variable used to create the derived variable must also be present in the variables and variable details.
 
-bmi2010 <- rec_with_table(cchs2010_p, variables = c("HWTGHTM", "HWTGWTK",
-            "HWTGBMI_der"), log = TRUE)
-```
-
-Since derived variables are based on previously transformed variables, if you want to only transform your derived variable, you must also specify its base CCHS variables in `rec_with_table()` as shown above. So for the derived BMI variable, you will have to also specify the height (`HWTGHTM`) and weight (`HWTGWTK`) variables.
-
-Using `bind_rows()`, you can then combine your transformed datasets.
-
-```{r, echo= FALSE, warning = FALSE, message= FALSE}
-library(dplyr)
-library(knitr)
-library(kableExtra)
-```
-
-```{r, echo=FALSE, message=FALSE}
-combined_bmi <- bind_rows(bmi2003, bmi2010)
-
-kable(combined_bmi[1:10, ])
-```
-
-## Creating a derived variable
-
-Creating a derived variable requires the harmonization of existing CCHS variables, and a custom function that uses those harmonized variables. For more information on how to create a derived variable [see here](how_to_add_variables.html)
+To use the custom function they must be loaded in your environment which can be done by simply entering your functions into the console to load them, or attaching them to your own package and loading that package using "library("name of package")" or by using the rec_with_table parameter to pass the path to your function R script.
