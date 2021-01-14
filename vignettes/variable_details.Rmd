@@ -1,5 +1,5 @@
 ---
-title: "variable_details.csv"
+title: "variable details"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{variable_details.csv}     
@@ -16,23 +16,30 @@ knitr::opts_chunk$set(
 
 ## Introduction
 
-The **variable_details.csv** worksheet contain details for the variables in `variables.csv`. Information from `variable_details.csv` worksheet is used by the `rec_with_table()` function to transform variables identified in `variable_details$variableStart` to the newly transformed variable in `variable_details$variable`. 
+The dataframe **var_details** contains the instructions for function `rec_with_table` on how to transform the variables listed in the dataframe `var_sheet`.
+
+Specifically, the function `rec_with-table` transforms variables listed in column `var_details$variableStart` to the variables listed in `var_details$variable`. 
 
 ```{r Read variables.csv, echo=FALSE, message=FALSE, warning=FALSE}
 library(readr)
 library(DT)
 library(knitr)
 library(kableExtra)
-library(cchsflow)
-datatable(variable_details, options = list(pageLength = 5))
-cat("In the `variable_details.csv` worksheet there are", nrow(variable_details), "rows and", ncol(variable_details), "columns", "\n\n")
+
+datatable(var_details, options = list(pageLength = 5))
+cat("In the dataframe `var_details` there are", nrow(var_details), "rows and", ncol(var_details), "columns", "\n\n")
 ```
 
-## Structure of variable_details.csv
+## Structure of var_details
+
 
 ### Rows
 
-Each row in `variable_details.csv` holds the recode rules for transforming a single category for a variable in `variables.csv`. An exception to this rule are the "don't know", "refusal", and "not stated" categories, which are combined as a single missing category. For each unique variable, an `else` row is used to assign values not identified in other rows and are outside identified ranges. We recommend not combining variables if the variable has an important change between survey cycles. `variable_details$notes` is used to identify issues that may be relevant when transforming the variable or category.
+Each row in `var_details` holds the instructions to transform (recode) a single category in a variable.
+
+An exception to this rule are the "don't know", "refusal", and "not stated" categories, which are combined as a single missing category.
+
+For each unique variable, an `else` row is used to assign values not identified in other rows and are outside identified ranges.
 
 If a categorical variable has 4 distinct categories, along with a "not applicable" category and the 3 missing categories, there will be 7 rows: 
 
@@ -44,83 +51,86 @@ If a categorical variable has 4 distinct categories, along with a "not applicabl
 
 + 1 else row.
 
+**Note**: We recommend not combining variables if the variable has an important change between datasets. `var_details$notes` is used to identify issues that may be relevant when transforming the variable or category.
+
 ### Naming convention for not applicable and missing values
 
-`rec_with_table()` uses the `tagged_na()` function from the [haven](https://www.rdocumentation.org/packages/haven/versions/2.1.1) package to tag not applicable responses as `NA(a)`, and missing values (don't know, refusal, not stated) as `NA(b)`. As you will see later, not applicable values are transformed to `NA::a`, and missing values are transformed to `NA::b`. See [here](tagged_na_usage.html) for more information about `tagged_na()`.
+`rec_with_table()` uses the `tagged_na()` function from the [haven](https://www.rdocumentation.org/packages/haven/versions/2.1.1) package to tag not applicable responses as `NA(a)`, and missing values (don't know, refusal, not stated) as `NA(b)`. As you will see later, not applicable values are transformed to `NA::a`, and missing values are transformed to `NA::b`. See [tagged_na_usage](tagged_na_usage.html) for more information about `tagged_na()`.
 
 ### Columns
 
-The following are the columns that are listed in `variable_details.csv`. Many of these columns need to be specified in order for `rec_with_table()` to be functional. We will use the `sex` variable to illustrate how each column is specified:
+Here we explain the columns in the dataframe `var_details`. Many of these columns are required for `rec_with_table()` to work. We will use the `sex` variable to illustrate how each column is specified:
 
 1. **variable:** the name of the final transformed variable.
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[c(198:202), 1], col.names = 'variable')
+kable(var_details[c(7:11), 1], col.names = 'variable')
 ```
 
-2. **dummyVariable:** the dummy variable for each category in a transformed categorical variable. This is only applicable for categorical variables; for continuous variables it is set as `N/A`. The name of a dummy variable consists of the final variable name, the number of categories in the variable, and the category level for each category. Note that this column is not necessary for `rec_with_table()`.
+2. **dummyVariable:** captures each category of a categorical variable. For continuous variables, this column is not applicable (set to `NA`).  The name of a dummy variable consists of the final variable name, the number of categories in the variable, and the category level for each category. Note that this column is not necessary for `rec_with_table()`.
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[c(198:202), c(1:2)])
+kable(var_details[c(7:11), c(1:2)])
 ```
 
-3. **toType:** the variable type of the final transformed variable. In this column, a transformed variable that is categorical will be specified as `cat`; while a transformed variable that is continuous will be specified as `cont`.
+3. **toType:** the type of the final transformed variable. In this column, a transformed variable that is categorical will be specified as `cat`; while a transformed variable that is continuous will be specified as `cont`.
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[c(198:202), c(1:3)])
+kable(var_details[c(7:11), c(1:3)])
 ```
 
-4. **databaseStart:** the surveys that contain the variable of interest, separated by commas.
+4. **databaseStart:** the datasets that contain the variable of interest, separated by commas.
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[c(198:202), c(1:4)])
+kable(var_details[c(7:11), c(1:4)])
 ```
 
-5. **variableStart:** the original names of the variables as they are listed in each respective survey cycle, separated by commas. If the variable name in a particular survey is different from the transformed variable name, write out the survey identifier, add two colons, and write out the original variable name for that cycle. If the variable name in a particular survey is the same as the transformed variable name, the variable name is written out surrounded by square brackets. Note: this only needs to be written out **once**.
+5. **variableStart:** the original names of the variables as they are listed in the original datasets, separated by commas. If the variable name in a particular dataset is different from the transformed variable name, write out the dataset name, add two colons, and write out the original variable name for that dataset (e.g., tester1::ascites). If the variable name in a particular dataset is the same as the transformed variable name, write the variable name in square brackets. Note: this only needs to be written out **once**.
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[c(198:202), c(1:5)])
+kable(var_details[c(7:11), c(1:5)])
 ```
 
-6. **fromType:** the variable type as indicated in surveys. As indicated in the **toType** column, categorical variables are denoted as `cat` and continuous variables are denoted as `cont`.
+6. **fromType:** the variable type as indicated in datasets. As indicated in the **toType** column, categorical variables are denoted as `cat` and continuous variables are denoted as `cont`.
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[c(198:202), c(1:6)])
+kable(var_details[c(7:11), c(1:6)])
 ```
 
-7. **recTo:** the value you would like to recode each category value to. For continuous variables that are not transformed in type, you would write in this column `copy` so that the function copies the values without any transformations. For the not applicable category, write `NA::a`. For missing & else categories, write `NA::b` 
+7. **recTo:** the category of the categorical value your transforming to. For the not applicable category, write `NA::a` and for missing and else categories, write `NA::b`. For continuous variables that are not transformed in type, you would write in this column `copy` so that the function copies the values without any transformations.
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[c(198:202), c(1:7)])
+kable(var_details[c(7:11), c(1:7)])
 ```
 
-+ For categorical variables that are not changing variable types (i.e. cat to cat), it is ideal to retain the same values as indicated in each survey. But for transformed categorical variables that have changed in type (i.e cat to cont), you will have to develop values that make the most sense to your analysis. In `variable_details.csv`, variables that have gone from cat to cont have used midpoints of each category.
++ For categorical variables that remain categorical (i.e. from: cat -> to: cat), it is ideal to retain the same values as indicated in the original datasets.
++ For categorical variables that have changed in type (i.e from: cat -> to: cont), you will have to develop values that make the most sense to your analysis. For example, for variables that change from: cat -> to: cont, you can choose the categories' lower bound, mid-point, or upper-bound for the continous value.
 
-8. **numValidCat:** the number of categories for a variable. This only applies to variables in which the **toType** is cat. For continuous variables, `numValidCat = N/A`. Not applicable, missing, and else categories are not included in the category count. Note that this column is not necessary for `rec_with_table()`.
+8. **numValidCat:** the number of categories for the transformed variable. This only applies to variables in which the **toType** is cat. For continuous variables, `numValidCat = N/A`. Note that for categories: not applicable, missing, and else, are not included in the category count. Note that this column is not necessary for `rec_with_table()`.
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[c(198:202), c(1:8)])
+kable(var_details[c(7:11), c(1:8)])
 ```
 
 9. **catLabel:** short form label describing the category of a particular variable.
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[c(198:202), c(1:9)])
+kable(var_details[c(7:11), c(1:9)])
 ```
 
-10. **catLabelLong:** more detailed label describing the category of a particular variable. This label should be identical to what is shown in the survey data documentation, unless you are creating derived variables and would like to create your own label for it.
+10. **catLabelLong:** more detailed label describing the category of a particular variable. This label should be identical to what is recorded in the original data's documentation (e.g., the exact survey question). For derived variables, you can create your own long label.
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[c(198:202), c(1:10)])
+kable(var_details[c(7:11), c(1:10)])
 ```
 
-11. **units:** the units of a particular variable. If there are no units for the variable, write `N/A`. Note, the function will not work if there different units between the rows of the same variable (i.e. height using both m and ft).
+11. **units:** the units of a particular variable. If there are no units for the variable, write `N/A`. Note, the function will not work if there different units between the rows of the same variable (e.g. if the concentration of a single molecule has two records one recorded as mg/dl and the other recorded as g/dl).
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[c(198:202), c(1:11)])
+kable(var_details[c(7:11), c(1:11)])
 ```
 
-12. **recFrom:** the range of values for a particular category in a variable as indicated in the survey. See data documentation for each survey cycle and use the smallest and large values as your range to capture all values between the survey years. 
+12. **recFrom:** the range of values for a particular category in a variable as indicated in the original data. See data documentation and use the smallest and large values as your range to capture all values across the datasets. 
 
 The rules for each category of a new variable are a string in `recFrom` and value in `recTo`. These recode pairs are the same syntax as interval notation in which a closed range of values are specified using square brackets. See [here](https://en.wikipedia.org/wiki/Interval_(mathematics)#Notations_for_intervals) for more information on interval notation. Recode pairs are obtained from the RecFrom and RecTo columns
   *value range* is indicated by a comma, e.g. `recFrom= [1,4]; recTo = 1` (recodes all values from 1 to 4 into 1}
@@ -131,38 +141,38 @@ The rules for each category of a new variable are a string in `recFrom` and valu
   
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[c(198:202), c(1:12)])
+kable(var_details[c(7:11), c(1:12)])
 ```
 
-13. **catStartLabel:** label describing each category. This label should be identical to what is shown in the CCHS data documentation. For the missing row, each missing category is described along with their coded values. You can import labels from a survey's DDI files using `bllflow` helper functions. See [bllflow documentation](http://bllflow.projectbiglife.ca).
+13. **catStartLabel:** label describing each category. This label should be identical to what is shown in the original data documentation. For the missing rows, each missing category is described along with their coded values. You can import labels from a survey's DDI files using `bllflow` helper functions. See [bllflow documentation](http://bllflow.projectbiglife.ca).
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[c(198:202), c(1:13)])
+kable(var_details[c(7:11), c(1:13)])
 ```
 
-14. **variableStartShortLabel:** short form label describing the variable.
+14. **variableStartShortLabel:** short form label describing the original variable.
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[c(198:202), c(1:14)])
+kable(var_details[c(7:11), c(1:14)])
 ```
 
-15. **variableStartLabel:** more detailed label describing the variable. This label should be identical to what is shown in the survey data documentation.
+15. **variableStartLabel:** more detailed label describing the original variable. This label should be identical to what is in the data documentation.
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[c(198:202), c(1:15)])
+kable(var_details[c(7:11), c(1:15)])
 ```
 
-16. **notes:** any relevant notes to inform the user running the `recode-with-table` function. Things to include here would be changes in wording between surveys, missing/changes in categories, and changes in variable type between survey cycles.
+16. **notes:** any relevant notes to inform the user running the `recode-with-table` function. Things to include here would be changes in wording across datasets, missing/changes in categories, and changes in variable type across datasets.
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[c(198:202), c(1:16)])
+kable(var_details[c(7:11), c(1:16)])
 ```
 
 ## Derived Variables
 
 The same naming convention applies to derived variables with the exception of two columns:
 
-1. In **variableStart**, instead of database names being listed, **DerivedVar::** is written followed with the list of CCHS variables used inside square brackets. 
+1. In **variableStart**, instead of database names being listed, **DerivedVar::** is written followed with the list of original variables used inside square brackets. 
 + `DerivedVar::[var1, var2, var3]`
 
 2. In **recTo**, write **Func::** followed with the name of the custom function used to create the derived variable.

@@ -13,30 +13,29 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Missing data (`NA` --> `tagged_na`)
 
-Base R supports only one type of NA ('not available') to represent missing 
-values. The CCHS, however, has several types of missing data or incomplete 
-category responses. `cchsflow` uses the `haven` package [`tagged_na()`](https://haven.tidyverse.org/reference/tagged_na.html) 
-to allow multiple missing data categories. `tagged_na()` adds an addition 
-character to the NA value, thereby allowing users to define additional missing 
-data types. `tagged_na()` applies only for numeric values, as character base 
-values can use any string to represent NA or missing data. 
+Base R supports only one type of NA ('not available') to represent missing values. However, your data may include several types of missing data or incomplete category responses. 
+
+To address this issue of a singular "na", we use the `haven` package [`tagged_na()`](https://haven.tidyverse.org/reference/tagged_na.html) 
+
+`tagged_na()` adds an additional character to any NA values, thereby allowing users to define additional missing data types. `tagged_na()` applies only for numeric values; character based values can use any string to represent NA or missing data. 
 
 ## recodeflow approach to coding missing data
 
-`recodeflow` recodes missing data categories values into 
-3 NA values that are commonly used for most studies. NA(a) = 'not applicable' 
-and NA(b) = 'missing'. Furthermore, variables may be entirely missing from a 
-specific cycle, which results in 'not asked' missing data that is not included 
-or coded in surveys, recoded to NA(c)
+`recodeflow` recodes missing data categories values into 3 NA values that are commonly used for most studies: 
+
+- NA(a) = 'not applicable' 
+- NA(b) = 'missing'
+- Na(c) = 'not asked' which is any variable that was not included in a survey cycle.
+
 
 **Summary of `tagged_na` values and their corresponding category values.**
 
 | recodeflow `tagged_na` | category value | Label |
 |----------------|--------------|
 | NA(a) | 6                  | not applicable     |
-| NA(b) | 7                  | don't know         |
-| NA(b) | 8                  | refusal            |
-| NA(b) | 9                  | not stated         |
+| NA(b) | 7                  | missing - don't know         |
+| NA(b) | 8                  | missing - refusal            |
+| NA(b) | 9                  | missing - not stated         |
 | NA(c) | question not asked in the survey cycle  |
 
 ## Example `haven::tagged_na()`
