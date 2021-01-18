@@ -1,7 +1,8 @@
 # Removing Note for undeclared variable. This is necessary because it is used
 # in the magritr package for piping however it is not exported so cran check throws a note.
 . <- NULL
-#' @title NA present if modification
+
+#' @title Checks whether two values are equal including NA
 #' @description Compared to the base "==" operator in R, this function returns true if the two values are NA
 #' whereas the base "==" operator returns NA
 #'
@@ -37,12 +38,13 @@ is_equal <- function(v1, v2) {
 
   return(same)
 }
+
 #' Recode with Table
 #'
 #' Creates new variables by recoding variables in a dataset using the rules
 #' specified in a variables details sheet
 #'
-#' The \href{https://github.com/Big-Life-Lab/bllflow/blob/master/inst/extdata/PBC-variableDetails.csv}{variable_details}
+#' The \href{https://github.com/Big-Life-Lab/recodeflow/blob/master/inst/extdata/PBC-variableDetails.csv}{variable_details}
 #'  dataframe needs the following columns:
 #'  \describe{
 #'   \item{variable}{Name of the new variable created. The name of the new
@@ -204,22 +206,26 @@ rec_with_table <-
            id_role_name = NULL,
            name_of_environment_to_load = NULL,
            append_non_db_columns = FALSE) {
-    # Convert passed id_role_name to list in case only a single id_role_name is passed as a string rather then list
-    # This makes it work with the select_vars_by_role function
+    # Convert passed id_role_name to list in case its a string.
+    # This makes it work with the select_vars_by_role function.
     id_role_name <- list(id_role_name)
 
-    # If custom Functions are passed source the R file from path
+    # If custom_function_path is passed, source it to load all the custom
+    # functions in the file into the R environment
     if (!is.null(custom_function_path)) {
       source(custom_function_path)
     }
 
+    # If the user passed the name_of_environment_to_load parameter and the
+    # variables_details or variables parameters are NULL, load them from the
+    # environment they passed in
     if (!is.null(name_of_environment_to_load)) {
       if (is.null(variable_details)) {
         message(
           paste0(
             "No variable_details detected.
               Loading",
-            name_of_environment_to_load ,
+            name_of_environment_to_load,
             "variable_details"
           )
         )
@@ -237,26 +243,36 @@ rec_with_table <-
             "variables"
           )
         )
-        data(variables, package = name_of_environment_to_load, envir = environment())
+        data(variables, package = name_of_environment_to_load,
+             envir = environment())
       }
 
-    } else if (is.null(variables) || is.null(variable_details)) {
+    }
+    # Otherwise if either variables or the variable_details is NULL and they did
+    # not pass in an environment to load them from, throw an error
+    else if (is.null(variables) || is.null(variable_details)) {
       stop(
         "No name_of_environment_to_load was passed to load variables and variable details from,
            as well as no variables or variable details was passed. Stopping execution"
       )
     }
+
+    # If the user did not pass in a database_name parameter, then use the name
+    # of the variable that holds the data parameter as database_name
     if (is.null(database_name)) {
       message("Using the passed data variable name as database_name")
       database_name <- deparse(substitute(data))
     }
 
-    # ---- Step 1: Detemine if the passed data is a list or single database
+    # If the passed data parameter is a list, then make sure that the
+    # each data in the list has a database name in the database_name parameter
+    # by checking their length
     if (class(data) == "list" &&
         length(database_name) == length(data)) {
+      # Iterate through each database name and recode the corresponding
+      # data
       for (data_name in database_name) {
-        # ---- Step 2A: Verify that the passed name exists in the passed data
-
+        # Verify that the passed name exists in the passed data
         if (!is.null(data[[data_name]])) {
           data[[data_name]] <- recode_call(
             variables = variables,
@@ -281,7 +297,10 @@ rec_with_table <-
           )
         }
       }
-    } else if ("data.frame" %in% class(data) &&
+    }
+    # If the data is a dataframe then the user only wants to recode one dataset.
+    # Make sure theres only one database name passed in.
+    else if ("data.frame" %in% class(data) &&
                length(database_name) == 1) {
       data <- recode_call(
         variables = variables,
@@ -333,25 +352,31 @@ recode_call <-
            append_non_db_columns,
            log,
            var_labels) {
+    # Trim the values in the Variable column of variables details
     variable_details[[pkg.env$columns.Variable]] <-
       trimws(variable_details[[pkg.env$columns.Variable]])
-    # Check whether variables sheet was passed or a vector containing variables to recode
+
+    # If the variables parameter is a variables sheet then update
+    # the variables details sheet based on it
     if ("data.frame" %in% class(variables)) {
+      # Trim the values in the variables columns of the variables sheet
       variables[[pkg.env$columns.Variable]] <-
         trimws(variables[[pkg.env$columns.Variable]])
       variable_details <-
         update_variable_details_based_on_variable_sheet(variable_sheet = variables,
                                                         variable_details = variable_details)
-    } else {
+    }
+    # Otherwise its a vector containing the variables to recode
+    else {
       # Create empty columns to later populate from variables sheet
       if (is.null(variable_details[[pkg.env$columns.VariableLabel]])) {
         variable_details[[pkg.env$columns.VariableLabel]] <- NA
       }
-
       if (is.null(variable_details[[pkg.env$columns.label]])) {
         variable_details[[pkg.env$columns.label]] <- NA
       }
 
+      # The variables in the variables details sheet
       vars_being_recoded <-
         as.character(unique(variable_details[[pkg.env$columns.Variable]]))
       if (length(vars_being_recoded) != length(variables)) {
@@ -363,32 +388,43 @@ recode_call <-
           )
         )
       }
-
     }
+
+    # Update the labels for variables in the variables details sheet with the
+    # ones in the var_labels parameter if the user passed them
     if (!is.null(var_labels)) {
+      # Make the var_labels is a named list
       if (is.null(names(var_labels))) {
         stop(
           "The passed labels was not a named vector please follow
           the c(var_name = varLalbel) format"
         )
-      } else {
-        if (is.factor(variable_details[[pkg.env$columns.label]])) {
-          variable_details[[pkg.env$columns.label]] <-
-            as.character(variable_details[[pkg.env$columns.label]])
-        }
-        for (var_name in names(var_labels)) {
-          variable_details[variable_details[[pkg.env$columns.Variable]] == var_name,
-                           pkg.env$columns.label] <-
-            var_labels[[var_name]]
-        }
+      }
+
+      # If the label column in variables details is a factor, convert it to
+      # a character
+      if (is.factor(variable_details[[pkg.env$columns.label]])) {
+        variable_details[[pkg.env$columns.label]] <-
+          as.character(variable_details[[pkg.env$columns.label]])
+      }
+
+      # For each list item in var_labels, find the rows in the variables details
+      # for that variable and update its label value to the list item's value.
+      for (var_name in names(var_labels)) {
+        variable_details[variable_details[[pkg.env$columns.Variable]] == var_name,
+                         pkg.env$columns.label] <-
+          var_labels[[var_name]]
       }
     }
 
     # Vector containing all variable names present in variable details
     all_possible_var_names <-
       unique(as.character(variable_details[[pkg.env$columns.Variable]]))
+
+    # The variables details rows whose database start column has the database_name
+    # parameter
     names_of_all_variables_detected <-
-      variable_details[grepl(database_name, variable_details[[pkg.env$columns.DatabaseStart]]), ]
+      variable_details[grepl(database_name, variable_details[[pkg.env$columns.DatabaseStart]]),]
 
     rec_data <-
       recode_columns(
@@ -399,6 +435,14 @@ recode_call <-
         print_note = print_note,
         else_default = else_value
       )
+
+    # If this flag is set then,
+    # Add all the variables in variables details whose database start matches
+    # the database_name parameter, but was not recoded, to the recoded data
+    # and set it to NA
+    # For e.g., if the user wants to recode ADL_01 for cchs2001, and the
+    # variables details includes rows for ADL_02 with cchs2001 as database start,
+    # add it to the recoded data if this flag is set.
     if (append_non_db_columns) {
       missed_variables <-
         all_possible_var_names[!all_possible_var_names %in%
@@ -501,21 +545,24 @@ recode_columns <-
            else_default) {
     # Split variables to process into recode map and func
     map_variables_to_process <-
-      variables_details_rows_to_process[grepl("map::", variables_details_rows_to_process[[pkg.env$columns.recTo]]), ]
+      variables_details_rows_to_process[grepl("map::", variables_details_rows_to_process[[pkg.env$columns.recTo]]),]
     if (nrow(map_variables_to_process) > 0) {
       stop("map:: variables were detected however this feature is not yet supported")
     }
 
     id_variables_to_process <-
-      variables_details_rows_to_process[grepl("id_from::", variables_details_rows_to_process[[pkg.env$columns.recTo]]), ]
+      variables_details_rows_to_process[grepl("id_from::", variables_details_rows_to_process[[pkg.env$columns.recTo]]),]
 
     func_variables_to_process <-
-      variables_details_rows_to_process[grepl("Func::", variables_details_rows_to_process[[pkg.env$columns.recTo]]), ]
+      variables_details_rows_to_process[grepl("Func::", variables_details_rows_to_process[[pkg.env$columns.recTo]]),]
 
     rec_variables_to_process <-
-      variables_details_rows_to_process[(!grepl("Func::|map::|id_from::", variables_details_rows_to_process[[pkg.env$columns.recTo]])) &
-                             (!grepl("DerivedVar::",
-                                     variables_details_rows_to_process[[pkg.env$columns.VariableStart]])), ]
+      variables_details_rows_to_process[(!grepl(
+        "Func::|map::|id_from::",
+        variables_details_rows_to_process[[pkg.env$columns.recTo]]
+      )) &
+        (!grepl("DerivedVar::",
+                variables_details_rows_to_process[[pkg.env$columns.VariableStart]])),]
 
     label_list <- list()
     # Set interval if none is present
@@ -529,8 +576,8 @@ recode_columns <-
         as.character(rec_variables_to_process[1,
                                               pkg.env$columns.Variable])
       rows_being_checked <-
-        rec_variables_to_process[rec_variables_to_process[[pkg.env$columns.Variable]] == variable_being_checked, ]
-      first_row <- rows_being_checked[1, ]
+        rec_variables_to_process[rec_variables_to_process[[pkg.env$columns.Variable]] == variable_being_checked,]
+      first_row <- rows_being_checked[1,]
       # The name of the variable start
       data_variable_being_checked <-
         get_data_variable_name(
@@ -602,7 +649,7 @@ recode_columns <-
       num_else_rows <- nrow(recoded_data)
       # Remove else rows from rows_being_checked
       rows_being_checked <-
-        rows_being_checked[!rows_being_checked[[pkg.env$columns.recFrom]] == "else", ]
+        rows_being_checked[!rows_being_checked[[pkg.env$columns.recFrom]] == "else",]
       if (nrow(rows_being_checked) > 0) {
         log_table <- rows_being_checked[, 0]
         log_table$value_to <- NA
@@ -613,7 +660,7 @@ recode_columns <-
             levels(rows_being_checked[[pkg.env$columns.recTo]]))
 
         for (row in seq_len(nrow(rows_being_checked))) {
-          row_being_checked <- rows_being_checked[row, ]
+          row_being_checked <- rows_being_checked[row,]
           # If cat go check for label and obtain it
 
           # regardless obtain unit and attach
@@ -735,12 +782,12 @@ recode_columns <-
         }
       }
       rec_variables_to_process <-
-        rec_variables_to_process[!rec_variables_to_process[[pkg.env$columns.Variable]] == variable_being_checked, ]
+        rec_variables_to_process[!rec_variables_to_process[[pkg.env$columns.Variable]] == variable_being_checked,]
     }
 
     # Process funcVars
     while (nrow(func_variables_to_process) > 0) {
-      first_row <- func_variables_to_process[1, ]
+      first_row <- func_variables_to_process[1,]
       first_row_variable_name <-
         as.character(first_row[[pkg.env$columns.Variable]])
       # get name of var pass to
@@ -765,8 +812,8 @@ recode_columns <-
     top_function_frame <- parent.frame(2)
     while (nrow(id_variables_to_process) > 0) {
       # Extract type of id creation
-      current_id <- id_variables_to_process[1, ]
-      id_variables_to_process <- id_variables_to_process[-1, ]
+      current_id <- id_variables_to_process[1,]
+      id_variables_to_process <- id_variables_to_process[-1,]
       id_creation_function <-
         as.character(current_id[[pkg.env$columns.recTo]])
       id_creation_function <-
@@ -853,12 +900,16 @@ compare_value_based_on_interval <-
     return(valid_row_index)
   }
 
-# Parse out variables csv
+# Does the following updates on the passed variable details sheet
+# Removes variables which are not present in the variables sheet
+# Updates the columns, VariableType, label, variableLabel and Units from
+# from the variables sheets
 update_variable_details_based_on_variable_sheet <-
   function(variable_sheet, variable_details) {
-    # remove conflicting columns from variable details
+    # Remove the columns from the variables details sheet that we will
+    # update from the variables sheet
     variable_details <-
-      variable_details[, !(
+      variable_details[,!(
         names(variable_details) %in% c(
           pkg.env$columns.VariableType,
           pkg.env$columns.label,
@@ -866,7 +917,9 @@ update_variable_details_based_on_variable_sheet <-
           pkg.env$columns.Units
         )
       )]
-    # Only keep the needed columns
+
+    # Only keep the columns in the variables sheet that we will use to
+    # update the variables details sheet
     variable_sheet <-
       variable_sheet[, c(
         pkg.env$columns.Variable,
@@ -875,7 +928,9 @@ update_variable_details_based_on_variable_sheet <-
         pkg.env$columns.VariableLabel,
         pkg.env$columns.Units
       )]
-    # merge the labels and data
+
+    # Update the variables details sheet by joining on the Variable column
+    # in both sheets
     variable_details <-
       merge(
         variable_details,
@@ -884,10 +939,11 @@ update_variable_details_based_on_variable_sheet <-
         by.y = pkg.env$columns.Variable,
         all.x = TRUE
       )
-    # remove variables not present in variable_sheet
+
+    # Remove variables not present in variable_sheet
     variable_details <-
       variable_details[variable_details[[pkg.env$columns.Variable]] %in%
-                         variable_sheet[[pkg.env$columns.Variable]], ]
+                         variable_sheet[[pkg.env$columns.Variable]],]
 
     return(variable_details)
   }
@@ -938,14 +994,14 @@ recode_derived_variables <-
     var_stack <- c(var_stack, variable_being_processed)
     # obtain rows to process and updated variables to Process
     variable_rows <-
-      variables_details_rows_to_process[variables_details_rows_to_process[[pkg.env$columns.Variable]] == variable_being_processed, ]
+      variables_details_rows_to_process[variables_details_rows_to_process[[pkg.env$columns.Variable]] == variable_being_processed,]
     variables_details_rows_to_process <-
-      variables_details_rows_to_process[variables_details_rows_to_process[[pkg.env$columns.Variable]] != variable_being_processed, ]
+      variables_details_rows_to_process[variables_details_rows_to_process[[pkg.env$columns.Variable]] != variable_being_processed,]
     for (row_num in seq_len(nrow(variable_rows))) {
       # Check for presence of feeder variables in data and in the
       # variable being processed stack
       feeder_vars <-
-        as.list(strsplit(as.character(variable_rows[row_num, ][[pkg.env$columns.VariableStart]]), "::"))[[1]][[2]]
+        as.list(strsplit(as.character(variable_rows[row_num,][[pkg.env$columns.VariableStart]]), "::"))[[1]][[2]]
       # Extract the variable names used in the function
       feeder_vars <- gsub("\\[|\\]", "", feeder_vars)
       feeder_vars <- as.list(strsplit(feeder_vars, ","))[[1]]
@@ -1021,7 +1077,7 @@ recode_derived_variables <-
       # Obtain the function for each row
       append(label_list, create_label_list_element(variable_rows))
 
-      row_being_checked <- variable_rows[row_num, ]
+      row_being_checked <- variable_rows[row_num,]
       func_cell <-
         as.character(row_being_checked[[pkg.env$columns.recTo]])
       function_being_used <-
