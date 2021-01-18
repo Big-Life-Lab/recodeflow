@@ -175,12 +175,11 @@ The same naming convention applies to derived variables with the exception of tw
 1. In **variableStart**, instead of database names being listed, **DerivedVar::** is written followed with the list of original variables used inside square brackets. 
 + `DerivedVar::[var1, var2, var3]`
 
-2. In **recTo**, write **Func::** followed with the name of the custom function used to create the derived variable.
+2. In **recTo**, write **Func::** followed with the exact name of the custom function used to create the derived variable.
 + `Func::derivedFunction`
 
 A derived variable looks like this in `variable_details.csv`
 
 ```{r, echo=FALSE, warning=FALSE}
-sample_variable_details <- read.csv(file.path(getwd(), '../inst/extdata/sample_variable_details.csv'))
-kable(sample_variable_details[1,], options = list(dom='t'))
+kable(var_details[c(33), c(1:16)])
 ```
