@@ -64,7 +64,7 @@ The `recodeflow` package includes:
 - **templates:**
 
   - **`variable_sheet`** a list of variables to transform, and
-  - **`variable_details`** a list of instructions for transforming variables.
+  - **`variable_details`** mapping of variables across datasets and a list of instructions for transforming variables.
 
 
 We've also created the following documentation, to help you understand `recodeflow`:
