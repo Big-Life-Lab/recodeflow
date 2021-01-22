@@ -17,86 +17,79 @@ MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.or
 
 <!-- badges: end -->
 
-Intro....
+# Introduction
 
-## Usage
+## What is `recodeflow`?
 
-.... update this example....
+`recodeflow` transforms variables from multiple data sets into harmonize variables.
 
-*Calculate a harmonized BMI variable for CCHS 2001 cycle*
+`recodeflow` has the basic functions and templates required to define, transform, and harmonize variables for any dataset.
 
-        # load test cchs data - included in cchsflow
 
-        cchs2001_BMI <- rec_with_table(cchs2001_p, "HWTGBMI")
-        
+## Why should I use `recodeflow`? 
 
-Notes printed to console indicate issues that may affect BMI
-classification for your study.
+Let's walk through an example. 
 
-    Loading cchsflow variable_details
-    Using the passed data variable name as database_name
-    NOTE for HWTGBMI : CCHS 2001 restricts BMI to ages 20-64
-    NOTE for HWTGBMI : CCHS 2001 and 2003 codes not applicable and missing 
-    variables as 999.6 and 999.7-999.9 respectively, while CCHS 2005 onwards codes 
-    not applicable and missing variables as 999.96 and 999.7-999.99 respectively
-    NOTE for HWTGBMI : Don't know (999.7) and refusal (999.8) not included
-    in 2001 CCHS"
+Each year, Canadians complete a survey, and the data is collected. The data is coded.  You, a scientist, want to use data from the 10 surveys to answer two research questions **but there's a catch:**
 
-## Installation
+At the survey level: 
 
-        # Install release version from CRAN
-        install.packages("cchsflow")
+- Not every survey question was asked each year.
+- The survey answers changed from year to year. 
 
-        # Install the most recent version from GitHub
-        devtools::install_github("Big-Life-Lab/cchsflow")
+At the data level:
 
-Do you just want new variables not yet added to the CRAN version?
+- Questions are not coded the same from year to year (e.g., variable names differ)
+- Answers are not coded the same from year to year (e.g., height is coded in meters in some years and feet in other years)
 
-You can download and use the latest version of
-[`variables.csv`](https://github.com/Big-Life-Lab/cchsflow/blob/master/inst/extdata/variables.csv)
-and
-[`variable_details.csv`](https://github.com/Big-Life-Lab/cchsflow/blob/master/inst/extdata/variable_details.csv)
-from GitHub.
+The data is messy! You start the timely and detailed process of cleaning and transforming the data. You think "there must be a better way."
 
-## What is in the `cchsflow` package?
+That's where `recodeflow` comes to the rescue. 
 
-*cchsflow* package includes:
+With `recodeflow` you can clean and transform your entire dataset with a few lines of code. Even better, once you have defined your variables you have variable sheets you can reuse or share with colleagues - saving you even more time down the line.
 
-1.  `variables.csv` - a list of variables that can be transformed across
-    CCHS surveys.\
-2.  `variable_details.csv` - information that describes how the
-    variables are recoded.
-3.  Vignettes - that describe how to use R to transform or generate new
-    derived variables that are listed in `variables.csv`.
-    Transformations are performed using `rec_with_table()`.
-    `variables.csv` and `variable_details.csv` can be used with other
-    statistics programs (see
-    [issue](https://github.com/Big-Life-Lab/cchsflow/issues)).
-4.  Demonstration CCHS data - `cchsflow` includes a random sample of 200
-    respondents from each CCHS PUMF file from 2001 to 2014. These data
-    are used for the vignettes. The CCHS test data is stored in /data as
-    .RData files. They can be read as a package database.
 
-<!-- -->
+## How does `recodeflow` work?
 
-    # read the CCHS 2014 PUMF test data
+Use templates `variable_sheet` and `variable_details` to list your variables, and state how to transform the each variable.
 
-    test_data <- cchs2014_p
+Once your variables are defined, use `recodeflow` functions to clean and transform your data. The main `recodeflow` function is `rec_with_table` which transforms variables within you dataset(s) based on how you've defined the variable in `variable_sheet` and `variable_details`.
 
-This repository does not include the full CCHS data. Information on how
-to access the CCHS data can is
-[here](https://www150.statcan.gc.ca/n1/pub/82-620-m/2005001/4144189-eng.htm).
-The Canadian university community can also access the CCHS through
-[ODESI](http://odesi2.scholarsportal.info/webview/) (see
-health/Canada/Canadian Community Health Survey).
 
-### Roadmap
+## What's does the `recodeflow` package include?
 
-Project on the roadmap can be found on
-[here](https://github.com/Big-Life-Lab/cchsflow/projects).
+The `recodeflow` package includes: 
 
-## Contributing
+- **functions** required to clean and transform variables.
+- **templates:**
 
-Please follow [this
-guide](https://big-life-lab.github.io/cchsflow/CONTRIBUTING.html) if you
-would like to contribute to the *cchsflow* package.
+  - **`variable_sheet`** a list of variables to transform, and
+  - **`variable_details`** a list of instructions for transforming variables.
+
+
+We've also created the following documentation, to help you understand `recodeflow`:
+
+- **how to guides** examples of how to use `recodeflow` and adapt `recodeflow` for your dataset
+- **articles** that describe package elements (e.g., variable_sheet) in detail 
+- **references** that describe all `recodeflow` functions 
+- **example data** to demonstrate `recodeflow` functions and templates.
+
+
+## Where is `recodeflow` used?
+
+Currently `recodeflow` is used in packages that harmonize health surveys and health administrative databases. 
+
+- `cchsflow` is a package that harmonizes variables across cycles of the Canadian Community Health Survey (CCHS). cchsflow is (published)[https://big-life-lab.github.io/cchsflow/index.html].
+-`raiflow` is a package that will harmonize variables within the Resident Assessments Instruments (RAI) from various sources: Canada's Continuing Care Reporting System (CCRS), and Ontario's Resident Assessment Instrutment for Home Care (RAI-HC). `raiflow` is currently underdevelopment. 
+
+
+# Roadmap
+
+Projects on the roadmap are at the Github repository recodeflow under the [projects tab](https://github.com/Big-Life-Lab/recodeflow/projects).
+
+# Contributing
+
+Please follow the [**recodeflow contribution guide**](https://big-life-lab.github.io/recodeflow/CONTRIBUTING.html) if you
+would like to contribute to the `recodeflow` package.
+
+
