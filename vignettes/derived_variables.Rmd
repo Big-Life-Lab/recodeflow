@@ -31,9 +31,9 @@ We'll walk through an example of creating a derived variable with our example da
 
 Our customized derived function is multiplying the blood concentration of cholesterol (`chol`) with the blood concentration of bilirunbin (`bili`).
 
-###1. Create and load a customized function for your derived variables.
+### 1. Create and load a customized function for your derived variables.
 
-Here is the customized function for our derived variable (`chol`*`bili`):
+**Create the custom function:** Here is the customized function for our derived variable (`chol`*`bili`):
 ```{r, warning=FALSE, message=FALSE}
 #example_der_fun caluclates chol*bili
 #@param chol the row value for chol
@@ -51,20 +51,20 @@ example_der_fun <- function(chol, bili){
 **Note:** You **must** use roxygen2 documentation for custom functions otherwise the function can not be attached to a package. See [roxygen2](https://cran.r-project.org/web/packages/roxygen2/vignettes/roxygen2.html) on how to format and document your function.
 
 
-Now load the customized function to your R environment. If you don't load the customized function you cannot create the derived variable. 
-
-Load the customized function by either:
+**Load the custom function** into your R environment. Load the customized function by either:
 
 - entering your functions into the console and running the code, or 
 - attaching the functions to your own package using the build and install tool and loading that package using "library("name of package")" or by using the `rec_with_table` parameter to pass the path to your function R script.
 
+If you don't load the customized function you cannot create the derived variable. 
 
-###2. Add the derived variable to the var_details and var_sheet.
+### 2. Add the derived variable to the var_details and var_sheet.
 
 Add the derived variable to the `var_sheet`. You'll use the same nomenclature as any other variable ([`variables_sheet`](../reference/variable_sheet.html)).
 
 Add the derived variable to the variable_details. See the article [`variable_details`](../reference/variable_sheet.html) for nomenclature. 
 
 
+### 3. Transform the derived variable
 
 
