@@ -2,7 +2,7 @@
 % Please edit documentation in R/recode-with-table.R
 \name{is_equal}
 \alias{is_equal}
-\title{NA present if modification}
+\title{Checks whether two values are equal including NA}
 \usage{
 is_equal(v1, v2)
 }

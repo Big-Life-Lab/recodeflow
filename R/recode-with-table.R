@@ -208,7 +208,9 @@ rec_with_table <-
            append_non_db_columns = FALSE) {
     # Convert passed id_role_name to list in case its a string.
     # This makes it work with the select_vars_by_role function.
-    id_role_name <- list(id_role_name)
+    # if (!is.list(id_role_name)) {
+    #   id_role_name <- list(id_role_name)
+    # }
 
     # If custom_function_path is passed, source it to load all the custom
     # functions in the file into the R environment
@@ -318,12 +320,7 @@ rec_with_table <-
         data[["data_name"]] <- database_name
       }
       if (!is.null(id_role_name)) {
-        for (single_id in id_role_name) {
-          if (!is.null(single_id)) {
-            data <- create_id_row(data, single_id, database_name)
-          }
-        }
-
+        data <- create_id_row(data, id_role_name, database_name)
       }
     } else {
       stop(
@@ -840,7 +837,7 @@ recode_columns <-
       tmp_list <-
         list(var_name = id_name, feeder_vars = tmp_feeder_vars)
       top_function_frame$id_role_name <-
-        append(top_function_frame$id_role_name, list(tmp_list))
+        append(top_function_frame$id_role_name, tmp_list)
 
 
     }
