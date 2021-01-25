@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 
 The `var_sheet` acts as a reference sheet your project(s), by listing the variables you are using. 
 
-This vignette describes how the `var_sheet` is organized and how to find variables that you can transform. See also the vignette `variable details`. The [Get Started](https://big-life-lab.github.io/recodeflow/articles/get_started.html) vignette provides examples of how to use the two worksheets. 
+This vignette describes how the `var_sheet` is organized and how to find variables that you can transform. See also the vignette `variable details`. The [How to guides](../reference/how_to_guides.html) provides examples of how to use the two worksheets. 
 
 Read the dataframe `var_sheet`
 
@@ -47,7 +47,7 @@ datatable(var_sheet, filter = 'top', options = list(pageLength = 5))
 
 ## How the `variables.csv` sheet is organized
 
-In each row there are 7 columns in this worksheet and they are as follows:
+In each row there are 8 columns in this worksheet and they are as follows:
 
 1. **variable:** the name of the final transformed variable.
 
