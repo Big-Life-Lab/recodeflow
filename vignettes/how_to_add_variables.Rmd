@@ -16,31 +16,27 @@ source("../R/test_data_generator.R")
 
 # How to use `recodeflow` with your data
 
-To use `recodeflow` with your data, you'll need create the worksheets (listed in order of creation):
+To use `recodeflow` with your data, you'll need create the worksheets:
 
 - `variable_details` mapping of variables across datasets and a list of instructions on how to transform variable(s), and
 - `variable_sheet` a list of variables to transform, and
 
 Files can either be a `.csv` file that you import to R or create directly in R (as a dataframe).
 
-*********Within these variable worksheets you'll add
-
-1. Existing variables to be harmonized across datasets, and
-2. Derived variables based on harmonized datasets.
-
-For the following examples, we'll use our example datasets and the variable `status`.
-
 Our examples use the dataset `pbc` from the package [survival](https://cran.r-project.org/web/packages/survival/index.html). We've split this dataset into two (tester1 and tester2) to mimic real data e.g., the same survey preformed in separate years. We've also added columns (`agegrp5` and `agegrp10`) to this dataset for our examples.
 
+For the following examples, we'll use our example datasets and the variable `status`.
 The variable `status` captures the status of the patient at the end of the study: censored, received a transplant, or dead.
 
 
 
-## How to create the `variables_details` file
+## How to create the `var_details` worksheet
 
 The `variable_details` worksheet does two important steps. First, it maps variables across datasets. Second, it gives instructions on how to transform the variables. 
 
-Note: additional information for the `variable_details` worksheet is in the article [variable_details](../reference/variable_details.html).
+Note: additional information for the `var_details` worksheet is in the article [variable_details](../reference/variable_details.html).
+
+Note: additional details on how to add derived variables to the `var_detials` worksheet is in the article [derived_variables](../reference/derived_variables.html).
 
 ### Rows
 
@@ -82,28 +78,28 @@ Write 'cat' in the six rows.
 kable(var_details[1:6, 1:3])
 ```
 
-4. **fromType:** `status` is originally a categorical variable.
-
-Write 'cat' in the six rows.
-
-```{r, echo=FALSE, warning=FALSE}
-kable(var_details[1:6, 1:4])
-```
-
-5. **databaseStart:** `status` was captured identically for both datasets. Therefore, we'll transform the variable the same way regardless of which dataset it's from.
+4. **databaseStart:** `status` was captured identically for both datasets. Therefore, we'll transform the variable the same way regardless of which dataset it's from.
 
 Write the dataset names, separated by a comma, in the six rows
+
+```{r, echo=FALSE, warning=FALSE}
+kable(var_details[c(1, 6), 1:4])
+```
+
+5. **variableStart:** the name of the transformed variables `status` is identical to the original variable `status`. Also, the original variable `status` is identical across our datasets. 
+
+Write the variable name in squared brackets once, per row, for all six rows.
 
 ```{r, echo=FALSE, warning=FALSE}
 kable(var_details[c(1, 6), 1:5])
 ```
 
-6. **variableStart:** the name of the transformed variables `status` is identical to the original variable `status`. Also, the original variable `status` is identical across our datasets. 
+6. **fromType:** `status` is originally a categorical variable.
 
-Write the variable name in squared brackets once, per row, for all six rows.
+Write 'cat' in the six rows.
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(var_details[c(1, 6), 1:6])
+kable(var_details[1:6, 1:4])
 ```
 
 7. **variableStartShortLabel:** 
@@ -122,49 +118,49 @@ Write "status at end of study" in the six rows.
 kable(var_details[1:6, 1:8])
 ```
 
-9. **numValidCat:** The number of categories within the variable `status`. There are three categories in `status`: 0-censored, 1-transplant, and 2-dead. Note that for categories: not applicable, missing, and else, are not included in the category count.
+9. **recTo:** Since `status` is a categorical variable, you'll capture the category you are transforming each row too. For the not applicable rows `NA::a` is written. For the missing and else rows `NA::b` is written. The `haven` package is used for tagging NA in numeric variables.
 
-Write 3 in each of the six rows.
+Write the category level you are transforming each row too. For the not applicable rows `NA::a` is written. For the missing and else rows `NA::b` is written.
 
 ```{r, echo=FALSE, warning=FALSE}
 kable(var_details[1:6, 1:9])
 ```
 
-10. **recTo:** Since `status` is a categorical variable, you'll capture the category you are transforming each row too. For the not applicable rows `NA::a` is written. For the missing and else rows `NA::b` is written. The `haven` package is used for tagging NA in numeric variables.
+10. **numValidCat:** The number of categories within the variable `status`. There are three categories in `status`: 0-censored, 1-transplant, and 2-dead. Note that for categories: not applicable, missing, and else, are not included in the category count.
 
-Write the category level you are transforming each row too. For the not applicable rows `NA::a` is written. For the missing and else rows `NA::b` is written.
+Write 3 in each of the six rows.
 
 ```{r, echo=FALSE, warning=FALSE}
 kable(var_details[1:6, 1:10])
 ```
 
-11. **recFrom:** Since we are not combining levels of categories and we are keeping the category levels the same, the recFrom column will be identical to recTo. 
+11. **catLabel:** Name the categorical level for the transformed variable.
 
-Write the category level you are transforming each row too. For the not applicable rows `NA::a` is written. For the missing and else rows `NA::b` is written.
+Write: "censored" in the first row, "transplant" in the second row, "dead" in the third row, "not applicable" in the forth row, "missing" in the fifth row, and "else" in the sixth row. 
 
 ```{r, echo=FALSE, warning=FALSE}
 kable(var_details[1:6, 1:11])
 ```
 
-12. **catLabel:** Name the categorical level for the transformed variable.
+12. **catLabelLong:** You can elaborate on the name of the categorical level of the transformed variable. For our example we will not. 
 
-Write: "censored" in the first row, "transplant" in the second row, "dead" in the third row, "not applicable" in the forth row, "missing" in the fifth row, and "else" in the sixth row. 
+Copy input in **catLabel** to **catLabelLong** for each row.
 
 ```{r, echo=FALSE, warning=FALSE}
 kable(var_details[1:6, 1:12])
 ```
 
-13. **catLabelLong:** You can elaborate on the name of the categorical level of the transformed variable. For our example we will not. 
+13. **units:** The status of the patient at the end of the study does not have measurement units. 
 
-Copy input in **catLabel** to **catLabelLong** for each row.
+Write "N/A" in all six rows.
 
 ```{r, echo=FALSE, warning=FALSE}
 kable(var_details[1:6, 1:13])
 ```
 
-14. **units:** The status of the patient at the end of the study does not have measurement units. 
+14. **recFrom:** Since we are not combining levels of categories and we are keeping the category levels the same, the recFrom column will be identical to recTo. 
 
-Write "N/A" in all six rows.
+Write the category level you are transforming each row too. For the not applicable rows `NA::a` is written. For the missing and else rows `NA::b` is written.
 
 ```{r, echo=FALSE, warning=FALSE}
 kable(var_details[1:6, 1:14])
@@ -213,117 +209,5 @@ Once mapped and specified on `variable_details`, the `status` variable can be sp
 ```{r, echo=FALSE, warning=FALSE}
 library(knitr)
 library(kableExtra)
-kable(variables[2, ])
-```
-
-
-
-
-
-
-
-
-## How to create derived variables and add them to cchsflow
-
-Along with specifying the variable on `variable_details.csv` and `variables.csv`, a previous step is required in creating derived variables and that is creating a custom function that creates the derived variable from existing CCHS variables. 
-
-```
-CustomFunctionName <- function(Vars from variableStart following same order){
-  outputVar <- {Code on passed vars that generates a single value output}
-  
-  return(outputVar)
-}
-```
-
-### Example of a derived variable: Smoking pack-years
-
-Pack-years is a complex derived variable often used by researchers to quantify the amount of cigarette use over a period of time. Even given its complex nature, pack-years can still be calculated. This derived variable incorporates numerous CCHS smoking variables, along with age.
-
-### Step 1. Creating a derived function
-
-With complex derived variables, sometimes it is necessary to create functions within the custom function. For pack-years, a nested function was used to create an intermediate smoking variable that was used in the main function.
-
-```{r, warning=FALSE}
-Pack_years_fun <-
-  function(SMKDSTY, DHHGAGE_cont, SMK_09A_B, SMKG09C, SMKG203_cont, SMKG207_cont,
-           SMK_204, SMK_05B, SMK_208, SMK_05C, SMKG01C_cont, SMK_01A) {
-    #Time since quit for former daily smokers
-    tsq_ds_fun <- function(SMK_09A_B, SMKG09C) {
-      SMKG09C <-
-        ifelse2(SMKG09C==1, 4,
-        ifelse2(SMKG09C==2, 8,
-        ifelse2(SMKG09C==3, 12, NA)))
-      tsq_ds <-
-        ifelse2(SMK_09A_B==1, 0.5,
-        ifelse2(SMK_09A_B==2, 1.5,
-        ifelse2(SMK_09A_B==3, 2.5,
-        ifelse2(SMK_09A_B==4, SMKG09C, NA))))
-    }
-    tsq_ds<-tsq_ds_fun(SMK_09A_B, SMKG09C)
-    # PackYears for Daily Smoker
-    ifelse2(SMKDSTY==1, pmax(((DHHGAGE_cont - SMKG203_cont)*(SMK_204/20)), 0.0137),
-    # PackYears for Occasional Smoker (former daily)     
-    ifelse2(SMKDSTY==2, pmax(((DHHGAGE_cont - SMKG207_cont - tsq_ds)*(SMK_208/20)), 0.0137) 
-            + (pmax((SMK_05B*SMK_05C/30), 1)*tsq_ds),
-    # PackYears for Occasional Smoker (never daily)      
-    ifelse2(SMKDSTY==3, (pmax((SMK_05B*SMK_05C/30), 1)/20)*(DHHGAGE_cont - SMKG01C_cont),
-    # PackYears for former daily smoker (non-smoker now)      
-    ifelse2(SMKDSTY==4, pmax(((DHHGAGE_cont - SMKG207_cont - tsq_ds)*(SMK_208/20)), 0.0137),
-    # PackYears for former occasional smoker (non-smoker now) who smoked at least 100 cigarettes lifetime      
-    ifelse2(SMKDSTY==5 & SMK_01A==1, 0.0137,
-    # PackYears for former occasional smoker (non-smoker now) who have not smoked at least 100 cigarettes lifetime      
-    ifelse2(SMKDSTY==5 & SMK_01A==2, 0.007,
-    # Non-smoker      
-    ifelse2(SMKDSTY==6, 0, NA)))))))
-  }
-```
-
-More information on what each smoking variable means can be found in the [Reference](../reference/pack_years_fun.html) section.
-
-### Steps 2 and 3. Specifying pack-years in `variable_details.csv` and `variables.csv`
-
-This is how the `variable_details.csv` sheet would look for the derived pack-years row
-```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[9,])
-```
-
-And this is how the `variables.csv` sheet would look for the derived pack-years row
-
-```{r, echo=FALSE, warning=FALSE}
-kable(variables[3,])
-```
-
-### Adding labels to a derived variable
-
-For a continuous derived variable like pack-years, the labels specified in `variables.csv` are sufficient for the variable to be properly labelled. For categorical derived variables, extra rows will need to be added on `variable_details.csv` so that labels are generated for each category. The example below shows how binge_drinker, a derived categorical variable flagging respondents who binge drink, is specified in `variable_details.csv`.
-
-```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[10:12,])
-```
-
-As you can see, the first row for binge_drinker specifies the function for the derived variable and the base variables included. The second and third rows specify the categories of the variables, which are then labelled.
-
-### Creating a derived variable using derived variables
-
-It is possible to create a derived variable that involves derived variables. When creating the custom function for it, use the derived variable name inside the function. Similarly, when specifying the variable in `variable_details.csv` and `variables.csv`, use the derived variable in the **variableStart** column. The example below shows how number_conditions, a derived categorical variable that counts the number of chronic conditions that uses the derived respiratory condition variable, is specified in `variable_details.csv` and `variables.csv`.
-
-```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[13:20,])
-kable(variables[4,])
-```
-
-### Creating a derived variable that exists in other CCHS cycles
-
-In order to harmonize a variable across all cycles, you may need to create a derived variable for the years in which the variable is not present. An example of this is RACDPAL, a variable that was derived from 2003 to 2014. To create and specify RACDPAL for 2001, the same derived variable conventions apply with a few slight differences. In `variables.csv`, the DerivedVar is enclosed with the database in which it is derived. 
-
-```{r, echo=FALSE, warning=FALSE}
-kable(variables[5, 9], col.names = 'variableStart')
-```
-
-This is to specify that for the 2001 CCHS cycle, it is derived from those base variables; while in later cycles it is simply recoded from the database.
-
-In `variable_details.csv`, additional rows are created for the 2001 cycle so that `rec_with_table()` understands that in 2001 it will be derived from base variables, while in later cycles it is a simple recode.
-
-```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[21:30, ])
+kable(var_sheet[2, ])
 ```
