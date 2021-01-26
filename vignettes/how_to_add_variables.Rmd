@@ -1,5 +1,5 @@
 ---
-title: "How to add variables to cchsflow"
+title: "How to add datasets and variables"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{How to add variables to cchsflow}     
@@ -8,274 +8,206 @@ vignette: >
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+
+source("../R/test_data_generator.R")
 ```
 
-## Introduction 
 
-This vignette explains how you can add variables to the _cchsflow_ package. There are two types of variables that can be added:
+# How to use `recodeflow` with your data
 
-1. Existing CCHS variables to be harmonized across cycles.
-2. Derived variables based on harmonized CCHS cycles.
+To use `recodeflow` with your data, you'll need create the worksheets:
 
-## How to add existing CCHS variables to cchsflow
+- `variable_details` mapping of variables across datasets and a list of instructions on how to transform variable(s), and
+- `variable_sheet` a list of variables to transform, and
 
-When adding variables that already exist across CCHS cycles, there are two worksheets that need to be specified:
+Files can either be a `.csv` file that you import to R or create directly in R (as a dataframe).
 
-1. `variable_details.csv`: This worksheet maps variables across CCHS cycles.
-2. `variables.csv`: This worksheet lists all the variables that exist in _cchsflow_
+Our examples use the dataset `pbc` from the package [survival](https://cran.r-project.org/web/packages/survival/index.html). We've split this dataset into two (tester1 and tester2) to mimic real data e.g., the same survey preformed in separate years. We've also added columns (`agegrp5` and `agegrp10`) to this dataset for our examples.
 
-### Example of an existing CCHS variable: Body mass index (BMI)
+For the following examples, we'll use our example datasets and the variable `status`.
+The variable `status` captures the status of the patient at the end of the study: censored, received a transplant, or dead.
 
-This example will show how the existing CCHS BMI variable was developed using `variable_details.csv` and `variables.csv`. **Note** this variable is different from the derived BMI variable that is also included in _cchsflow_. For this article, a sample `variable_details.csv` & `variables.csv` will be loaded to demonstrate how to add variables.
 
-```{r}
-variables <- read.csv(file.path(getwd(), '../inst/extdata/sample_variables.csv'))
-variable_details <- read.csv(file.path(getwd(),'../inst/extdata/sample_variable_details.csv'))
-```
 
-### Specifying the variable on `variable_details.csv`
+## How to create the `var_details` worksheet
 
-* For this variable, there are 4 rows, 1 for the continuous "category", 1 for not applicable, 1 for missing, and 1 for else. However, CCHS 2001 and 2003 code not applicable and the missing categories differently from other cycles so two extra rows will be created to account for this. In many instances there are changes in how variable categories are coded between CCHS cycles. But since the overall variable structure remains intact, extra rows can be used to help rectify this issue to make sure all values feed into the newly transformed variable.
+The `variable_details` worksheet does two important steps. First, it maps variables across datasets. Second, it gives instructions on how to transform the variables. 
 
-### Columns
+Note: additional information for the `var_details` worksheet is in the article [variable_details](../reference/variable_details.html).
 
-1. **variable:** the most common variable name for BMI is `HWTGBMI`. This should be written for each row.
+Note: additional details on how to add derived variables to the `var_detials` worksheet is in the article [derived_variables](../reference/derived_variables.html).
+
+### Rows
+
+For the `status` variable, there are the following six rows:
+
+- 3 categorical responses (censored, transplant, dead), 
+- 1 for missing, 
+- 1 for not applicable, and 
+- 1 for else. 
+
+Since `status` is coded consistently across the two datasets no additional rows are required. 
+
+
+### Columns (16)
+
+1. **variable:** the name of the final transformed variable. We'll use the same name as in the original dataset `status` though you could rename the variable.
+
+Write `status` in the column **variable** in the six rows.
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 library(knitr)
 library(kableExtra)
-kable(variable_details[1:6, 1], col.names = 'variable')
+kable(var_details[1:6, 1], col.names = 'variable')
 ```
 
-2. **dummyVariable:** BMI is a continuous variable, so it does not have dummy variables.
+2. **dummyVariable:** Since `status` is a categorical variable it has dummy variables. 
+
+Write the final variable name, the number of categories within the variable, and the category level for each category, in the six rows.
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[1:6, 1:2])
+kable(var_details[1:6, 1:2])
 ```
 
-3. **toType:** BMI was captured in the CCHS as a continuous variable. It does not make much sense to transform it into a categorical variable, so the toType should be `cont` in each row of BMI.
+3. **toType:** `status` is originally a categorical vaiable and captures different outcomes for patients. Therefore, it does not make sense to change `status` into a continuous variable. 
+
+Write 'cat' in the six rows.
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[1:6, 1:3])
+kable(var_details[1:6, 1:3])
 ```
 
-4. **databaseStart:** BMI was captured in all CCHS surveys between 2001 and 2014, so in the first row with the continuous "category" and the else row, the CCHS identifiers will be listed this column:
+4. **databaseStart:** `status` was captured identically for both datasets. Therefore, we'll transform the variable the same way regardless of which dataset it's from.
+
+Write the dataset names, separated by a comma, in the six rows
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[c(1, 6), 1:4])
+kable(var_details[c(1, 6), 1:4])
 ```
 
-+ For the not applicable and missing rows that pertain to the 2001 and 2003 CCHS surveys, only write the 2001 and 2003 identifiers in this column. 
+5. **variableStart:** the name of the transformed variables `status` is identical to the original variable `status`. Also, the original variable `status` is identical across our datasets. 
+
+Write the variable name in squared brackets once, per row, for all six rows.
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[2:3, 1:4])
+kable(var_details[c(1, 6), 1:5])
 ```
 
-+ For the not applicable and missing rows that pertain to the 2005 CCHS survey and onwards, write the identifiers for CCHS 2005 onwards. This is because the not applicable category and the missing categories are coded differently.
+6. **fromType:** `status` is originally a categorical variable.
+
+Write 'cat' in the six rows.
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[4:5, 1:4])
+kable(var_details[1:6, 1:4])
 ```
 
-5. **variableStart:** In the 2001, 2003, and 2005 CCHS surveys the BMI variable differs from the common name, while in the CCHS surveys from 2007-2014, the BMI variable is the same as the common name. However, the values for not applicable and missing categories changes after 2003. Therefore for the first & else rows, the variableStart column will look like this:
-      
-```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[c(1, 6), 1:5])
-```
-      
-+ For the not applicable and missing rows that pertain to the 2001 and 2003 CCHS surveys, the variable names for those two cycles will be written.
+7. **variableStartShortLabel:** 
+
+Write "status" in the 6 rows.
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[2:3, 1:5])
+kable(var_details[1:6, 1:7])
 ```
 
-+ For the not applicable and missing rows that pertain to the 2005 CCHS surveys onwards, the column will look like this:
+8. **variableStartLabel:** Include the definition of the variable, as stated in the original data documentation. 
+
+Write "status at end of study" in the six rows.
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[4:5, 1:5])
+kable(var_details[1:6, 1:8])
 ```
 
-6. **fromType:** As mentioned previously, BMI was measured as a continuous variable in the CCHS, so the fromType should be `cont` in each row of BMI.
+9. **recTo:** Since `status` is a categorical variable, you'll capture the category you are transforming each row too. For the not applicable rows `NA::a` is written. For the missing and else rows `NA::b` is written. The `haven` package is used for tagging NA in numeric variables.
+
+Write the category level you are transforming each row too. For the not applicable rows `NA::a` is written. For the missing and else rows `NA::b` is written.
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[1:6, 1:6])
+kable(var_details[1:6, 1:9])
 ```
 
-7. **recTo:** Since this is a continuous variable, the first row (the main "category") has `copy` written. For the not applicable rows `NA::a` is written. For the missing and else rows `NA::b` is written. The `haven` package is used for tagging NA in numeric variables.
+10. **numValidCat:** The number of categories within the variable `status`. There are three categories in `status`: 0-censored, 1-transplant, and 2-dead. Note that for categories: not applicable, missing, and else, are not included in the category count.
+
+Write 3 in each of the six rows.
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[1:6, 1:7])
+kable(var_details[1:6, 1:10])
 ```
 
-8. **numValidCat:** Since this is a continuous variable, there are no actual categories; so `N/A` is written in each row.
+11. **catLabel:** Name the categorical level for the transformed variable.
+
+Write: "censored" in the first row, "transplant" in the second row, "dead" in the third row, "not applicable" in the forth row, "missing" in the fifth row, and "else" in the sixth row. 
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[1:6, 1:8])
+kable(var_details[1:6, 1:11])
 ```
 
-9. **catLabel:** For the first row `BMI` is written. Not applicable rows `not applicable` is written. Missing rows: `missing`. Else row: `else`
+12. **catLabelLong:** You can elaborate on the name of the categorical level of the transformed variable. For our example we will not. 
+
+Copy input in **catLabel** to **catLabelLong** for each row.
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[1:6, 1:9])
+kable(var_details[1:6, 1:12])
 ```
 
-10. **catLabelLong:** For the first row, `body mass index` is written to give further detail on what BMI is. The other rows remain the same.
+13. **units:** The status of the patient at the end of the study does not have measurement units. 
+
+Write "N/A" in all six rows.
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[1:6, 1:10])
+kable(var_details[1:6, 1:13])
 ```
 
-11. **units:** BMI is measured in kg/m^2^, so `kg/m2` is written in each row. 
+14. **recFrom:** Since we are not combining levels of categories and we are keeping the category levels the same, the recFrom column will be identical to recTo. 
+
+Write the category level you are transforming each row too. For the not applicable rows `NA::a` is written. For the missing and else rows `NA::b` is written.
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[1:6, 1:11])
+kable(var_details[1:6, 1:14])
 ```
 
-12. **recFrom:** Going through the CCHS data documentation from 2001 to 2014, it was found that the lowest BMI value was 11.91 and the highest BMI value was 57.9. Therefore the recFrom for the first row is written as `[11.91,57.9]`. In the 2001 and 2003 CCHS surveys not applicable was coded as 999.6 so the recFrom for this row would be `[999.6,999.6]`. Similarly, in the 2001 and 2003 CCHS surveys don't know was coded as 999.7, refusal was coded as 999.8, and not stated was coded as 999.9. Therefore the recFrom for the missing row for CCHS 2001 and 2003 would be `[999.7,999.9]`. In the not applicable row for the 2005 CCHS survey onwards, the recFrom is `[999.96,999.96]`. In the missing row for CCHS 2005 onwards, the recFrom is `[999.97,999.99]`. For the else row, just write `else`.
+15. **catStartLabel:** The `status` label should be identical to what is shown in the original data documentation. For the missing rows, each missing category is described along with their coded values.
+
+Write: "censored" in the first row, "transplant" in the second row, "dead" in the third row, "not applicable" in the forth row, "missing" in the fifth row, and "else" in the sixth row.
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[1:6, 1:12])
+kable(var_details[1:6, 1:15])
 ```
 
-13. **catStartLabel:** For the first row, `BMI / self-report (D,G)` is written as it is written in CCHS documentation. The other rows  remain the same, and the values for each missing category are stated in the missing rows.
+16. **notes: ** Capture any important differences in a variable across datasets. For our example, there are no differences across datasets.
+
+Write "This is sample survival pbc data" in all six rows.
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[1:6, 1:13])
+kable(var_details[1:6, 1:16])
 ```
 
-14. **variableStartShortLabel:** Writing `BMI` for each row is sufficient for this variable.
 
-```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[1:6, 1:14])
-```
 
-15. **variableStartLabel:** As per CCHS documentation, the label for this variable is `BMI / self-report - (D,G)`.
+## How to create the variables worksheet `var_sheet`
 
-```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[1:6, 1:15])
-```
+Once mapped and specified on `variable_details`, the `status` variable can be specified on the variables worksheet: `var_sheet`. Ensure that the names you used in the `var_details` worksheet are identical to those listed in `var_sheet`.
 
-16. **notes: ** As described previously, there are differences between CCHS surveys with regards to coding the not applicable and missing categories. These are documented in this section. Aside from this, there are other changes and differences that should also be documented. In the 2001 CCHS survey, this variable was restricted to participants aged 20-64. As well, don't know (999.97) and refusal (999.98) were not asked in this survey.
+1. **variable:** the name of the transformed variable (var_detail worksheet column 'variable')
 
-```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[1:6, ])
-```
+2. **label:** the shorthand label for the variable (var_detail worksheet column 'variableShortLabel')
 
-### Specifying the variable on `variables.csv`
+3. **labelLong:** a more detailed label for the variable (var_detail worksheet column 'variableStartLabel')
 
-Once mapped and specified on `variable_details.csv`, the BMI variable can now be specified on `variables.csv`
+4. **section:** the section where this variable could be found (new column, it is not in the var_details worksheet)
+
+5. **subject:** what the variable pertains to  (new column, it is not in the var_details worksheet)
+
+6. **variableType:** whether the transformed variable is categorical or continuous (var_detail worksheet column 'toType')
+
+7. **units:** any units for the variable (var_detail worksheet column 'units')
+
+8. **databaseStart:** the list of databases that contain the variable of interest (var_detail worksheet column 'databaseStart')
+
+9. **variableStart** the original variable name (var_detail worksheet column 'variableStart')
 
 ```{r, echo=FALSE, warning=FALSE}
 library(knitr)
 library(kableExtra)
-kable(variables[1, ])
-```
-
-## How to create derived variables and add them to cchsflow
-
-Along with specifying the variable on `variable_details.csv` and `variables.csv`, a previous step is required in creating derived variables and that is creating a custom function that creates the derived variable from existing CCHS variables. 
-
-```
-CustomFunctionName <- function(Vars from variableStart following same order){
-  outputVar <- {Code on passed vars that generates a single value output}
-  
-  return(outputVar)
-}
-```
-
-### Example of a derived variable: Smoking pack-years
-
-Pack-years is a complex derived variable often used by researchers to quantify the amount of cigarette use over a period of time. Even given its complex nature, pack-years can still be calculated. This derived variable incorporates numerous CCHS smoking variables, along with age.
-
-### Step 1. Creating a derived function
-
-With complex derived variables, sometimes it is necessary to create functions within the custom function. For pack-years, a nested function was used to create an intermediate smoking variable that was used in the main function.
-
-```{r, warning=FALSE}
-Pack_years_fun <-
-  function(SMKDSTY, DHHGAGE_cont, SMK_09A_B, SMKG09C, SMKG203_cont, SMKG207_cont,
-           SMK_204, SMK_05B, SMK_208, SMK_05C, SMKG01C_cont, SMK_01A) {
-    #Time since quit for former daily smokers
-    tsq_ds_fun <- function(SMK_09A_B, SMKG09C) {
-      SMKG09C <-
-        ifelse2(SMKG09C==1, 4,
-        ifelse2(SMKG09C==2, 8,
-        ifelse2(SMKG09C==3, 12, NA)))
-      tsq_ds <-
-        ifelse2(SMK_09A_B==1, 0.5,
-        ifelse2(SMK_09A_B==2, 1.5,
-        ifelse2(SMK_09A_B==3, 2.5,
-        ifelse2(SMK_09A_B==4, SMKG09C, NA))))
-    }
-    tsq_ds<-tsq_ds_fun(SMK_09A_B, SMKG09C)
-    # PackYears for Daily Smoker
-    ifelse2(SMKDSTY==1, pmax(((DHHGAGE_cont - SMKG203_cont)*(SMK_204/20)), 0.0137),
-    # PackYears for Occasional Smoker (former daily)     
-    ifelse2(SMKDSTY==2, pmax(((DHHGAGE_cont - SMKG207_cont - tsq_ds)*(SMK_208/20)), 0.0137) 
-            + (pmax((SMK_05B*SMK_05C/30), 1)*tsq_ds),
-    # PackYears for Occasional Smoker (never daily)      
-    ifelse2(SMKDSTY==3, (pmax((SMK_05B*SMK_05C/30), 1)/20)*(DHHGAGE_cont - SMKG01C_cont),
-    # PackYears for former daily smoker (non-smoker now)      
-    ifelse2(SMKDSTY==4, pmax(((DHHGAGE_cont - SMKG207_cont - tsq_ds)*(SMK_208/20)), 0.0137),
-    # PackYears for former occasional smoker (non-smoker now) who smoked at least 100 cigarettes lifetime      
-    ifelse2(SMKDSTY==5 & SMK_01A==1, 0.0137,
-    # PackYears for former occasional smoker (non-smoker now) who have not smoked at least 100 cigarettes lifetime      
-    ifelse2(SMKDSTY==5 & SMK_01A==2, 0.007,
-    # Non-smoker      
-    ifelse2(SMKDSTY==6, 0, NA)))))))
-  }
-```
-
-More information on what each smoking variable means can be found in the [Reference](../reference/pack_years_fun.html) section.
-
-### Steps 2 and 3. Specifying pack-years in `variable_details.csv` and `variables.csv`
-
-This is how the `variable_details.csv` sheet would look for the derived pack-years row
-```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[9,])
-```
-
-And this is how the `variables.csv` sheet would look for the derived pack-years row
-
-```{r, echo=FALSE, warning=FALSE}
-kable(variables[3,])
-```
-
-### Adding labels to a derived variable
-
-For a continuous derived variable like pack-years, the labels specified in `variables.csv` are sufficient for the variable to be properly labelled. For categorical derived variables, extra rows will need to be added on `variable_details.csv` so that labels are generated for each category. The example below shows how binge_drinker, a derived categorical variable flagging respondents who binge drink, is specified in `variable_details.csv`.
-
-```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[10:12,])
-```
-
-As you can see, the first row for binge_drinker specifies the function for the derived variable and the base variables included. The second and third rows specify the categories of the variables, which are then labelled.
-
-### Creating a derived variable using derived variables
-
-It is possible to create a derived variable that involves derived variables. When creating the custom function for it, use the derived variable name inside the function. Similarly, when specifying the variable in `variable_details.csv` and `variables.csv`, use the derived variable in the **variableStart** column. The example below shows how number_conditions, a derived categorical variable that counts the number of chronic conditions that uses the derived respiratory condition variable, is specified in `variable_details.csv` and `variables.csv`.
-
-```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[13:20,])
-kable(variables[4,])
-```
-
-### Creating a derived variable that exists in other CCHS cycles
-
-In order to harmonize a variable across all cycles, you may need to create a derived variable for the years in which the variable is not present. An example of this is RACDPAL, a variable that was derived from 2003 to 2014. To create and specify RACDPAL for 2001, the same derived variable conventions apply with a few slight differences. In `variables.csv`, the DerivedVar is enclosed with the database in which it is derived. 
-
-```{r, echo=FALSE, warning=FALSE}
-kable(variables[5, 9], col.names = 'variableStart')
-```
-
-This is to specify that for the 2001 CCHS cycle, it is derived from those base variables; while in later cycles it is simply recoded from the database.
-
-In `variable_details.csv`, additional rows are created for the 2001 cycle so that `rec_with_table()` understands that in 2001 it will be derived from base variables, while in later cycles it is a simple recode.
-
-```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[21:30, ])
+kable(var_sheet[2, ])
 ```

@@ -1,7 +1,7 @@
 var_details <-
   data.frame(
     "variable" = c("time", rep("status", times = 3), rep("trt", times = 3), "age", rep("sex", times = 2), rep("ascites", times = 2), rep("hepato", times = 2), rep("spiders", times = 2), rep("edema", times = 3), "bili", "chol", "albumin", "copper", "alk.phos", "ast", "trig", "platelet", "protime", rep("stage", times = 4), "example_der"),
-    "dummyVariable" = c("NA", "status0", "status1","status2", "trt1","trt2", "trt3", "NA","sexM","sexF", "ascites0", "ascites1","hepato0","hepato1","spiders0","spiders1","edema0.0","edema0.5","edema1.0",rep("NA",times = 9), "stage1", "stage2","stage3","stage4", "N/A"),
+    "dummyVariable" = c("NA", "status_cat3_0", "status_cat3_1","status_cat3_2", "trt_cat3_1","trt_cat3_2", "trt_cat3_3", "NA","sex_cat2_1","sex_cat2_F", "ascites_cat2_1", "ascites_cat2_2","hepato_cat2_1","hepato_cat2_2","spiders_cat2_1","spiders_cat2_2","edema_cat3_1","edema_cat3_2","edema_cat3_3",rep("NA",times = 9), "stage_cat4_1", "stage_cat4_2","stage_cat4_3","stage_cat4_4", "N/A"),
     "toType" = c("cont", rep("cat", times = 3), rep("cat", times = 3), "cont", rep("cat", times = 2), rep("cat", times = 2), rep("cat", times = 2),rep("cat", times = 2), rep("cat", times = 3), rep("cont", times = 9), rep("cat", times = 4), "cont"),
     "databaseStart" = rep("tester1, tester2", times = 33),
     "variableStart" = c("[time]", rep("[status]", times = 3), rep("[trt]", times = 3), "[age]", rep("[sex]", times = 2), rep("[ascites]", times = 2), rep("[hepato]", times = 2), rep("[spiders]", times = 2), rep("[edema]", times = 3), "[bili]", "[chol]", "[albumin]", "[copper]", "[alk.phos]", "[ast]", "[trig]", "[platelet]", "[protime]", rep("[stage]", times = 4), "DerivedVar::[chol, bili]"),
