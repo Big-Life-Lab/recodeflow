@@ -304,3 +304,59 @@ select_vars_by_role <- function(roles, variables){
 
   return(ret)
 }
+
+#' @title Set Data Labels
+#' @description sets labels for passed database, Uses the names of final
+#' variables in variable_details/variables_sheet as well as the labels contained
+#' in the passed dataframes
+#'
+#' @param data_to_label newly transformed dataset
+#' @param variable_details variable_details.csv
+#' @param variables_sheet variables.csv
+#'
+#' @return labeled data_to_label
+#'
+#' @export
+set_data_labels <-
+  function(data_to_label,
+           variable_details,
+           variables_sheet = NULL) {
+    # Extract variables in the data
+    variable_names <- unique(colnames(data_to_label))
+    # extract only relevant variable info
+    if (!is.null(variable_details)) {
+      variable_details[[pkg.env$columns.Variable]] <- sapply(
+        variable_details[[pkg.env$columns.Variable]], trimws)
+      variable_details <-
+        variable_details[variable_details[[pkg.env$columns.Variable]]
+                         %in% variable_names, ]
+      if (is.null(variables_sheet)) {
+        variable_details[[pkg.env$columns.label]] <- NA
+        variable_details[[pkg.env$columns.VariableLabel]] <-
+          NA
+      }
+    }
+    if (!is.null(variables_sheet)) {
+      variables_sheet[[pkg.env$columns.Variable]] <- sapply(
+        variables_sheet[[pkg.env$columns.Variable]], trimws)
+      variables_sheet <-
+        variables_sheet[variables_sheet[[pkg.env$columns.Variable]] %in%
+                          variable_names, ]
+      variable_details <-
+        update_variable_details_based_on_variable_sheet(
+          variable_sheet = variables_sheet,
+          variable_details = variable_details
+        )
+    }
+    label_list <- NULL
+    for (variable_name in variable_names) {
+      rows_to_process <-
+        variable_details[variable_details[[
+          pkg.env$columns.Variable]] == variable_name, ]
+      label_list[[variable_name]] <-
+        create_label_list_element(rows_to_process)
+    }
+    data_to_label <- label_data(label_list, data_to_label)
+
+    return(data_to_label)
+  }
