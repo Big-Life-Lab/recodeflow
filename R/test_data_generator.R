@@ -1,20 +1,18 @@
 var_details <-
   data.frame(
     "variable" = c("time", rep("status", times = 3), rep("trt", times = 3), "age", rep("sex", times = 2), rep("ascites", times = 2), rep("hepato", times = 2), rep("spiders", times = 2), rep("edema", times = 3), "bili", "chol", "albumin", "copper", "alk.phos", "ast", "trig", "platelet", "protime", rep("stage", times = 4), "example_der"),
-    "dummyVariable" = c("NA", "status_cat3_0", "status_cat3_1","status_cat3_2", "trt_cat3_1","trt_cat3_2", "trt_cat3_3", "NA","sex_cat2_1","sex_cat2_F", "ascites_cat2_1", "ascites_cat2_2","hepato_cat2_1","hepato_cat2_2","spiders_cat2_1","spiders_cat2_2","edema_cat3_1","edema_cat3_2","edema_cat3_3",rep("NA",times = 9), "stage_cat4_1", "stage_cat4_2","stage_cat4_3","stage_cat4_4", "N/A"),
     "toType" = c("cont", rep("cat", times = 3), rep("cat", times = 3), "cont", rep("cat", times = 2), rep("cat", times = 2), rep("cat", times = 2),rep("cat", times = 2), rep("cat", times = 3), rep("cont", times = 9), rep("cat", times = 4), "cont"),
     "databaseStart" = rep("tester1, tester2", times = 33),
     "variableStart" = c("[time]", rep("[status]", times = 3), rep("[trt]", times = 3), "[age]", rep("[sex]", times = 2), rep("[ascites]", times = 2), rep("[hepato]", times = 2), rep("[spiders]", times = 2), rep("[edema]", times = 3), "[bili]", "[chol]", "[albumin]", "[copper]", "[alk.phos]", "[ast]", "[trig]", "[platelet]", "[protime]", rep("[stage]", times = 4), "DerivedVar::[chol, bili]"),
     "fromType" = c("cont", rep("cat", times = 3), rep("cat", times = 3), "cont", rep("cat", times = 2), rep("cat", times = 2), rep("cat", times = 2),rep("cat", times = 2), rep("cat", times = 3), rep("cont", times = 9), rep("cat", times = 4), "cont"),
+    "variableStartShortLabel" = c("time", rep("status", times = 3), rep("treatment", times = 3), "age", rep("sex", times = 2), rep("ascites", times = 2), rep("hepato", times = 2), rep("spiders", times = 2), rep("edema", times = 3), "bili", "chol", "albumin", "copper", "alk.phos", "ast", "trig", "platelet", "protime", rep("stage", times = 4), "example_der"),
     "recTo" = c("copy", "0", "1","2", "1","2","3", "copy","m","f", "0", "1","0","1","0","1","0.0","0.5","1.0",rep("copy",times = 9), "1", "2","3","4", "Func::example_der_fun"),
     "numValidCat" = c("N/A", rep("3", times = 3), rep("3", times = 3), "N/A", rep("2", times = 8), rep("3", times = 3), rep("N/A", times = 9), rep("4", times = 4), "N/A"),
     "catLabel" = c("N/A", "censored", "transplant","dead", "D-penicillmain","Placebo", "none", "N/A", "Male","Female", "No ascites", "Yes ascites","No hepatomegaly","yes hepatomegaly","no spiders","yes spiders","edema 0","edema 0.5","edema 1",rep("N/A",times = 9), "stage 1", "stage 2","stage 3","stage 4", "N/A"),
     "catLabelLong" = c("N/A", "censored", "transplant","dead", "D-penicillmain","Placebo", "no treatment", "N/A", "Male","Female", "No ascites", "Yes ascites","No hepatomegaly","yes hepatomegaly","no spiders","yes spiders","edema 0","edema 0.5","edema 1",rep("N/A",times = 9), "stage 1", "stage 2","stage 3","stage 4", "N/A"),
+    "units" = c("days", rep("N/A", times = 6), "years", rep("N/A", times = 11), rep("mg/dl", times = 2), "g/dl", "ug/dl", rep("U/L", times = 2), "mg/dl", rep("N/A", times = 6), "mg/dl"),
     "recFrom" = c("else", "0", "1","2", "1","2","3", "else","m","f", "0", "1","0","1","0","1","0.0","0.5","1.0",rep("else",times = 9), "1", "2","3","4", "else"),
     "catStartLabel" = c("N/A", "censored", "transplant","dead", "D-penicillmain","Placebo", "none", "N/A", "Male","Female", "No ascites", "Yes ascites","No hepatomegaly","yes hepatomegaly","no spiders","yes spiders","edema 0","edema 0.5","edema 1",rep("N/A",times = 9), "stage 1", "stage 2","stage 3","stage 4", "N/A"),
-    "variableStartShortLabel" = c("time", rep("status", times = 3), rep("treatment", times = 3), "age", rep("sex", times = 2), rep("ascites", times = 2), rep("hepato", times = 2), rep("spiders", times = 2), rep("edema", times = 3), "bili", "chol", "albumin", "copper", "alk.phos", "ast", "trig", "platelet", "protime", rep("stage", times = 4), "example_der"),
-    "variableStartLabel" = c("number of days between registration and the earlier of death, treatment or end of study", rep("status at end of study", times = 3), rep("treatment", times = 3), "age", rep("sex", times = 2), rep("prescence of ascites", times = 2), rep("prescence of hepatomegaly or enlarged liver", times = 2), rep("prescence of spiders", times = 2), rep("edema", times = 3), "bilirunbin concentration (blood)", "cholestral concentration (blood)", "albumin concentration (blood)", "copper concentration (urine)", "alkaline phosphotase concentration (blood)", " aspartate aminotransferase concentration (blood)", "triglycerides concentration (blood)", "platelet count", "standarized blood clotting time", rep("histologic stage of disease", times = 4), "example of dervived function: concentration of cholestral * concentration of bilirunbin"),
-    "units" = c("days", rep("N/A", times = 6), "years", rep("N/A", times = 11), rep("mg/dl", times = 2), "g/dl", "ug/dl", rep("U/L", times = 2), "mg/dl", rep("N/A", times = 6), "mg/dl"),
     "notes" = rep("This is sample survival pbc data", times = 33)
   )
 var_sheet <-
@@ -30,8 +28,12 @@ var_sheet <-
     "variableStart" = c("[time]","[status]", "[trt]", "[age]", "[sex]", "[ascites]","[hepato]","[spiders]","[edema]", "[bili]", "[chol]", "[albumin]", "[copper]", "[alk.phos]", "[ast]", "[trig]", "[platelet]", "[protime]","[stage]", "[example_der]")
   )
 
+
+
+
 library(survival)
-tester1 <- survival::pbc[1:209,]
-tester2 <- survival::pbc[210:418,]
+test1 <- survival::pbc[1:209,]
+test2 <- survival::pbc[210:418,]
+
 
 
