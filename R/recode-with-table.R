@@ -418,10 +418,17 @@ recode_call <-
     all_possible_var_names <-
       unique(as.character(variable_details[[pkg.env$columns.Variable]]))
 
+    select_variables <- ""
+    if(is.data.frame(variables)){
+      select_variables <- as.character(variables[[pkg.env$columns.Variable]])
+    }else{
+      select_variables <- variables
+    }
+
     # The variables details rows whose database start column has the database_name
     # parameter
     names_of_all_variables_detected <-
-      variable_details[grepl(database_name, variable_details[[pkg.env$columns.DatabaseStart]]),]
+      variable_details[grepl(database_name, variable_details[[pkg.env$columns.DatabaseStart]])& as.character(variable_details[[pkg.env$columns.Variable]]) %in% select_variables,]
 
     rec_data <-
       recode_columns(
