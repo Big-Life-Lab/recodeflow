@@ -25,7 +25,7 @@ To address this issue of a singular "na", we use the `haven` package [`tagged_na
 
 - NA(a) = 'not applicable' 
 - NA(b) = 'missing'
-- Na(c) = 'not asked' which is any variable that was not included in a survey cycle.
+- Na(c) = 'not asked' which is any variable that was in a dataset.
 
 
 **Summary of `tagged_na` values and their corresponding category values.**
