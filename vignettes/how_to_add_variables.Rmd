@@ -1,5 +1,5 @@
 ---
-title: "How to add datasets and variables"
+title: "How to use recodeflow with your data"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{How to add variables to cchsflow}     
@@ -18,196 +18,198 @@ source("../R/test_data_generator.R")
 
 To use `recodeflow` with your data, you'll need create the worksheets:
 
-- `variable_details` mapping of variables across datasets and a list of instructions on how to transform variable(s), and
+- `variable_details` mapping of variables across datasets and a list of instructions on how to transform variables, and
 - `variable_sheet` a list of variables to transform, and
 
-Files can either be a `.csv` file that you import to R or create directly in R (as a dataframe).
+Files can either be a `.csv` file that you import to R or create directly in R as a dataframe.
+
+If you have derived variable variables, you'll also need to create custom functions. For more information on custom functions see the article [derived_variables](../reference/derived_variables.html).
+
+
+## Example data
 
 Our examples use the dataset `pbc` from the package [survival](https://cran.r-project.org/web/packages/survival/index.html). We've split this dataset into two (tester1 and tester2) to mimic real data e.g., the same survey preformed in separate years. We've also added columns (`agegrp5` and `agegrp10`) to this dataset for our examples.
 
-For the following examples, we'll use our example datasets and the variable `status`.
-The variable `status` captures the status of the patient at the end of the study: censored, received a transplant, or dead.
+We'll use our example datasets and the variable `stage`.
+The variable `stage` captures the histologic stage of the patient's disease (primary biliary cirrhosis (PBC)).
 
-
-
-## How to create the `var_details` worksheet
+## How to create the `variable_details` worksheet
 
 The `variable_details` worksheet does two important steps. First, it maps variables across datasets. Second, it gives instructions on how to transform the variables. 
 
-Note: additional information for the `var_details` worksheet is in the article [variable_details](../reference/variable_details.html).
+Note: additional information for the `variable_details` worksheet is in the article [variable_details](../reference/variable_details.html).
 
 Note: additional details on how to add derived variables to the `var_detials` worksheet is in the article [derived_variables](../reference/derived_variables.html).
 
+
 ### Rows
 
-For the `status` variable, there are the following six rows:
+For the `stage` variable, there are the following six rows:
 
-- 3 categorical responses (censored, transplant, dead), 
-- 1 for missing, 
-- 1 for not applicable, and 
-- 1 for else. 
+- 4 rows for the 4 categories for the histological stage of the disease, 
+- 1 row for the not applicable responses, and 
+- 1 row for else. 
 
-Since `status` is coded consistently across the two datasets no additional rows are required. 
+Since `stage` is coded consistently across the two datasets (tester1 and tester2) we only need one row per categorical response.
 
+### Columns (14)
 
-### Columns (16)
+1. **variable:** the name of the final transformed variable. We'll use the same name as in the original dataset `stage` though you could rename the variable.
 
-1. **variable:** the name of the final transformed variable. We'll use the same name as in the original dataset `status` though you could rename the variable.
-
-Write `status` in the column **variable** in the six rows.
+Write `stage` in the column **variable** in the six rows.
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 library(knitr)
 library(kableExtra)
-kable(var_details[1:6, 1], col.names = 'variable')
+kable(variable_details[58:63, 1], col.names = 'variable')
 ```
 
-2. **dummyVariable:** Since `status` is a categorical variable it has dummy variables. 
-
-Write the final variable name, the number of categories within the variable, and the category level for each category, in the six rows.
-
-```{r, echo=FALSE, warning=FALSE}
-kable(var_details[1:6, 1:2])
-```
-
-3. **toType:** `status` is originally a categorical vaiable and captures different outcomes for patients. Therefore, it does not make sense to change `status` into a continuous variable. 
+2. **toType:** `stage` captures the stage of the disease and is originally a categorical variable. Therefore, it does not make sense to change `stage` into a continuous variable. 
 
 Write 'cat' in the six rows.
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(var_details[1:6, 1:3])
+kable(variable_details[58:63, 1:2])
 ```
 
-4. **databaseStart:** `status` was captured identically for both datasets. Therefore, we'll transform the variable the same way regardless of which dataset it's from.
+3. **fromType:** `stage` is originally a categorical variable.
+
+Write 'cat' in the six rows.
+
+```{r, echo=FALSE, warning=FALSE}
+kable(variable_details[58:63, 1:3])
+```
+
+4. **databaseStart:** `stage` was captured identically for both datasets. Therefore, we'll transform the variable the same way regardless of which dataset it's from.
 
 Write the dataset names, separated by a comma, in the six rows
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(var_details[c(1, 6), 1:4])
+kable(variable_details[58:63, 1:4])
 ```
 
-5. **variableStart:** the name of the transformed variables `status` is identical to the original variable `status`. Also, the original variable `status` is identical across our datasets. 
+5. **variableStart:** The original variable `stage` is identical across our datasets. 
 
-Write the variable name in squared brackets once, per row, for all six rows.
+Write the variable name in squared brackets once per row, for all six rows.
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(var_details[c(1, 6), 1:5])
+kable(variable_details[58:63, 1:5])
 ```
 
-6. **fromType:** `status` is originally a categorical variable.
+6. **variableStartLabel:** 
 
-Write 'cat' in the six rows.
+Write "stage" in the 6 rows.
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(var_details[1:6, 1:4])
+kable(variable_details[58:63, 1:6])
 ```
 
-7. **variableStartShortLabel:** 
+7. **numValidCat:** The number of categories within the variable `stage`. There are four categories in `stage`: 1, 2, 3, and 4. Note that for categories: not applicable, missing, and else, are not included in the category count.
 
-Write "status" in the 6 rows.
+Write 4 in each of the six rows.
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(var_details[1:6, 1:7])
+kable(variable_details[58:63, 1:7])
 ```
 
-8. **variableStartLabel:** Include the definition of the variable, as stated in the original data documentation. 
+8. **recTo:** Since `stage` is a categorical variable, you'll capture the category you are transforming each row too. For the not applicable rows `NA::a` is written. For the missing and else rows `NA::b` is written. The `haven` package is used for tagging NA in numeric variables.
 
-Write "status at end of study" in the six rows.
+We are not changing the categories. Therefore, the four stages captured in the original data. For the not applicable rows write `NA::a`. For the else rows write `NA::b`.
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(var_details[1:6, 1:8])
+kable(variable_details[58:63, 1:8])
 ```
 
-9. **recTo:** Since `status` is a categorical variable, you'll capture the category you are transforming each row too. For the not applicable rows `NA::a` is written. For the missing and else rows `NA::b` is written. The `haven` package is used for tagging NA in numeric variables.
+9. **catLabel:** Name the categorical level for the transformed variable.
 
-Write the category level you are transforming each row too. For the not applicable rows `NA::a` is written. For the missing and else rows `NA::b` is written.
+Write Stage 1, Stage 2, Stage 3, Stage 4, NA, and missing.
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(var_details[1:6, 1:9])
+kable(variable_details[58:63, 1:9])
 ```
 
-10. **numValidCat:** The number of categories within the variable `status`. There are three categories in `status`: 0-censored, 1-transplant, and 2-dead. Note that for categories: not applicable, missing, and else, are not included in the category count.
+10. **catLabelLong:** You can elaborate on the name of the categorical level of the transformed variable.
 
-Write 3 in each of the six rows.
+Copy values from **catLabel**
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(var_details[1:6, 1:10])
+kable(variable_details[58:63, 1:10])
 ```
 
-11. **catLabel:** Name the categorical level for the transformed variable.
-
-Write: "censored" in the first row, "transplant" in the second row, "dead" in the third row, "not applicable" in the forth row, "missing" in the fifth row, and "else" in the sixth row. 
-
-```{r, echo=FALSE, warning=FALSE}
-kable(var_details[1:6, 1:11])
-```
-
-12. **catLabelLong:** You can elaborate on the name of the categorical level of the transformed variable. For our example we will not. 
-
-Copy input in **catLabel** to **catLabelLong** for each row.
-
-```{r, echo=FALSE, warning=FALSE}
-kable(var_details[1:6, 1:12])
-```
-
-13. **units:** The status of the patient at the end of the study does not have measurement units. 
+11. **units:** The histologic stage of disease does not have units of measurement. 
 
 Write "N/A" in all six rows.
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(var_details[1:6, 1:13])
+kable(variable_details[58:63, 1:11])
 ```
 
-14. **recFrom:** Since we are not combining levels of categories and we are keeping the category levels the same, the recFrom column will be identical to recTo. 
+12. **recFrom:** Since we are not combining levels of categories and we are keeping the category levels the same, the recFrom column will be identical to recTo. 
 
 Write the category level you are transforming each row too. For the not applicable rows `NA::a` is written. For the missing and else rows `NA::b` is written.
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(var_details[1:6, 1:14])
+kable(variable_details[58:63, 1:12])
 ```
 
-15. **catStartLabel:** The `status` label should be identical to what is shown in the original data documentation. For the missing rows, each missing category is described along with their coded values.
+13. **catStartLabel:** The `stage` label should be identical to what is shown in the original data documentation. For the missing rows, each missing category is described along with their coded values.
 
-Write: "censored" in the first row, "transplant" in the second row, "dead" in the third row, "not applicable" in the forth row, "missing" in the fifth row, and "else" in the sixth row.
+Write Stage 1, Stage 2, Stage 3, Stage 4, NA, and missing.
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(var_details[1:6, 1:15])
+kable(variable_details[58:63, 1:13])
 ```
 
-16. **notes: ** Capture any important differences in a variable across datasets. For our example, there are no differences across datasets.
+14. **notes: ** Capture any important differences in a variable across datasets. For our example, there are no differences across datasets.
 
 Write "This is sample survival pbc data" in all six rows.
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(var_details[1:6, 1:16])
+kable(variable_details[58:63, 1:14])
 ```
 
+## `variable_details` for dervived variables
 
+The same naming convention applies to derived variables with the exception of two columns:
 
-## How to create the variables worksheet `var_sheet`
+1. In **variableStart**, instead of database names being listed, **DerivedVar::** is written followed with the list of original variables used inside square brackets. 
++ `DerivedVar::[var1, var2, var3]`
 
-Once mapped and specified on `variable_details`, the `status` variable can be specified on the variables worksheet: `var_sheet`. Ensure that the names you used in the `var_details` worksheet are identical to those listed in `var_sheet`.
+2. In **recTo**, write **Func::** followed with the exact name of the custom function used to create the derived variable.
++ `Func::derivedFunction`
 
-1. **variable:** the name of the transformed variable (var_detail worksheet column 'variable')
+A derived variable looks like this in `variable_details.csv`
 
-2. **label:** the shorthand label for the variable (var_detail worksheet column 'variableShortLabel')
+```{r, echo=FALSE, warning=FALSE}
+kable(variable_details[64,1:14])
+```
 
-3. **labelLong:** a more detailed label for the variable (var_detail worksheet column 'variableStartLabel')
+## How to create the variables worksheet `variables_sheet`
 
-4. **section:** the section where this variable could be found (new column, it is not in the var_details worksheet)
+Once mapped and specified on `variable_details`, the `stage` variable can be specified on the variables worksheet: `variables_sheet`. Ensure that the names you used in the `variable_details` worksheet are identical to those listed in `variables_sheet`.
 
-5. **subject:** what the variable pertains to  (new column, it is not in the var_details worksheet)
+1. **variable:** the name of the transformed variable (variable_detail worksheet column: 'variable')
 
-6. **variableType:** whether the transformed variable is categorical or continuous (var_detail worksheet column 'toType')
+2. **label:** the shorthand label for the variable (variable_detail worksheet column: '*variableStartShortLabel:)
 
-7. **units:** any units for the variable (var_detail worksheet column 'units')
+3. **labelLong:** a more detailed label for the variable (new column, it is not in the variable_details worksheet))
 
-8. **databaseStart:** the list of databases that contain the variable of interest (var_detail worksheet column 'databaseStart')
+4. **section:** group of data the variable belongs to (new column, it is not in the variable_details worksheet)
 
-9. **variableStart** the original variable name (var_detail worksheet column 'variableStart')
+5. **subject:** sub-group of data the variable belongs to (new column, it is not in the variable_details worksheet)
+
+6. **variableType:** whether the transformed variable is categorical or continuous (variable_detail worksheet column: 'toType')
+
+7. **units:** any units for the variable (variable_detail worksheet column 'units')
+
+8. **databaseStart:** the list of databases that contain the variable of interest (variable_detail worksheet column: 'databaseStart')
+
+9. **variableStart** the original variable name (variable_detail worksheet column: 'variableStart')
 
 ```{r, echo=FALSE, warning=FALSE}
 library(knitr)
 library(kableExtra)
-kable(var_sheet[2, ])
+kable(variables_sheet[19, ])
 ```
+
+
