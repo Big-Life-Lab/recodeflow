@@ -107,6 +107,11 @@ get_variable_type_data_type <- function (var_details_rows, var_type, is_start_va
 #'
 #' @return data with the ID row attached
 create_id_row <- function(data, id_role_name, database_name, variables){
+  # Flag to check for presence of data_name before execusion
+  keep_data_name <- FALSE
+  if(!is.null(data[["data_name"]])){
+    keep_data_name <- TRUE
+  }
   # Check for role or variables
   id_cols <- c()
   if(!is.null(id_role_name$feeder_vars)){
@@ -123,6 +128,11 @@ create_id_row <- function(data, id_role_name, database_name, variables){
   # tmp_column is a column name it cannot be passed as a string as it breaks the unite function
   tmp_data <- tidyr::unite(data = data, tmp_column, sep = "_", id_cols)
   data[[id_role_name$var_name]] <- tmp_data$tmp_column
+
+  # Remove data_name if it was generated and not present before
+  if((!is.null(data[["data_name"]]) && (!keep_data_name))){
+    data[["data_name"]] <- NULL
+  }
 
   return(data)
 }
