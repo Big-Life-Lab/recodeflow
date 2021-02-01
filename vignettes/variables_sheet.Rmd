@@ -1,5 +1,5 @@
 ---
-title: "variables.csv"
+title: "variables_sheet worksheet"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{variables.csv}     
@@ -16,32 +16,30 @@ knitr::opts_chunk$set(
 
 ## Introduction
 
-The `var_sheet` acts as a reference sheet your project(s), by listing the variables you are using. 
+The `variables_sheet` acts as a reference sheet your project(s), by listing the variables you are using. 
 
-This vignette describes how the `var_sheet` is organized and how to find variables that you can transform. See also the vignette `variable details`. The [How to guides](../reference/how_to_guides.html) provides examples of how to use the two worksheets. 
+This vignette describes how the `variables_sheet` is organized and how to find variables that you can transform. See also the vignette `variable details`. The [How to guides](../reference/how_to_guides.html) provides examples of how to use the two worksheets. 
 
-Read the dataframe `var_sheet`
+Read the dataframe `variables_sheet`
 
 ```{r Read variables.csv, echo=FALSE, message=FALSE, warning=FALSE}
-variables <- var_sheet
-
-cat("There are", nrow(variables), "variables, grouped in", sum(!duplicated(variables$section)), "sections and", sum(!duplicated(variables$subject)), "subjects that are available for transformation.")
+cat("There are", nrow(variables_sheet), "variables, grouped in", sum(!duplicated(variables_sheet$section)), "sections and", sum(!duplicated(variables_sheet$subject)), "subjects that are available for transformation.")
 
 ```
 
 ```{r, echo=FALSE}
-cat("You can search for variables in the table below. Try searching for the lab tests. There are", sum(variables$subject == "lab test"),
+cat("You can search for variables in the table below. Try searching for the lab tests. There are", sum(variables_sheet$subject == "lab test"),
     "variables are in the lab test subject. 
     
-    Try sorting the subject column by clicking the up beside the `subject` heading: the top", sum(variables$subject == "lab test"),
+    Try sorting the subject column by clicking the up beside the `subject` heading: the top", sum(variables_sheet$subject == "lab test"),
     "rows of the table should show the lab tests variables:") 
 
-as.character(variables[variables$subject == "lab test", "variable"])
+as.character(variables_sheet[variables_sheet$subject == "lab test", "variable"])
 ```
 
 ```{r echo=FALSE, results='asis', warning=FALSE}
 library(DT)
-datatable(var_sheet, filter = 'top', options = list(pageLength = 5))
+datatable(variable_sheet, filter = 'top', options = list(pageLength = 5))
 ```
 
 
@@ -69,12 +67,6 @@ In each row there are 8 columns in this worksheet and they are as follows:
 
 ## Derived Variables
 
-Derived variables follow the same naming conventions as transformed variables when listed in `var_sheet`. 
+Derived variables follow the same naming conventions as transformed variables when listed in `variables_sheet`. 
 
-## Contributing or customizing `var_sheet`
 
-We recommend that try using the `var_sheet`. First, copy the `var_sheet`. Second, keep the `var_sheet` as it or remove some variables  based on the tests you want to run.  
-
-`Recodeflow` uses example data. You can use `var_sheet` and `var_detials` as a template and add your data. 
-
-We welcome [issues](https://github.com/Big-Life-Lab/recodeflow/issues) for comments to existing variables in `variables.csv. See [Contributing](https://big-life-lab.github.io/recodeflow/CONTRIBUTING.html).
