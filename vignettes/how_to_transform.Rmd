@@ -242,7 +242,6 @@ age_sex_1 <- rec_with_table(data = tester1,
                             )
 head(age_sex_1)
 
-#Transform variables age adn sex from dataset tester2
 age_sex_2 <- rec_with_table(data = tester2, 
                             variables = c("age", "sex"), 
                             variable_details = variable_details,
@@ -276,6 +275,7 @@ labeled_combined_age_sex <-
 You can check if labels have been added to your transformed dataset by using `get_label()`.
 
 ```{r, warning=FALSE}
+library(sjlabelled) 
 get_label(labeled_combined_age_sex)
 ```
 
