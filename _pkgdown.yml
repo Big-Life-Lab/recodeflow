@@ -1,0 +1,42 @@
+destination: docs
+
+template:
+  params:
+    bootswatch: cosmo
+
+development:
+  mode: auto
+
+
+navbar:
+  structure:
+    left: [home, how_to, articles, reference]
+    right: github
+  components:
+    how_to:
+      text: How To
+      menu:
+      - text: How to install
+        href: articles/how_to_install.html
+      - text: How to transform
+        href: articles/how_to_transform.html
+      - text: How to add variables
+        href: articles/how_to_add_variables.html
+    articles:
+      text: Articles
+      menu:
+      - text: variable_details
+        href: articles/variabledetails.html
+      - text: variable_sheet
+        href: articles/variables_sheet.html
+      - text: Derived variables
+        href: articles/derived_variables.html
+      - text: Rec with table
+        href: articles/rec_with_table.html
+      - text: How to use tagged_na
+        href: articles/tagged_na_usage.html
+    reference:
+      text: Reference
+      href: reference/index.html
+
+

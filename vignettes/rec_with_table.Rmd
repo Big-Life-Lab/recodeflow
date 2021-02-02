@@ -23,6 +23,7 @@ source("../R/test_data_generator.R")
 - `variable_details` for instructions on how to transform variable(s)
 
 ```{r}
+library(recodeflow)
 status <- rec_with_table(data = tester1, 
                          variables = "status", 
                          variable_details = variable_details,
@@ -71,7 +72,7 @@ age_sex_1 <- rec_with_table(data = tester1,
 
 #To recode all variables listed on the variable_sheet
 transformed1 <- rec_with_table(data = tester1,
-                          variables = variable_sheet,
+                          variables = variables_sheet,
                           variable_details = variable_details)
 ```
 

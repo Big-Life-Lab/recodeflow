@@ -1,10 +1,4 @@
----
-editor_options: 
-  markdown: 
-    wrap: 72
----
-
-# recodeflow ![](man/figures/logo.svg){align="right" width="180"}
+# recodeflow <img src="man/figures/logo.svg" align="right" width="180"/>
 
 <!-- badges: start -->
 

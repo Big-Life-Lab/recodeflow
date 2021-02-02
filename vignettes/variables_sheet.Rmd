@@ -12,6 +12,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+source("../R/test_data_generator.R")
 ```
 
 ## Introduction
@@ -39,7 +40,7 @@ as.character(variables_sheet[variables_sheet$subject == "lab test", "variable"])
 
 ```{r echo=FALSE, results='asis', warning=FALSE}
 library(DT)
-datatable(variable_sheet, filter = 'top', options = list(pageLength = 5))
+datatable(variables_sheet, filter = 'top', options = list(pageLength = 5))
 ```
 
 
