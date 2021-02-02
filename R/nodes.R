@@ -94,13 +94,11 @@ attach_cat_value_nodes_for_start_var <- function(var_details_row, data_field) {
 #'
 #' @examples
 attach_cont_value_nodes_for_start_var <- function(var_details_row, data_field) {
-  if (var_details_row$recTo == pkg.env$rec_to_copy) {
+  if (is_rec_from_range(var_details_row)) {
     margins <- get_margins(var_details_row$recFrom)
     closure <- get_margin_closure(var_details_row$recFrom)
     interval_node <- XML::xmlNode(pkg.env$node_name.interval, attrs=c(closure=closure, leftMargin=margins[1], rightMargin=margins[2]))
     data_field <- XML::append.xmlNode(data_field, interval_node)
-  } else if(is_rec_from_range(var_details_row)) {
-    data_field <- attach_range_value_nodes(var_details_row, data_field)
   } else {
     data_field <- attach_cat_value_nodes_for_start_var(var_details_row, data_field)
   }
