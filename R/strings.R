@@ -37,7 +37,12 @@ pkg.env$node_attr.name.var_start_label <- "variableStartLabel"
 pkg.env$node_attr.name.label_long <- "labelLong"
 pkg.env$node_attr.name.units <- "units"
 pkg.env$node_attr.name.cat_label_long <- "catLabelLong"
-pkg.env$node_attr.closure.closedClosed <- "closedClosed"
+
+pkg.env$node_attr.closure.closed <- "closedClosed"
+pkg.env$node_attr.closure.leftOpen <- "openClosed"
+pkg.env$node_attr.closure.open <- "openOpen"
+pkg.env$node_attr.closure.rightOpen <- "closedOpen"
+
 pkg.env$node_attr.missing.true <- "true"
 pkg.env$node_attr.optype.categorical <- "categorical"
 pkg.env$node_attr.optype.continuous <- "continuous"
