@@ -16,14 +16,14 @@ source("../R/test_data_generator.R")
 
 # How to use `recodeflow` with your data
 
-To use `recodeflow` with your data, you'll need create the worksheets:
+To use `recodeflow` with your data, you'll need create the following worksheets:
 
-- `variable_details` mapping of variables across datasets and a list of instructions on how to transform variables, and
-- `variable_sheet` a list of variables to transform, and
+- `variable_details` - mapping of variables across datasets and a list of instructions on how to transform variables
+- `variable_sheet` - a list of variables to transform, and
 
 Files can either be a `.csv` file that you import to R or create directly in R as a dataframe.
 
-If you have derived variable variables, you'll also need to create custom functions. For more information on custom functions see the article [derived_variables](../reference/derived_variables.html).
+If you have derived variables, you will also need to create custom functions. For more information on custom functions see the article [derived_variables](../reference/derived_variables.html).
 
 
 ## Example data
@@ -80,7 +80,7 @@ Write 'cat' in the six rows.
 kable(variable_details[58:63, 1:3])
 ```
 
-4. **databaseStart:** `stage` was captured identically for both datasets. Therefore, we'll transform the variable the same way regardless of which dataset it's from.
+4. **databaseStart:** `stage` was captured identically for both datasets. Therefore, we will transform the variable the same way regardless of which dataset it's from.
 
 Write the dataset names, separated by a comma, in the six rows
 
@@ -188,11 +188,11 @@ kable(variable_details[64,1:14])
 
 Once mapped and specified on `variable_details`, the `stage` variable can be specified on the variables worksheet: `variables_sheet`. Ensure that the names you used in the `variable_details` worksheet are identical to those listed in `variables_sheet`.
 
-1. **variable:** the name of the transformed variable (variable_detail worksheet column: 'variable')
+1. **variable:** the name of the transformed variable (variable_details worksheet column: 'variable')
 
-2. **label:** the shorthand label for the variable (variable_detail worksheet column: '*variableStartShortLabel:)
+2. **label:** the shorthand label for the variable (variable_details worksheet column: '*variableStartShortLabel*')
 
-3. **labelLong:** a more detailed label for the variable (new column, it is not in the variable_details worksheet))
+3. **labelLong:** a more detailed label for the variable (new column, it is not in the variable_details worksheet)
 
 4. **section:** group of data the variable belongs to (new column, it is not in the variable_details worksheet)
 

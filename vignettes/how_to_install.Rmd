@@ -27,7 +27,7 @@ library(recodeflow)
 
 ## Additional packages
 
-Depending on how you use recodeflow you may need to load the following packages:
+Depending on how you use `recodeflow` you may need to load the following packages:
 
 - dplyr: to combine datasets
 - tidyr: to reorganize datasets
@@ -35,7 +35,5 @@ Depending on how you use recodeflow you may need to load the following packages:
 - haven: to use NAs with different meanings
 - stingr
 - magrittr
-
-Note: you do not need to install these packages; you only need to load them.
 
 

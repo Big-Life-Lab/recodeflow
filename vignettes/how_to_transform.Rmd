@@ -53,7 +53,6 @@ sex_1 <- rec_with_table(data = tester1,
 head(sex_1)
 ```
 
-
 ## Example 2. How to transform a single variable across multiple datasets
 
 We'll transform and combine the variable `sex` for our two datasets. 
@@ -105,9 +104,6 @@ labeled_sex_combined <- set_data_labels(
 )
 ```
 
-
-
-
 ## Example 3. How to transform a single variable, with different categories, from multiple datasets {#example3}
 
 You could have a situation a variable is the same across datasets but its categories change. 
@@ -118,7 +114,6 @@ In our example data the variable `agegrp` is different in tester1 and tester2.
 - In tester2 the `agegrp` variable is 10-year age groups: 20-29, 30-39, 40-49, etc.
 
 There are three options to facilitate the use of variables with inconsistent categories across datasets. 
-
 
 ### Option 1: transform category `agegrp` variable into a common variable for only datasets with the same category responses
 
@@ -390,7 +385,3 @@ derived2 <- rec_with_table(data = tester2,
 #combine the transformed datasets
 combined_der <- bind_rows(derived1, derived2)
 ```
-
-
-
-
