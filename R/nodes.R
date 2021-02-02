@@ -95,6 +95,10 @@ attach_cat_value_nodes_for_start_var <- function(var_details_row, data_field) {
 #' @examples
 attach_cont_value_nodes_for_start_var <- function(var_details_row, data_field) {
   if (is_rec_from_range(var_details_row)) {
+    if (var_details_row$recTo %in% pkg.env$all_NAs) {
+      return (attach_range_value_nodes(var_details_row, data_field))
+    }
+
     margins <- get_margins(var_details_row$recFrom)
     closure <- get_margin_closure(var_details_row$recFrom)
     interval_node <- XML::xmlNode(pkg.env$node_name.interval, attrs=c(closure=closure, leftMargin=margins[1], rightMargin=margins[2]))
