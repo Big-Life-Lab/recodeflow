@@ -17,6 +17,22 @@ get_margins <- function (chars) {
   return (margins)
 }
 
+#' Get closure type for a margin.
+#'
+#' @param chars Character vector.
+#'
+#' @return Closure type.
+#'
+#' @examples
+get_margin_closure <- function (chars) {
+  if (is_left_open(chars)) {
+    if (is_right_open(chars)) return (pkg.env$node_attr.closure.open)
+    return (pkg.env$node_attr.closure.leftOpen)
+  }
+  if (is_right_open(chars)) return (pkg.env$node_attr.closure.rightOpen)
+  return (pkg.env$node_attr.closure.closed)
+}
+
 #' Extract margins from character vector.
 #'
 #' @param chars Character vector.
