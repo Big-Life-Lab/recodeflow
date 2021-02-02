@@ -3,11 +3,11 @@ variable_details <-  data.frame(
                  rep("bili", times = 2), rep("chol", times =3), rep("albumin", times =2), rep("copper", times = 3),  rep("alk.phos", times=3), rep("ast", times = 3),  rep("trig", times=3), rep("platelet", times = 3), rep("protime", times = 3), rep("stage", times = 6),
                  "example_der", rep("agegrp5", times = 12), rep("agegrp10", times = 7), rep("age_cont", times = 19), rep("agegrp10", times = 12)),
 
-  "toType" = c(rep("cont", times = 2), rep("cat", times = 4), rep("cat", times = 5), rep("cont", times = 2), rep("cat", times = 3), rep("cat", times = 4), rep("cat", times = 4), rep("cat", times = 4), rep("cat", times = 4),
+  "typeEnd" = c(rep("cont", times = 2), rep("cat", times = 4), rep("cat", times = 5), rep("cont", times = 2), rep("cat", times = 3), rep("cat", times = 4), rep("cat", times = 4), rep("cat", times = 4), rep("cat", times = 4),
                rep("cont", times = 2), rep("cont", times = 3), rep("cont", times = 2), rep("cont", times = 3), rep("cont", times = 3), rep("cont", times = 3), rep("cont", times = 3), rep("cont", times = 3), rep("cont", times = 3), rep("cat", times = 6),
                "cont", rep("cat", times = 12), rep("cat", times = 7), rep("cont", times = 19), rep("cat", times = 12)),
 
-  "fromType" = c(rep("cont", times = 2), rep("cat", times = 4), rep("cat", times = 5), rep("cont", times = 2), rep("cat", times = 3), rep("cat", times = 4), rep("cat", times = 4), rep("cat", times = 4), rep("cat", times = 4),
+  "typeStart" = c(rep("cont", times = 2), rep("cat", times = 4), rep("cat", times = 5), rep("cont", times = 2), rep("cat", times = 3), rep("cat", times = 4), rep("cat", times = 4), rep("cat", times = 4), rep("cat", times = 4),
                  rep("cont", times = 2), rep("cont", times = 3), rep("cont", times = 2), rep("cont", times = 3), rep("cont", times = 3), rep("cont", times = 3), rep("cont", times = 3), rep("cont", times = 3), rep("cont", times = 3), rep("cat", times = 6),
                  "cont", rep("cat", times =12), rep("cat", times = 7), rep("cat", times = 19), rep("cat", times = 12)),
 
@@ -26,7 +26,7 @@ variable_details <-  data.frame(
                     rep("N/A", times = 2), rep("N/A", times = 3), rep("N/A", times =2), rep("N/A", times = 3), rep("N/A", times = 3), rep("N/A", times = 3), rep("N/A", times = 3), rep("N/A", times = 3), rep("N/A", times = 3), rep("4", times = 6),
                     "N/A", rep("11", times = 12), rep("6", times = 7), rep("N/A", times = 19), rep("6", times = 12)),
 
-  "recTo" = c(c("copy", "NA::b"), c("0", "1","2", "NA::b"), c("1","2","3","NA::a", "NA::b"), c("copy","NA::b"), c("0","1", "NA::b"), c("0", "1","NA::a", "NA::b"), c("0", "1","NA::a", "NA::b"),c("0", "1","NA::a", "NA::b"), c("0.0","0.5","1.0", "Na::b"),
+  "recEnd" = c(c("copy", "NA::b"), c("0", "1","2", "NA::b"), c("1","2","3","NA::a", "NA::b"), c("copy","NA::b"), c("0","1", "NA::b"), c("0", "1","NA::a", "NA::b"), c("0", "1","NA::a", "NA::b"),c("0", "1","NA::a", "NA::b"), c("0.0","0.5","1.0", "Na::b"),
               c("copy", "Na::b"),  c("copy", "Na::a", "Na::b"), c("copy", "Na::b"), c("copy", "Na::a", "Na::b"), c("copy", "Na::a", "Na::b"), c("copy", "Na::a", "Na::b"), c("copy", "Na::a", "Na::b"), c("copy", "Na::a", "Na::b"), c("copy", "Na::a", "Na::b"), c("1", "2","3","4", "Na::a", "NA::b"),
               "Func::example_der_fun", c("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "Na::b"), c("1", "2", "3", "4", "5", "6", "Na::b"), c("27", "32", "37", "42", "47", "52", "57", "62", "67", "72", "77", "Na::b"), c("25", "35", "45", "55", "65", "75", "Na::b"), c("1", "2", "2", "3", "3", "4", "4", "5", "5", "6", "6", "Na::b")),
 
@@ -42,7 +42,7 @@ variable_details <-  data.frame(
               rep("mg/dl", times = 2), rep("mg/dl", times = 3), rep("g/dl", times = 2), rep("ug/dl", times = 3), rep("U/L", times = 3), rep("U/L", times = 3), rep("mg/dl", times = 3), rep("N/A", times = 3), rep("N/A", times = 3), rep("N/A", times = 6),
               "mg/dl", rep("years", times = 12), rep("years", times = 7), rep("years", times = 19), rep("years", times = 12)),
 
-  "recFrom" = c(c("[0,4556]","else"), c("0", "1","2", "else"), c("1","2","3", "NA", "else"), c("[25,79]", "else"), c("m","f", "else"), c("0", "1", "NA", "else"), c("0", "1","NA", "else"), c("0", "1","NA", "else"), c("0.0","0.5","1.0", "else"),
+  "recStart" = c(c("[0,4556]","else"), c("0", "1","2", "else"), c("1","2","3", "NA", "else"), c("[25,79]", "else"), c("m","f", "else"), c("0", "1", "NA", "else"), c("0", "1","NA", "else"), c("0", "1","NA", "else"), c("0.0","0.5","1.0", "else"),
                 c("[0,28]", "else"), c("[120, 1775]", "NA", "else"), c("[1.960, 4.64]", "else"), c("[4,588]", "NA", "else"), c("[289, 13863]", "NA", "else"), c("[26, 458]", "NA", "else"), c("[33, 598]", "NA", "else"),  c("[62, 721]", "NA", "else"), c("[9,18]", "NA", "else"), c("1", "2","3","4","Na","else"),
                 "else", c("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "Na::b"), c("1", "2", "3", "4", "5", "6", "else"), c("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "Na::b"), c("1", "2", "3", "4", "5", "6", "Na::b"), c("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "Na::b")),
 
@@ -68,7 +68,7 @@ variables_sheet <-
                   "derived", rep("demographics", times =3)),
     "section" = c("time","status","trt", "age","sex","ascites","hepato", "spiders", "edema", "bili", "chol", "albumin", "copper", "alk.phos", "ast", "trig", "platelet", "protime", "stage",
                   "example", "age", "age", "age"),
-    "variableType" = c("cont", "cat", "cat", "cont","cat", "cat", "cat","cat", "cat", rep("cont", times = 9), "cat",
+    "typeEnd" = c("cont", "cat", "cat", "cont","cat", "cat", "cat","cat", "cat", rep("cont", times = 9), "cat",
                        "cont", rep("cat", times = 2), "cont"),
     "databaseStart" = c(rep("tester1, tester2", times = 20), "tester1", rep("tester1, tester2", times =2)),
     "units" = c("days", rep("N/A", times = 2), "years", rep("N/A", times = 5), rep("mg/dl", times = 2), "g/dl", "ug/dl", rep("U/L", times = 2), "mg/dl", rep("N/A", times = 3),
