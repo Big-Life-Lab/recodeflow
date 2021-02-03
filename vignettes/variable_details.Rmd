@@ -13,7 +13,7 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 
 ## Introduction
 
-The worksheet **variable_details** maps variables across datasets. **variable_details** also contains the instructions for function `rec_with_table` on how to transform the variables listed in the worksheet `variables_sheet`.
+The worksheet `variable_details` maps variables across datasets. `variable_details` also contains the instructions for function `rec_with_table` on how to transform the variables listed in the worksheet `variables_sheet`.
 
 Specifically, the function `rec_with-table` transforms variables listed in column `variable_details$variableStart` to the variables listed in `variable_details$variable`. 
 
@@ -35,14 +35,11 @@ cat("In the dataframe `variable_details` there are", nrow(variable_details), "ro
 
 `rec_with_table()` uses the `tagged_na()` function from the [haven](https://www.rdocumentation.org/packages/haven/versions/2.1.1) package to tag not applicable responses as `NA(a)`, and missing values (don't know, refusal, not stated) as `NA(b)`. As you will see later, not applicable values are transformed to `NA::a`, and missing values are transformed to `NA::b`. See [tagged_na_usage](tagged_na_usage.html) for more information about `tagged_na()`.
 
-
-
 ### Rows
 
 Each row in `variable_details` lists the instructions to transform a single category of a variable.
 
 - An exception to this rule are the "don't know", "refusal", and "not stated" categories, which are combined as a single missing category.
-
 
 The number of rows required for a transformed variable depends on the:
 
@@ -50,7 +47,6 @@ The number of rows required for a transformed variable depends on the:
 - **PLUS** the number of categories for "not applicable" or "missing" data, 
 - **PLUS** an 'else' row to assign values that are not defined in other rows or fall outside of the variable's range of possible values.
 - **multiplied** by the number of datasets where the original variable's categories are different 
-
 
 For example, in dataset A, a categorical variable with 4 distinct categories, a "not applicable" category and the 3 missing categories (e.g., don't know, not asked, not stated), will have 7 rows: 
 
@@ -68,10 +64,6 @@ If in dataset B the categorical variable' distinct categories are the **differen
 
 
 **Note**: We recommend not combining variables if the variable has an important change between datasets. `variable_detailsdetails$notes` is used to identify issues that may be relevant when transforming the variable or category.
-
-
-
-
 
 ### Columns
 

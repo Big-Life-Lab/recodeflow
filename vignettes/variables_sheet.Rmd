@@ -43,7 +43,6 @@ library(DT)
 datatable(variables_sheet, filter = 'top', options = list(pageLength = 5))
 ```
 
-
 ## How the `variables.csv` sheet is organized
 
 In each row there are 8 columns in this worksheet and they are as follows:

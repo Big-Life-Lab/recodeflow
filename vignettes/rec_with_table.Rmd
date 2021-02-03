@@ -52,7 +52,6 @@ You should read and consider `notes` before deciding whether to harmonize a vari
 
 The notes output is from the column *notes* in the`variable_details` 
 
-
 # Arguments 
 
 ## Required arguments

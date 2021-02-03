@@ -15,7 +15,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Base R supports only one type of NA ('not available') to represent missing values. However, your data may include several types of missing data or incomplete category responses. 
 
-To address this issue of a singular "na", we use the `haven` package [`tagged_na()`](https://haven.tidyverse.org/reference/tagged_na.html) 
+To address this issue of a singular "NA", we use the `haven` package [`tagged_na()`](https://haven.tidyverse.org/reference/tagged_na.html) 
 
 `tagged_na()` adds an additional character to any NA values, thereby allowing users to define additional missing data types. `tagged_na()` applies only for numeric values; character based values can use any string to represent NA or missing data. 
 
