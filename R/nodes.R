@@ -312,6 +312,9 @@ build_ranged_derived_field_apply_node <- function (var_details_row, db_name) {
     apply_node <- XML::append.xmlNode(apply_node, const_node, const_node)
   } else if (var_details_row$recTo == pkg.env$rec_to_copy) {
     apply_node <- XML::append.xmlNode(apply_node, field_node)
+  } else if (is_numeric(var_details_row$recTo)) {
+    const_val_node <- XML::xmlNode(pkg.env$node_name.constant, attrs=c(dataType=pkg.env$node_attr.dataType.integer), value=var_details_row$recTo)
+    apply_node <- XML::append.xmlNode(apply_node, const_val_node)
   }
 
   return (apply_node)
