@@ -201,14 +201,42 @@ attach_derived_field_child_nodes <- function(derived_field_node, var_details_she
     var_details_row <- var_details_rows[index,]
 
     if (is_numeric(var_details_row$recTo)) {
-      value_node <- XML::xmlNode(pkg.env$node_name.value, attrs=c(value=var_details_row$recTo, displayValue=var_details_row$catLabel))
-      extension_node <- XML::xmlNode(pkg.env$node_name.extension, attrs=c(name=pkg.env$node_attr.name.cat_label_long, value=var_details_row$catLabelLong))
-      value_node <- XML::append.xmlNode(value_node, extension_node)
-      derived_field_node <- XML::append.xmlNode(derived_field_node, value_node)
+      derived_field_node <- XML::append.xmlNode(
+        derived_field_node,
+        build_derived_field_value_node(var_details_row))
+    }
+  }
+
+  for (index in 1:nrow(var_details_rows)) {
+    var_details_row <- var_details_rows[index,]
+
+    if (var_details_row$recTo %in% pkg.env$all_NAs) {
+      derived_field_node <- XML::append.xmlNode(
+        derived_field_node,
+        build_derived_field_value_node(var_details_row))
     }
   }
 
   return (derived_field_node)
+}
+
+#' Build Value node for DerivedField node.
+#'
+#' @param var_details_row Variable details sheet row.
+#'
+#' @return Value node.
+#'
+#' @examples
+build_derived_field_value_node <- function(var_details_row) {
+  extension_node <- XML::xmlNode(
+    pkg.env$node_name.extension,
+    attrs=c(name=pkg.env$node_attr.name.cat_label_long, value=var_details_row$catLabelLong))
+
+  value_node <- XML::xmlNode(
+    pkg.env$node_name.value,
+    attrs=c(value=var_details_row$recTo, displayValue=var_details_row$catLabel), extension_node)
+
+  return (value_node)
 }
 
 #' Attach Apply nodes to a parent node.
