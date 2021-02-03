@@ -102,7 +102,10 @@ attach_cont_value_nodes_for_start_var <- function(var_details_row, data_field) {
     margins <- get_margins(var_details_row$recFrom)
     closure <- get_margin_closure(var_details_row$recFrom)
     property <- pkg.env$node_attr.property.valid
-    interval_node <- XML::xmlNode(pkg.env$node_name.interval, attrs=c(closure=closure, leftMargin=margins[1], rightMargin=margins[2], property=property))
+    interval_node <- XML::xmlNode(
+      pkg.env$node_name.interval,
+      attrs=c(closure=closure, leftMargin=margins[1], rightMargin=margins[2], property=property))
+
     data_field <- XML::append.xmlNode(data_field, interval_node)
   } else {
     data_field <- attach_cat_value_nodes_for_start_var(var_details_row, data_field)
@@ -224,14 +227,13 @@ attach_apply_nodes <- function(var_details_rows, parent_node, db_name) {
 
   if (is_numeric(var_details_row$recFrom)) {
     apply_node <- build_numeric_derived_field_apply_node(var_details_row, db_name)
-
     return (XML::append.xmlNode(parent_node, attach_apply_nodes(remaining_rows, apply_node, db_name)))
   } else if (is_rec_from_range(var_details_row)) {
     apply_node <- build_ranged_derived_field_apply_node(var_details_row, db_name)
-
     return (XML::append.xmlNode(parent_node, attach_apply_nodes(remaining_rows, apply_node, db_name)))
   } else {
-    return (XML::append.xmlNode(parent_node, XML::xmlNode(pkg.env$node_name.constant, attrs=c(missing=pkg.env$node_attr.missing.true))))
+    const_node <- build_missing_const_node(var_details_row)
+    return (XML::append.xmlNode(parent_node, const_node))
   }
 }
 
@@ -249,7 +251,7 @@ build_numeric_derived_field_apply_node <- function (var_details_row, db_name) {
   const_val_node <- XML::xmlNode(pkg.env$node_name.constant)
 
   if (var_details_row$recTo %in% pkg.env$all_NAs) {
-    XML::xmlAttrs(const_val_node) <- c(missing=pkg.env$node_attr.missing.true)
+    const_val_node <- build_missing_const_node(var_details_row)
   } else {
     XML::xmlAttrs(const_val_node) <- c(dataType=pkg.env$node_attr.dataType.integer)
     XML::xmlValue(const_val_node) <- var_details_row$recFrom
@@ -306,8 +308,8 @@ build_ranged_derived_field_apply_node <- function (var_details_row, db_name) {
   apply_node <- XML::append.xmlNode(XML::xmlNode(pkg.env$node_name.apply, attrs=c("function"=pkg.env$node_attr.function.if)), and_node)
 
   if (var_details_row$recTo %in% pkg.env$all_NAs) {
-    missing_node <- XML::xmlNode(pkg.env$node_name.constant, attrs=c(missing=pkg.env$node_attr.missing.true))
-    apply_node <- XML::append.xmlNode(apply_node, missing_node, missing_node)
+    const_node <- build_missing_const_node(var_details_row)
+    apply_node <- XML::append.xmlNode(apply_node, const_node, const_node)
   } else if (var_details_row$recTo == pkg.env$rec_to_copy) {
     apply_node <- XML::append.xmlNode(apply_node, field_node)
   }
@@ -325,4 +327,19 @@ build_ranged_derived_field_apply_node <- function (var_details_row, db_name) {
 #' @examples
 build_variable_field_ref_node <- function (var_details_row, db_name) {
   return (XML::xmlNode(pkg.env$node_name.field_ref, attrs=c(field=get_start_var_name(var_details_row, db_name))))
+}
+
+
+#' Build Constant node for a missing value for a variable.
+#'
+#' @param var_details_row Variable details sheet row.
+#'
+#' @return Constant node.
+#'
+#' @examples
+build_missing_const_node <- function (var_details_row) {
+  return (XML::xmlNode(
+    pkg.env$node_name.constant,
+    value=var_details_row$recTo,
+    attrs=c(dataType=pkg.env$node_attr.dataType.string)))
 }
