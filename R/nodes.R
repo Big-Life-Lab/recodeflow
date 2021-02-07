@@ -193,6 +193,7 @@ build_derived_field_node <- function(vars_sheet, var_details_sheet, var_name, db
 #'
 #' @examples
 attach_derived_field_child_nodes <- function(derived_field_node, var_details_sheet, var_name, db_name) {
+  added_NAs <- c(character(0))
   var_details_rows <- get_var_details_rows(var_details_sheet, var_name, db_name)
 
   derived_field_node <- attach_apply_nodes(var_details_rows, derived_field_node, db_name)
@@ -210,10 +211,14 @@ attach_derived_field_child_nodes <- function(derived_field_node, var_details_she
   for (index in 1:nrow(var_details_rows)) {
     var_details_row <- var_details_rows[index,]
 
+    if (var_details_row$recTo %in% added_NAs) next
+
     if (var_details_row$recTo %in% pkg.env$all_NAs) {
       derived_field_node <- XML::append.xmlNode(
         derived_field_node,
         build_derived_field_value_node(var_details_row))
+
+      added_NAs <- c(added_NAs, var_details_row$recTo)
     }
   }
 
