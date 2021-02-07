@@ -287,7 +287,7 @@ build_numeric_derived_field_apply_node <- function (var_details_row, db_name) {
     const_val_node <- build_missing_const_node(var_details_row)
   } else {
     XML::xmlAttrs(const_val_node) <- c(dataType=pkg.env$node_attr.dataType.integer)
-    XML::xmlValue(const_val_node) <- var_details_row$recFrom
+    XML::xmlValue(const_val_node) <- var_details_row$recTo
   }
 
   apply_node <- XML::xmlNode(pkg.env$node_name.apply, attrs=c("function"=pkg.env$node_attr.function.if),
