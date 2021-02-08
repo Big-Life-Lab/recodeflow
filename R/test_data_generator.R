@@ -54,7 +54,7 @@ variable_details <-  data.frame(
   "notes" = c(rep("This is sample survival pbc data", times = 64), rep("adapted from sample survival pbc data", times = 50))
 )
 
-variables_sheet <-
+variables <-
   data.frame(
     "variable" = c("time","status","trt", "age","sex","ascites","hepato", "spiders", "edema", "bili", "chol", "albumin", "copper", "alk.phos", "ast", "trig", "platelet", "protime", "stage",
                    "example_der", "agegrp5", "agegrp10", "age_cont"),

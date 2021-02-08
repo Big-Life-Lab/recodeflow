@@ -17,10 +17,10 @@ source("../R/test_data_generator.R")
 
 # What is the function `rec_with-table`?
 
-`rec_with_table` is the function used to transform variables within your dataset into harmonized variables. `rec_with_table` reads:
+`rec_with_table` is the function used to recode variables within your dataset into harmonized variables. `rec_with_table` reads:
 
-- `variable_sheet` for a list of variables to transform, and
-- `variable_details` for instructions on how to transform variable(s)
+- `variable` for a list of variables to recode, and
+- `variable_details` for instructions on how to recode the variable(s)
 
 ```{r}
 library(recodeflow)
@@ -36,7 +36,7 @@ status <- rec_with_table(data = tester1,
 ## Warning messages
 
 Warning messages will appear when your dataset is missing variables in your
-`variables_sheet` worksheet or `rec_with_table()` call.
+`variable` worksheet or `rec_with_table()` call.
 
 # Notes
 
@@ -46,7 +46,7 @@ Notes can give important details on what and how variables are harmonized. For e
 
 - which datasets include a variable,
 - how a variable changes across datasets, and 
-- if a variable transformation is dependent on which dataset the variable is in
+- if the recoding rules for a variable is dependent on which dataset the variable is in
 
 You should read and consider `notes` before deciding whether to harmonize a variable.
 
@@ -58,7 +58,7 @@ The notes output is from the column *notes* in the`variable_details`
 
 - `data` A dataframe(s) containing data to be recoded. 
 
-- `variables` Either a string of variables to recode or a dataframe containing the variables (e.g., `variables_sheet`)
+- `variables` Either a string of variables to recode or a dataframe containing the variables (e.g., `variables`)
 
 - `variable_details` A dataframe containing the specifications for recoding. 
 
@@ -69,9 +69,9 @@ age_sex_1 <- rec_with_table(data = tester1,
                          variable_details = variable_details)
 
 
-#To recode all variables listed on the variable_sheet
-transformed1 <- rec_with_table(data = tester1,
-                          variables = variables_sheet,
+#To recode all variables listed on the variable worksheet
+recoded1 <- rec_with_table(data = tester1,
+                          variables = variables,
                           variable_details = variable_details)
 ```
 
@@ -84,22 +84,22 @@ With `rec_with_table()` the following arguments are only called if you want to m
   
 - `else_value` defaults to NA. Values out of range set to NA.
 
-- `append_to_data` defaults to FALSE. Transformed variables will not be appended
+- `append_to_data` defaults to FALSE. Recoded variables will not be appended
   to the original dataset.
   
-- `log` defaults to FALSE. Logs of the variable transformations will not be
+- `log` defaults to FALSE. Logs of the variable recoding will not be
   displayed.
   
 - `notes` defaults to TRUE. Information in the `Notes` column from
   `variable_details` worksheet will be displayed
   
 - `var_labels` is set to NULL. This argument can be used to add labels to a
-  transformed dataset that only contains a subset of variables from
-  `variables_sheet` worksheet. The format to add labels to a subset of variables is
+  recoded dataset that only contains a subset of variables from
+  `variables` worksheet. The format to add labels to a subset of variables is
   `c(variable = "Label")`.
   
 - `attach_data_name` is set to FALSE. This argument can be used to append a
-  column that denotes the name of the dataset each transformed row came from.
+  column that denotes the name of the dataset each recoded row came from.
 
 
 

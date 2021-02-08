@@ -61,9 +61,9 @@ If you don't load the customized function you cannot create the derived variable
 
 ### 2. Add the derived variable to the var_details and var_sheet.
 
-Add the derived variable to the `var_sheet`. You'll use the same nomenclature as any other variable ([`variables_sheet`](../reference/variable_sheet.html)).
+Add the derived variable to the `var_sheet`. You'll use the same nomenclature as any other variable ([`variables_sheet`](../reference/variables.html)).
 
-Add the derived variable to the variable_details. See the article [`variable_details`](../reference/variable_sheet.html) for nomenclature rules. 
+Add the derived variable to the variable_details. See the article [`variable_details`](../reference/variables.html) for nomenclature rules. 
 
 
 ### 3. Transform the derived variable
