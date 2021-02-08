@@ -915,7 +915,7 @@ update_variable_details_based_on_variable_sheet <-
     variable_details <-
       variable_details[,!(
         names(variable_details) %in% c(
-          pkg.env$columns.VariableType,
+          pkg.env$columns.variablesDetails.typeStart,
           pkg.env$columns.label,
           pkg.env$columns.VariableLabel,
           pkg.env$columns.Units

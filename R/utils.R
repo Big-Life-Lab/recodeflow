@@ -261,7 +261,7 @@ label_data <- function(label_list, data_to_label) {
       }
       data_to_label[[variable_name]] <-
         sjlabelled::set_labels(data_to_label[[variable_name]],
-                               labels = label_list[[variable_name]]$values
+                               labels = unlist(label_list[[variable_name]]$values)
         )
       attr(data_to_label[[variable_name]], "labels_long") <-
         label_list[[variable_name]]$values_long
