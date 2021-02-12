@@ -297,7 +297,7 @@ label_data <- function(label_list, data_to_label) {
 #' @param variables the variables sheet containing variable info
 #'
 #' @return a vector containing the variable names that match the passed roles
-select_vars_by_role <- function(roles, variables){
+select_vars_by_role  <- function(roles, variables){
   # Reduce row looping by only looping over only unique combinations
   unique_roles <- unique(variables[[pkg.env$columns.Role]])
   valid_patern <- c()
@@ -305,6 +305,7 @@ select_vars_by_role <- function(roles, variables){
     # Split by commas to avoid partial matches being false positives
     role_list <- strsplit(role_patern, ",")[[1]]
     for (role in role_list){
+      role <- trimws(role)
       if(role %in% roles){
         valid_patern <- append(valid_patern, role_patern)
       }
@@ -315,8 +316,12 @@ select_vars_by_role <- function(roles, variables){
   if(length(valid_patern)<1){
     stop(paste0(roles, " is not present in variabes"))
   }
-
-  ret <- as.character(variables[variables[[pkg.env$columns.Role]] == valid_patern, pkg.env$columns.Variable][[pkg.env$columns.Variable]])
+  ret <- variables[variables[[pkg.env$columns.Role]] == valid_patern, pkg.env$columns.Variable]
+  if(is.data.frame(ret)){
+    ret <- as.character(ret[[pkg.env$columns.Variable]])
+  }else{
+    ret <- as.character(ret)
+  }
 
   return(ret)
 }
