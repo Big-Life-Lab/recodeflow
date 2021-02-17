@@ -316,7 +316,7 @@ select_vars_by_role  <- function(roles, variables){
   if(length(valid_patern)<1){
     stop(paste0(roles, " is not present in variabes"))
   }
-  ret <- variables[variables[[pkg.env$columns.Role]] == valid_patern, pkg.env$columns.Variable]
+  ret <- variables[variables[[pkg.env$columns.Role]] %in% valid_patern, pkg.env$columns.Variable]
   if(is.data.frame(ret)){
     ret <- as.character(ret[[pkg.env$columns.Variable]])
   }else{
