@@ -121,7 +121,7 @@
 <a href="#recodeflow-" class="anchor"></a>recodeflow <img src="reference/figures/logo.svg" align="right" width="180">
 </h1></div>
 <!-- badges: start -->
-<p><a href="https://www.tidyverse.org/lifecycle/#maturing"><img src="https://img.shields.io/badge/lifecycle-maturing-blue.svg" alt="Lifecycle: development"></a> <a href="https://CRAN.R-project.org/package=TBA"><img src="https://img.shields.io/cran/v/cchsflow?color=green"></a> <img src="https://img.shields.io/github/v/release/big-life-lab/recodeflow?color=green&amp;label=GitHub"><a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a></p>
+
 <!-- badges: end -->
 </div>
 <div id="introduction" class="section level1">
@@ -130,58 +130,48 @@
 <div id="what-is-recodeflow" class="section level2">
 <h2 class="hasAnchor">
 <a href="#what-is-recodeflow" class="anchor"></a>What is <code>recodeflow</code>?</h2>
-<p><code>recodeflow</code> transforms variables from multiple data sets into harmonize variables.</p>
-<p><code>recodeflow</code> has the basic functions and templates required to define, transform, and harmonize variables for any dataset.</p>
+<p><code>recodeflow</code> recodes variables from multiple data sets into harmonize variables.</p>
+<p><code>recodeflow</code> has basic functions and templates required to define, recode, and harmonize variables for any dataset.</p>
 </div>
 <div id="why-should-i-use-recodeflow" class="section level2">
 <h2 class="hasAnchor">
 <a href="#why-should-i-use-recodeflow" class="anchor"></a>Why should I use <code>recodeflow</code>?</h2>
-<p>Let’s walk through an example.</p>
-<p>Each year, Canadians complete a survey, and the data is collected. The data is coded. You, a scientist, want to use data from the 10 surveys to answer two research questions <strong>but there’s a catch:</strong></p>
-<p>At the survey level:</p>
-<ul>
-<li>Not every survey question was asked each year.</li>
-<li>The survey answers changed from year to year.</li>
-</ul>
-<p>At the data level:</p>
-<ul>
-<li>Questions are not coded the same from year to year (e.g., variable names differ)</li>
-<li>Answers are not coded the same from year to year (e.g., height is coded in meters in some years and feet in other years)</li>
-</ul>
-<p>The data is messy! You start the timely and detailed process of cleaning and transforming the data. You think “there must be a better way.”</p>
-<p>That’s where <code>recodeflow</code> comes to the rescue.</p>
-<p>With <code>recodeflow</code> you can clean and transform your entire dataset with a few lines of code. Even better, once you have defined your variables you have variable sheets you can reuse or share with colleagues - saving you even more time down the line.</p>
+<p>Recoding and cleaning your data is typically the most time consuming step of your project. Existing functions such as <code>sjmisc::rec()</code> and <code>dplyr:recode()</code> work well but they are limited to recoding one variable at a time.</p>
+<p>The <code>recodeflow</code> package takes data cleaning and recoding one step further:</p>
+<p>-<code>recodeflow</code> allows you to recode multiple variables at the same time, and -<code>recodeflow</code> allows you to harmonize variables across similar databases even when the variables and variables’ categories change,</p>
+<p><code>recodeflow</code> also helps to reduce errors, document the recode process, and ensures your new variables have labels and other metadata.</p>
+<p>Even if your project has a few variables,<code>recodeflow</code> can save you time.</p>
 </div>
 <div id="how-does-recodeflow-work" class="section level2">
 <h2 class="hasAnchor">
 <a href="#how-does-recodeflow-work" class="anchor"></a>How does <code>recodeflow</code> work?</h2>
-<p>Use templates <code>variable_sheet</code> and <code>variable_details</code> to list your variables, and state how to transform the each variable.</p>
-<p>Once your variables are defined, use <code>recodeflow</code> functions to clean and transform your data. The main <code>recodeflow</code> function is <code>rec_with_table</code> which transforms variables within you dataset(s) based on how you’ve defined the variable in <code>variable_sheet</code> and <code>variable_details</code>.</p>
+<p>Use the worksheets <code>variables</code> and <code>variable_details</code> to list your variables, and state how to recode the each variable.</p>
+<p>Once your variables are defined, use <code>recodeflow</code> functions to clean and recode your data. The main <code>recodeflow</code> function is <code>rec_with_table</code> which recodes variables within you dataset(s) based on how you’ve defined the variable in the worksheets <code>variables</code> and <code>variable_details</code>.</p>
 </div>
-<div id="whats-does-the-recodeflow-package-include" class="section level2">
+<div id="whats-included-in-recodeflow" class="section level2">
 <h2 class="hasAnchor">
-<a href="#whats-does-the-recodeflow-package-include" class="anchor"></a>What’s does the <code>recodeflow</code> package include?</h2>
+<a href="#whats-included-in-recodeflow" class="anchor"></a>What’s included in <code>recodeflow</code>?</h2>
 <p>The <code>recodeflow</code> package includes:</p>
 <ul>
-<li><p><strong>functions</strong> required to clean and transform variables.</p></li>
+<li><p><strong>functions</strong> required to clean and recode variables.</p></li>
 <li>
-<p><strong>templates:</strong></p>
+<p><strong>worksheets:</strong></p>
 <ul>
 <li>
-<strong><code>variable_sheet</code></strong> a list of variables to transform, and</li>
+<strong><code>variables</code></strong> a list of variables to recode, and</li>
 <li>
-<strong><code>variable_details</code></strong> mapping of variables across datasets and a list of instructions for transforming variables.</li>
+<strong><code>variable_details</code></strong> mapping of variables across datasets and a list of instructions for recoding variables.</li>
 </ul>
 </li>
 </ul>
 <p>We’ve also created the following documentation, to help you understand <code>recodeflow</code>:</p>
 <ul>
 <li>
-<strong>how to guides</strong> examples of how to use <code>recodeflow</code> and adapt <code>recodeflow</code> for your dataset</li>
+<strong>how to guides</strong> examples of how to use <code>recodeflow</code> and adapt <code>recodeflow</code> for your dataset,</li>
 <li>
-<strong>articles</strong> that describe package elements (e.g., variable_sheet) in detail</li>
+<strong>articles</strong> that describe package elements (e.g., variables) in detail,</li>
 <li>
-<strong>references</strong> that describe all <code>recodeflow</code> functions</li>
+<strong>references</strong> that describe all <code>recodeflow</code> functions, and</li>
 <li>
 <strong>example data</strong> to demonstrate <code>recodeflow</code> functions and templates.</li>
 </ul>
@@ -191,8 +181,8 @@
 <a href="#where-is-recodeflow-used" class="anchor"></a>Where is <code>recodeflow</code> used?</h2>
 <p>Currently <code>recodeflow</code> is used in packages that harmonize health surveys and health administrative databases.</p>
 <ul>
-<li>
-<code>cchsflow</code> is a package that harmonizes variables across cycles of the Canadian Community Health Survey (CCHS). cchsflow is (published)[<a href="https://big-life-lab.github.io/cchsflow/index.html" class="uri">https://big-life-lab.github.io/cchsflow/index.html</a>]. -<code>raiflow</code> is a package that will harmonize variables within the Resident Assessments Instruments (RAI) from various sources: Canada’s Continuing Care Reporting System (CCRS), and Ontario’s Resident Assessment Instrutment for Home Care (RAI-HC). <code>raiflow</code> is currently underdevelopment.</li>
+<li><p><code>cchsflow</code> is a package that harmonizes variables across cycles of the Canadian Community Health Survey (CCHS). cchsflow is (published)[<a href="https://big-life-lab.github.io/cchsflow/index.html" class="uri">https://big-life-lab.github.io/cchsflow/index.html</a>].</p></li>
+<li><p><code>raiflow</code> is a package that will harmonize variables within the Resident Assessments Instruments (RAI) from various sources: Canada’s Continuing Care Reporting System (CCRS), and Ontario’s Resident Assessment Instrutment for Home Care (RAI-HC). <code>raiflow</code> is currently underdevelopment.</p></li>
 </ul>
 </div>
 </div>
@@ -227,6 +217,12 @@
 </li>
 </ul>
 </div>
+<div class="community">
+<h2>Community</h2>
+<ul class="list-unstyled">
+<li><a href="CONTRIBUTING.html">Contributing guide</a></li>
+</ul>
+</div>
 <div class="developers">
 <h2>Developers</h2>
 <ul class="list-unstyled">
@@ -235,7 +231,14 @@
 </ul>
 </div>
 
-  </div>
+  <div class="dev-status">
+<h2>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://www.tidyverse.org/lifecycle/#maturing"><img src="https://img.shields.io/badge/lifecycle-maturing-blue.svg" alt="Lifecycle: development"></a></li>
+<li><a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a></li>
+</ul>
+</div>
+</div>
 </div>
 
 

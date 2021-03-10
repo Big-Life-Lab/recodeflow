@@ -68,7 +68,7 @@ variables <-
                   "derived", rep("demographics", times =3)),
     "section" = c("time","status","trt", "age","sex","ascites","hepato", "spiders", "edema", "bili", "chol", "albumin", "copper", "alk.phos", "ast", "trig", "platelet", "protime", "stage",
                   "example", "age", "age", "age"),
-    "typeEnd" = c("cont", "cat", "cat", "cont","cat", "cat", "cat","cat", "cat", rep("cont", times = 9), "cat",
+    "variableType" = c("cont", "cat", "cat", "cont","cat", "cat", "cat","cat", "cat", rep("cont", times = 9), "cat",
                        "cont", rep("cat", times = 2), "cont"),
     "databaseStart" = c(rep("tester1, tester2", times = 20), "tester1", rep("tester1, tester2", times =2)),
     "units" = c("days", rep("N/A", times = 2), "years", rep("N/A", times = 5), rep("mg/dl", times = 2), "g/dl", "ug/dl", rep("U/L", times = 2), "mg/dl", rep("N/A", times = 3),

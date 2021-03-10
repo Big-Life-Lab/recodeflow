@@ -129,32 +129,35 @@
 <div id="what-is-the-function-rec_with-table" class="section level1">
 <h1 class="hasAnchor">
 <a href="#what-is-the-function-rec_with-table" class="anchor"></a>What is the function <code>rec_with-table</code>?</h1>
-<p><code>rec_with_table</code> is the function used to transform variables within your dataset into harmonized variables. <code>rec_with_table</code> reads:</p>
+<p><code>rec_with_table</code> is the function used to recode variables within your dataset into harmonized variables. <code>rec_with_table</code> reads:</p>
 <ul>
 <li>
-<code>variable_sheet</code> for a list of variables to transform, and</li>
+<code>variable</code> for a list of variables to recode, and</li>
 <li>
-<code>variable_details</code> for instructions on how to transform variable(s)</li>
+<code>variable_details</code> for instructions on how to recode the variable(s)</li>
 </ul>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(recodeflow)</span>
-<span id="cb1-2"><a href="#cb1-2"></a>status &lt;-<span class="st"> </span><span class="kw"><a href="../reference/rec_with_table.html">rec_with_table</a></span>(<span class="dt">data =</span> tester1, </span>
-<span id="cb1-3"><a href="#cb1-3"></a>                         <span class="dt">variables =</span> <span class="st">"status"</span>, </span>
-<span id="cb1-4"><a href="#cb1-4"></a>                         <span class="dt">variable_details =</span> variable_details,</span>
-<span id="cb1-5"><a href="#cb1-5"></a>                         <span class="dt">log =</span> <span class="ot">TRUE</span>,</span>
-<span id="cb1-6"><a href="#cb1-6"></a>                         <span class="dt">var_labels =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dt">status =</span> <span class="st">"Status"</span>))</span>
-<span id="cb1-7"><a href="#cb1-7"></a><span class="co">#&gt; Using the passed data variable name as database_name</span></span>
-<span id="cb1-8"><a href="#cb1-8"></a><span class="co">#&gt; Warning in recode_call(variables = variables, data = data, database_name =</span></span>
-<span id="cb1-9"><a href="#cb1-9"></a><span class="co">#&gt; database_name, : is missing from variable details therefore cannot be recoded</span></span>
-<span id="cb1-10"><a href="#cb1-10"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for status: This is sample survival pbc data</span></span>
-<span id="cb1-11"><a href="#cb1-11"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for status: This is sample survival pbc data</span></span>
-<span id="cb1-12"><a href="#cb1-12"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for status: This is sample survival pbc data</span></span>
-<span id="cb1-13"><a href="#cb1-13"></a><span class="co">#&gt; The variable status was recoded into status for the database tester1 the following recodes were made:</span></span>
-<span id="cb1-14"><a href="#cb1-14"></a><span class="co">#&gt;   value_to From rows_recoded</span></span>
-<span id="cb1-15"><a href="#cb1-15"></a><span class="co">#&gt; 1        0    0           94</span></span>
-<span id="cb1-16"><a href="#cb1-16"></a><span class="co">#&gt; 2        1    1            7</span></span>
-<span id="cb1-17"><a href="#cb1-17"></a><span class="co">#&gt; 3        2    2          108</span></span>
-<span id="cb1-18"><a href="#cb1-18"></a><span class="co">#&gt; 4    NA(b) else            0</span></span>
-<span id="cb1-19"><a href="#cb1-19"></a><span class="co">#&gt; More values in "x" than length of "labels". Additional values were added to labels.</span></span></code></pre></div>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="co">#&gt; Registered S3 methods overwritten by 'tibble':</span></span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="co">#&gt;   method     from  </span></span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="co">#&gt;   format.tbl pillar</span></span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="co">#&gt;   print.tbl  pillar</span></span>
+<span id="cb1-6"><a href="#cb1-6"></a>status &lt;-<span class="st"> </span><span class="kw"><a href="../reference/rec_with_table.html">rec_with_table</a></span>(<span class="dt">data =</span> tester1, </span>
+<span id="cb1-7"><a href="#cb1-7"></a>                         <span class="dt">variables =</span> <span class="st">"status"</span>, </span>
+<span id="cb1-8"><a href="#cb1-8"></a>                         <span class="dt">variable_details =</span> variable_details,</span>
+<span id="cb1-9"><a href="#cb1-9"></a>                         <span class="dt">log =</span> <span class="ot">TRUE</span>,</span>
+<span id="cb1-10"><a href="#cb1-10"></a>                         <span class="dt">var_labels =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dt">status =</span> <span class="st">"Status"</span>))</span>
+<span id="cb1-11"><a href="#cb1-11"></a><span class="co">#&gt; Using the passed data variable name as database_name</span></span>
+<span id="cb1-12"><a href="#cb1-12"></a><span class="co">#&gt; Warning in recode_call(variables = variables, data = data, database_name =</span></span>
+<span id="cb1-13"><a href="#cb1-13"></a><span class="co">#&gt; database_name, : is missing from variable details therefore cannot be recoded</span></span>
+<span id="cb1-14"><a href="#cb1-14"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for status: This is sample survival pbc data</span></span>
+<span id="cb1-15"><a href="#cb1-15"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for status: This is sample survival pbc data</span></span>
+<span id="cb1-16"><a href="#cb1-16"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for status: This is sample survival pbc data</span></span>
+<span id="cb1-17"><a href="#cb1-17"></a><span class="co">#&gt; The variable status was recoded into status for the database tester1 the following recodes were made:</span></span>
+<span id="cb1-18"><a href="#cb1-18"></a><span class="co">#&gt;   value_to From rows_recoded</span></span>
+<span id="cb1-19"><a href="#cb1-19"></a><span class="co">#&gt; 1        0    0           94</span></span>
+<span id="cb1-20"><a href="#cb1-20"></a><span class="co">#&gt; 2        1    1            7</span></span>
+<span id="cb1-21"><a href="#cb1-21"></a><span class="co">#&gt; 3        2    2          108</span></span>
+<span id="cb1-22"><a href="#cb1-22"></a><span class="co">#&gt; 4    NA(b) else            0</span></span></code></pre></div>
 </div>
 <div id="output" class="section level1">
 <h1 class="hasAnchor">
@@ -162,7 +165,7 @@
 <div id="warning-messages" class="section level2">
 <h2 class="hasAnchor">
 <a href="#warning-messages" class="anchor"></a>Warning messages</h2>
-<p>Warning messages will appear when your dataset is missing variables in your <code>variables_sheet</code> worksheet or <code><a href="../reference/rec_with_table.html">rec_with_table()</a></code> call.</p>
+<p>Warning messages will appear when your dataset is missing variables in your <code>variable</code> worksheet or <code><a href="../reference/rec_with_table.html">rec_with_table()</a></code> call.</p>
 </div>
 </div>
 <div id="notes" class="section level1">
@@ -173,7 +176,7 @@
 <ul>
 <li>which datasets include a variable,</li>
 <li>how a variable changes across datasets, and</li>
-<li>if a variable transformation is dependent on which dataset the variable is in</li>
+<li>if the recoding rules for a variable is dependent on which dataset the variable is in</li>
 </ul>
 <p>You should read and consider <code>notes</code> before deciding whether to harmonize a variable.</p>
 <p>The notes output is from the column <em>notes</em> in the<code>variable_details</code></p>
@@ -186,7 +189,7 @@
 <a href="#required-arguments" class="anchor"></a>Required arguments</h2>
 <ul>
 <li><p><code>data</code> A dataframe(s) containing data to be recoded.</p></li>
-<li><p><code>variables</code> Either a string of variables to recode or a dataframe containing the variables (e.g., <code>variables_sheet</code>)</p></li>
+<li><p><code>variables</code> Either a string of variables to recode or a dataframe containing the variables (e.g., <code>variables</code>)</p></li>
 <li><p><code>variable_details</code> A dataframe containing the specifications for recoding.</p></li>
 </ul>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="co">#To recode only a few variables</span></span>
@@ -199,15 +202,15 @@
 <span id="cb2-8"><a href="#cb2-8"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for age: This is sample survival pbc data</span></span>
 <span id="cb2-9"><a href="#cb2-9"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for sex: This is sample survival pbc data</span></span>
 <span id="cb2-10"><a href="#cb2-10"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for sex: This is sample survival pbc data</span></span>
-<span id="cb2-11"><a href="#cb2-11"></a><span class="co">#&gt; More values in "x" than length of "labels". Additional values were added to labels.</span></span>
+<span id="cb2-11"><a href="#cb2-11"></a></span>
 <span id="cb2-12"><a href="#cb2-12"></a></span>
-<span id="cb2-13"><a href="#cb2-13"></a></span>
-<span id="cb2-14"><a href="#cb2-14"></a><span class="co">#To recode all variables listed on the variable_sheet</span></span>
-<span id="cb2-15"><a href="#cb2-15"></a>transformed1 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/rec_with_table.html">rec_with_table</a></span>(<span class="dt">data =</span> tester1,</span>
-<span id="cb2-16"><a href="#cb2-16"></a>                          <span class="dt">variables =</span> variables_sheet,</span>
-<span id="cb2-17"><a href="#cb2-17"></a>                          <span class="dt">variable_details =</span> variable_details)</span>
-<span id="cb2-18"><a href="#cb2-18"></a><span class="co">#&gt; Using the passed data variable name as database_name</span></span>
-<span id="cb2-19"><a href="#cb2-19"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for age: This is sample survival pbc data</span></span>
+<span id="cb2-13"><a href="#cb2-13"></a><span class="co">#To recode all variables listed on the variable worksheet</span></span>
+<span id="cb2-14"><a href="#cb2-14"></a>recoded1 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/rec_with_table.html">rec_with_table</a></span>(<span class="dt">data =</span> tester1,</span>
+<span id="cb2-15"><a href="#cb2-15"></a>                          <span class="dt">variables =</span> variables,</span>
+<span id="cb2-16"><a href="#cb2-16"></a>                          <span class="dt">variable_details =</span> variable_details)</span>
+<span id="cb2-17"><a href="#cb2-17"></a><span class="co">#&gt; Using the passed data variable name as database_name</span></span>
+<span id="cb2-18"><a href="#cb2-18"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for age: This is sample survival pbc data</span></span>
+<span id="cb2-19"><a href="#cb2-19"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for age_cont: adapted from sample survival pbc data</span></span>
 <span id="cb2-20"><a href="#cb2-20"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for age_cont: adapted from sample survival pbc data</span></span>
 <span id="cb2-21"><a href="#cb2-21"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for age_cont: adapted from sample survival pbc data</span></span>
 <span id="cb2-22"><a href="#cb2-22"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for age_cont: adapted from sample survival pbc data</span></span>
@@ -218,10 +221,10 @@
 <span id="cb2-27"><a href="#cb2-27"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for age_cont: adapted from sample survival pbc data</span></span>
 <span id="cb2-28"><a href="#cb2-28"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for age_cont: adapted from sample survival pbc data</span></span>
 <span id="cb2-29"><a href="#cb2-29"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for age_cont: adapted from sample survival pbc data</span></span>
-<span id="cb2-30"><a href="#cb2-30"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for age_cont: adapted from sample survival pbc data</span></span>
-<span id="cb2-31"><a href="#cb2-31"></a><span class="co">#&gt; Warning in format_recoded_value(value_to_recode_to,</span></span>
-<span id="cb2-32"><a href="#cb2-32"></a><span class="co">#&gt; label_list[[variable_being_checked]]$type): NAs introduced by coercion</span></span>
-<span id="cb2-33"><a href="#cb2-33"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for age_cont: adapted from sample survival pbc data</span></span>
+<span id="cb2-30"><a href="#cb2-30"></a><span class="co">#&gt; Warning in format_recoded_value(value_to_recode_to,</span></span>
+<span id="cb2-31"><a href="#cb2-31"></a><span class="co">#&gt; label_list[[variable_being_checked]]$type): NAs introduced by coercion</span></span>
+<span id="cb2-32"><a href="#cb2-32"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for age_cont: adapted from sample survival pbc data</span></span>
+<span id="cb2-33"><a href="#cb2-33"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for agegrp10: adapted from sample survival pbc data</span></span>
 <span id="cb2-34"><a href="#cb2-34"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for agegrp10: adapted from sample survival pbc data</span></span>
 <span id="cb2-35"><a href="#cb2-35"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for agegrp10: adapted from sample survival pbc data</span></span>
 <span id="cb2-36"><a href="#cb2-36"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for agegrp10: adapted from sample survival pbc data</span></span>
@@ -233,7 +236,7 @@
 <span id="cb2-42"><a href="#cb2-42"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for agegrp10: adapted from sample survival pbc data</span></span>
 <span id="cb2-43"><a href="#cb2-43"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for agegrp10: adapted from sample survival pbc data</span></span>
 <span id="cb2-44"><a href="#cb2-44"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for agegrp10: adapted from sample survival pbc data</span></span>
-<span id="cb2-45"><a href="#cb2-45"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for agegrp10: adapted from sample survival pbc data</span></span>
+<span id="cb2-45"><a href="#cb2-45"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for agegrp5: adapted from sample survival pbc data</span></span>
 <span id="cb2-46"><a href="#cb2-46"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for agegrp5: adapted from sample survival pbc data</span></span>
 <span id="cb2-47"><a href="#cb2-47"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for agegrp5: adapted from sample survival pbc data</span></span>
 <span id="cb2-48"><a href="#cb2-48"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for agegrp5: adapted from sample survival pbc data</span></span>
@@ -245,92 +248,81 @@
 <span id="cb2-54"><a href="#cb2-54"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for agegrp5: adapted from sample survival pbc data</span></span>
 <span id="cb2-55"><a href="#cb2-55"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for agegrp5: adapted from sample survival pbc data</span></span>
 <span id="cb2-56"><a href="#cb2-56"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for agegrp5: adapted from sample survival pbc data</span></span>
-<span id="cb2-57"><a href="#cb2-57"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for agegrp5: adapted from sample survival pbc data</span></span>
-<span id="cb2-58"><a href="#cb2-58"></a><span class="co">#&gt; Warning in format_recoded_value(else_value, label_list[[variable_being_checked]]</span></span>
-<span id="cb2-59"><a href="#cb2-59"></a><span class="co">#&gt; $type): NAs introduced by coercion</span></span>
-<span id="cb2-60"><a href="#cb2-60"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for albumin: This is sample survival pbc data</span></span>
-<span id="cb2-61"><a href="#cb2-61"></a><span class="co">#&gt; Warning in format_recoded_value(else_value, label_list[[variable_being_checked]]</span></span>
-<span id="cb2-62"><a href="#cb2-62"></a><span class="co">#&gt; $type): NAs introduced by coercion</span></span>
-<span id="cb2-63"><a href="#cb2-63"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for alk.phos: This is sample survival pbc data</span></span>
-<span id="cb2-64"><a href="#cb2-64"></a><span class="co">#&gt; Warning in format_recoded_value(value_to_recode_to,</span></span>
-<span id="cb2-65"><a href="#cb2-65"></a><span class="co">#&gt; label_list[[variable_being_checked]]$type): NAs introduced by coercion</span></span>
-<span id="cb2-66"><a href="#cb2-66"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for alk.phos: This is sample survival pbc data</span></span>
+<span id="cb2-57"><a href="#cb2-57"></a><span class="co">#&gt; Warning in format_recoded_value(else_value, label_list[[variable_being_checked]]</span></span>
+<span id="cb2-58"><a href="#cb2-58"></a><span class="co">#&gt; $type): NAs introduced by coercion</span></span>
+<span id="cb2-59"><a href="#cb2-59"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for albumin: This is sample survival pbc data</span></span>
+<span id="cb2-60"><a href="#cb2-60"></a><span class="co">#&gt; Warning in format_recoded_value(else_value, label_list[[variable_being_checked]]</span></span>
+<span id="cb2-61"><a href="#cb2-61"></a><span class="co">#&gt; $type): NAs introduced by coercion</span></span>
+<span id="cb2-62"><a href="#cb2-62"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for alk.phos: This is sample survival pbc data</span></span>
+<span id="cb2-63"><a href="#cb2-63"></a><span class="co">#&gt; Warning in format_recoded_value(value_to_recode_to,</span></span>
+<span id="cb2-64"><a href="#cb2-64"></a><span class="co">#&gt; label_list[[variable_being_checked]]$type): NAs introduced by coercion</span></span>
+<span id="cb2-65"><a href="#cb2-65"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for alk.phos: This is sample survival pbc data</span></span>
+<span id="cb2-66"><a href="#cb2-66"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for ascites: This is sample survival pbc data</span></span>
 <span id="cb2-67"><a href="#cb2-67"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for ascites: This is sample survival pbc data</span></span>
 <span id="cb2-68"><a href="#cb2-68"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for ascites: This is sample survival pbc data</span></span>
-<span id="cb2-69"><a href="#cb2-69"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for ascites: This is sample survival pbc data</span></span>
-<span id="cb2-70"><a href="#cb2-70"></a><span class="co">#&gt; Warning in format_recoded_value(else_value, label_list[[variable_being_checked]]</span></span>
-<span id="cb2-71"><a href="#cb2-71"></a><span class="co">#&gt; $type): NAs introduced by coercion</span></span>
-<span id="cb2-72"><a href="#cb2-72"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for ast: This is sample survival pbc data</span></span>
-<span id="cb2-73"><a href="#cb2-73"></a><span class="co">#&gt; Warning in format_recoded_value(value_to_recode_to,</span></span>
-<span id="cb2-74"><a href="#cb2-74"></a><span class="co">#&gt; label_list[[variable_being_checked]]$type): NAs introduced by coercion</span></span>
-<span id="cb2-75"><a href="#cb2-75"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for ast: This is sample survival pbc data</span></span>
-<span id="cb2-76"><a href="#cb2-76"></a><span class="co">#&gt; Warning in format_recoded_value(else_value, label_list[[variable_being_checked]]</span></span>
-<span id="cb2-77"><a href="#cb2-77"></a><span class="co">#&gt; $type): NAs introduced by coercion</span></span>
-<span id="cb2-78"><a href="#cb2-78"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for bili: This is sample survival pbc data</span></span>
-<span id="cb2-79"><a href="#cb2-79"></a><span class="co">#&gt; Warning in format_recoded_value(else_value, label_list[[variable_being_checked]]</span></span>
-<span id="cb2-80"><a href="#cb2-80"></a><span class="co">#&gt; $type): NAs introduced by coercion</span></span>
-<span id="cb2-81"><a href="#cb2-81"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for chol: This is sample survival pbc data</span></span>
-<span id="cb2-82"><a href="#cb2-82"></a><span class="co">#&gt; Warning in format_recoded_value(value_to_recode_to,</span></span>
-<span id="cb2-83"><a href="#cb2-83"></a><span class="co">#&gt; label_list[[variable_being_checked]]$type): NAs introduced by coercion</span></span>
-<span id="cb2-84"><a href="#cb2-84"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for chol: This is sample survival pbc data</span></span>
-<span id="cb2-85"><a href="#cb2-85"></a><span class="co">#&gt; Warning in format_recoded_value(else_value, label_list[[variable_being_checked]]</span></span>
-<span id="cb2-86"><a href="#cb2-86"></a><span class="co">#&gt; $type): NAs introduced by coercion</span></span>
-<span id="cb2-87"><a href="#cb2-87"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for copper: This is sample survival pbc data</span></span>
-<span id="cb2-88"><a href="#cb2-88"></a><span class="co">#&gt; Warning in format_recoded_value(value_to_recode_to,</span></span>
-<span id="cb2-89"><a href="#cb2-89"></a><span class="co">#&gt; label_list[[variable_being_checked]]$type): NAs introduced by coercion</span></span>
-<span id="cb2-90"><a href="#cb2-90"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for copper: This is sample survival pbc data</span></span>
+<span id="cb2-69"><a href="#cb2-69"></a><span class="co">#&gt; Warning in format_recoded_value(else_value, label_list[[variable_being_checked]]</span></span>
+<span id="cb2-70"><a href="#cb2-70"></a><span class="co">#&gt; $type): NAs introduced by coercion</span></span>
+<span id="cb2-71"><a href="#cb2-71"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for ast: This is sample survival pbc data</span></span>
+<span id="cb2-72"><a href="#cb2-72"></a><span class="co">#&gt; Warning in format_recoded_value(value_to_recode_to,</span></span>
+<span id="cb2-73"><a href="#cb2-73"></a><span class="co">#&gt; label_list[[variable_being_checked]]$type): NAs introduced by coercion</span></span>
+<span id="cb2-74"><a href="#cb2-74"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for ast: This is sample survival pbc data</span></span>
+<span id="cb2-75"><a href="#cb2-75"></a><span class="co">#&gt; Warning in format_recoded_value(else_value, label_list[[variable_being_checked]]</span></span>
+<span id="cb2-76"><a href="#cb2-76"></a><span class="co">#&gt; $type): NAs introduced by coercion</span></span>
+<span id="cb2-77"><a href="#cb2-77"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for bili: This is sample survival pbc data</span></span>
+<span id="cb2-78"><a href="#cb2-78"></a><span class="co">#&gt; Warning in format_recoded_value(else_value, label_list[[variable_being_checked]]</span></span>
+<span id="cb2-79"><a href="#cb2-79"></a><span class="co">#&gt; $type): NAs introduced by coercion</span></span>
+<span id="cb2-80"><a href="#cb2-80"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for chol: This is sample survival pbc data</span></span>
+<span id="cb2-81"><a href="#cb2-81"></a><span class="co">#&gt; Warning in format_recoded_value(value_to_recode_to,</span></span>
+<span id="cb2-82"><a href="#cb2-82"></a><span class="co">#&gt; label_list[[variable_being_checked]]$type): NAs introduced by coercion</span></span>
+<span id="cb2-83"><a href="#cb2-83"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for chol: This is sample survival pbc data</span></span>
+<span id="cb2-84"><a href="#cb2-84"></a><span class="co">#&gt; Warning in format_recoded_value(else_value, label_list[[variable_being_checked]]</span></span>
+<span id="cb2-85"><a href="#cb2-85"></a><span class="co">#&gt; $type): NAs introduced by coercion</span></span>
+<span id="cb2-86"><a href="#cb2-86"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for copper: This is sample survival pbc data</span></span>
+<span id="cb2-87"><a href="#cb2-87"></a><span class="co">#&gt; Warning in format_recoded_value(value_to_recode_to,</span></span>
+<span id="cb2-88"><a href="#cb2-88"></a><span class="co">#&gt; label_list[[variable_being_checked]]$type): NAs introduced by coercion</span></span>
+<span id="cb2-89"><a href="#cb2-89"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for copper: This is sample survival pbc data</span></span>
+<span id="cb2-90"><a href="#cb2-90"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for edema: This is sample survival pbc data</span></span>
 <span id="cb2-91"><a href="#cb2-91"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for edema: This is sample survival pbc data</span></span>
 <span id="cb2-92"><a href="#cb2-92"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for edema: This is sample survival pbc data</span></span>
-<span id="cb2-93"><a href="#cb2-93"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for edema: This is sample survival pbc data</span></span>
+<span id="cb2-93"><a href="#cb2-93"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for hepato: This is sample survival pbc data</span></span>
 <span id="cb2-94"><a href="#cb2-94"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for hepato: This is sample survival pbc data</span></span>
 <span id="cb2-95"><a href="#cb2-95"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for hepato: This is sample survival pbc data</span></span>
-<span id="cb2-96"><a href="#cb2-96"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for hepato: This is sample survival pbc data</span></span>
-<span id="cb2-97"><a href="#cb2-97"></a><span class="co">#&gt; Warning in format_recoded_value(else_value, label_list[[variable_being_checked]]</span></span>
-<span id="cb2-98"><a href="#cb2-98"></a><span class="co">#&gt; $type): NAs introduced by coercion</span></span>
-<span id="cb2-99"><a href="#cb2-99"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for platelet: This is sample survival pbc data</span></span>
-<span id="cb2-100"><a href="#cb2-100"></a><span class="co">#&gt; Warning in format_recoded_value(value_to_recode_to,</span></span>
-<span id="cb2-101"><a href="#cb2-101"></a><span class="co">#&gt; label_list[[variable_being_checked]]$type): NAs introduced by coercion</span></span>
-<span id="cb2-102"><a href="#cb2-102"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for platelet: This is sample survival pbc data</span></span>
-<span id="cb2-103"><a href="#cb2-103"></a><span class="co">#&gt; Warning in format_recoded_value(else_value, label_list[[variable_being_checked]]</span></span>
-<span id="cb2-104"><a href="#cb2-104"></a><span class="co">#&gt; $type): NAs introduced by coercion</span></span>
-<span id="cb2-105"><a href="#cb2-105"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for protime: This is sample survival pbc data</span></span>
-<span id="cb2-106"><a href="#cb2-106"></a><span class="co">#&gt; Warning in format_recoded_value(value_to_recode_to,</span></span>
-<span id="cb2-107"><a href="#cb2-107"></a><span class="co">#&gt; label_list[[variable_being_checked]]$type): NAs introduced by coercion</span></span>
-<span id="cb2-108"><a href="#cb2-108"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for protime: This is sample survival pbc data</span></span>
+<span id="cb2-96"><a href="#cb2-96"></a><span class="co">#&gt; Warning in format_recoded_value(else_value, label_list[[variable_being_checked]]</span></span>
+<span id="cb2-97"><a href="#cb2-97"></a><span class="co">#&gt; $type): NAs introduced by coercion</span></span>
+<span id="cb2-98"><a href="#cb2-98"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for platelet: This is sample survival pbc data</span></span>
+<span id="cb2-99"><a href="#cb2-99"></a><span class="co">#&gt; Warning in format_recoded_value(value_to_recode_to,</span></span>
+<span id="cb2-100"><a href="#cb2-100"></a><span class="co">#&gt; label_list[[variable_being_checked]]$type): NAs introduced by coercion</span></span>
+<span id="cb2-101"><a href="#cb2-101"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for platelet: This is sample survival pbc data</span></span>
+<span id="cb2-102"><a href="#cb2-102"></a><span class="co">#&gt; Warning in format_recoded_value(else_value, label_list[[variable_being_checked]]</span></span>
+<span id="cb2-103"><a href="#cb2-103"></a><span class="co">#&gt; $type): NAs introduced by coercion</span></span>
+<span id="cb2-104"><a href="#cb2-104"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for protime: This is sample survival pbc data</span></span>
+<span id="cb2-105"><a href="#cb2-105"></a><span class="co">#&gt; Warning in format_recoded_value(value_to_recode_to,</span></span>
+<span id="cb2-106"><a href="#cb2-106"></a><span class="co">#&gt; label_list[[variable_being_checked]]$type): NAs introduced by coercion</span></span>
+<span id="cb2-107"><a href="#cb2-107"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for protime: This is sample survival pbc data</span></span>
+<span id="cb2-108"><a href="#cb2-108"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for sex: This is sample survival pbc data</span></span>
 <span id="cb2-109"><a href="#cb2-109"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for sex: This is sample survival pbc data</span></span>
-<span id="cb2-110"><a href="#cb2-110"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for sex: This is sample survival pbc data</span></span>
+<span id="cb2-110"><a href="#cb2-110"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for spiders: This is sample survival pbc data</span></span>
 <span id="cb2-111"><a href="#cb2-111"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for spiders: This is sample survival pbc data</span></span>
 <span id="cb2-112"><a href="#cb2-112"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for spiders: This is sample survival pbc data</span></span>
-<span id="cb2-113"><a href="#cb2-113"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for spiders: This is sample survival pbc data</span></span>
+<span id="cb2-113"><a href="#cb2-113"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for stage: This is sample survival pbc data</span></span>
 <span id="cb2-114"><a href="#cb2-114"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for stage: This is sample survival pbc data</span></span>
 <span id="cb2-115"><a href="#cb2-115"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for stage: This is sample survival pbc data</span></span>
 <span id="cb2-116"><a href="#cb2-116"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for stage: This is sample survival pbc data</span></span>
 <span id="cb2-117"><a href="#cb2-117"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for stage: This is sample survival pbc data</span></span>
-<span id="cb2-118"><a href="#cb2-118"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for stage: This is sample survival pbc data</span></span>
+<span id="cb2-118"><a href="#cb2-118"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for status: This is sample survival pbc data</span></span>
 <span id="cb2-119"><a href="#cb2-119"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for status: This is sample survival pbc data</span></span>
 <span id="cb2-120"><a href="#cb2-120"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for status: This is sample survival pbc data</span></span>
-<span id="cb2-121"><a href="#cb2-121"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for status: This is sample survival pbc data</span></span>
-<span id="cb2-122"><a href="#cb2-122"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for time: This is sample survival pbc data</span></span>
-<span id="cb2-123"><a href="#cb2-123"></a><span class="co">#&gt; Warning in format_recoded_value(else_value, label_list[[variable_being_checked]]</span></span>
-<span id="cb2-124"><a href="#cb2-124"></a><span class="co">#&gt; $type): NAs introduced by coercion</span></span>
-<span id="cb2-125"><a href="#cb2-125"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for trig: This is sample survival pbc data</span></span>
-<span id="cb2-126"><a href="#cb2-126"></a><span class="co">#&gt; Warning in format_recoded_value(value_to_recode_to,</span></span>
-<span id="cb2-127"><a href="#cb2-127"></a><span class="co">#&gt; label_list[[variable_being_checked]]$type): NAs introduced by coercion</span></span>
-<span id="cb2-128"><a href="#cb2-128"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for trig: This is sample survival pbc data</span></span>
+<span id="cb2-121"><a href="#cb2-121"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for time: This is sample survival pbc data</span></span>
+<span id="cb2-122"><a href="#cb2-122"></a><span class="co">#&gt; Warning in format_recoded_value(else_value, label_list[[variable_being_checked]]</span></span>
+<span id="cb2-123"><a href="#cb2-123"></a><span class="co">#&gt; $type): NAs introduced by coercion</span></span>
+<span id="cb2-124"><a href="#cb2-124"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for trig: This is sample survival pbc data</span></span>
+<span id="cb2-125"><a href="#cb2-125"></a><span class="co">#&gt; Warning in format_recoded_value(value_to_recode_to,</span></span>
+<span id="cb2-126"><a href="#cb2-126"></a><span class="co">#&gt; label_list[[variable_being_checked]]$type): NAs introduced by coercion</span></span>
+<span id="cb2-127"><a href="#cb2-127"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for trig: This is sample survival pbc data</span></span>
+<span id="cb2-128"><a href="#cb2-128"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for trt: This is sample survival pbc data</span></span>
 <span id="cb2-129"><a href="#cb2-129"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for trt: This is sample survival pbc data</span></span>
 <span id="cb2-130"><a href="#cb2-130"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for trt: This is sample survival pbc data</span></span>
-<span id="cb2-131"><a href="#cb2-131"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for trt: This is sample survival pbc data</span></span>
-<span id="cb2-132"><a href="#cb2-132"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for trt: This is sample survival pbc data</span></span>
-<span id="cb2-133"><a href="#cb2-133"></a><span class="co">#&gt; More values in "x" than length of "labels". Additional values were added to labels.</span></span>
-<span id="cb2-134"><a href="#cb2-134"></a><span class="co">#&gt; More values in "x" than length of "labels". Additional values were added to labels.</span></span>
-<span id="cb2-135"><a href="#cb2-135"></a><span class="co">#&gt; More values in "x" than length of "labels". Additional values were added to labels.</span></span>
-<span id="cb2-136"><a href="#cb2-136"></a><span class="co">#&gt; More values in "x" than length of "labels". Additional values were added to labels.</span></span>
-<span id="cb2-137"><a href="#cb2-137"></a><span class="co">#&gt; More values in "x" than length of "labels". Additional values were added to labels.</span></span>
-<span id="cb2-138"><a href="#cb2-138"></a><span class="co">#&gt; More values in "x" than length of "labels". Additional values were added to labels.</span></span>
-<span id="cb2-139"><a href="#cb2-139"></a><span class="co">#&gt; More values in "x" than length of "labels". Additional values were added to labels.</span></span>
-<span id="cb2-140"><a href="#cb2-140"></a><span class="co">#&gt; More values in "x" than length of "labels". Additional values were added to labels.</span></span>
-<span id="cb2-141"><a href="#cb2-141"></a><span class="co">#&gt; More values in "x" than length of "labels". Additional values were added to labels.</span></span>
-<span id="cb2-142"><a href="#cb2-142"></a><span class="co">#&gt; More values in "x" than length of "labels". Additional values were added to labels.</span></span></code></pre></div>
+<span id="cb2-131"><a href="#cb2-131"></a><span class="co">#&gt; </span><span class="al">NOTE</span><span class="co"> for trt: This is sample survival pbc data</span></span></code></pre></div>
 </div>
 <div id="default-arguments" class="section level2">
 <h2 class="hasAnchor">
@@ -339,11 +331,11 @@
 <ul>
 <li><p><code>database_name</code> defaults to NULL. As a result, <code><a href="../reference/rec_with_table.html">rec_with_table()</a></code> uses the database indicated in the <code>data</code> argument.</p></li>
 <li><p><code>else_value</code> defaults to NA. Values out of range set to NA.</p></li>
-<li><p><code>append_to_data</code> defaults to FALSE. Transformed variables will not be appended to the original dataset.</p></li>
-<li><p><code>log</code> defaults to FALSE. Logs of the variable transformations will not be displayed.</p></li>
+<li><p><code>append_to_data</code> defaults to FALSE. Recoded variables will not be appended to the original dataset.</p></li>
+<li><p><code>log</code> defaults to FALSE. Logs of the variable recoding will not be displayed.</p></li>
 <li><p><code>notes</code> defaults to TRUE. Information in the <code>Notes</code> column from <code>variable_details</code> worksheet will be displayed</p></li>
-<li><p><code>var_labels</code> is set to NULL. This argument can be used to add labels to a transformed dataset that only contains a subset of variables from <code>variables_sheet</code> worksheet. The format to add labels to a subset of variables is <code><a href="https://rdrr.io/r/base/c.html">c(variable = "Label")</a></code>.</p></li>
-<li><p><code>attach_data_name</code> is set to FALSE. This argument can be used to append a column that denotes the name of the dataset each transformed row came from.</p></li>
+<li><p><code>var_labels</code> is set to NULL. This argument can be used to add labels to a recoded dataset that only contains a subset of variables from <code>variables</code> worksheet. The format to add labels to a subset of variables is <code><a href="https://rdrr.io/r/base/c.html">c(variable = "Label")</a></code>.</p></li>
+<li><p><code>attach_data_name</code> is set to FALSE. This argument can be used to append a column that denotes the name of the dataset each recoded row came from.</p></li>
 </ul>
 </div>
 </div>

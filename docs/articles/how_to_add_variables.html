@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>How to use recodeflow with your data • recodeflow</title>
+<title>Use recodeflow with your data • recodeflow</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
@@ -16,7 +16,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="How to use recodeflow with your data">
+<script src="../pkgdown.js"></script><meta property="og:title" content="Use recodeflow with your data">
 <meta property="og:description" content="">
 <meta property="og:image" content="/logo.png">
 <meta name="twitter:card" content="summary">
@@ -116,7 +116,7 @@
       </header><script src="how_to_add_variables_files/header-attrs-2.1/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1>How to use recodeflow with your data</h1>
+      <h1>Use recodeflow with your data</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/Big-Life-Lab/recodeflow/blob/master/vignettes/how_to_add_variables.Rmd"><code>vignettes/how_to_add_variables.Rmd</code></a></small>
@@ -129,15 +129,15 @@
 <div id="how-to-use-recodeflow-with-your-data" class="section level1">
 <h1 class="hasAnchor">
 <a href="#how-to-use-recodeflow-with-your-data" class="anchor"></a>How to use <code>recodeflow</code> with your data</h1>
-<p>To use <code>recodeflow</code> with your data, you’ll need create the worksheets:</p>
+<p>To use <code>recodeflow</code> with your data, you’ll need create the following worksheets:</p>
 <ul>
 <li>
-<code>variable_details</code> mapping of variables across datasets and a list of instructions on how to transform variables, and</li>
+<code>variable_details</code> - mapping of variables across datasets and a list of instructions on how to recode variables</li>
 <li>
-<code>variable_sheet</code> a list of variables to transform, and</li>
+<code>variables</code> - a list of variables to recode, and</li>
 </ul>
 <p>Files can either be a <code>.csv</code> file that you import to R or create directly in R as a dataframe.</p>
-<p>If you have derived variable variables, you’ll also need to create custom functions. For more information on custom functions see the article <a href="../reference/derived_variables.html">derived_variables</a>.</p>
+<p>If you have derived variables, you will also need to create custom functions. For more information on custom functions see the article <a href="../reference/derived_variables.html">derived_variables</a>.</p>
 <div id="example-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#example-data" class="anchor"></a>Example data</h2>
@@ -147,7 +147,7 @@
 <div id="how-to-create-the-variable_details-worksheet" class="section level2">
 <h2 class="hasAnchor">
 <a href="#how-to-create-the-variable_details-worksheet" class="anchor"></a>How to create the <code>variable_details</code> worksheet</h2>
-<p>The <code>variable_details</code> worksheet does two important steps. First, it maps variables across datasets. Second, it gives instructions on how to transform the variables.</p>
+<p>The <code>variable_details</code> worksheet does two important steps. First, it maps variables across datasets. Second, it gives instructions on how to recode the variables.</p>
 <p>Note: additional information for the <code>variable_details</code> worksheet is in the article <a href="../reference/variable_details.html">variable_details</a>.</p>
 <p>Note: additional details on how to add derived variables to the <code>var_detials</code> worksheet is in the article <a href="../reference/derived_variables.html">derived_variables</a>.</p>
 <div id="rows" class="section level3">
@@ -166,7 +166,7 @@
 <a href="#columns-14" class="anchor"></a>Columns (14)</h3>
 <ol style="list-style-type: decimal">
 <li>
-<strong>variable:</strong> the name of the final transformed variable. We’ll use the same name as in the original dataset <code>stage</code> though you could rename the variable.</li>
+<strong>variable:</strong> the name of the final recoded variable. We’ll use the same name as in the original dataset <code>stage</code> though you could rename the variable.</li>
 </ol>
 <p>Write <code>stage</code> in the column <strong>variable</strong> in the six rows.</p>
 <table class="table">
@@ -210,7 +210,7 @@ stage
 </table>
 <ol start="2" style="list-style-type: decimal">
 <li>
-<strong>toType:</strong> <code>stage</code> captures the stage of the disease and is originally a categorical variable. Therefore, it does not make sense to change <code>stage</code> into a continuous variable.</li>
+<strong>typeEnd:</strong> <code>stage</code> captures the stage of the disease and is originally a categorical variable. Therefore, it does not make sense to change <code>stage</code> into a continuous variable.</li>
 </ol>
 <p>Write ‘cat’ in the six rows.</p>
 <table class="table">
@@ -221,7 +221,7 @@ stage
 variable
 </th>
 <th style="text-align:left;">
-toType
+typeEnd
 </th>
 </tr></thead>
 <tbody>
@@ -295,7 +295,7 @@ cat
 </table>
 <ol start="3" style="list-style-type: decimal">
 <li>
-<strong>fromType:</strong> <code>stage</code> is originally a categorical variable.</li>
+<strong>typeStart:</strong> <code>stage</code> is originally a categorical variable.</li>
 </ol>
 <p>Write ‘cat’ in the six rows.</p>
 <table class="table">
@@ -306,10 +306,10 @@ cat
 variable
 </th>
 <th style="text-align:left;">
-toType
+typeEnd
 </th>
 <th style="text-align:left;">
-fromType
+typeStart
 </th>
 </tr></thead>
 <tbody>
@@ -401,7 +401,7 @@ cat
 </table>
 <ol start="4" style="list-style-type: decimal">
 <li>
-<strong>databaseStart:</strong> <code>stage</code> was captured identically for both datasets. Therefore, we’ll transform the variable the same way regardless of which dataset it’s from.</li>
+<strong>databaseStart:</strong> <code>stage</code> was captured identically for both datasets. Therefore, we will recode the variable the same way regardless of which dataset it’s from.</li>
 </ol>
 <p>Write the dataset names, separated by a comma, in the six rows</p>
 <table class="table">
@@ -412,10 +412,10 @@ cat
 variable
 </th>
 <th style="text-align:left;">
-toType
+typeEnd
 </th>
 <th style="text-align:left;">
-fromType
+typeStart
 </th>
 <th style="text-align:left;">
 databaseStart
@@ -539,10 +539,10 @@ tester1, tester2
 variable
 </th>
 <th style="text-align:left;">
-toType
+typeEnd
 </th>
 <th style="text-align:left;">
-fromType
+typeStart
 </th>
 <th style="text-align:left;">
 databaseStart
@@ -686,10 +686,10 @@ tester1, tester2
 variable
 </th>
 <th style="text-align:left;">
-toType
+typeEnd
 </th>
 <th style="text-align:left;">
-fromType
+typeStart
 </th>
 <th style="text-align:left;">
 databaseStart
@@ -855,10 +855,10 @@ stage
 variable
 </th>
 <th style="text-align:left;">
-toType
+typeEnd
 </th>
 <th style="text-align:left;">
-fromType
+typeStart
 </th>
 <th style="text-align:left;">
 databaseStart
@@ -1034,7 +1034,7 @@ stage
 </table>
 <ol start="8" style="list-style-type: decimal">
 <li>
-<strong>recTo:</strong> Since <code>stage</code> is a categorical variable, you’ll capture the category you are transforming each row too. For the not applicable rows <code>NA::a</code> is written. For the missing and else rows <code>NA::b</code> is written. The <code>haven</code> package is used for tagging NA in numeric variables.</li>
+<strong>recEnd:</strong> Since <code>stage</code> is a categorical variable, you’ll capture the category you are recoding each row too. For the not applicable rows <code>NA::a</code> is written. For the missing and else rows <code>NA::b</code> is written. The <code>haven</code> package is used for tagging NA in numeric variables.</li>
 </ol>
 <p>We are not changing the categories. Therefore, the four stages captured in the original data. For the not applicable rows write <code>NA::a</code>. For the else rows write <code>NA::b</code>.</p>
 <table class="table">
@@ -1045,10 +1045,10 @@ stage
 variable
 </th>
 <th style="text-align:left;">
-toType
+typeEnd
 </th>
 <th style="text-align:left;">
-fromType
+typeStart
 </th>
 <th style="text-align:left;">
 databaseStart
@@ -1063,7 +1063,7 @@ variableStartLabel
 numValidCat
 </th>
 <th style="text-align:left;">
-recTo
+recEnd
 </th>
 </tr></thead>
 <tbody>
@@ -1245,7 +1245,7 @@ NA::b
 </table>
 <ol start="9" style="list-style-type: decimal">
 <li>
-<strong>catLabel:</strong> Name the categorical level for the transformed variable.</li>
+<strong>catLabel:</strong> Name the categorical level for the recoded variable.</li>
 </ol>
 <p>Write Stage 1, Stage 2, Stage 3, Stage 4, NA, and missing.</p>
 <table class="table">
@@ -1256,10 +1256,10 @@ NA::b
 variable
 </th>
 <th style="text-align:left;">
-toType
+typeEnd
 </th>
 <th style="text-align:left;">
-fromType
+typeStart
 </th>
 <th style="text-align:left;">
 databaseStart
@@ -1274,7 +1274,7 @@ variableStartLabel
 numValidCat
 </th>
 <th style="text-align:left;">
-recTo
+recEnd
 </th>
 <th style="text-align:left;">
 catLabel
@@ -1477,7 +1477,7 @@ missing
 </table>
 <ol start="10" style="list-style-type: decimal">
 <li>
-<strong>catLabelLong:</strong> You can elaborate on the name of the categorical level of the transformed variable.</li>
+<strong>catLabelLong:</strong> You can elaborate on the name of the categorical level of the recoded variable.</li>
 </ol>
 <p>Copy values from <strong>catLabel</strong></p>
 <table class="table">
@@ -1488,10 +1488,10 @@ missing
 variable
 </th>
 <th style="text-align:left;">
-toType
+typeEnd
 </th>
 <th style="text-align:left;">
-fromType
+typeStart
 </th>
 <th style="text-align:left;">
 databaseStart
@@ -1506,7 +1506,7 @@ variableStartLabel
 numValidCat
 </th>
 <th style="text-align:left;">
-recTo
+recEnd
 </th>
 <th style="text-align:left;">
 catLabel
@@ -1741,10 +1741,10 @@ missing
 variable
 </th>
 <th style="text-align:left;">
-toType
+typeEnd
 </th>
 <th style="text-align:left;">
-fromType
+typeStart
 </th>
 <th style="text-align:left;">
 databaseStart
@@ -1759,7 +1759,7 @@ variableStartLabel
 numValidCat
 </th>
 <th style="text-align:left;">
-recTo
+recEnd
 </th>
 <th style="text-align:left;">
 catLabel
@@ -2004,9 +2004,9 @@ N/A
 </table>
 <ol start="12" style="list-style-type: decimal">
 <li>
-<strong>recFrom:</strong> Since we are not combining levels of categories and we are keeping the category levels the same, the recFrom column will be identical to recTo.</li>
+<strong>recStart:</strong> Since we are not combining levels of categories and we are keeping the category levels the same, the recStart column will be identical to recEnd.</li>
 </ol>
-<p>Write the category level you are transforming each row too. For the not applicable rows <code>NA::a</code> is written. For the missing and else rows <code>NA::b</code> is written.</p>
+<p>Write the category level you are recoding each row too. For the not applicable rows <code>NA::a</code> is written. For the missing and else rows <code>NA::b</code> is written.</p>
 <table class="table">
 <thead><tr>
 <th style="text-align:left;">
@@ -2015,10 +2015,10 @@ N/A
 variable
 </th>
 <th style="text-align:left;">
-toType
+typeEnd
 </th>
 <th style="text-align:left;">
-fromType
+typeStart
 </th>
 <th style="text-align:left;">
 databaseStart
@@ -2033,7 +2033,7 @@ variableStartLabel
 numValidCat
 </th>
 <th style="text-align:left;">
-recTo
+recEnd
 </th>
 <th style="text-align:left;">
 catLabel
@@ -2045,7 +2045,7 @@ catLabelLong
 units
 </th>
 <th style="text-align:left;">
-recFrom
+recStart
 </th>
 </tr></thead>
 <tbody>
@@ -2310,10 +2310,10 @@ else
 variable
 </th>
 <th style="text-align:left;">
-toType
+typeEnd
 </th>
 <th style="text-align:left;">
-fromType
+typeStart
 </th>
 <th style="text-align:left;">
 databaseStart
@@ -2328,7 +2328,7 @@ variableStartLabel
 numValidCat
 </th>
 <th style="text-align:left;">
-recTo
+recEnd
 </th>
 <th style="text-align:left;">
 catLabel
@@ -2340,7 +2340,7 @@ catLabelLong
 units
 </th>
 <th style="text-align:left;">
-recFrom
+recStart
 </th>
 <th style="text-align:left;">
 catStartLabel
@@ -2626,10 +2626,10 @@ missing
 variable
 </th>
 <th style="text-align:left;">
-toType
+typeEnd
 </th>
 <th style="text-align:left;">
-fromType
+typeStart
 </th>
 <th style="text-align:left;">
 databaseStart
@@ -2644,7 +2644,7 @@ variableStartLabel
 numValidCat
 </th>
 <th style="text-align:left;">
-recTo
+recEnd
 </th>
 <th style="text-align:left;">
 catLabel
@@ -2656,7 +2656,7 @@ catLabelLong
 units
 </th>
 <th style="text-align:left;">
-recFrom
+recStart
 </th>
 <th style="text-align:left;">
 catStartLabel
@@ -2963,7 +2963,7 @@ This is sample survival pbc data
 <li><code>DerivedVar::[var1, var2, var3]</code></li>
 </ul>
 <ol start="2" style="list-style-type: decimal">
-<li>In <strong>recTo</strong>, write <strong>Func::</strong> followed with the exact name of the custom function used to create the derived variable.</li>
+<li>In <strong>recEnd</strong>, write <strong>Func::</strong> followed with the exact name of the custom function used to create the derived variable.</li>
 </ol>
 <ul>
 <li><code>Func::derivedFunction</code></li>
@@ -2977,10 +2977,10 @@ This is sample survival pbc data
 variable
 </th>
 <th style="text-align:left;">
-toType
+typeEnd
 </th>
 <th style="text-align:left;">
-fromType
+typeStart
 </th>
 <th style="text-align:left;">
 databaseStart
@@ -2995,7 +2995,7 @@ variableStartLabel
 numValidCat
 </th>
 <th style="text-align:left;">
-recTo
+recEnd
 </th>
 <th style="text-align:left;">
 catLabel
@@ -3007,7 +3007,7 @@ catLabelLong
 units
 </th>
 <th style="text-align:left;">
-recFrom
+recStart
 </th>
 <th style="text-align:left;">
 catStartLabel
@@ -3071,12 +3071,12 @@ This is sample survival pbc data
 </h2>
 <p>Once mapped and specified on <code>variable_details</code>, the <code>stage</code> variable can be specified on the variables worksheet: <code>variables_sheet</code>. Ensure that the names you used in the <code>variable_details</code> worksheet are identical to those listed in <code>variables_sheet</code>.</p>
 <ol style="list-style-type: decimal">
-<li><p><strong>variable:</strong> the name of the transformed variable (variable_detail worksheet column: ‘variable’)</p></li>
-<li><p><strong>label:</strong> the shorthand label for the variable (variable_detail worksheet column: ’*variableStartShortLabel:)</p></li>
-<li><p><strong>labelLong:</strong> a more detailed label for the variable (new column, it is not in the variable_details worksheet))</p></li>
+<li><p><strong>variable:</strong> the name of the recoded variable (variable_details worksheet column: ‘variable’)</p></li>
+<li><p><strong>label:</strong> the shorthand label for the variable (variable_details worksheet column: ‘<em>variableStartShortLabel</em>’)</p></li>
+<li><p><strong>labelLong:</strong> a more detailed label for the variable (new column, it is not in the variable_details worksheet)</p></li>
 <li><p><strong>section:</strong> group of data the variable belongs to (new column, it is not in the variable_details worksheet)</p></li>
 <li><p><strong>subject:</strong> sub-group of data the variable belongs to (new column, it is not in the variable_details worksheet)</p></li>
-<li><p><strong>variableType:</strong> whether the transformed variable is categorical or continuous (variable_detail worksheet column: ‘toType’)</p></li>
+<li><p><strong>variableType:</strong> whether the recoded variable is categorical or continuous (variable_detail worksheet column: ‘typeEnd’)</p></li>
 <li><p><strong>units:</strong> any units for the variable (variable_detail worksheet column ‘units’)</p></li>
 <li><p><strong>databaseStart:</strong> the list of databases that contain the variable of interest (variable_detail worksheet column: ‘databaseStart’)</p></li>
 <li><p><strong>variableStart</strong> the original variable name (variable_detail worksheet column: ‘variableStart’)</p></li>

@@ -209,7 +209,7 @@ Once mapped and specified on `variable_details`, the `stage` variable can be spe
 ```{r, echo=FALSE, warning=FALSE}
 library(knitr)
 library(kableExtra)
-kable(variables_sheet[19, ])
+kable(variables[19, ])
 ```
 
 
