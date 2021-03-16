@@ -26,7 +26,7 @@ navbar:
       text: Articles
       menu:
       - text: variable_details
-        href: articles/variabledetails.html
+        href: articles/variable_details.html
       - text: variable_sheet
         href: articles/variables_sheet.html
       - text: Derived variables
