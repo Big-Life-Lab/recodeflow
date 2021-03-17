@@ -18,8 +18,8 @@ source("../R/test_data_generator.R")
 
 To use `recodeflow` with your data, you'll need create the following worksheets:
 
-- `variable_details` - mapping of variables across datasets and a list of instructions on how to recode variables
-- `variables` - a list of variables to recode, and
+- `variable_details` - mapping of variables across datasets and a list of instructions on how to recode variables, and
+- `variables` - a list of variables to recode
 
 Files can either be a `.csv` file that you import to R or create directly in R as a dataframe.
 
@@ -184,9 +184,9 @@ A derived variable looks like this in `variable_details.csv`
 kable(variable_details[64,1:14])
 ```
 
-## How to create the variables worksheet `variables_sheet`
+## How to create the variables worksheet `variables`
 
-Once mapped and specified on `variable_details`, the `stage` variable can be specified on the variables worksheet: `variables_sheet`. Ensure that the names you used in the `variable_details` worksheet are identical to those listed in `variables_sheet`.
+Once mapped and specified on `variable_details`, the `stage` variable can be specified on the variables worksheet: `variables`. Ensure that the names you used in the `variable_details` worksheet are identical to those listed in `variables`.
 
 1. **variable:** the name of the recoded variable (variable_details worksheet column: 'variable')
 

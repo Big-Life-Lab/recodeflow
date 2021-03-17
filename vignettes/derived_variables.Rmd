@@ -66,9 +66,9 @@ Add the derived variable to the `var_sheet`. You'll use the same nomenclature as
 Add the derived variable to the variable_details. See the article [`variable_details`](../reference/variables.html) for nomenclature rules. 
 
 
-### 3. Transform the derived variable
+### 3. Recode the derived variable
 
-Use the function `rec_with_table` to transform your derived function. 
+Use the function `rec_with_table` to recode your derived function. 
 
 1) Load recodeflow
 ```{r results= 'hide', message = FALSE, warning=FALSE}
@@ -76,7 +76,7 @@ Use the function `rec_with_table` to transform your derived function.
 library(recodeflow)
 ```
 
-2) Transform the underlying variables (`chol` and `bili`) and the derived variable (`example_der`).
+2) Recode the underlying variables (`chol` and `bili`) and the derived variable (`example_der`).
 ```{r, warning=FALSE}
 derived1 <- rec_with_table(data = tester1,
                           variables = c("chol", "bili","example_der"),

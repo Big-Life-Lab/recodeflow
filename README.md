@@ -19,14 +19,11 @@
 
 ## Why should I use `recodeflow`?
 
-Recoding and cleaning your data is typically the most time consuming step of your project. Existing functions such as `sjmisc::rec()` and `dplyr:recode()` work well but they are limited to recoding one variable at a time. 
+Recoding and cleaning your data is typically the most time consuming step of your project. Existing functions such as `sjmisc::rec()` and `dplyr:recode()` work well but they are **limited to recoding one variable at a time**. 
 
-The `recodeflow` package takes data cleaning and recoding one step further:
+The `recodeflow` package takes data cleaning and recoding one step further. `recodeflow` allows you to  recode **multiple variables at the same time**, and **harmonize variables** across similar databases even when the variables and variables' categories change.
 
--`recodeflow` allows you to recode multiple variables at the same time, and
--`recodeflow` allows you to harmonize variables across similar databases even when the variables and variables' categories change,
-
-`recodeflow` also helps to reduce errors, document the recode process, and ensures your new variables have labels and other metadata.
+`recodeflow` also helps to **reduce errors**, **document the recode process**, and ensures your new variables have labels and other **metadata**.
 
 Even if your project has a few variables,`recodeflow` can save you time.
 
@@ -60,7 +57,7 @@ We've also created the following documentation, to help you understand `recodefl
 
 Currently `recodeflow` is used in packages that harmonize health surveys and health administrative databases.
 
-- `cchsflow` is a package that harmonizes variables across cycles of the Canadian Community Health Survey (CCHS). cchsflow is (published)[<https://big-life-lab.github.io/cchsflow/index.html>]. 
+- `cchsflow` is a package that harmonizes variables across cycles of the Canadian Community Health Survey (CCHS). cchsflow is [published](https://big-life-lab.github.io/cchsflow/index.html). 
 
 - `raiflow` is a package that will harmonize variables within the Resident Assessments Instruments (RAI) from various sources: Canada's Continuing Care Reporting System (CCRS), and Ontario's Resident Assessment Instrutment for Home Care (RAI-HC). `raiflow` is currently underdevelopment.
 

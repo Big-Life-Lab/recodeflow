@@ -15,7 +15,7 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 
 The worksheet `variable_details` maps variables across datasets. `variable_details` also contains the instructions for function `rec_with_table` on how to recode the variables listed in the worksheet `variables`.
 
-Specifically, the function `rec_with-table` recodes variables listed in column `variable_details$variableStart` to the variables listed in `variable_details$variable`. 
+Specifically, the function `rec_with_table` recodes variables listed in column `variable_details$variableStart` to the variables listed in `variable_details$variable`. 
 
 ```{r Read variables.csv, echo=FALSE, message=FALSE, warning=FALSE}
 library(readr)

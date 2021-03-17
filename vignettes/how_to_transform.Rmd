@@ -13,11 +13,13 @@ source("../R/test_data_generator.R")
 
 # Recode variables
 
-We have examples to demonstrate how to recode variables with the _recodeflow_ function [`rec_with_table()`](../reference/rec_wtih_table.html)
+We have examples to demonstrate how to recode variables with the _recodeflow_ function [`rec_with_table()`](../reference/rec_with_table.html)
 
 **Our examples use following packages.**
 
-Package _recodeflow_ Steps on how to install `recodeflow` are in [how to install](../reference/how_to_install.html)
+Package _recodeflow_ 
+
+Steps on how to install `recodeflow` are in [how to install](../reference/how_to_install.html)
 ```{r results= 'hide', message = FALSE, warning=FALSE}
 #Load the package
 library(recodeflow)
@@ -106,7 +108,7 @@ labeled_sex_combined <- set_data_labels(
 
 ## Example 3. Recode a single variable, with different categories, from multiple datasets {#example3}
 
-You could have a situation a variable is the same across datasets but its categories change. 
+You could have a situation where a variable is the same across datasets but its categories change. 
 
 In our example data the variable `agegrp` is different in tester1 and tester2. 
 
@@ -279,7 +281,7 @@ refer to the [sjlabelled](https://strengejacke.github.io/sjlabelled/reference/)
 package.
 
 
-## Example 5. Recode all variables in variables {#example5}
+## Example 5. Recode all variables in the variables worksheet {#example5}
 
 All the variables listed in `variables` worksheet can be recoded with `rec_with_table()`. 
 

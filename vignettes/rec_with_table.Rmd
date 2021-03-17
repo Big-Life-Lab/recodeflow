@@ -15,7 +15,7 @@ source("../R/test_data_generator.R")
 ```
 
 
-# What is the function `rec_with-table`?
+# What is the function `rec_with_table`?
 
 `rec_with_table` is the function used to recode variables within your dataset into harmonized variables. `rec_with_table` reads:
 
@@ -62,7 +62,7 @@ The notes output is from the column *notes* in the`variable_details`
 
 - `variable_details` A dataframe containing the specifications for recoding. 
 
-```{r}
+```{r, eval=FALSE}
 #To recode only a few variables
 age_sex_1 <- rec_with_table(data = tester1, 
                          variables = c("age","sex"),
