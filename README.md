@@ -2,7 +2,7 @@
 
 <!-- badges: start -->
 
-[![Lifecycle: development](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing) <!--
+[![Lifecycle: development](https://img.shields.io/badge/lifecycle-experimental-blue.svg)](https://www.tidyverse.org/lifecycle/#experimental) <!--
 [![](https://img.shields.io/cran/v/cchsflow?color=green)](https://CRAN.R-project.org/package=TBA)
 ![](https://img.shields.io/github/v/release/big-life-lab/recodeflow?color=green&label=GitHub)
 --> [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
