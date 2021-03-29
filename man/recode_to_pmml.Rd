@@ -4,7 +4,8 @@
 \alias{recode_to_pmml}
 \title{Creates a PMML document from variable and variable details sheets for specified database.}
 \usage{
-recode_to_pmml(var_details_sheet, vars_sheet, db_name, vars_to_convert = NULL)
+recode_to_pmml(var_details_sheet, vars_sheet, db_name,
+  vars_to_convert = NULL)
 }
 \arguments{
 \item{var_details_sheet}{A data frame representing a variable details sheet.}
