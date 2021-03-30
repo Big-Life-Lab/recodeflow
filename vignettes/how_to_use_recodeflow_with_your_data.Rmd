@@ -14,8 +14,6 @@ source("../R/test_data_generator.R")
 ```
 
 
-# How to use `recodeflow` with your data
-
 To use `recodeflow` with your data, you'll need create the following worksheets:
 
 - `variable_details` - mapping of variables across datasets and a list of instructions on how to recode variables, and
@@ -23,7 +21,7 @@ To use `recodeflow` with your data, you'll need create the following worksheets:
 
 Files can either be a `.csv` file that you import to R or create directly in R as a dataframe.
 
-If you have derived variables, you will also need to create custom functions. For more information on custom functions see the article [derived_variables](../reference/derived_variables.html).
+If you have derived variables, you will also need to create custom functions. For more information on custom functions see the article [derived variables](../articles/derived_variables.html).
 
 
 ## Example data
@@ -37,9 +35,9 @@ The variable `stage` captures the histologic stage of the patient's disease (pri
 
 The `variable_details` worksheet does two important steps. First, it maps variables across datasets. Second, it gives instructions on how to recode the variables. 
 
-Note: additional information for the `variable_details` worksheet is in the article [variable_details](../reference/variable_details.html).
+Note: additional information for the `variable_details` worksheet is in the article [variable_details](../articles/variable_details.html).
 
-Note: additional details on how to add derived variables to the `var_detials` worksheet is in the article [derived_variables](../reference/derived_variables.html).
+Note: additional details on how to add derived variables to the `variable_detials` worksheet is in the article [derived variables](../articles/derived_variables.html).
 
 
 ### Rows

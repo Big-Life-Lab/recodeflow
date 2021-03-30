@@ -19,7 +19,7 @@ source("../R/test_data_generator.R")
 
 The `variables` worksheet acts as a reference sheet your project(s), by listing the variables you are using. 
 
-This vignette describes how the `variables` worksheet is organized and how to find variables that you can transform. The [How to guides](../reference/how_to_guides.html) provides examples of how to use the this. 
+This vignette describes how the `variables` worksheet is organized and how to find variables that you can transform. The [How to guides](../how_to/recode_variables.html) provides examples of how to use the this. 
 
 Read the `variables` worksheet
 

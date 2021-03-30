@@ -14,17 +14,17 @@ source("../R/test_data_generator.R")
 
 ## Introduction
 
-_recodeflow_ supports the use of derived variables. This can be any custom function as long as the variable can be calculated on a per row bases. Functions requiring operations across rows or on the full data set are not supported. 
+_recodeflow_ supports the use of derived variables. Derived variables can be any custom function as long as the variable can be calculated on a per row bases. Functions requiring operations across rows or on the full data set are not supported. 
 
 Two most common uses for derived variables are: 
 
-- Variable mapping - mapping two or more variables into a single variable.
-- Variables that derived using math equations (e.g., BMI is calculated by dividing weight by the square of height). 
+- Variables derived from two or more variables,
+- Variables that are derived using math equations (e.g., BMI is calculated by dividing weight by the square of height). 
 
 To create derived variables, you need to complete two steps.
 
 1. Create and load a customized function.
-2. Add the derived variable to the var_details and var_sheet.
+2. Add the derived variable to the variable_details and variables worksheets.
 
 ## Example of a derived function
 
@@ -59,11 +59,11 @@ example_der_fun <- function(chol, bili){
 If you don't load the customized function you cannot create the derived variable. 
 
 
-### 2. Add the derived variable to the var_details and var_sheet.
+### 2. Add the derived variable to the `variable_details` and `variables` worksheets.
 
-Add the derived variable to the `var_sheet`. You'll use the same nomenclature as any other variable ([`variables_sheet`](../reference/variables.html)).
+Add the derived variable to the `variables` worksheet. You'll use the same nomenclature as any other variable. See the article [`variables_sheet`](../articles/variables_worksheet.html) for nomenclature rules.
 
-Add the derived variable to the variable_details. See the article [`variable_details`](../reference/variables.html) for nomenclature rules. 
+Add the derived variable to the variable_details. See the article [`variable_details`](../articles/variable_details_worksheet.html) for nomenclature rules. 
 
 
 ### 3. Recode the derived variable

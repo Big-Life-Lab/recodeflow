@@ -11,15 +11,13 @@ knitr::opts_chunk$set(echo = TRUE, collapse = TRUE, comment = "#>")
 source("../R/test_data_generator.R")
 ```
 
-# Recode variables
-
 We have examples to demonstrate how to recode variables with the _recodeflow_ function [`rec_with_table()`](../reference/rec_with_table.html)
 
 **Our examples use following packages.**
 
 Package _recodeflow_ 
 
-Steps on how to install `recodeflow` are in [how to install](../reference/how_to_install.html)
+Steps on how to install `recodeflow` are in [how to install](../how_to/install.html)
 ```{r results= 'hide', message = FALSE, warning=FALSE}
 #Load the package
 library(recodeflow)
@@ -31,7 +29,8 @@ Package [dplyr](https://www.rdocumentation.org/packages/dplyr/versions/0.7.8) to
 library(dplyr)
 ```
 
-**Example data**
+**Our examples use example data**
+
 Our examples use the dataset `pbc` from the package [survival](https://cran.r-project.org/web/packages/survival/index.html). We've split this dataset into two (tester1 and tester2) to mimic real data e.g., the same survey preformed in separate years. We've also added columns (`agegrp5` and `agegrp10`) to this dataset for our examples.
 
 
@@ -86,10 +85,6 @@ sex_combined <- bind_rows(sex_1, sex_2)
 ```{r, echo=FALSE}
 head(sex_combined)
 tail(sex_combined)
-```
-
-```{r, echo=FALSE}
-head(sex_combined)
 ```
 
 3) Set labels
@@ -356,7 +351,7 @@ tail(combined_age_sex)
 
 Derived variables are variables that are not in the original dataset; rather they are created using variables the original dataset.
 
-Descriptions of derived functions are in the article [derived functions](../reference/derived_variables.html)
+Descriptions of derived functions are in the article [derived functions](../articles/derived_variables.html)
 
 
 To recode a derived variable, you must: 

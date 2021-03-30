@@ -31,14 +31,12 @@ status <- rec_with_table(data = tester1,
                          var_labels = c(status = "Status"))
 ```
 
-# Output
-
-## Warning messages
+# Output - Warning messages
 
 Warning messages will appear when your dataset is missing variables in your
 `variable` worksheet or `rec_with_table()` call.
 
-# Notes
+# Output - Notes
 
 By default, `rec_with_table()` prints notes to the console.
 
@@ -52,9 +50,7 @@ You should read and consider `notes` before deciding whether to harmonize a vari
 
 The notes output is from the column *notes* in the`variable_details` 
 
-# Arguments 
-
-## Required arguments
+# Arguments - Required
 
 - `data` A dataframe(s) containing data to be recoded. 
 
@@ -75,7 +71,7 @@ recoded1 <- rec_with_table(data = tester1,
                           variable_details = variable_details)
 ```
 
-## Default arguments
+# Arguments - Default 
 
 With `rec_with_table()` the following arguments are only called if you want to modify them.
 
