@@ -39,4 +39,18 @@ navbar:
       text: Reference
       href: reference/index.html
 
+reference:
+  - title: "Recoding"
+    desc: Functions for recoding data across databases
+    contents:
+    - rec_with_table
+  - title: "PMML"
+    desc: Functions for converting recoding metadata into PMML
+    contents:
+    - recode_to_pmml
+  - title: "Utility"
+    desc: Useful functions for existing pmml/recoded data
+    contents:
+    - build_trans_dict
+    - set_data_labels
 

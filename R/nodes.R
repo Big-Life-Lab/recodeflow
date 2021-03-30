@@ -134,6 +134,7 @@ attach_range_value_nodes <- function(var_details_row, data_field) {
 #' @param db_name Database name.
 #'
 #' @return TransformationDictionary node.
+#' @export
 build_trans_dict <- function(vars_sheet, var_details_sheet, var_names, db_name) {
   trans_dict <- XML::xmlNode(pkg.env$node_name.trans_dict)
 
