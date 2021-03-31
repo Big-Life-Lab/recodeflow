@@ -13,7 +13,7 @@
 
 ## What is `recodeflow`?
 
-`recodeflow` recodes variables from multiple data sets into harmonize variables.
+`recodeflow` recodes variables from multiple data sets into harmonized variables.
 
 `recodeflow` has basic functions and templates required to define, recode, and harmonize variables for any dataset.
 
@@ -25,7 +25,7 @@ The `recodeflow` package takes data cleaning and recoding one step further. `rec
 
 `recodeflow` also helps to **reduce errors**, **document the recode process**, and ensures your new variables have labels and other **metadata**.
 
-Even if your project has a few variables,`recodeflow` can save you time.
+Even if your project has few variables,`recodeflow` can save you time.
 
 
 ## How does `recodeflow` work?
