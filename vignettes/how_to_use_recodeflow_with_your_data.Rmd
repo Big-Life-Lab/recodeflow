@@ -19,14 +19,14 @@ To use `recodeflow` with your data, you'll need create the following worksheets:
 - `variable_details` - mapping of variables across datasets and a list of instructions on how to recode variables, and
 - `variables` - a list of variables to recode
 
-Files can either be a `.csv` file that you import to R or create directly in R as a dataframe.
+Files can either be a `.csv` file that you import to R or a dataframe created directly in R.
 
 If you have derived variables, you will also need to create custom functions. For more information on custom functions see the article [derived variables](../articles/derived_variables.html).
 
 
 ## Example data
 
-Our examples use the dataset `pbc` from the package [survival](https://cran.r-project.org/web/packages/survival/index.html). We've split this dataset into two (tester1 and tester2) to mimic real data e.g., the same survey preformed in separate years. We've also added columns (`agegrp5` and `agegrp10`) to this dataset for our examples.
+Our examples use the dataset `pbc` from the package [survival](https://cran.r-project.org/web/packages/survival/index.html). We've split this dataset in two (tester1 and tester2) to mimic real data e.g., the same survey preformed in separate years. We've also added columns (`agegrp5` and `agegrp10`) to this dataset for our examples.
 
 We'll use our example datasets and the variable `stage`.
 The variable `stage` captures the histologic stage of the patient's disease (primary biliary cirrhosis (PBC)).
@@ -62,7 +62,7 @@ library(kableExtra)
 kable(variable_details[58:63, 1], col.names = 'variable')
 ```
 
-2. **typeEnd:** `stage` captures the stage of the disease and is originally a categorical variable. Therefore, it does not make sense to change `stage` into a continuous variable. 
+2. **typeEnd:** indicates the type of variable (continous or categorical)for the recoded (final) variable. `stage`, which captures the stage of the disease, is a categorical variable in the original dataset and will remain a categorical variable after recoding. 
 
 Write 'cat' in the six rows.
 
@@ -70,7 +70,7 @@ Write 'cat' in the six rows.
 kable(variable_details[58:63, 1:2])
 ```
 
-3. **typeStart:** `stage` is originally a categorical variable.
+3. **typeStart:** indicates the type of variable (continous or categorical) for the original variable. `stage` is a categorical variable in the original dataset. 
 
 Write 'cat' in the six rows.
 
@@ -78,7 +78,7 @@ Write 'cat' in the six rows.
 kable(variable_details[58:63, 1:3])
 ```
 
-4. **databaseStart:** `stage` was captured identically for both datasets. Therefore, we will recode the variable the same way regardless of which dataset it's from.
+4. **databaseStart:** indicates the name of the database(s) from which the original variable(s) is(are) obtained. 
 
 Write the dataset names, separated by a comma, in the six rows
 
@@ -86,7 +86,7 @@ Write the dataset names, separated by a comma, in the six rows
 kable(variable_details[58:63, 1:4])
 ```
 
-5. **variableStart:** The original variable `stage` is identical across our datasets. 
+5. **variableStart:** indicates the original variable name(s) in the database(s). In our example, both datasets have the start variable `stage`. Therefore we can indicate a single variable name here. If the variable names were different, we would need to indicate 'dataset_name::variable_name' separated by commas for each of the datasets.
 
 Write the variable name in squared brackets once per row, for all six rows.
 
@@ -94,7 +94,7 @@ Write the variable name in squared brackets once per row, for all six rows.
 kable(variable_details[58:63, 1:5])
 ```
 
-6. **variableStartLabel:** 
+6. **variableStartLabel:** indicates the original variable lable 
 
 Write "stage" in the 6 rows.
 
@@ -102,7 +102,7 @@ Write "stage" in the 6 rows.
 kable(variable_details[58:63, 1:6])
 ```
 
-7. **numValidCat:** The number of categories within the variable `stage`. There are four categories in `stage`: 1, 2, 3, and 4. Note that for categories: not applicable, missing, and else, are not included in the category count.
+7. **numValidCat:** indicates the number of valid categories for the final derived variable. In our example, there are four categories for `stage`: 1, 2, 3, and 4. Note that the categories 'not applicable', 'missing', and 'else' are not included in the category count.
 
 Write 4 in each of the six rows.
 
@@ -110,15 +110,15 @@ Write 4 in each of the six rows.
 kable(variable_details[58:63, 1:7])
 ```
 
-8. **recEnd:** Since `stage` is a categorical variable, you'll capture the category you are recoding each row too. For the not applicable rows `NA::a` is written. For the missing and else rows `NA::b` is written. The `haven` package is used for tagging NA in numeric variables.
+8. **recEnd:** indicates the category to which you are recoding each row. For the not applicable rows `NA::a` is written. For the missing and else rows `NA::b` is written. The `haven` package is used for tagging NA in numeric variables.
 
-We are not changing the categories. Therefore, the four stages captured in the original data. For the not applicable rows write `NA::a`. For the else rows write `NA::b`.
+We are not changing the categories `stage`, therefore, the recEnd values for these rows will be the same as the the original data. For the not applicable rows write `NA::a`. For the missing and else rows write `NA::b`.
 
 ```{r, echo=FALSE, warning=FALSE}
 kable(variable_details[58:63, 1:8])
 ```
 
-9. **catLabel:** Name the categorical level for the recoded variable.
+9. **catLabel:** indicates the lable for the recoded categorical level.
 
 Write Stage 1, Stage 2, Stage 3, Stage 4, NA, and missing.
 
@@ -126,7 +126,7 @@ Write Stage 1, Stage 2, Stage 3, Stage 4, NA, and missing.
 kable(variable_details[58:63, 1:9])
 ```
 
-10. **catLabelLong:** You can elaborate on the name of the categorical level of the recoded variable.
+10. **catLabelLong:** provides a more elaborate lable for the recoded categorical level. If not required, repeat the shorter _catLabel_.
 
 Copy values from **catLabel**
 
@@ -134,7 +134,7 @@ Copy values from **catLabel**
 kable(variable_details[58:63, 1:10])
 ```
 
-11. **units:** The histologic stage of disease does not have units of measurement. 
+11. **units:** indicates the unit of measure for the variable. The histologic stage of disease does not have a units of measurement. 
 
 Write "N/A" in all six rows.
 
@@ -142,7 +142,7 @@ Write "N/A" in all six rows.
 kable(variable_details[58:63, 1:11])
 ```
 
-12. **recStart:** Since we are not combining levels of categories and we are keeping the category levels the same, the recStart column will be identical to recEnd. 
+12. **recStart:** indicates the category(ies) from which you are recoding each row. Since we are not combining levels of categories and we are keeping the category levels the same, the recStart column will be identical to recEnd. If multiple categories were being combined into a single category, the original categories would be indicated in square brackets, separated by commas.
 
 Write the category level you are recoding each row too. For the not applicable rows `NA::a` is written. For the missing and else rows `NA::b` is written.
 
@@ -150,7 +150,7 @@ Write the category level you are recoding each row too. For the not applicable r
 kable(variable_details[58:63, 1:12])
 ```
 
-13. **catStartLabel:** The `stage` label should be identical to what is shown in the original data documentation. For the missing rows, each missing category is described along with their coded values.
+13. **catStartLabel:** indicates the original variable category label. The `stage` label should be identical to what is shown in the original data documentation. For the missing rows, each missing category is described along with their coded values.
 
 Write Stage 1, Stage 2, Stage 3, Stage 4, NA, and missing.
 
@@ -192,13 +192,13 @@ Once mapped and specified on `variable_details`, the `stage` variable can be spe
 
 3. **labelLong:** a more detailed label for the variable (new column, it is not in the variable_details worksheet)
 
-4. **section:** group of data the variable belongs to (new column, it is not in the variable_details worksheet)
+4. **section:** group of data to which the variable belongs (new column, it is not in the variable_details worksheet)
 
-5. **subject:** sub-group of data the variable belongs to (new column, it is not in the variable_details worksheet)
+5. **subject:** sub-group of data to which the variable belongs (new column, it is not in the variable_details worksheet)
 
 6. **variableType:** whether the recoded variable is categorical or continuous (variable_detail worksheet column: 'typeEnd')
 
-7. **units:** any units for the variable (variable_detail worksheet column 'units')
+7. **units:** unit of measurement for the variable (variable_detail worksheet column 'units')
 
 8. **databaseStart:** the list of databases that contain the variable of interest (variable_detail worksheet column: 'databaseStart')
 
