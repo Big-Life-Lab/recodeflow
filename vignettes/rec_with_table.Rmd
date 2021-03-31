@@ -44,11 +44,11 @@ Notes can give important details on what and how variables are harmonized. For e
 
 - which datasets include a variable,
 - how a variable changes across datasets, and 
-- if the recoding rules for a variable is dependent on which dataset the variable is in
+- if the recoding rules for a variable are dependent on the source dataset
 
 You should read and consider `notes` before deciding whether to harmonize a variable.
 
-The notes output is from the column *notes* in the`variable_details` 
+The notes output is from the column *notes* in `variable_details` 
 
 # Arguments - Required
 
