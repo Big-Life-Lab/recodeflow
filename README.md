@@ -30,7 +30,7 @@ Even if your project has few variables,`recodeflow` can save you time.
 
 ## How does `recodeflow` work?
 
-Use the worksheets `variables` and `variable_details` to list your variables, and state how to recode the each variable.
+Use the worksheets `variables` and `variable_details` to list your variables and state how to recode the each variable.
 
 Once your variables are defined, use `recodeflow` functions to clean and recode your data. The main `recodeflow` function is `rec_with_table` which recodes variables within you dataset(s) based on how you've defined the variable in the worksheets `variables` and `variable_details`.
 
@@ -43,10 +43,10 @@ The `recodeflow` package includes:
 
 -   **worksheets:**
 
-    -   **`variables`** a list of variables to recode, and
+    -   **`variables`** a list of variables to recode and
     -   **`variable_details`** mapping of variables across datasets and a list of instructions for recoding variables.
 
-We've also created the following documentation, to help you understand `recodeflow`:
+We've also created the following documentation to help you understand `recodeflow`:
 
 -   **how to guides** examples of how to use `recodeflow` and adapt `recodeflow` for your dataset,
 -   **articles** that describe package elements (e.g., variables) in detail,
@@ -59,7 +59,7 @@ Currently `recodeflow` is used in packages that harmonize health surveys and hea
 
 - `cchsflow` is a package that harmonizes variables across cycles of the Canadian Community Health Survey (CCHS). cchsflow is [published](https://big-life-lab.github.io/cchsflow/index.html). 
 
-- `raiflow` is a package that will harmonize variables within the Resident Assessments Instruments (RAI) from various sources: Canada's Continuing Care Reporting System (CCRS), and Ontario's Resident Assessment Instrutment for Home Care (RAI-HC). `raiflow` is currently underdevelopment.
+- `raiflow` is a package that will harmonize variables within the Resident Assessments Instruments (RAI) from various sources: Canada's Continuing Care Reporting System (CCRS) and Ontario's Resident Assessment Instrutment for Home Care (RAI-HC). `raiflow` is currently underdevelopment.
 
 # Roadmap
 
