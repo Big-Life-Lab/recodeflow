@@ -37,7 +37,7 @@ cat("In the dataframe `variable_details` there are", nrow(variable_details), "ro
 
 ### Rows
 
-Each row in `variable_details` lists the instructions to recode a single category of a variable.
+Each row in `variable_details` lists the instructions to recode a single category of a variable. [Rusty & Rhiannon see note in commit]
 
 - An exception to this rule are the "don't know", "refusal", and "not stated" categories, which are combined as a single missing category.
 
