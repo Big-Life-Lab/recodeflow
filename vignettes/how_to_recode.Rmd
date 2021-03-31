@@ -13,7 +13,7 @@ source("../R/test_data_generator.R")
 
 We have examples to demonstrate how to recode variables with the _recodeflow_ function [`rec_with_table()`](../reference/rec_with_table.html)
 
-**Our examples use following packages.**
+**Our examples use following packages:**
 
 Package _recodeflow_ 
 
@@ -31,7 +31,7 @@ library(dplyr)
 
 **Our examples use example data**
 
-Our examples use the dataset `pbc` from the package [survival](https://cran.r-project.org/web/packages/survival/index.html). We've split this dataset into two (tester1 and tester2) to mimic real data e.g., the same survey preformed in separate years. We've also added columns (`agegrp5` and `agegrp10`) to this dataset for our examples.
+Our examples use the dataset `pbc` from the package [survival](https://cran.r-project.org/web/packages/survival/index.html). We've split this dataset in two (tester1 and tester2) to mimic real data e.g., the same survey preformed in separate years. For our examples, we've also added columns (`agegrp5` and `agegrp10`) to this dataset.
 
 
 ## Example 1. Recode a single variable from a single dataset
@@ -264,7 +264,7 @@ labeled_combined_age_sex <-
       )
 ```
 
-You can check if labels have been added to your recodeed dataset by using `get_label()`.
+You can check if labels have been added to your recoded dataset by using `get_label()`.
 
 ```{r, warning=FALSE}
 library(sjlabelled) 
@@ -349,7 +349,7 @@ tail(combined_age_sex)
 
 ## Example 7. Recode derived variables {#example7}
 
-Derived variables are variables that are not in the original dataset; rather they are created using variables the original dataset.
+Derived variables are variables that are not in the original dataset; rather they are created using variables from the original dataset.
 
 Descriptions of derived functions are in the article [derived functions](../articles/derived_variables.html)
 
