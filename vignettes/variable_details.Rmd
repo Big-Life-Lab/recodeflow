@@ -54,7 +54,8 @@ There are two exceptions to this rule.
 - Dataset B has categories “1” = male and “2” = female.
 - Variable_details requires four rows to map the final “Sex” categories = two for dataset A and two for dataset B.
 
-
+[@CBjerke should we remove the text below (---) to (---)]
+'-------------------------------
 Therefore, the number of rows required for a final variable depends on the:
 
 - Number of distinct categories in the final variable, 
@@ -78,6 +79,8 @@ The final variable 'X', will have 7 rows:
 If in dataset B the variable X' distinct categories are the **identical** to dataset A, there are **7 rows**. 
 
 If in dataset B the categorical variable' distinct categories are **all different** to dataset A, there are **13 rows**. 
+
+'-------------------------------
 
 **Note**: We recommend not combining variables if the variable has an important change between datasets. `variable_detailsdetails$notes` is used to identify issues that may be relevant when recoding the variable or category.
 
