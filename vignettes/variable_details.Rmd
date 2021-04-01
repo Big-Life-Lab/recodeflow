@@ -37,18 +37,35 @@ cat("In the dataframe `variable_details` there are", nrow(variable_details), "ro
 
 ### Rows
 
-Each row in `variable_details` lists the instructions to recode a single category of a variable. [Rusty & Rhiannon see note in commit]
+Each row in `variable_details` gives instructions to recode a single category of a final variable. Typically, a single category of a final variable maps to a single category of an original variable. Therefore, in `variable_details` you'll have one row per category. 
 
-- An exception to this rule are the "don't know", "refusal", and "not stated" categories, which are combined as a single missing category.
+There are two exceptions to this rule.
 
-The number of rows required for a recoded variable depends on the:
+1. Original categories are sometimes combined into a single final variable category. For example,
 
-- Number of categories in the original variable, 
-- **PLUS** the number of categories for "not applicable" or "missing" data, 
+- Most often survey responses "don't know,” "refusal," and "not stated" are combined into a final single "missing" category. 
+- Original age group categories are often combined into larger age groups categories (e.g., original five-year age group categories are combined into final ten-year age group categories).
+
+
+2. Original datasets with different categories map to separate rows for a final variable. For example, 
+
+- The final variable, “Sex,” has categories “1” = male and “2” = female.
+- Dataset A has sex categories “m” = male and “f” = female. 
+- Dataset B has categories “1” = male and “2” = female.
+- Variable_details requires four rows to map the final “Sex” categories = two for dataset A and two for dataset B.
+
+
+Therefore, the number of rows required for a final variable depends on the:
+
+- Number of distinct categories in the final variable, 
+- **PLUS** a category for "not applicable" (if required),
+- **PLUS** a category for "missing" data (if required), 
+- **multiplied** by the number of original datasets where the original categories differ from each other
 - **PLUS** an 'else' row to assign values that are not defined in other rows or fall outside of the variable's range of possible values.
-- **multiplied** by the number of datasets where the original variable's categories are different 
 
-For example, in dataset A, a categorical variable with 4 distinct categories, a "not applicable" category and the 3 missing categories (e.g., don't know, not asked, not stated), will have 7 rows: 
+For example, Dataset A, a categorical variable 'X' with 4 distinct categories, a "not applicable" category and the 3 missing categories (e.g., don't know, not asked, not stated). 
+
+The final variable 'X', will have 7 rows: 
 
 + 4 for each distinct category
 
@@ -58,10 +75,9 @@ For example, in dataset A, a categorical variable with 4 distinct categories, a 
 
 + 1 else row.
 
-If in dataset B the categorical variable' distinct categories are the **identical** to dataset A, there are **7 rows**. 
+If in dataset B the variable X' distinct categories are the **identical** to dataset A, there are **7 rows**. 
 
-If in dataset B the categorical variable' distinct categories are the **different** to dataset A, there are **14 rows**. 
-
+If in dataset B the categorical variable' distinct categories are **all different** to dataset A, there are **13 rows**. 
 
 **Note**: We recommend not combining variables if the variable has an important change between datasets. `variable_detailsdetails$notes` is used to identify issues that may be relevant when recoding the variable or category.
 
