@@ -46,41 +46,12 @@ There are two exceptions to this rule.
 - Most often survey responses "don't know,” "refusal," and "not stated" are combined into a final single "missing" category. 
 - Original age group categories are often combined into larger age groups categories (e.g., original five-year age group categories are combined into final ten-year age group categories).
 
-
 2. Original datasets with different categories map to separate rows for a final variable. For example, 
 
 - The final variable, “Sex,” has categories “1” = male and “2” = female.
 - Dataset A has sex categories “m” = male and “f” = female. 
 - Dataset B has categories “1” = male and “2” = female.
 - Variable_details requires four rows to map the final “Sex” categories = two for dataset A and two for dataset B.
-
-[@CBjerke should we remove the text below (---) to (---)]
-'-------------------------------
-Therefore, the number of rows required for a final variable depends on the:
-
-- Number of distinct categories in the final variable, 
-- **PLUS** a category for "not applicable" (if required),
-- **PLUS** a category for "missing" data (if required), 
-- **multiplied** by the number of original datasets where the original categories differ from each other
-- **PLUS** an 'else' row to assign values that are not defined in other rows or fall outside of the variable's range of possible values.
-
-For example, Dataset A, a categorical variable 'X' with 4 distinct categories, a "not applicable" category and the 3 missing categories (e.g., don't know, not asked, not stated). 
-
-The final variable 'X', will have 7 rows: 
-
-+ 4 for each distinct category
-
-+ 1 for the not applicable category
-
-+ 1 for the missing categories
-
-+ 1 else row.
-
-If in dataset B the variable X' distinct categories are the **identical** to dataset A, there are **7 rows**. 
-
-If in dataset B the categorical variable' distinct categories are **all different** to dataset A, there are **13 rows**. 
-
-'-------------------------------
 
 **Note**: We recommend not combining variables if the variable has an important change between datasets. `variable_detailsdetails$notes` is used to identify issues that may be relevant when recoding the variable or category.
 
