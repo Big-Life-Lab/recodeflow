@@ -1,0 +1,57 @@
+---
+title: "missing data (tagged_na)"
+output: html_document
+vignette: >
+  %\VignetteIndexEntry{How to use tagged_na}     
+  %\VignetteEngine{knitr::rmarkdown} 
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Base R supports only one type of NA ('not available') to represent missing values. However, your data may include several types of missing data or incomplete category responses. 
+
+To address this issue of a singular "NA", we use the `haven` package [`tagged_na()`](https://haven.tidyverse.org/reference/tagged_na.html) 
+
+`tagged_na()` adds an additional character to any NA values, enabling users to define additional missing data types. `tagged_na()` applies only for numeric values; character based values can use any string to represent NA or missing data. 
+
+## recodeflow approach to coding missing data
+
+`recodeflow` recodes missing data categories values into 3 NA values that are commonly used for most studies: 
+
+- NA(a) = 'not applicable' 
+- NA(b) = 'missing'
+- Na(c) = 'not asked'
+
+
+**Summary of `tagged_na` values and their corresponding category values.**
+
+| recodeflow `tagged_na` | category value | Label |
+|----------------|--------------|
+| NA(a) | 6                  | not applicable     |
+| NA(b) | 7                  | missing - don't know         |
+| NA(b) | 8                  | missing - refusal            |
+| NA(b) | 9                  | missing - not stated         |
+| NA(c) | question not asked in the survey cycle  |
+
+## Example `haven::tagged_na()`
+```{r}
+library(haven)
+x <- c(1:5, tagged_na("a"), tagged_na("b"))
+
+# Is used to read the tagged NA in most other functions they are still viewed as NA
+na_tag(x)
+```
+```{r}
+# Is used to print the na as well as their tag
+print_tagged_na(x)
+```
+```{r}
+# Tagged NA's work identically to regular NAs
+x
+```
+```{r}
+is.na(x)
+```

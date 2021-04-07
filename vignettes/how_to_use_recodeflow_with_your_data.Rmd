@@ -1,0 +1,213 @@
+---
+title: "Use recodeflow with your data"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{How to add variables to cchsflow}     
+  %\VignetteEngine{knitr::rmarkdown} 
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+
+source("../R/test_data_generator.R")
+```
+
+
+To use `recodeflow` with your data, you'll need create the following worksheets:
+
+- `variable_details` - mapping of variables across datasets and a list of instructions on how to recode variables, and
+- `variables` - a list of variables to recode
+
+Files can either be a `.csv` file that you import to R or a dataframe created directly in R.
+
+If you have derived variables, you will also need to create custom functions. For more information on custom functions see the article [derived variables](../articles/derived_variables.html).
+
+
+## Example data
+
+Our examples use the dataset `pbc` from the package [survival](https://cran.r-project.org/web/packages/survival/index.html). We've split this dataset in two (tester1 and tester2) to mimic real data e.g., the same survey preformed in separate years. We've also added columns (`agegrp5` and `agegrp10`) to this dataset for our examples.
+
+We'll use our example datasets and the variable `stage`.
+The variable `stage` captures the histologic stage of the patient's disease (primary biliary cirrhosis (PBC)).
+
+## How to create the `variable_details` worksheet
+
+The `variable_details` worksheet does two important steps. First, it maps variables across datasets. Second, it gives instructions on how to recode the variables. 
+
+Note: additional information for the `variable_details` worksheet is in the article [variable_details](../articles/variable_details.html).
+
+Note: additional details on how to add derived variables to the `variable_detials` worksheet is in the article [derived variables](../articles/derived_variables.html).
+
+
+### Rows
+
+For the `stage` variable, there are the following six rows:
+
+- 4 rows for the 4 categories for the histological stage of the disease, 
+- 1 row for the not applicable responses, and 
+- 1 row for else. 
+
+Since `stage` is coded consistently across the two datasets (tester1 and tester2) we only need one row per categorical response.
+
+### Columns (14)
+
+1. **variable:** the name of the final recoded variable. We'll use the same name as in the original dataset `stage` though you could rename the variable.
+
+Write `stage` in the column **variable** in the six rows.
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(knitr)
+library(kableExtra)
+kable(variable_details[58:63, 1], col.names = 'variable')
+```
+
+2. **typeEnd:** indicates the type of variable (continous or categorical)for the recoded (final) variable. `stage`, which captures the stage of the disease, is a categorical variable in the original dataset and will remain a categorical variable after recoding. 
+
+Write 'cat' in the six rows.
+
+```{r, echo=FALSE, warning=FALSE}
+kable(variable_details[58:63, 1:2])
+```
+
+3. **typeStart:** indicates the type of variable (continous or categorical) for the original variable. `stage` is a categorical variable in the original dataset. 
+
+Write 'cat' in the six rows.
+
+```{r, echo=FALSE, warning=FALSE}
+kable(variable_details[58:63, 1:3])
+```
+
+4. **databaseStart:** indicates the name of the database(s) from which the original variable(s) is(are) obtained. 
+
+Write the dataset names, separated by a comma, in the six rows
+
+```{r, echo=FALSE, warning=FALSE}
+kable(variable_details[58:63, 1:4])
+```
+
+5. **variableStart:** indicates the original variable name(s) in the database(s). In our example, both datasets have the start variable `stage`. Therefore we can indicate a single variable name here. If the variable names were different, we would need to indicate 'dataset_name::variable_name' separated by commas for each of the datasets.
+
+Write the variable name in squared brackets once per row, for all six rows.
+
+```{r, echo=FALSE, warning=FALSE}
+kable(variable_details[58:63, 1:5])
+```
+
+6. **variableStartLabel:** indicates the original variable lable 
+
+Write "stage" in the 6 rows.
+
+```{r, echo=FALSE, warning=FALSE}
+kable(variable_details[58:63, 1:6])
+```
+
+7. **numValidCat:** indicates the number of valid categories for the final derived variable. In our example, there are four categories for `stage`: 1, 2, 3, and 4. Note that the categories 'not applicable', 'missing', and 'else' are not included in the category count.
+
+Write 4 in each of the six rows.
+
+```{r, echo=FALSE, warning=FALSE}
+kable(variable_details[58:63, 1:7])
+```
+
+8. **recEnd:** indicates the category to which you are recoding each row. For the not applicable rows `NA::a` is written. For the missing and else rows `NA::b` is written. The `haven` package is used for tagging NA in numeric variables.
+
+We are not changing the categories `stage`, therefore, the recEnd values for these rows will be the same as the the original data. For the not applicable rows write `NA::a`. For the missing and else rows write `NA::b`.
+
+```{r, echo=FALSE, warning=FALSE}
+kable(variable_details[58:63, 1:8])
+```
+
+9. **catLabel:** indicates the lable for the recoded categorical level.
+
+Write Stage 1, Stage 2, Stage 3, Stage 4, NA, and missing.
+
+```{r, echo=FALSE, warning=FALSE}
+kable(variable_details[58:63, 1:9])
+```
+
+10. **catLabelLong:** provides a more elaborate lable for the recoded categorical level. If not required, repeat the shorter _catLabel_.
+
+Copy values from **catLabel**
+
+```{r, echo=FALSE, warning=FALSE}
+kable(variable_details[58:63, 1:10])
+```
+
+11. **units:** indicates the unit of measure for the variable. The histologic stage of disease does not have a units of measurement. 
+
+Write "N/A" in all six rows.
+
+```{r, echo=FALSE, warning=FALSE}
+kable(variable_details[58:63, 1:11])
+```
+
+12. **recStart:** indicates the category(ies) from which you are recoding each row. Since we are not combining levels of categories and we are keeping the category levels the same, the recStart column will be identical to recEnd. If multiple categories were being combined into a single category, the original categories would be indicated in square brackets, separated by commas.
+
+Write the category level you are recoding each row too. For the not applicable rows `NA::a` is written. For the missing and else rows `NA::b` is written.
+
+```{r, echo=FALSE, warning=FALSE}
+kable(variable_details[58:63, 1:12])
+```
+
+13. **catStartLabel:** indicates the original variable category label. The `stage` label should be identical to what is shown in the original data documentation. For the missing rows, each missing category is described along with their coded values.
+
+Write Stage 1, Stage 2, Stage 3, Stage 4, NA, and missing.
+
+```{r, echo=FALSE, warning=FALSE}
+kable(variable_details[58:63, 1:13])
+```
+
+14. **notes: ** Capture any important differences in a variable across datasets. For our example, there are no differences across datasets.
+
+Write "This is sample survival pbc data" in all six rows.
+
+```{r, echo=FALSE, warning=FALSE}
+kable(variable_details[58:63, 1:14])
+```
+
+## `variable_details` for dervived variables
+
+The same naming convention applies to derived variables with the exception of two columns:
+
+1. In **variableStart**, instead of database names being listed, **DerivedVar::** is written followed with the list of original variables used inside square brackets. 
++ `DerivedVar::[var1, var2, var3]`
+
+2. In **recEnd**, write **Func::** followed with the exact name of the custom function used to create the derived variable.
++ `Func::derivedFunction`
+
+A derived variable looks like this in `variable_details.csv`
+
+```{r, echo=FALSE, warning=FALSE}
+kable(variable_details[64,1:14])
+```
+
+## How to create the variables worksheet `variables`
+
+Once mapped and specified on `variable_details`, the `stage` variable can be specified on the variables worksheet: `variables`. Ensure that the names you used in the `variable_details` worksheet are identical to those listed in `variables`.
+
+1. **variable:** the name of the recoded variable (variable_details worksheet column: 'variable')
+
+2. **label:** the shorthand label for the variable (variable_details worksheet column: '*variableStartShortLabel*')
+
+3. **labelLong:** a more detailed label for the variable (new column, it is not in the variable_details worksheet)
+
+4. **section:** group of data to which the variable belongs (new column, it is not in the variable_details worksheet)
+
+5. **subject:** sub-group of data to which the variable belongs (new column, it is not in the variable_details worksheet)
+
+6. **variableType:** whether the recoded variable is categorical or continuous (variable_detail worksheet column: 'typeEnd')
+
+7. **units:** unit of measurement for the variable (variable_detail worksheet column 'units')
+
+8. **databaseStart:** the list of databases that contain the variable of interest (variable_detail worksheet column: 'databaseStart')
+
+9. **variableStart** the original variable name (variable_detail worksheet column: 'variableStart')
+
+```{r, echo=FALSE, warning=FALSE}
+library(knitr)
+library(kableExtra)
+kable(variables[19, ])
+```
+
+

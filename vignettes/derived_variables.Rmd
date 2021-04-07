@@ -1,0 +1,86 @@
+---
+title: "Derived variables"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Derived variables}     
+  %\VignetteEngine{knitr::rmarkdown} 
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+source("../R/test_data_generator.R")
+```
+
+## Introduction
+
+_recodeflow_ supports the use of derived variables. Derived variables can be any custom function as long as the variable can be calculated on a per row basis. Functions requiring operations across rows or on the full data set are not supported. 
+
+The two most common uses for derived variables are: 
+
+- Variables derived from two or more variables,
+- Variables that are derived using math equations (e.g., BMI is calculated by dividing weight by the square of height). 
+
+To create derived variables, you need to complete two steps:
+
+1. Create and load a customized function.
+2. Add the derived variable to the variable_details and variables worksheets.
+
+## Example of a derived function
+
+We'll walk through an example of creating a derived variable with our example data.
+
+Our customized derived function is multiplying the blood concentration of cholesterol (`chol`) with the blood concentration of bilirunbin (`bili`).
+
+### 1. Create and load a customized function for your derived variables.
+
+**Create the custom function:** Here is the customized function for our derived variable (`chol`*`bili`):
+```{r, warning=FALSE, message=FALSE}
+#example_der_fun caluclates chol*bili
+#@param chol the row value for chol
+#@param bili the row value for bili
+#@export 
+example_der_fun <- function(chol, bili){
+  # as numeric is used to coerce in case categorical numeric variables are used.
+  # Warning either chol or bili being NA will result in NA return
+  example_der <- as.numeric(chol)*as.numeric(bili)
+  
+  return(example_der)
+}
+```
+
+**Note:** You **must** use roxygen2 documentation for custom functions otherwise the function cannot be attached to a package. See [roxygen2](https://cran.r-project.org/web/packages/roxygen2/vignettes/roxygen2.html) on how to format and document your function.
+
+**Load the custom function** into your R environment. Load the customized function by either:
+
+- entering your functions into the console and running the code, or 
+- attaching the functions to your own package using the build and install tool. Then load your package using "library("name of package")" or by using the `rec_with_table` parameter to pass the path to your function R script.
+
+If you don't load the customized function you cannot create the derived variable. 
+
+
+### 2. Add the derived variable to the `variable_details` and `variables` worksheets.
+
+Add the derived variable to the `variables` worksheet. You'll use the same nomenclature as any other variable. See the article [`variables_sheet`](../articles/variables_worksheet.html) for nomenclature rules.
+
+Add the derived variable to the variable_details. See the article [`variable_details`](../articles/variable_details_worksheet.html) for nomenclature rules. 
+
+
+### 3. Recode the derived variable
+
+Use the function `rec_with_table` to recode your derived function. 
+
+1) Load recodeflow
+```{r results= 'hide', message = FALSE, warning=FALSE}
+#Load the package
+library(recodeflow)
+```
+
+2) Recode the underlying variables (`chol` and `bili`) and the derived variable (`example_der`).
+```{r, warning=FALSE}
+derived1 <- rec_with_table(data = tester1,
+                          variables = c("chol", "bili","example_der"),
+                          variable_details = variable_details,
+                          log = TRUE)
+```
+

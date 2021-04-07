@@ -1,0 +1,197 @@
+---
+title: "variable_details worksheet"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{variable_details.csv}     
+  %\VignetteEngine{knitr::rmarkdown} 
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```
+
+## Introduction
+
+The worksheet `variable_details` maps variables across datasets. `variable_details` also contains the instructions for function `rec_with_table` on how to recode the variables listed in the worksheet `variables`.
+
+Specifically, the function `rec_with_table` recodes variables listed in column `variable_details$variableStart` to the variables listed in `variable_details$variable`. 
+
+```{r Read variables.csv, echo=FALSE, message=FALSE, warning=FALSE}
+library(readr)
+library(DT)
+library(knitr)
+library(kableExtra)
+
+source("../R/test_data_generator.R")
+
+datatable(variable_details, options = list(pageLength = 2))
+cat("In the dataframe `variable_details` there are", nrow(variable_details), "rows and", ncol(variable_details), "columns", "\n\n")
+```
+
+## Structure of the worksheet `variable_details`
+
+### Naming convention for not applicable and missing values
+
+`rec_with_table()` uses the `tagged_na()` function from the [haven](https://www.rdocumentation.org/packages/haven/versions/2.1.1) package to tag not applicable responses as `NA(a)`, and missing values (don't know, refusal, not stated) as `NA(b)`. As you will see later, not applicable values are recoded to `NA::a`, and missing values are recoded to `NA::b`. See [tagged_na_usage](tagged_na_usage.html) for more information about `tagged_na()`.
+
+### Rows
+
+Each row in `variable_details` gives instructions to recode a single category of a final variable. Typically, a single category of a final variable maps to a single category of an original variable. Therefore, in `variable_details` you'll have one row per category. 
+
+There are two exceptions to this rule.
+
+1. Original categories are sometimes combined into a single final variable category. For example,
+
+- Most often survey responses "don't know,” "refusal," and "not stated" are combined into a final single "missing" category. 
+- Original age group categories are often combined into larger age groups categories (e.g., original five-year age group categories are combined into final ten-year age group categories).
+
+2. Original datasets with different categories map to separate rows for a final variable. For example, 
+
+- The final variable, “Sex,” has categories “1” = male and “2” = female.
+- Dataset A has sex categories “m” = male and “f” = female. 
+- Dataset B has categories “1” = male and “2” = female.
+- Variable_details requires four rows to map the final “Sex” categories = two for dataset A and two for dataset B.
+
+**Note**: We recommend not combining variables if the variable has an important change between datasets. `variable_detailsdetails$notes` is used to identify issues that may be relevant when recoding the variable or category.
+
+### Columns
+
+Here we explain the columns in the worksheet `variable_details`.
+
+**Table 1.** Summary of the source and level of information used for each column in the worksheet 'variable_details'.
+```{r, echo=FALSE, results='hide', message=FALSE}
+library(knitr)
+library(kableExtra)
+
+var_desc_table <- data.frame(
+  Data_source = c(rep("recoded",5), rep("original",3), "both"),
+  Dataset = c(rep("",5), "databaseStart", rep("", 2), "notes"),
+  Variable = c("variable *", "typeEnd *", rep("", 3), "variableStart *", "typeStart *", "variableStartlabel", "notes"),
+  Categories = c("recEnd *", "numValidCat", "catLabel", "catLongLabel", "units", "recStart *", "catStartLabel", "", "notes")
+)
+
+```
+```{r, echo=FALSE}
+kable(var_desc_table) %>%
+  kable_styling(full_width = T) %>%
+  collapse_rows(columns = 1, valign = "top") %>%
+  add_header_above(c("", "Level of information" = 3)) %>%
+  footnote(symbol = c("Columns required for the function rec_with_table. All other columns are recommended but optional."))
+```
+
+The order of the columns within the worksheet `variable_details` is not important because recodeflow functions use the column names.
+
+
+1. **variable:** the name of the final recoded variable.
+
+```{r, echo=FALSE, warning=FALSE}
+kable(variable_details[7:13, 1], col.names = 'variable')
+```
+
+2. **typeEnd:** the data type of the final recoded variable. If the recoded variable is continuous fill in as `cont`; if the recoded variable that is categorical fill in as `cat` .
+
+```{r, echo=FALSE, warning=FALSE}
+kable(variable_details[c(7:13), c(1:2)])
+```
+
+3. **typeStart:** the variable type as indicated in datasets. As indicated in the **typeEnd** column, categorical variables are denoted as `cat` and continuous variables are denoted as `cont`.
+
+```{r, echo=FALSE, warning=FALSE}
+kable(variable_details[c(7:13), c(1:3)])
+```
+
+4. **databaseStart:** the datasets that contain the variable and categories of interest, separated by commas.
+
+```{r, echo=FALSE, warning=FALSE}
+kable(variable_details[c(7:13), c(1:4)])
+```
+
+5. **variableStart:** the original names of the variables as they are listed in the original datasets, separated by commas. 
+
+- If the variable name in a particular dataset is different from the recoded variable name, write out the dataset name, add two colons, and write out the original variable name for that dataset. 
+- If the variable name in a particular dataset is the same as the recoded variable name, write the variable name in square brackets. Note: this only needs to be written out **once**.
+
+```{r, echo=FALSE, warning=FALSE}
+kable(variable_details[c(7:13), c(1:5)])
+```
+
+6. **variableStartLabel:** short form label describing the original variable.
+
+```{r, echo=FALSE, warning=FALSE}
+kable(variable_details[c(7:13), c(1:6)])
+```
+
+7. **numValidCat:** the number of categories for the recoded variable. This only applies to variables in which the **typeEnd** is cat. For continuous variables, `numValidCat = N/A`. Note that for categories: not applicable, missing, and else, are not included in the category count. This column is not necessary for the function `rec_with_table()`.
+
+```{r, echo=FALSE, warning=FALSE}
+kable(variable_details[c(7:13), c(1:7)])
+```
+
+8. **recEnd:** the category of the categorical value your recoding to. For the not applicable category, write `NA::a` and for missing and else categories, write `NA::b`. For continuous variables that are not recoded in type, you would write in this column `copy` so that the function copies the values without any recoding.
+
+```{r, echo=FALSE, warning=FALSE}
+kable(variable_details[c(7:13), c(1:8)])
+```
+
++ For categorical variables that remain categorical (i.e. from: cat -> to: cat), it is ideal to retain the same values as indicated in the original datasets.
++ For categorical variables that have changed in type (i.e from: cat -> to: cont), you will have to develop values that make the most sense to your analysis. For example, for variables that change from: cat -> to: cont, you can choose the categories' lower bound, mid-point, or upper-bound for the continuous value.
+
+9. **catLabel:** short form label describing the category of a particular variable.
+
+```{r, echo=FALSE, warning=FALSE}
+kable(variable_details[c(7:13), c(1:9)])
+```
+
+10. **catLabelLong:** more detailed label describing the category of a particular variable. This label should be identical to what is recorded in the original data's documentation (e.g., the exact survey question). For derived variables, you can create your own long label.
+
+```{r, echo=FALSE, warning=FALSE}
+kable(variable_details[c(7:13), c(1:10)])
+```
+
+11. **units:** the units of a particular variable. If there are no units for the variable, write `N/A`. Note, the function will not work if there different units between the rows of the same variable (e.g. if the concentration of a single molecule has two records one recorded as mg/dl and the other recorded as g/dl).
+
+```{r, echo=FALSE, warning=FALSE}
+kable(variable_details[c(7:13), c(1:11)])
+```
+
+12. **recStart:** the range of values for a particular category in a variable as indicated in the original data. See data documentation and use the smallest and large values as your range to capture all values across the datasets. 
+
+The rules for each category of a new variable are a string in `recStart` and value in `recEnd`. These recode pairs are the same syntax as interval notation in which a closed range of values are specified using square brackets. See [Notations for intervals](https://en.wikipedia.org/wiki/Interval_(mathematics)) for more information on interval notation. Recode pairs are obtained from the recStart and recEnd columns
+  *value range* is indicated by a comma, e.g. `recStart= [1,4]; recEnd = 1` (recodes all values from 1 to 4 into 1}
+  *value range* for double vectors (with fractional part), all values within the specified range are recoded; e.g. `recStart = [1,2.5]; recEnd = 1` recodes 1 to 2.5 into 1, but 2.55 would not be recoded (since it's not included in the specified range).
+  *NA* is used for missing values (don't know, refusal, not stated)
+  *else* is used all other values, which have not been specified yet, are indicated by `else`, e.g. `recStart = "else"; recEnd = NA` (recode all other values (not specified in other rows) to "NA")}
+  *copy* the `else` token can be combined with `copy`, indicating that all remaining, not yet recoded values should stay the same (are copied from the original value), e.g. `recStart = "else"; recEnd = "copy"`
+
+```{r, echo=FALSE, warning=FALSE}
+kable(variable_details[c(7:13), c(1:9)])
+```
+
+13. **catStartLabel:** label describing each category. This label should be identical to what is shown in the original data documentation. For the missing rows, each missing category is described along with their coded values. You can import labels from a survey's DDI files using `bllflow` helper functions. See [bllflow documentation](http://bllflow.projectbiglife.ca).
+
+```{r, echo=FALSE, warning=FALSE}
+kable(variable_details[c(7:13), c(1:13)])
+```
+
+14. **notes:** any relevant notes to inform the user running the `recode-with-table` function. Things to include here would be changes in wording across datasets, missing/changes in categories, and changes in variable type across datasets.
+
+```{r, echo=FALSE, warning=FALSE}
+kable(variable_details[c(7:13), c(1:14)])
+```
+
+## Derived Variables
+
+The same naming convention applies to derived variables with the exception of two columns:
+
+1. In **variableStart**, instead of database names being listed, **DerivedVar::** is written followed with the list of original variables used inside square brackets. 
++ `DerivedVar::[var1, var2, var3]`
+
+2. In **recEnd**, write **Func::** followed with the exact name of the custom function used to create the derived variable.
++ `Func::derivedFunction`
+
+A derived variable looks like this in `variable_details.csv`
+
+```{r, echo=FALSE, warning=FALSE}
+kable(variable_details[64,1:14])
+```

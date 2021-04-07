@@ -4,8 +4,6 @@
 #' @param var_details_rows All variable details rows for the `var_name` variable.
 #'
 #' @return DataField node with optype and dataType according to `fromType`.
-#'
-#' @examples
 build_data_field_for_start_var <- function(var_name, var_details_rows) {
   first_var_details_row <- var_details_rows[1,]
   if (first_var_details_row$fromType == pkg.env$var_details_cat) {
@@ -31,8 +29,6 @@ build_data_field_for_start_var <- function(var_name, var_details_rows) {
 #' @param vars_sheet Variable sheet data frame.
 #'
 #' @return DataField node for variable.
-#'
-#' @examples
 build_data_field_for_var <- function(var_name, vars_sheet) {
   var_row <- get_var_sheet_row(var_name, vars_sheet)
   data_field_node <- XML::xmlNode(pkg.env$node_name.data_field, attrs=c(name=var_name, displayName=var_row$label))
@@ -46,8 +42,6 @@ build_data_field_for_var <- function(var_name, vars_sheet) {
 #' @param var_details_rows Variable details rows associated with current variable.
 #'
 #' @return Updated DataField node.
-#'
-#' @examples
 add_data_field_children_for_start_var <- function(data_field, var_details_rows) {
   var_details_row <- var_details_rows[1,]
   extension_node <- XML::xmlNode(pkg.env$node_name.extension, attrs=c(name=pkg.env$node_attr.name.var_start_label, value=var_details_row$variableStartLabel))
@@ -68,8 +62,6 @@ add_data_field_children_for_start_var <- function(data_field, var_details_rows) 
 #' @param data_field DataField node to attach Value nodes.
 #'
 #' @return Updated DataField node.
-#'
-#' @examples
 attach_cat_value_nodes_for_start_var <- function(var_details_row, data_field) {
   if(is_rec_from_range(var_details_row)) {
     data_field <- attach_range_value_nodes(var_details_row, data_field)
@@ -91,8 +83,6 @@ attach_cat_value_nodes_for_start_var <- function(var_details_row, data_field) {
 #' @param data_field DataField node to attach Value nodes.
 #'
 #' @return Updated DataField node.
-#'
-#' @examples
 attach_cont_value_nodes_for_start_var <- function(var_details_row, data_field) {
   if (is_rec_from_range(var_details_row)) {
     if (var_details_row$recTo %in% pkg.env$all_NAs) {
@@ -120,8 +110,6 @@ attach_cont_value_nodes_for_start_var <- function(var_details_row, data_field) {
 #' @param data_field DataField node to attach Value nodes.
 #'
 #' @return Updated DataField node.
-#'
-#' @examples
 attach_range_value_nodes <- function(var_details_row, data_field) {
   margins <- get_margins(var_details_row$recFrom)
   range <- margins[1]:margins[2]
@@ -146,8 +134,7 @@ attach_range_value_nodes <- function(var_details_row, data_field) {
 #' @param db_name Database name.
 #'
 #' @return TransformationDictionary node.
-#'
-#' @examples
+#' @export
 build_trans_dict <- function(vars_sheet, var_details_sheet, var_names, db_name) {
   trans_dict <- XML::xmlNode(pkg.env$node_name.trans_dict)
 
@@ -166,8 +153,6 @@ build_trans_dict <- function(vars_sheet, var_details_sheet, var_names, db_name) 
 #' @param db_name Database name.
 #'
 #' @return DerivedField node.
-#'
-#' @examples
 build_derived_field_node <- function(vars_sheet, var_details_sheet, var_name, db_name) {
   var_row <- get_var_sheet_row(var_name, vars_sheet)
   var_details_rows <- get_var_details_rows(var_details_sheet, var_name, db_name)
@@ -190,8 +175,6 @@ build_derived_field_node <- function(vars_sheet, var_details_sheet, var_name, db
 #' @param db_name Database name.
 #'
 #' @return Updated DerivedField node.
-#'
-#' @examples
 attach_derived_field_child_nodes <- function(derived_field_node, var_details_sheet, var_name, db_name) {
   added_NAs <- c(character(0))
   var_details_rows <- get_var_details_rows(var_details_sheet, var_name, db_name)
@@ -251,8 +234,6 @@ build_derived_field_value_node <- function(var_details_row) {
 #' @param db_name Database name.
 #'
 #' @return Updated parent node.
-#'
-#' @examples
 attach_apply_nodes <- function(var_details_rows, parent_node, db_name) {
   var_details_row <- var_details_rows[1,]
   remaining_rows <- var_details_rows[-1,]
@@ -359,8 +340,6 @@ build_ranged_derived_field_apply_node <- function (var_details_row, db_name) {
 #' @param db_name Database name.
 #'
 #' @return FieldRef node.
-#'
-#' @examples
 build_variable_field_ref_node <- function (var_details_row, db_name) {
   return (XML::xmlNode(pkg.env$node_name.field_ref, attrs=c(field=get_start_var_name(var_details_row, db_name))))
 }

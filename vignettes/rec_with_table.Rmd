@@ -1,0 +1,101 @@
+---
+title: "rec_with_table"
+output:
+  html_document:
+    df_print: paged
+vignette: |
+  %\VignetteIndexEntry{rec_with_table}
+  %\VignetteEngine{knitr::rmarkdown} 
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, collapse = TRUE, comment = "#>")
+source("../R/test_data_generator.R")
+```
+
+
+# What is the function `rec_with_table`?
+
+`rec_with_table` is the function used to recode variables within your dataset into harmonized variables. `rec_with_table` reads:
+
+- `variable` for a list of variables to recode, and
+- `variable_details` for instructions on how to recode the variable(s)
+
+```{r}
+library(recodeflow)
+status <- rec_with_table(data = tester1, 
+                         variables = "status", 
+                         variable_details = variable_details,
+                         log = TRUE,
+                         var_labels = c(status = "Status"))
+```
+
+# Output - Warning messages
+
+Warning messages will appear when your dataset is missing variables in your
+`variable` worksheet or `rec_with_table()` call.
+
+# Output - Notes
+
+By default, `rec_with_table()` prints notes to the console.
+
+Notes can give important details on what and how variables are harmonized. For example, notes can include details on:
+
+- which datasets include a variable,
+- how a variable changes across datasets, and 
+- if the recoding rules for a variable are dependent on the source dataset
+
+You should read and consider `notes` before deciding whether to harmonize a variable.
+
+The notes output is from the column *notes* in `variable_details` 
+
+# Arguments - Required
+
+- `data` A dataframe(s) containing data to be recoded. 
+
+- `variables` Either a string of variables to recode or a dataframe containing the variables (e.g., `variables`)
+
+- `variable_details` A dataframe containing the specifications for recoding. 
+
+```{r, eval=FALSE}
+#To recode only a few variables
+age_sex_1 <- rec_with_table(data = tester1, 
+                         variables = c("age","sex"),
+                         variable_details = variable_details)
+
+
+#To recode all variables listed on the variable worksheet
+recoded1 <- rec_with_table(data = tester1,
+                          variables = variables,
+                          variable_details = variable_details)
+```
+
+# Arguments - Default 
+
+With `rec_with_table()` the following arguments are only called if you want to modify them.
+
+- `database_name` defaults to NULL. As a result, `rec_with_table()` uses the
+  database indicated in the `data` argument.
+  
+- `else_value` defaults to NA. Values out of range set to NA.
+
+- `append_to_data` defaults to FALSE. Recoded variables will not be appended
+  to the original dataset.
+  
+- `log` defaults to FALSE. Logs of the variable recoding will not be
+  displayed.
+  
+- `notes` defaults to TRUE. Information in the `Notes` column from
+  `variable_details` worksheet will be displayed
+  
+- `var_labels` is set to NULL. This argument can be used to add labels to a
+  recoded dataset that only contains a subset of variables from
+  `variables` worksheet. The format to add labels to a subset of variables is
+  `c(variable = "Label")`.
+  
+- `attach_data_name` is set to FALSE. This argument can be used to append a
+  column that denotes the name of the dataset each recoded row came from.
+
+
+

@@ -1,0 +1,56 @@
+destination: docs
+
+template:
+  params:
+    bootswatch: cosmo
+
+development:
+  mode: auto
+
+
+navbar:
+  structure:
+    left: [home, how_to, articles, reference]
+    right: github
+  components:
+    how_to:
+      text: How To
+      menu:
+      - text: How to install
+        href: articles/how_to_install.html
+      - text: How to transform
+        href: articles/how_to_recode.html
+      - text: How to add variables
+        href: articles/how_to_use_recodeflow_with_your_data.html
+    articles:
+      text: Articles
+      menu:
+      - text: variable_details
+        href: articles/variable_details.html
+      - text: variable_sheet
+        href: articles/variables_sheet.html
+      - text: Derived variables
+        href: articles/derived_variables.html
+      - text: Rec with table
+        href: articles/rec_with_table.html
+      - text: How to use tagged_na
+        href: articles/missing_data_(tagged_na).html
+    reference:
+      text: Reference
+      href: reference/index.html
+
+reference:
+  - title: "Recoding"
+    desc: Functions for recoding data across databases
+    contents:
+    - rec_with_table
+  - title: "PMML"
+    desc: Functions for converting recoding metadata into PMML
+    contents:
+    - recode_to_pmml
+  - title: "Utility"
+    desc: Useful functions for existing pmml/recoded data
+    contents:
+    - build_trans_dict
+    - set_data_labels
+
