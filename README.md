@@ -28,3 +28,6 @@
 
 * Row for variable `ALW_2A1` with recTo value 4
 
+# Test the conversion when there is only a default var in the variableStart column
+
+* Row for variable `DHHGAGE_cont`

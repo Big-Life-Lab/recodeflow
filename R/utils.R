@@ -131,14 +131,43 @@ get_var_sheet_row <- function (var_name, vars_sheet) {
 #'
 #' @examples
 get_start_var_name <- function(var_details_row, db_name) {
-  # Create regex using database name, database variable start infix, followed by variable start
-  var_regex <- paste0(db_name, pkg.env$db_var_start_infix, "(.+?)[,?]")
+  # The value of the variableStart column for this variable details row
+  start_variables = var_details_row$variableStart
 
+  # The regex that will be used to pluck the name of the start variable from
+  # list of start variables and their databases. For example, if the db_name
+  # is cchs2001_p and the list is cchs2001_p::RACA_6A, this regex will pluck out
+  # RACA_6A
+  db_var_regex <- paste0(db_name, pkg.env$db_var_start_infix, "(.+?)[,?]")
   # Get regex match for variable start
-  match <- regexec(var_regex, var_details_row$variableStart)
+  db_var_regex_match <- regexec(db_var_regex, start_variables)
+  # Get the start variable for the db passed in the db_name parameter
+  start_var_for_db <- regmatches(start_variables, db_var_regex_match)[[1]][2]
 
-  # Extract variable start from column
-  return (regmatches(var_details_row$variableStart, match)[[1]][2])
+  # The regex to pluck out the default start variable to use. In the column
+  # of start variables this will be encoded as [RACA_6A]. This regex will
+  # pluck out RACA_6A
+  default_var_regex <- "\\[(.+?)\\]"
+  default_var_match <- regexec(default_var_regex, start_variables)
+  default_var <- regmatches(start_variables, default_var_match)[[1]][2]
+
+  # If there was a start variable for the passed database, return it
+  if(!is.na(start_var_for_db) & nchar(start_var_for_db) != 0) {
+    return(start_var_for_db)
+  }
+  # Otherwise, if there was a default start variable return it
+  else if(nchar(default_var) != 0) {
+    return(default_var)
+  }
+  # Otherwise, throw an error saying we could not find a start variable
+  else {
+    stop(paste(
+      "No start variable found for database ",
+      db_name,
+      "for column ",
+      start_variables
+    ))
+  }
 }
 
 #' Get data type for variable type.
