@@ -136,12 +136,12 @@
 <li>
 <code>variables</code> - a list of variables to recode</li>
 </ul>
-<p>Files can either be a <code>.csv</code> file that you import to R or create directly in R as a dataframe.</p>
+<p>Files can either be a <code>.csv</code> file that you import to R or a dataframe created directly in R.</p>
 <p>If you have derived variables, you will also need to create custom functions. For more information on custom functions see the article <a href="../articles/derived_variables.html">derived variables</a>.</p>
 <div id="example-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#example-data" class="anchor"></a>Example data</h2>
-<p>Our examples use the dataset <code>pbc</code> from the package <a href="https://cran.r-project.org/web/packages/survival/index.html">survival</a>. We’ve split this dataset into two (tester1 and tester2) to mimic real data e.g., the same survey preformed in separate years. We’ve also added columns (<code>agegrp5</code> and <code>agegrp10</code>) to this dataset for our examples.</p>
+<p>Our examples use the dataset <code>pbc</code> from the package <a href="https://cran.r-project.org/web/packages/survival/index.html">survival</a>. We’ve split this dataset in two (tester1 and tester2) to mimic real data e.g., the same survey preformed in separate years. We’ve also added columns (<code>agegrp5</code> and <code>agegrp10</code>) to this dataset for our examples.</p>
 <p>We’ll use our example datasets and the variable <code>stage</code>. The variable <code>stage</code> captures the histologic stage of the patient’s disease (primary biliary cirrhosis (PBC)).</p>
 </div>
 <div id="how-to-create-the-variable_details-worksheet" class="section level2">
@@ -210,7 +210,7 @@ stage
 </table>
 <ol start="2" style="list-style-type: decimal">
 <li>
-<strong>typeEnd:</strong> <code>stage</code> captures the stage of the disease and is originally a categorical variable. Therefore, it does not make sense to change <code>stage</code> into a continuous variable.</li>
+<strong>typeEnd:</strong> indicates the type of variable (continous or categorical)for the recoded (final) variable. <code>stage</code>, which captures the stage of the disease, is a categorical variable in the original dataset and will remain a categorical variable after recoding.</li>
 </ol>
 <p>Write ‘cat’ in the six rows.</p>
 <table class="table">
@@ -295,7 +295,7 @@ cat
 </table>
 <ol start="3" style="list-style-type: decimal">
 <li>
-<strong>typeStart:</strong> <code>stage</code> is originally a categorical variable.</li>
+<strong>typeStart:</strong> indicates the type of variable (continous or categorical) for the original variable. <code>stage</code> is a categorical variable in the original dataset.</li>
 </ol>
 <p>Write ‘cat’ in the six rows.</p>
 <table class="table">
@@ -401,7 +401,7 @@ cat
 </table>
 <ol start="4" style="list-style-type: decimal">
 <li>
-<strong>databaseStart:</strong> <code>stage</code> was captured identically for both datasets. Therefore, we will recode the variable the same way regardless of which dataset it’s from.</li>
+<strong>databaseStart:</strong> indicates the name of the database(s) from which the original variable(s) is(are) obtained.</li>
 </ol>
 <p>Write the dataset names, separated by a comma, in the six rows</p>
 <table class="table">
@@ -528,7 +528,7 @@ tester1, tester2
 </table>
 <ol start="5" style="list-style-type: decimal">
 <li>
-<strong>variableStart:</strong> The original variable <code>stage</code> is identical across our datasets.</li>
+<strong>variableStart:</strong> indicates the original variable name(s) in the database(s). In our example, both datasets have the start variable <code>stage</code>. Therefore we can indicate a single variable name here. If the variable names were different, we would need to indicate ‘dataset_name::variable_name’ separated by commas for each of the datasets.</li>
 </ol>
 <p>Write the variable name in squared brackets once per row, for all six rows.</p>
 <table class="table">
@@ -675,7 +675,8 @@ tester1, tester2
 </tbody>
 </table>
 <ol start="6" style="list-style-type: decimal">
-<li><strong>variableStartLabel:</strong></li>
+<li>
+<strong>variableStartLabel:</strong> indicates the original variable lable</li>
 </ol>
 <p>Write “stage” in the 6 rows.</p>
 <table class="table">
@@ -844,7 +845,7 @@ stage
 </table>
 <ol start="7" style="list-style-type: decimal">
 <li>
-<strong>numValidCat:</strong> The number of categories within the variable <code>stage</code>. There are four categories in <code>stage</code>: 1, 2, 3, and 4. Note that for categories: not applicable, missing, and else, are not included in the category count.</li>
+<strong>numValidCat:</strong> indicates the number of valid categories for the final derived variable. In our example, there are four categories for <code>stage</code>: 1, 2, 3, and 4. Note that the categories ‘not applicable’, ‘missing’, and ‘else’ are not included in the category count.</li>
 </ol>
 <p>Write 4 in each of the six rows.</p>
 <table class="table">
@@ -1034,9 +1035,9 @@ stage
 </table>
 <ol start="8" style="list-style-type: decimal">
 <li>
-<strong>recEnd:</strong> Since <code>stage</code> is a categorical variable, you’ll capture the category you are recoding each row too. For the not applicable rows <code>NA::a</code> is written. For the missing and else rows <code>NA::b</code> is written. The <code>haven</code> package is used for tagging NA in numeric variables.</li>
+<strong>recEnd:</strong> indicates the category to which you are recoding each row. For the not applicable rows <code>NA::a</code> is written. For the missing and else rows <code>NA::b</code> is written. The <code>haven</code> package is used for tagging NA in numeric variables.</li>
 </ol>
-<p>We are not changing the categories. Therefore, the four stages captured in the original data. For the not applicable rows write <code>NA::a</code>. For the else rows write <code>NA::b</code>.</p>
+<p>We are not changing the categories <code>stage</code>, therefore, the recEnd values for these rows will be the same as the the original data. For the not applicable rows write <code>NA::a</code>. For the missing and else rows write <code>NA::b</code>.</p>
 <table class="table">
 <thead><tr>
 <th style="text-align:left;">
@@ -1245,7 +1246,7 @@ NA::b
 </table>
 <ol start="9" style="list-style-type: decimal">
 <li>
-<strong>catLabel:</strong> Name the categorical level for the recoded variable.</li>
+<strong>catLabel:</strong> indicates the lable for the recoded categorical level.</li>
 </ol>
 <p>Write Stage 1, Stage 2, Stage 3, Stage 4, NA, and missing.</p>
 <table class="table">
@@ -1477,7 +1478,7 @@ missing
 </table>
 <ol start="10" style="list-style-type: decimal">
 <li>
-<strong>catLabelLong:</strong> You can elaborate on the name of the categorical level of the recoded variable.</li>
+<strong>catLabelLong:</strong> provides a more elaborate lable for the recoded categorical level. If not required, repeat the shorter <em>catLabel</em>.</li>
 </ol>
 <p>Copy values from <strong>catLabel</strong></p>
 <table class="table">
@@ -1730,7 +1731,7 @@ missing
 </table>
 <ol start="11" style="list-style-type: decimal">
 <li>
-<strong>units:</strong> The histologic stage of disease does not have units of measurement.</li>
+<strong>units:</strong> indicates the unit of measure for the variable. The histologic stage of disease does not have a units of measurement.</li>
 </ol>
 <p>Write “N/A” in all six rows.</p>
 <table class="table">
@@ -2004,7 +2005,7 @@ N/A
 </table>
 <ol start="12" style="list-style-type: decimal">
 <li>
-<strong>recStart:</strong> Since we are not combining levels of categories and we are keeping the category levels the same, the recStart column will be identical to recEnd.</li>
+<strong>recStart:</strong> indicates the category(ies) from which you are recoding each row. Since we are not combining levels of categories and we are keeping the category levels the same, the recStart column will be identical to recEnd. If multiple categories were being combined into a single category, the original categories would be indicated in square brackets, separated by commas.</li>
 </ol>
 <p>Write the category level you are recoding each row too. For the not applicable rows <code>NA::a</code> is written. For the missing and else rows <code>NA::b</code> is written.</p>
 <table class="table">
@@ -2299,7 +2300,7 @@ else
 </table>
 <ol start="13" style="list-style-type: decimal">
 <li>
-<strong>catStartLabel:</strong> The <code>stage</code> label should be identical to what is shown in the original data documentation. For the missing rows, each missing category is described along with their coded values.</li>
+<strong>catStartLabel:</strong> indicates the original variable category label. The <code>stage</code> label should be identical to what is shown in the original data documentation. For the missing rows, each missing category is described along with their coded values.</li>
 </ol>
 <p>Write Stage 1, Stage 2, Stage 3, Stage 4, NA, and missing.</p>
 <table class="table">
@@ -3074,10 +3075,10 @@ This is sample survival pbc data
 <li><p><strong>variable:</strong> the name of the recoded variable (variable_details worksheet column: ‘variable’)</p></li>
 <li><p><strong>label:</strong> the shorthand label for the variable (variable_details worksheet column: ‘<em>variableStartShortLabel</em>’)</p></li>
 <li><p><strong>labelLong:</strong> a more detailed label for the variable (new column, it is not in the variable_details worksheet)</p></li>
-<li><p><strong>section:</strong> group of data the variable belongs to (new column, it is not in the variable_details worksheet)</p></li>
-<li><p><strong>subject:</strong> sub-group of data the variable belongs to (new column, it is not in the variable_details worksheet)</p></li>
+<li><p><strong>section:</strong> group of data to which the variable belongs (new column, it is not in the variable_details worksheet)</p></li>
+<li><p><strong>subject:</strong> sub-group of data to which the variable belongs (new column, it is not in the variable_details worksheet)</p></li>
 <li><p><strong>variableType:</strong> whether the recoded variable is categorical or continuous (variable_detail worksheet column: ‘typeEnd’)</p></li>
-<li><p><strong>units:</strong> any units for the variable (variable_detail worksheet column ‘units’)</p></li>
+<li><p><strong>units:</strong> unit of measurement for the variable (variable_detail worksheet column ‘units’)</p></li>
 <li><p><strong>databaseStart:</strong> the list of databases that contain the variable of interest (variable_detail worksheet column: ‘databaseStart’)</p></li>
 <li><p><strong>variableStart</strong> the original variable name (variable_detail worksheet column: ‘variableStart’)</p></li>
 </ol>

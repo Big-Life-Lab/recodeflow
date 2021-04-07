@@ -132,13 +132,13 @@
 <div id="introduction" class="section level2">
 <h2 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h2>
-<p><em>recodeflow</em> supports the use of derived variables. Derived variables can be any custom function as long as the variable can be calculated on a per row bases. Functions requiring operations across rows or on the full data set are not supported.</p>
-<p>Two most common uses for derived variables are:</p>
+<p><em>recodeflow</em> supports the use of derived variables. Derived variables can be any custom function as long as the variable can be calculated on a per row basis. Functions requiring operations across rows or on the full data set are not supported.</p>
+<p>The two most common uses for derived variables are:</p>
 <ul>
 <li>Variables derived from two or more variables,</li>
 <li>Variables that are derived using math equations (e.g., BMI is calculated by dividing weight by the square of height).</li>
 </ul>
-<p>To create derived variables, you need to complete two steps.</p>
+<p>To create derived variables, you need to complete two steps:</p>
 <ol style="list-style-type: decimal">
 <li>Create and load a customized function.</li>
 <li>Add the derived variable to the variable_details and variables worksheets.</li>
@@ -165,7 +165,7 @@
   
   <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">example_der</span><span class="op">)</span>
 <span class="op">}</span></code></pre></div>
-<p><strong>Note:</strong> You <strong>must</strong> use roxygen2 documentation for custom functions otherwise the function can not be attached to a package. See <a href="https://cran.r-project.org/web/packages/roxygen2/vignettes/roxygen2.html">roxygen2</a> on how to format and document your function.</p>
+<p><strong>Note:</strong> You <strong>must</strong> use roxygen2 documentation for custom functions otherwise the function cannot be attached to a package. See <a href="https://cran.r-project.org/web/packages/roxygen2/vignettes/roxygen2.html">roxygen2</a> on how to format and document your function.</p>
 <p><strong>Load the custom function</strong> into your R environment. Load the customized function by either:</p>
 <ul>
 <li>entering your functions into the console and running the code, or</li>

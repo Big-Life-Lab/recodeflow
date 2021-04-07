@@ -133,7 +133,7 @@
 <div id="what-is-recodeflow" class="section level2">
 <h2 class="hasAnchor">
 <a href="#what-is-recodeflow" class="anchor"></a>What is <code>recodeflow</code>?</h2>
-<p><code>recodeflow</code> recodes variables from multiple data sets into harmonize variables.</p>
+<p><code>recodeflow</code> recodes variables from multiple data sets into harmonized variables.</p>
 <p><code>recodeflow</code> has basic functions and templates required to define, recode, and harmonize variables for any dataset.</p>
 </div>
 <div id="why-should-i-use-recodeflow" class="section level2">
@@ -142,12 +142,12 @@
 <p>Recoding and cleaning your data is typically the most time consuming step of your project. Existing functions such as <code>sjmisc::rec()</code> and <code>dplyr:recode()</code> work well but they are <strong>limited to recoding one variable at a time</strong>.</p>
 <p>The <code>recodeflow</code> package takes data cleaning and recoding one step further. <code>recodeflow</code> allows you to recode <strong>multiple variables at the same time</strong>, and <strong>harmonize variables</strong> across similar databases even when the variables and variables’ categories change.</p>
 <p><code>recodeflow</code> also helps to <strong>reduce errors</strong>, <strong>document the recode process</strong>, and ensures your new variables have labels and other <strong>metadata</strong>.</p>
-<p>Even if your project has a few variables,<code>recodeflow</code> can save you time.</p>
+<p>Even if your project has few variables,<code>recodeflow</code> can save you time.</p>
 </div>
 <div id="how-does-recodeflow-work" class="section level2">
 <h2 class="hasAnchor">
 <a href="#how-does-recodeflow-work" class="anchor"></a>How does <code>recodeflow</code> work?</h2>
-<p>Use the worksheets <code>variables</code> and <code>variable_details</code> to list your variables, and state how to recode the each variable.</p>
+<p>Use the worksheets <code>variables</code> and <code>variable_details</code> to list your variables and state how to recode the each variable.</p>
 <p>Once your variables are defined, use <code>recodeflow</code> functions to clean and recode your data. The main <code>recodeflow</code> function is <code>rec_with_table</code> which recodes variables within you dataset(s) based on how you’ve defined the variable in the worksheets <code>variables</code> and <code>variable_details</code>.</p>
 </div>
 <div id="whats-included-in-recodeflow" class="section level2">
@@ -160,13 +160,13 @@
 <p><strong>worksheets:</strong></p>
 <ul>
 <li>
-<strong><code>variables</code></strong> a list of variables to recode, and</li>
+<strong><code>variables</code></strong> a list of variables to recode and</li>
 <li>
 <strong><code>variable_details</code></strong> mapping of variables across datasets and a list of instructions for recoding variables.</li>
 </ul>
 </li>
 </ul>
-<p>We’ve also created the following documentation, to help you understand <code>recodeflow</code>:</p>
+<p>We’ve also created the following documentation to help you understand <code>recodeflow</code>:</p>
 <ul>
 <li>
 <strong>how to guides</strong> examples of how to use <code>recodeflow</code> and adapt <code>recodeflow</code> for your dataset,</li>
@@ -184,7 +184,7 @@
 <p>Currently <code>recodeflow</code> is used in packages that harmonize health surveys and health administrative databases.</p>
 <ul>
 <li><p><code>cchsflow</code> is a package that harmonizes variables across cycles of the Canadian Community Health Survey (CCHS). cchsflow is <a href="https://big-life-lab.github.io/cchsflow/index.html">published</a>.</p></li>
-<li><p><code>raiflow</code> is a package that will harmonize variables within the Resident Assessments Instruments (RAI) from various sources: Canada’s Continuing Care Reporting System (CCRS), and Ontario’s Resident Assessment Instrutment for Home Care (RAI-HC). <code>raiflow</code> is currently underdevelopment.</p></li>
+<li><p><code>raiflow</code> is a package that will harmonize variables within the Resident Assessments Instruments (RAI) from various sources: Canada’s Continuing Care Reporting System (CCRS) and Ontario’s Resident Assessment Instrutment for Home Care (RAI-HC). <code>raiflow</code> is currently underdevelopment.</p></li>
 </ul>
 </div>
 </div>

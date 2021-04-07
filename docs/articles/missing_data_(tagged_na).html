@@ -131,7 +131,7 @@
     
 <p>Base R supports only one type of NA (‘not available’) to represent missing values. However, your data may include several types of missing data or incomplete category responses.</p>
 <p>To address this issue of a singular “NA”, we use the <code>haven</code> package <a href="https://haven.tidyverse.org/reference/tagged_na.html"><code>tagged_na()</code></a></p>
-<p><code><a href="https://haven.tidyverse.org/reference/tagged_na.html">tagged_na()</a></code> adds an additional character to any NA values, thereby allowing users to define additional missing data types. <code><a href="https://haven.tidyverse.org/reference/tagged_na.html">tagged_na()</a></code> applies only for numeric values; character based values can use any string to represent NA or missing data.</p>
+<p><code><a href="https://haven.tidyverse.org/reference/tagged_na.html">tagged_na()</a></code> adds an additional character to any NA values, enabling users to define additional missing data types. <code><a href="https://haven.tidyverse.org/reference/tagged_na.html">tagged_na()</a></code> applies only for numeric values; character based values can use any string to represent NA or missing data.</p>
 <div id="recodeflow-approach-to-coding-missing-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#recodeflow-approach-to-coding-missing-data" class="anchor"></a>recodeflow approach to coding missing data</h2>
@@ -139,7 +139,7 @@
 <ul>
 <li>NA(a) = ‘not applicable’</li>
 <li>NA(b) = ‘missing’</li>
-<li>Na(c) = ‘not asked’ which is any variable that was in a dataset.</li>
+<li>Na(c) = ‘not asked’</li>
 </ul>
 <p><strong>Summary of <code>tagged_na</code> values and their corresponding category values.</strong></p>
 <table class="table">
