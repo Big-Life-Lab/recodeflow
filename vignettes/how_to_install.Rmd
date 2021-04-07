@@ -1,0 +1,39 @@
+---
+title: "Install"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{How to guides}     
+  %\VignetteEngine{knitr::rmarkdown}  %\VignetteEncoding{UTF-8}
+---
+
+
+# Install and load `recodeflow`
+
+## Install `recodeflow`
+```{r eval= FALSE}
+# Install release version from CRAN
+install.packages("recodeflow")
+
+# Install the most recent version from GitHub
+devtools::install_github("Big-Life-Lab/recodeflow")
+```
+
+## Load `recodeflow`
+
+```{r results= 'hide', message = FALSE, warning=FALSE}
+#Load the package
+library(recodeflow)
+```
+
+## Additional packages
+
+Depending on how you use `recodeflow` you may need to load the following packages:
+
+- dplyr: to combine datasets
+- tidyr: to reorganize datasets
+- sjlabelled: to use functions like get_label()
+- haven: to use NAs with different meanings
+- stingr
+- magrittr
+
+
