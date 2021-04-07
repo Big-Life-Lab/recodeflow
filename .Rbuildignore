@@ -3,3 +3,7 @@
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
+^assets$
+R/test_data_generator.R
+CONTRIBUTING.md
+^vignettes

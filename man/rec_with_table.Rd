@@ -51,9 +51,11 @@ and its functions loaded into the R environment.}
 
 \item{id_role_name}{name for the role to be used to generate id column}
 
-\item{name_of_environment_to_load}{Name of package to load variables and variable_details from}
+\item{name_of_environment_to_load}{Name of package to load variables and
+variable_details from}
 
-\item{append_non_db_columns}{boolean determening if data not present in this cycle should be appended as NA}
+\item{append_non_db_columns}{boolean determening if data not present in
+this cycle should be appended as NA}
 }
 \value{
 a dataframe that is recoded according to rules in variable_details.
@@ -67,7 +69,8 @@ The \href{https://github.com/Big-Life-Lab/recodeflow/blob/master/inst/extdata/PB
  dataframe needs the following columns:
  \describe{
   \item{variable}{Name of the new variable created. The name of the new
-  variable can be the same as the original variable if it does not change the original variable definition}
+  variable can be the same as the original variable if it does not change
+  the original variable definition}
   \item{toType}{type the new variable
   \emph{cat = categorical, cont = continuous}}
   \item{databaseStart}{Names of the databases that the original variable can
@@ -87,17 +90,17 @@ The \href{https://github.com/Big-Life-Lab/recodeflow/blob/master/inst/extdata/PB
  }
  Each row in the \emph{variables details} sheet encodes the rule for recoding
  value(s) of the original variable to a category in the new variable. The
- categories of the new variable are encoded in the \emph{recTo} column and the
- value(s) of the original variable that recode to this new value are encoded
- in the \emph{recFrom} column. These recode columns follow a syntax
- similar to the \emph{sjmisc::rec()} function. Whereas in the \emph{sjmisc::rec()}
- function the recoding rules are in one string, in the variables details sheet
- they are encoded over multiple rows and columns (recFrom an recTo). For eg.,
- a recoding rule in the sjmisc function would like like "1=2;2=3" whereas
- in the variables details sheet this would be encoded over two rows with
- recFrom and recTo values of the first row being 1 and 2 and similarly for
- the second row it would be 2 and 3. The rules for describing recoding
- pairs are shown below:
+ categories of the new variable are encoded in the \emph{recTo} column
+ and the value(s) of the original variable that recode to this new value
+ are encoded in the \emph{recFrom} column. These recode columns follow a
+ syntax similar to the \emph{sjmisc::rec()} function. Whereas in the
+ \emph{sjmisc::rec()} function the recoding rules are in one string,
+ in the variables details sheet they are encoded over multiple rows and
+ columns (recFrom an recTo). For eg., a recoding rule in the sjmisc function
+ would like like "1=2;2=3" whereas in the variables details sheet this would
+ be encoded over two rows with recFrom and recTo values of the first row
+ being 1 and 2 and similarly for the second row it would be 2 and 3.
+ The rules for describing recoding pairs are shown below:
   \describe{
     \item{recode pairs}{Each recode pair is a row}
     \item{multiple values}{Multiple values from the old variable that should
@@ -106,7 +109,7 @@ The \href{https://github.com/Big-Life-Lab/recodeflow/blob/master/inst/extdata/PB
     \emph{recFrom = "1,2"; recTo = 1}} will recode values of 1 and 2 in the
     original variable to 1 in the new variable
     \item{value range}{A value range is indicated by a colon, e.g.
-    \emph{recFrom= "1:4"; recTo = 1} will recode all values from 1 to 4 into 1}
+    \emph{recFrom= "1:4"; recTo = 1} will recode all values from 1to4 into 1}
     \item{\emph{min} and \emph{max}}{minimum and maximum values
     are indicated by \emph{min} (or \emph{lo}) and \emph{max} (or \emph{hi}),
      e.g. \emph{recFrom = "min:4"; recTo = 1} will recode all values from the
@@ -129,33 +132,82 @@ The \href{https://github.com/Big-Life-Lab/recodeflow/blob/master/inst/extdata/PB
 \examples{
 var_details <-
   data.frame(
-    "variable" = c("time", rep("status", times = 3), rep("trt", times = 2), "age", rep("sex", times = 2), rep("ascites", times = 2), rep("hepato", times = 2), rep("spiders", times = 2), rep("edema", times = 3), "bili", "chol", "albumin", "copper", "alk.phos", "ast", "trig", "platelet", "protime", rep("stage", times = 4)),
-    "dummyVariable" = c("NA", "status0", "status1","status2", "trt1","trt2","NA","sexM","sexF", "ascites0", "ascites1","hepato0","hepato1","spiders0","spiders1","edema0.0","edema0.5","edema1.0",rep("NA",times = 9), "stage1", "stage2","stage3","stage4"),
-    "toType" = c("cont", rep("cat", times = 3), rep("cat", times = 2), "cont", rep("cat", times = 2), rep("cat", times = 2), rep("cat", times = 2),rep("cat", times = 2), rep("cat", times = 3), rep("cont", times = 9), rep("cat", times = 4)),
+    "variable" = c("time", rep("status", times = 3), rep("trt", times = 2),
+    "age", rep("sex", times = 2), rep("ascites", times = 2),
+    rep("hepato", times = 2), rep("spiders", times = 2),
+    rep("edema", times = 3),
+    "bili", "chol", "albumin", "copper", "alk.phos", "ast",
+    "trig", "platelet", "protime", rep("stage", times = 4)),
+    "dummyVariable" = c("NA", "status0", "status1","status2", "trt1","trt2"
+    ,"NA","sexM","sexF", "ascites0", "ascites1","hepato0","hepato1","
+    spiders0","spiders1","edema0.0","edema0.5","edema1.0",
+    rep("NA",times = 9), "stage1", "stage2","stage3","stage4"),
+    "toType" = c("cont", rep("cat", times = 3), rep("cat", times = 2),
+    "cont", rep("cat", times = 2), rep("cat", times = 2),
+    rep("cat", times = 2),rep("cat", times = 2), rep("cat", times = 3),
+    rep("cont", times = 9), rep("cat", times = 4)),
     "databaseStart" = rep("tester1, tester2", times = 31),
-    "variableStart" = c("[time]", rep("[status]", times = 3), rep("[trt]", times = 2), "[age]", rep("[sex]", times = 2), rep("[ascites]", times = 2), rep("[hepato]", times = 2), rep("[spiders]", times = 2), rep("[edema]", times = 3), "[bili]", "[chol]", "[albumin]", "[copper]", "[alk.phos]", "[ast]", "[trig]", "[platelet]", "[protime]", rep("[stage]", times = 4)),
-    "fromType" = c("cont", rep("cat", times = 3), rep("cat", times = 2), "cont", rep("cat", times = 2), rep("cat", times = 2), rep("cat", times = 2),rep("cat", times = 2), rep("cat", times = 3), rep("cont", times = 9), rep("cat", times = 4)),
-    "recTo" = c("copy", "0", "1","2", "1","2","copy","m","f", "0", "1","0","1","0","1","0.0","0.5","1.0",rep("copy",times = 9), "1", "2","3","4"),
-    "catLabel" = c("", "status 0", "status 1","status 2", "trt 1","trt 2","","sex m","sex f", "ascites 0", "ascites 1","hepato 0","hepato 1","spiders 0","spiders 1","edema 0.0","edema 0.5","edema 1.0",rep("",times = 9), "stage 1", "stage 2","stage 3","stage 4"),
-    "catLabelLong" = c("", "status 0", "status 1","status 2", "trt 1","trt 2","","sex m","sex f", "ascites 0", "ascites 1","hepato 0","hepato 1","spiders 0","spiders 1","edema 0.0","edema 0.5","edema 1.0",rep("",times = 9), "stage 1", "stage 2","stage 3","stage 4"),
-    "recFrom" = c("else", "0", "1","2", "1","2","else","m","f", "0", "1","0","1","0","1","0.0","0.5","1.0",rep("else",times = 9), "1", "2","3","4"),
-    "catStartLabel" = c("", "status 0", "status 1","status 2", "trt 1","trt 2","","sex m","sex f", "ascites 0", "ascites 1","hepato 0","hepato 1","spiders 0","spiders 1","edema 0.0","edema 0.5","edema 1.0",rep("",times = 9), "stage 1", "stage 2","stage 3","stage 4"),
-    "variableStartShortLabel" = c("time", rep("status", times = 3), rep("trt", times = 2), "age", rep("sex", times = 2), rep("ascites", times = 2), rep("hepato", times = 2), rep("spiders", times = 2), rep("edema", times = 3), "bili", "chol", "albumin", "copper", "alk.phos", "ast", "trig", "platelet", "protime", rep("stage", times = 4)),
-    "variableStartLabel" = c("time", rep("status", times = 3), rep("trt", times = 2), "age", rep("sex", times = 2), rep("ascites", times = 2), rep("hepato", times = 2), rep("spiders", times = 2), rep("edema", times = 3), "bili", "chol", "albumin", "copper", "alk.phos", "ast", "trig", "platelet", "protime", rep("stage", times = 4)),
+    "variableStart" = c("[time]", rep("[status]", times = 3), rep("[trt]",
+    times = 2), "[age]", rep("[sex]", times = 2), rep("[ascites]",
+    times = 2), rep("[hepato]", times = 2), rep("[spiders]", times = 2),
+    rep("[edema]", times = 3), "[bili]", "[chol]", "[albumin]", "[copper]",
+    "[alk.phos]", "[ast]", "[trig]", "[platelet]", "[protime]",
+    rep("[stage]", times = 4)), "fromType" = c("cont", rep("cat", times = 3),
+    rep("cat", times = 2), "cont", rep("cat", times = 2),
+    rep("cat", times = 2), rep("cat", times = 2),rep("cat", times = 2),
+    rep("cat", times = 3), rep("cont", times = 9), rep("cat", times = 4)),
+    "recTo" = c("copy", "0", "1","2", "1","2","copy","m","f", "0", "1","0",
+    "1","0","1","0.0","0.5","1.0",rep("copy",times = 9), "1", "2","3","4"),
+    "catLabel" = c("", "status 0", "status 1","status 2", "trt 1","trt 2","",
+    "sex m","sex f", "ascites 0", "ascites 1","hepato 0","hepato 1",
+    "spiders 0","spiders 1","edema 0.0","edema 0.5","edema 1.0",
+    rep("",times = 9), "stage 1", "stage 2","stage 3","stage 4"),
+    "catLabelLong" = c("", "status 0", "status 1","status 2", "trt 1",
+    "trt 2","","sex m","sex f", "ascites 0", "ascites 1","hepato 0","
+    hepato 1","spiders 0","spiders 1","edema 0.0","edema 0.5","edema 1.0",
+    rep("",times = 9), "stage 1", "stage 2","stage 3","stage 4"),
+    "recFrom" = c("else", "0", "1","2", "1","2","else","m","f", "0", "1","0",
+    "1","0","1","0.0","0.5","1.0",rep("else",times = 9), "1", "2","3","4"),
+    "catStartLabel" = c("", "status 0", "status 1","status 2", "trt 1",
+    "trt 2","","sex m","sex f", "ascites 0", "ascites 1","hepato 0",
+    "hepato 1","spiders 0","spiders 1","edema 0.0","edema 0.5","edema 1.0",
+    rep("",times = 9), "stage 1", "stage 2","stage 3","stage 4"),
+    "variableStartShortLabel" = c("time", rep("status", times = 3),
+    rep("trt", times = 2), "age", rep("sex", times = 2),
+    rep("ascites", times = 2), rep("hepato", times = 2),
+    rep("spiders", times = 2), rep("edema", times = 3), "bili", "chol",
+    "albumin", "copper", "alk.phos", "ast", "trig", "platelet", "protime",
+    rep("stage", times = 4)),
+    "variableStartLabel" = c("time", rep("status", times = 3),
+    rep("trt", times = 2), "age", rep("sex", times = 2),
+    rep("ascites", times = 2), rep("hepato", times = 2),
+    rep("spiders", times = 2), rep("edema", times = 3), "bili", "chol",
+    "albumin", "copper", "alk.phos", "ast", "trig", "platelet", "protime",
+    rep("stage", times = 4)),
     "units" = rep("NA", times = 31),
     "notes" = rep("This is sample survival pbc data", times = 31)
   )
 var_sheet <-
   data.frame(
-    "variable" = c("time","status","trt", "age","sex","ascites","hepato", "spiders", "edema", "bili", "chol", "albumin", "copper", "alk.phos", "ast", "trig", "platelet", "protime", "stage"),
-    "label" = c("time","status","trt", "age","sex","ascites","hepato", "spiders", "edema", "bili", "chol", "albumin", "copper", "alk.phos", "ast", "trig", "platelet", "protime", "stage"),
-    "labelLong" = c("time","status","trt", "age","sex","ascites","hepato", "spiders", "edema", "bili", "chol", "albumin", "copper", "alk.phos", "ast", "trig", "platelet", "protime", "stage"),
+    "variable" = c("time","status","trt", "age","sex","ascites","hepato",
+    "spiders", "edema", "bili", "chol", "albumin", "copper", "alk.phos",
+    "ast", "trig", "platelet", "protime", "stage"),
+    "label" = c("time","status","trt", "age","sex","ascites","hepato",
+    "spiders", "edema", "bili", "chol", "albumin", "copper", "alk.phos",
+    "ast", "trig", "platelet", "protime", "stage"),
+    "labelLong" = c("time","status","trt", "age","sex","ascites","hepato",
+    "spiders", "edema", "bili", "chol", "albumin", "copper", "alk.phos",
+    "ast", "trig", "platelet", "protime", "stage"),
     "section" = rep("tester", times=19),
     "subject" = rep("tester",times = 19),
-    "variableType" = c("cont", "cat", "cat", "cont","cat", "cat", "cat","cat", "cat", rep("cont", times = 9), "cat"),
+    "variableType" = c("cont", "cat", "cat", "cont","cat", "cat", "cat",
+    "cat", "cat", rep("cont", times = 9), "cat"),
     "databaseStart" = rep("tester1, tester2", times = 19),
     "units" = rep("NA", times = 19),
-    "variableStart" = c("[time]","[status]", "[trt]", "[age]", "[sex]", "[ascites]","[hepato]","[spiders]","[edema]", "[bili]", "[chol]", "[albumin]", "[copper]", "[alk.phos]", "[ast]", "[trig]", "[platelet]", "[protime]","[stage]")
+    "variableStart" = c("[time]","[status]", "[trt]", "[age]", "[sex]",
+    "[ascites]","[hepato]","[spiders]","[edema]", "[bili]", "[chol]",
+    "[albumin]", "[copper]", "[alk.phos]", "[ast]", "[trig]", "[platelet]",
+    "[protime]","[stage]")
   )
 library(survival)
 tester1 <- survival::pbc[1:209,]

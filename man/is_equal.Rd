@@ -15,7 +15,8 @@ is_equal(v1, v2)
 boolean value of whether or not v1 and v2 are equal
 }
 \description{
-Compared to the base "==" operator in R, this function returns true if the two values are NA
+Compared to the base "==" operator in R, this function returns
+true if the two values are NA
 whereas the base "==" operator returns NA
 }
 \examples{
