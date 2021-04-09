@@ -70,7 +70,7 @@ is_numeric <- function(chars) {
 #'
 #' @return Whether recFrom is a range.
 is_rec_from_range <- function(var_details_row) {
-  margins <- get_margins(var_details_row$recFrom)
+  margins <- get_margins(var_details_row[[pkg.env$columns.recFrom]])
   # only consider margins as a range if the endpoints are different
   return (margins[1] != margins[2])
 }
@@ -167,8 +167,8 @@ get_variable_type_data_type <- function (var_details_rows, var_type, is_start_va
   is_categorical <- var_type %in% c(pkg.env$var_details_cat, pkg.env$var_cat)
   if (is_categorical) {
     char_var_details_rows <- ifelse(is_start_var,
-                                    var_details_rows[!is_numeric(var_details_rows$recFrom), ],
-                                    var_details_rows[!is_numeric(var_details_rows$recTo), ])
+                                    var_details_rows[!is_numeric(var_details_rows[[pkg.env$columns.recFrom]]), ],
+                                    var_details_rows[!is_numeric(var_details_rows[[pkg.env$columns.recTo]]), ])
     if (length(char_var_details_rows) > 0) return (pkg.env$node_attr.dataType.string)
     return (pkg.env$node_attr.dataType.integer)
   }
