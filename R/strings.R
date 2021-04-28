@@ -52,7 +52,7 @@ pkg.env$node_attr.function.and <- "and"
 pkg.env$node_attr.function.or <- "or"
 pkg.env$node_attr.function.greater_than <- "greaterThan"
 pkg.env$node_attr.function.less_than <- "lessThan"
-pkg.env$node_attr.function.equals <- "equals"
+pkg.env$node_attr.function.equals <- "equal"
 
 pkg.env$node_attr.dataType.integer <- "integer"
 pkg.env$node_attr.dataType.string <- "string"
