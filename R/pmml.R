@@ -8,6 +8,8 @@
 #' @param vars_to_convert A vector of strings containing the names of variables
 #'  from the variable column in the variable details sheet that should be
 #'  converted to PMML. Passing in an empty vector will convert all the variables.
+#' @param custom_function_files Optional vector of strings containing the paths
+#' to the R files with custom functions references in the variable details sheet.
 #'
 #' @return A PMML document.
 #'
@@ -61,7 +63,7 @@
 #' )
 #'
 #' @export
-recode_to_pmml <- function(var_details_sheet, vars_sheet, db_name, vars_to_convert = NULL) {
+recode_to_pmml <- function(var_details_sheet, vars_sheet, db_name, vars_to_convert = NULL, custom_function_files = NULL) {
   doc <- XML::xmlNode(pkg.env$node_name.pmml, namespaceDefinitions=c(pkg.env$node_namespace.pmml), attrs=c(version=pkg.env$node_attr.pmml_version))
   dict <- XML::xmlNode(pkg.env$node_name.data_dict)
   recognized_vars_to_convert <- c(character(0))
@@ -96,6 +98,34 @@ recode_to_pmml <- function(var_details_sheet, vars_sheet, db_name, vars_to_conve
     print("Unable to recognize any requested variables.")
   } else {
     trans_dict <- build_trans_dict(vars_sheet, var_details_sheet, recognized_vars_to_convert, db_name)
+
+    #---- This section parses the R files in the custom_function_files argument ----#
+    #---- into PMML and adds them to the TransformationsDictionary node ----#
+
+    # Parse the custom_function_files argument if it was provided
+    if (!is.null(custom_function_files)) {
+      # Iterate through all the custom function files
+      for (custom_function_file_index in seq_len(length(custom_function_files))) {
+        # Convert the current one to a PMML string and parse it using the XML library
+        custom_function_file_pmml_string <-
+          pmml::get_pmml_string_from_r_file(custom_function_files[custom_function_file_index],
+                                            src_file = TRUE)
+        custom_function_file_pmml <-
+          XML::xmlTreeParse(custom_function_file_pmml_string)
+
+        # Get the LocalTransformations node which has all the DefineFunction
+        # nodes which we will need to add to the TransformationDictionary node
+        local_transformations_node <-
+          custom_function_file_pmml$doc$children[[pkg.env$node_name.pmml]][[pkg.env$node_name.local_transformations]]
+        # Iterate through each DefineFunction node in the LocalTransformations node
+        for (define_function_index in seq_len(length(local_transformations_node))) {
+          # Add the current one to the TransformationDictionary node
+          trans_dict <-
+            XML::addChildren(trans_dict, local_transformations_node[[define_function_index]])
+        }
+      }
+    }
+
     doc <- XML::append.xmlNode(doc, dict, trans_dict)
   }
 

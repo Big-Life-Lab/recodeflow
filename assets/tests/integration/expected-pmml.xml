@@ -299,5 +299,17 @@
     <Extension name="catLabelLong" value="missing"/>
    </Value>
   </DerivedField>
+  <DefineFunction name="custom_function_one">
+   <ParameterField name="a" dataType="double"/>
+   <FieldRef field="a"/>
+  </DefineFunction>
+  <DefineFunction name="custom_function_two">
+   <ParameterField name="b" dataType="double"/>
+   <FieldRef field="b"/>
+  </DefineFunction>
+  <DefineFunction name="custom_function_three">
+   <ParameterField name="c" dataType="double"/>
+   <FieldRef field="c"/>
+  </DefineFunction>
  </TransformationDictionary>
 </PMML>
