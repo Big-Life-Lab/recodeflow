@@ -355,7 +355,7 @@ attach_apply_nodes <-
   function(var_details_rows, parent_node, db_name) {
     var_details_row <- var_details_rows[1, ]
     remaining_rows <- var_details_rows[-1, ]
-    if (nrow(remaining_rows) == 0)
+    if (nrow(var_details_rows) == 0)
       return (parent_node)
 
     if (is_numeric(var_details_row[[pkg.env$columns.recFrom]])) {
@@ -519,7 +519,7 @@ build_ranged_derived_field_apply_node <-
     if (var_details_row[[pkg.env$columns.recTo]] %in% pkg.env$all_NAs) {
       const_node <- build_missing_const_node(var_details_row)
       apply_node <-
-        XML::append.xmlNode(apply_node, const_node, const_node)
+        XML::append.xmlNode(apply_node, const_node)
     } else if (var_details_row[[pkg.env$columns.recTo]] == pkg.env$rec_to_copy) {
       apply_node <- XML::append.xmlNode(apply_node, field_node)
     } else if (is_numeric(var_details_row[[pkg.env$columns.recTo]])) {
