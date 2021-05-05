@@ -29,6 +29,8 @@ pkg.env$node_name.interval <- "Interval"
 pkg.env$node_name.derived_field <- "DerivedField"
 pkg.env$node_name.apply <- "Apply"
 pkg.env$node_name.field_ref <- "FieldRef"
+pkg.env$node_name.local_transformations <- "LocalTransformations"
+pkg.env$node_name.define_function <- "DefineFunction"
 
 pkg.env$node_namespace.pmml <- "http://www.dmg.org/PMML-4_4"
 

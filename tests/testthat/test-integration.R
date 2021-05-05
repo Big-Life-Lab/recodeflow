@@ -20,7 +20,10 @@ test_that("The PMML file is correctly generated", {
     var_details_sheet,
     vars_sheet,
     db_name,
-    vars
+    vars,
+    custom_function_files = c(
+      "../../assets/tests/integration/custom-functions-1.R",
+      "../../assets/tests/integration/custom-functions-2.R")
   )
 
   actual_pmml_string <- XML::toString.XMLNode(actual_pmml)

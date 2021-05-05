@@ -61,6 +61,10 @@ Currently `recodeflow` is used in packages that harmonize health surveys and hea
 
 - `raiflow` is a package that will harmonize variables within the Resident Assessments Instruments (RAI) from various sources: Canada's Continuing Care Reporting System (CCRS) and Ontario's Resident Assessment Instrutment for Home Care (RAI-HC). `raiflow` is currently underdevelopment.
 
+# Requirements
+
+* If you plan on using the `recode_to_pmml` function's `custom_function_files` argument, you need access to the `local-transformations-generator` repo
+
 # Roadmap
 
 Projects on the roadmap are at the Github repository recodeflow under the [projects tab](https://github.com/Big-Life-Lab/recodeflow/projects).
