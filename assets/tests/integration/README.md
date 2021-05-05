@@ -31,3 +31,7 @@
 # Test the conversion when there is only a default var in the variableStart column
 
 * Row for variable `DHHGAGE_cont`
+
+# Test the conversion when there is only variable with a database in the variableStart column
+
+* Row for variable `variable_four`

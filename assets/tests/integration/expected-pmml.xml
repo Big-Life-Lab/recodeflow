@@ -1,5 +1,5 @@
 <PMML version="4.4" xmlns="http://www.dmg.org/PMML-4_4">
- <DataDictionary numberOfFields="3">
+ <DataDictionary numberOfFields="4">
   <DataField name="RACA_6A" displayName="Needs help - preparing meals" optype="categorical" dataType="string">
    <Extension name="variableStartLabel" value="Because of any condition or health problem, do you need the help of another person in preparing meals?"/>
    <Value value="1" displayValue="Yes" property="valid"/>
@@ -29,6 +29,10 @@
    <Value value="97" displayValue="don&apos;t know (97)" property="missing"/>
    <Value value="98" displayValue="refusal (98)" property="missing"/>
    <Value value="99" displayValue="not stated (99)" property="missing"/>
+  </DataField>
+  <DataField name="start_variable_four" displayName="N/A" optype="categorical" dataType="string">
+   <Extension name="variableStartLabel" value="N/A"/>
+   <Value value="1" displayValue="N/A" property="valid"/>
   </DataField>
  </DataDictionary>
  <TransformationDictionary>
@@ -294,6 +298,24 @@
    </Value>
    <Value value="NA::a" displayValue="not applicable">
     <Extension name="catLabelLong" value="not applicable"/>
+   </Value>
+   <Value value="NA::b" displayValue="missing">
+    <Extension name="catLabelLong" value="missing"/>
+   </Value>
+  </DerivedField>
+  <DerivedField name="variable_four" displayName="N/A" optype="categorical" dataType="string">
+   <Extension name="labelLong" value="N/A"/>
+   <Extension name="units" value="N/A"/>
+   <Apply function="if">
+    <Apply function="equal">
+     <FieldRef field="start_variable_four"/>
+     <Constant dataType="integer">1</Constant>
+    </Apply>
+    <Constant dataType="integer">1</Constant>
+    <Constant dataType="string">NA::b</Constant>
+   </Apply>
+   <Value value="1" displayValue="N/A">
+    <Extension name="catLabelLong" value="N/A"/>
    </Value>
    <Value value="NA::b" displayValue="missing">
     <Extension name="catLabelLong" value="missing"/>
