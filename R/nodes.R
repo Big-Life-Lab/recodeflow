@@ -197,21 +197,23 @@ attach_range_value_nodes <- function(var_details_row, data_field) {
 #' @param var_details_sheet Variable details sheet data frame.
 #' @param var_names Vector of variable names.
 #' @param db_name Database name.
-#'
+#' @param custom_function_names vector of strings. Holds the names of functions
+#' parsed from custom function files.
 #' @return TransformationDictionary node.
 #' @export
 build_trans_dict <-
   function(vars_sheet,
            var_details_sheet,
            var_names,
-           db_name) {
+           db_name,
+           custom_function_names) {
     trans_dict <- XML::xmlNode(pkg.env$node_name.trans_dict)
 
     for (var_name in var_names) {
       trans_dict <-
         XML::append.xmlNode(
           trans_dict,
-          build_derived_field_node(vars_sheet, var_details_sheet, var_name, db_name)
+          build_derived_field_node(vars_sheet, var_details_sheet, var_name, db_name, custom_function_names)
         )
     }
 
@@ -224,13 +226,16 @@ build_trans_dict <-
 #' @param var_details_sheet Variable details sheet data frame.
 #' @param var_name Variable name.
 #' @param db_name Database name.
-#'
+#' @param custom_function_names vector of strings. Holds the names of functions
+#' parsed from custom function files.
+#' 
 #' @return DerivedField node.
 build_derived_field_node <-
   function(vars_sheet,
            var_details_sheet,
            var_name,
-           db_name) {
+           db_name,
+           custom_function_names) {
     var_row <- get_var_sheet_row(var_name, vars_sheet)
     var_details_rows <-
       get_var_details_rows(var_details_sheet, var_name, db_name)
@@ -266,7 +271,7 @@ build_derived_field_node <-
     derived_field_node <-
       XML::append.xmlNode(derived_field_node, label_long_node, units_node)
     derived_field_node <-
-      attach_derived_field_child_nodes(derived_field_node, var_details_sheet, var_name, db_name)
+      attach_derived_field_child_nodes(derived_field_node, var_details_sheet, var_name, db_name, custom_function_names)
 
     return (derived_field_node)
   }
@@ -277,19 +282,22 @@ build_derived_field_node <-
 #' @param var_details_sheet Variable details sheet data frame.
 #' @param var_name Variable name.
 #' @param db_name Database name.
-#'
+#' @param custom_function_names vector of strings. Holds the names of functions
+#' parsed from custom function files.
+#' 
 #' @return Updated DerivedField node.
 attach_derived_field_child_nodes <-
   function(derived_field_node,
            var_details_sheet,
            var_name,
-           db_name) {
+           db_name,
+           custom_function_names) {
     added_NAs <- c(character(0))
     var_details_rows <-
       get_var_details_rows(var_details_sheet, var_name, db_name)
 
     derived_field_node <-
-      attach_apply_nodes(var_details_rows, derived_field_node, db_name)
+      attach_apply_nodes(var_details_rows, derived_field_node, db_name, custom_function_names)
 
     for (index in 1:nrow(var_details_rows)) {
       var_details_row <- var_details_rows[index, ]
@@ -346,33 +354,88 @@ build_derived_field_value_node <- function(var_details_row) {
 
 #' Attach Apply nodes to a parent node.
 #'
-#' @param var_details_rows Variable details rows associated with a variable.
+#' @param all_var_details_rows Variable details rows associated with a variable.
 #' @param parent_node An XML node.
 #' @param db_name Database name.
-#'
+#' @param custom_function_names vector of strings. Holds the names of functions
+#' parsed from custom function files.
+#' 
 #' @return Updated parent node.
 attach_apply_nodes <-
-  function(var_details_rows, parent_node, db_name) {
-    var_details_row <- var_details_rows[1, ]
-    remaining_rows <- var_details_rows[-1, ]
-    if (nrow(var_details_rows) == 0)
+  function(all_var_details_rows, parent_node, db_name, custom_function_names) {
+    var_details_row <- all_var_details_rows[1, ]
+    remaining_rows <- all_var_details_rows[-1, ]
+    if (nrow(var_details_row) == 0)
       return (parent_node)
 
-    if (is_numeric(var_details_row[[pkg.env$columns.recFrom]])) {
+    # If this set of rows is for parsing a DerivedVar
+    if(is_derived_var(all_var_details_rows)) {
+      # First get the name of the custom function used to derive
+      # this variable
+      function_name_regex <- "Func::(.{0,})"
+      rec_to_column <- all_var_details_rows[1, pkg.env$columns.recTo]
+      derived_var_function_name <- regmatches(
+        rec_to_column,
+        regexec(function_name_regex, rec_to_column)
+      )[[1]][2]
+      
+      # Check to make sure the function for this derived variable is
+      # in the list of parsed custom functions. If it is not, throw an
+      # error
+      if(!derived_var_function_name %in% custom_function_names) {
+        derived_var_name <- all_var_details_rows[1, pkg.env$columns.Variable]
+        stop(paste("No custom function found for derved variable", derived_var_name, "with name", derived_var_function_name))
+      }
+
+      # Get the list of variables this derived variable is derived from
+      # and convert them all to FieldRef XML nodes
+      derived_from_vars <- get_derived_from_vars(all_var_details_rows[1, pkg.env$columns.Variable], all_var_details_rows)
+      field_ref_nodes <- list()
+      # Go through each derived from variable and create a field ref node for
+      # each one
+      for(derived_from_var in derived_from_vars) {
+        field_ref_attrs <- c()
+        field_ref_attrs[[pkg.env$node_attr.FieldRef.field]] <- derived_from_var
+        field_ref_nodes[[length(field_ref_nodes) + 1]] <- XML::xmlNode(
+          pkg.env$node_name.field_ref,
+          attrs = field_ref_attrs
+        )
+      }
+
+      # Create the Apply XML node for this derived variable and add the
+      # FieldRef nodes created in the previous section to it
+      apply_node_attrs <- c()
+      apply_node_attrs[[pkg.env$node_attr.Apply.function]] <- derived_var_function_name
+      apply_node <- XML::xmlNode(
+        pkg.env$node_name.apply,
+        attrs = apply_node_attrs
+      )
+      for(field_ref_node in field_ref_nodes){
+        apply_node <- XML::addChildren(apply_node, field_ref_node)
+      }
+
+      # Add the Apply node to the parent node and return it
+      return (XML::append.xmlNode(
+        parent_node,
+        apply_node
+      ))
+    }
+    else if (is_numeric(var_details_row[[pkg.env$columns.recFrom]])) {
       apply_node <-
         build_numeric_derived_field_apply_node(var_details_row, db_name)
       return (XML::append.xmlNode(
         parent_node,
-        attach_apply_nodes(remaining_rows, apply_node, db_name)
+        attach_apply_nodes(remaining_rows, apply_node, db_name, custom_function_names)
       ))
     } else if (is_rec_from_range(var_details_row)) {
       apply_node <-
         build_ranged_derived_field_apply_node(var_details_row, db_name)
       return (XML::append.xmlNode(
         parent_node,
-        attach_apply_nodes(remaining_rows, apply_node, db_name)
+        attach_apply_nodes(remaining_rows, apply_node, db_name, custom_function_names)
       ))
-    } else {
+    }
+    else {
       const_node <- build_missing_const_node(var_details_row)
       return (XML::append.xmlNode(parent_node, const_node))
     }

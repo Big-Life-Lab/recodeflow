@@ -64,6 +64,12 @@ pkg.env$node_attr.property.valid <- "valid"
 pkg.env$node_attr.property.invalid <- "invalid"
 pkg.env$node_attr.property.missing <- "missing"
 
+pkg.env$node_attr.DefineFunction.name <- "name"
+
+pkg.env$node_attr.FieldRef.field <- "field"
+
+pkg.env$node_attr.Apply.function <- "function"
+
 pkg.env$columns.Variable <- "variable"
 pkg.env$columns.VariableLabel <- "labelLong"
 pkg.env$columns.label <- "label"

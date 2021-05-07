@@ -1,5 +1,5 @@
 <PMML version="4.4" xmlns="http://www.dmg.org/PMML-4_4">
- <DataDictionary numberOfFields="4">
+ <DataDictionary numberOfFields="5">
   <DataField name="RACA_6A" displayName="Needs help - preparing meals" optype="categorical" dataType="string">
    <Extension name="variableStartLabel" value="Because of any condition or health problem, do you need the help of another person in preparing meals?"/>
    <Value value="1" displayValue="Yes" property="valid"/>
@@ -33,6 +33,10 @@
   <DataField name="start_variable_four" displayName="N/A" optype="categorical" dataType="string">
    <Extension name="variableStartLabel" value="N/A"/>
    <Value value="1" displayValue="N/A" property="valid"/>
+  </DataField>
+ <DataField name="variable_six_start" displayName="Variable six start" optype="categorical" dataType="string">
+   <Extension name="variableStartLabel" value="Variable six start"/>
+   <Value value="1" displayValue="Category one start" property="valid"/>
   </DataField>
  </DataDictionary>
  <TransformationDictionary>
@@ -321,9 +325,42 @@
     <Extension name="catLabelLong" value="missing"/>
    </Value>
   </DerivedField>
+  <DerivedField name="variable_five" displayName="Variable five" optype="categorical" dataType="string">
+    <Extension name="labelLong" value="Variable five"/>
+    <Extension name="units" value="N/A"/>
+    <Apply function="custom_function_one">
+      <FieldRef field="ADL_01"/>
+      <FieldRef field="variable_six"/>
+    </Apply>
+    <Value value="1" displayValue="Category one">
+      <Extension name="catLabelLong" value="Category one"/>
+    </Value>
+  </DerivedField>
+  <DerivedField name="variable_six" displayName="Variable six" optype="categorical" dataType="string">
+   <Extension name="labelLong" value="Variable six"/>
+   <Extension name="units" value="N/A"/>
+   <Apply function="if">
+    <Apply function="equal">
+     <FieldRef field="variable_six_start"/>
+     <Constant dataType="integer">1</Constant>
+    </Apply>
+    <Constant dataType="integer">1</Constant>
+    <Constant dataType="string">NA::b</Constant>
+   </Apply>
+   <Value value="1" displayValue="Category one">
+    <Extension name="catLabelLong" value="Category one"/>
+   </Value>
+   <Value value="NA::b" displayValue="Missing">
+    <Extension name="catLabelLong" value="Missing"/>
+   </Value>
+  </DerivedField>
   <DefineFunction name="custom_function_one">
    <ParameterField name="a" dataType="double"/>
-   <FieldRef field="a"/>
+   <ParameterField name="b" dataType="double"/>
+   <Apply function="+">
+     <FieldRef field="a" />
+     <FieldRef field="b" />
+   </Apply>
   </DefineFunction>
   <DefineFunction name="custom_function_two">
    <ParameterField name="b" dataType="double"/>

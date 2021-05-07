@@ -68,9 +68,61 @@ recode_to_pmml <- function(var_details_sheet, vars_sheet, db_name, vars_to_conve
   dict <- XML::xmlNode(pkg.env$node_name.data_dict)
   recognized_vars_to_convert <- c(character(0))
 
-  if (is.null(vars_to_convert)) vars_to_convert <- vars_sheet$variable
+  # 2. Get the vector of variables names that we will need to add to the
+  # PMML document
+  all_vars_to_convert <- c()
+  # If the user does not tell us which variables to add, we add all the ones
+  # from the variables sheet
+  if (is.null(vars_to_convert)) {
+    all_vars_to_convert <- vars_sheet$variable
+  }
+  # Otherwise we will need to go through each one, check if it is a derived
+  # variable and add its dependencies to the sheet also
+  else {
+    for (var_to_convert in vars_to_convert) {
+      var_details_rows <-
+        var_details_sheet[get_var_details_row_indices(var_details_sheet, var_to_convert), ]
 
-  for (var_to_convert in vars_to_convert) {
+      if (is_derived_var(var_details_rows)) {
+        all_vars_to_convert <- c(
+          all_vars_to_convert,
+          var_to_convert,
+          get_all_derived_from_vars(var_to_convert,
+                                    var_details_rows)
+        )
+      } else {
+        all_vars_to_convert <- c(all_vars_to_convert, var_to_convert)
+      }
+    }
+    all_vars_to_convert <- unique(all_vars_to_convert)
+  }
+
+  # 3. Get the list of DefineFunction nodes which represents all the
+  # custom functions parsed from the files in the custom_function_files argument
+  custom_function_nodes <- list()
+  # Parse the custom_function_files argument if it was provided
+  if (!is.null(custom_function_files)) {
+    # Iterate through all the custom function files
+    for (custom_function_file_index in seq_len(length(custom_function_files))) {
+      # Convert the current one to a PMML string and parse it using the XML library
+      custom_function_file_pmml_string <-
+        pmml::get_pmml_string_from_r_file(custom_function_files[custom_function_file_index],
+                                          src_file = TRUE)
+      custom_function_file_pmml <-
+        XML::xmlTreeParse(custom_function_file_pmml_string)
+
+      # Get the LocalTransformations node which has all the DefineFunction
+      # nodes which we will need to add to the TransformationDictionary node
+      local_transformations_node <-
+        custom_function_file_pmml$doc$children[[pkg.env$node_name.pmml]][[pkg.env$node_name.local_transformations]]
+      # Iterate through each DefineFunction node in the LocalTransformations node
+      for (define_function_index in seq_len(length(local_transformations_node))) {
+        custom_function_nodes[[length(custom_function_nodes) + 1]] <- local_transformations_node[[define_function_index]]
+      }
+    }
+  }
+
+  for (var_to_convert in all_vars_to_convert) {
     var_details_rows <- var_details_sheet[get_var_details_row_indices(var_details_sheet, var_to_convert),]
     if (nrow(var_details_rows) == 0) {
       print(paste0("Skipping ", var_to_convert, ": No rows with that name found in var_details_sheet."))
@@ -79,16 +131,34 @@ recode_to_pmml <- function(var_details_sheet, vars_sheet, db_name, vars_to_conve
 
     var_db_details_rows <- get_var_details_rows(var_details_sheet, var_to_convert, db_name)
 
-    if (nrow(var_db_details_rows) > 0) {
-      var_start_name <- get_start_var_name(var_db_details_rows[1,], db_name)
-      data_field <- build_data_field_for_start_var(var_start_name, var_db_details_rows)
-      recognized_vars_to_convert <- c(recognized_vars_to_convert, var_to_convert)
-    } else {
-      data_field <- build_data_field_for_var(var_to_convert, vars_sheet)
-    }
+    # If it is not a derived variable then we can add the start variable for
+    # this variable to the DataDictionary node
+    if (!is_derived_var(var_db_details_rows)) {
+      if (nrow(var_db_details_rows) > 0) {
+        var_start_name <-
+          get_start_var_name(var_db_details_rows[1, ], db_name)
+        data_field <-
+          build_data_field_for_start_var(var_start_name, var_db_details_rows)
+        recognized_vars_to_convert <-
+          c(recognized_vars_to_convert, var_to_convert)
+      } else {
+        data_field <- build_data_field_for_var(var_to_convert, vars_sheet)
+      }
 
-    if (is.null(data_field)) print(paste0("Skipping ", var_to_convert, ": Unable to determine fromType."))
-    else dict <- XML::append.xmlNode(dict, data_field)
+      if (is.null(data_field))
+        print(paste0("Skipping ", var_to_convert, ": Unable to determine fromType."))
+      else
+        dict <- XML::append.xmlNode(dict, data_field)
+    }
+    # If it is a derived variable, the start variables are variables in the
+    # Variable column and should not be added as DataField nodes. They will
+    # be added as DerivedField nodes in the next section.
+    # Add this derived variable to the vector of variables names that need to
+    # be converted to a DerivedField
+    else {
+      recognized_vars_to_convert <-
+        c(recognized_vars_to_convert, var_to_convert)
+    }
   }
 
   number_of_fields <- XML::xmlSize(dict)
@@ -97,33 +167,21 @@ recode_to_pmml <- function(var_details_sheet, vars_sheet, db_name, vars_to_conve
   if (number_of_fields == 0) {
     print("Unable to recognize any requested variables.")
   } else {
-    trans_dict <- build_trans_dict(vars_sheet, var_details_sheet, recognized_vars_to_convert, db_name)
+    custom_function_names <- c()
+    for(custom_function_node in custom_function_nodes) {
+      #print(custom_function_node$attrs)
+      custom_function_names <- c(
+        custom_function_names,
+        XML::xmlGetAttr(custom_function_node, pkg.env$node_attr.DefineFunction.name)
+      )
+    }
+    trans_dict <- build_trans_dict(vars_sheet, var_details_sheet, recognized_vars_to_convert, db_name, custom_function_names)
 
-    #---- This section parses the R files in the custom_function_files argument ----#
-    #---- into PMML and adds them to the TransformationsDictionary node ----#
-
-    # Parse the custom_function_files argument if it was provided
-    if (!is.null(custom_function_files)) {
-      # Iterate through all the custom function files
-      for (custom_function_file_index in seq_len(length(custom_function_files))) {
-        # Convert the current one to a PMML string and parse it using the XML library
-        custom_function_file_pmml_string <-
-          pmml::get_pmml_string_from_r_file(custom_function_files[custom_function_file_index],
-                                            src_file = TRUE)
-        custom_function_file_pmml <-
-          XML::xmlTreeParse(custom_function_file_pmml_string)
-
-        # Get the LocalTransformations node which has all the DefineFunction
-        # nodes which we will need to add to the TransformationDictionary node
-        local_transformations_node <-
-          custom_function_file_pmml$doc$children[[pkg.env$node_name.pmml]][[pkg.env$node_name.local_transformations]]
-        # Iterate through each DefineFunction node in the LocalTransformations node
-        for (define_function_index in seq_len(length(local_transformations_node))) {
-          # Add the current one to the TransformationDictionary node
-          trans_dict <-
-            XML::addChildren(trans_dict, local_transformations_node[[define_function_index]])
-        }
-      }
+    # Iterate through each DefineFunction node in the LocalTransformations node
+    for (custom_function_node in custom_function_nodes) {
+      # Add the current one to the TransformationDictionary node
+      trans_dict <-
+        XML::addChildren(trans_dict, custom_function_node)
     }
 
     doc <- XML::append.xmlNode(doc, dict, trans_dict)
@@ -131,3 +189,96 @@ recode_to_pmml <- function(var_details_sheet, vars_sheet, db_name, vars_to_conve
 
   return (doc)
 }
+
+derived_var_regex <- "DerivedVar::\\[(.+?)\\]|DerivedVar::\\[\\]"
+
+#' Whether this variable details row is for a derived variable
+#'
+#' @param variable_details_row data.frame One row from a variable details sheet
+#'
+#' @return boolean True if it is a derived variable, false otherwise
+#' @export
+#'
+#' @examples
+is_derived_var <- function(variable_details_row) {
+  return(length(grep(
+    derived_var_regex, variable_details_row[1, pkg.env$columns.VariableStart]
+  )) > 0)
+}
+
+#' Returns all the variable names, including the ones from children variables
+#' that a derived variable depends on
+#'
+#' @param derived_var string The name of the derived variable
+#' @param variable_details_sheet data.frame A data frame that contains an entire
+#' variables details sheet
+#'
+#' @return vector of strings Contains the names of the derived from variables
+#' @export
+#'
+#' @examples
+get_all_derived_from_vars <-
+  function(derived_var, variable_details_sheet) {
+    # 1. Get the immediate children for this derived variable
+    current_derived_from_vars <-
+      get_derived_from_vars(derived_var, variable_details_sheet)
+
+    # 2. Get the variables that the children depend on if they any of them
+    # are a derived variable
+    # This is the list of all the variables that the derived variable depends
+    # on
+    all_derived_from_vars <- current_derived_from_vars
+    # Go through each child variable for this derived variable
+    for (derived_from_var in current_derived_from_vars) {
+      # Get all the variable details rows for this child variable
+      variable_details_row_for_current_var <-
+        variable_details_sheet[get_var_details_row_indices(variable_details_sheet, derived_from_var),]
+      # If it is a derived variable get all the variables it depends on and
+      # add it to the master list
+      if (is_derived_var(variable_details_row_for_current_var)) {
+        all_derived_from_vars <- c(
+          all_derived_from_vars,
+          get_all_derived_from_vars(
+            derived_from_var,
+            variable_details_row_for_current_var
+          )
+        )
+      }
+    }
+
+    # 3. Return the vector of derived from variables removing all duplicates
+    return(unique(all_derived_from_vars))
+  }
+
+#' Returns the immediate derived from variables for a derived variable
+#'
+#' @param derived_var string The name of the derived variable
+#' @param variable_details_sheet data.frame A data frame containing a
+#' variable details sheet
+#'
+#' @return vector of strings Contains the derived from variables
+#' @export
+#'
+#' @examples
+get_derived_from_vars <-
+  function(derived_var, variable_details_sheet) {
+    # 1. Get the string of derived from variables from the variableStart column
+    # For example, if the column value is DerivedVar::[ADL_01, ADL_02], this
+    # will extract "ADL_01, ADL_02"
+
+    # Get all the variable details rows for this derived variable
+    derived_var_variable_details_rows <-
+      variable_details_sheet[get_var_details_row_indices(variable_details_sheet, derived_var), ]
+    # Get the value of the variableStart column with the DerivedVar string
+    derived_from_vars_str <-
+      derived_var_variable_details_rows[1, pkg.env$columns.VariableStart]
+    # Extract the string we want
+    derived_from_string <- regmatches(derived_from_vars_str,
+                                      regexec(derived_var_regex, derived_from_vars_str))[[1]][2]
+
+    # 2. Split the string into its variable names and trim each one before
+    # returning it
+
+    # Each variable name is seperated by a comma
+    return(trimws(strsplit(derived_from_string, ",")[[1]]))
+  }
