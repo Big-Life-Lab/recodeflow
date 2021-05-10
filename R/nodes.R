@@ -228,7 +228,7 @@ build_trans_dict <-
 #' @param db_name Database name.
 #' @param custom_function_names vector of strings. Holds the names of functions
 #' parsed from custom function files.
-#' 
+#'
 #' @return DerivedField node.
 build_derived_field_node <-
   function(vars_sheet,
@@ -284,7 +284,7 @@ build_derived_field_node <-
 #' @param db_name Database name.
 #' @param custom_function_names vector of strings. Holds the names of functions
 #' parsed from custom function files.
-#' 
+#'
 #' @return Updated DerivedField node.
 attach_derived_field_child_nodes <-
   function(derived_field_node,
@@ -359,7 +359,7 @@ build_derived_field_value_node <- function(var_details_row) {
 #' @param db_name Database name.
 #' @param custom_function_names vector of strings. Holds the names of functions
 #' parsed from custom function files.
-#' 
+#'
 #' @return Updated parent node.
 attach_apply_nodes <-
   function(all_var_details_rows, parent_node, db_name, custom_function_names) {
@@ -378,7 +378,7 @@ attach_apply_nodes <-
         rec_to_column,
         regexec(function_name_regex, rec_to_column)
       )[[1]][2]
-      
+
       # Check to make sure the function for this derived variable is
       # in the list of parsed custom functions. If it is not, throw an
       # error
@@ -389,7 +389,7 @@ attach_apply_nodes <-
 
       # Get the list of variables this derived variable is derived from
       # and convert them all to FieldRef XML nodes
-      derived_from_vars <- get_derived_from_vars(all_var_details_rows[1, pkg.env$columns.Variable], all_var_details_rows)
+      derived_from_vars <- get_start_vars_for_derived_var(all_var_details_rows[1, pkg.env$columns.Variable], all_var_details_rows)
       field_ref_nodes <- list()
       # Go through each derived from variable and create a field ref node for
       # each one

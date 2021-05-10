@@ -43,3 +43,7 @@
   * `variable_six` is also part of this test since `variable_five` depends on it but its not part of the variables argument. This tests whether the function automatically adds variables it depends on but are not part of the variable argument
 * Test adding a DerivedVar when the custom function for it has not been added to the document
   * Row for variable `variable_seven`
+  
+# Test adding a variable whose start variable is a variable in the variable column
+
+* Rows for `variable_eight` and `variable_nine`

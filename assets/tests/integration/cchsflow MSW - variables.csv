@@ -5,3 +5,5 @@ DHHGAGE_cont,Age,Converted categorical age,Demographics,Age,Continuous,Years,"cc
 variable_four,N/A,N/A,N/A,N/A,Categorical,N/A,"cchs2001_p, cchs2003_p, cchs2005_p, cchs2007_2008_p, cchs2009_2010_p, cchs2010_p, cchs2011_2012_p, cchs2012_p, cchs2013_2014_p, cchs2014_p",cchs2001_p::start_variable_four
 variable_five,Variable five,Variable five,Derived var,Derived var,Categorical,N/A,cchs2001_p,"DerivedVar::[ADL_01, variable_six]"
 variable_six,Variable six,Variable six,Derived var,Derived var,Categorical,N/A,cchs2001_p,[variable_six_start]
+variable_eight,Variable eight,Variable eight,N/A,N/A,Categorical,N/A,cchs2001_p,cchs2001_p::variable_eight_start
+variable_nine,Variable nine,Variable nine,N/A,N/A,Categorical,N/A,cchs2001_p,[variable_eight]

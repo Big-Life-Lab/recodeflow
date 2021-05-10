@@ -1,5 +1,5 @@
 <PMML version="4.4" xmlns="http://www.dmg.org/PMML-4_4">
- <DataDictionary numberOfFields="5">
+ <DataDictionary numberOfFields="6">
   <DataField name="RACA_6A" displayName="Needs help - preparing meals" optype="categorical" dataType="string">
    <Extension name="variableStartLabel" value="Because of any condition or health problem, do you need the help of another person in preparing meals?"/>
    <Value value="1" displayValue="Yes" property="valid"/>
@@ -36,6 +36,10 @@
   </DataField>
  <DataField name="variable_six_start" displayName="Variable six start" optype="categorical" dataType="string">
    <Extension name="variableStartLabel" value="Variable six start"/>
+   <Value value="1" displayValue="Category one start" property="valid"/>
+  </DataField>
+  <DataField name="variable_eight_start" displayName="Variable eight start" optype="categorical" dataType="string">
+   <Extension name="variableStartLabel" value="Variable eight start"/>
    <Value value="1" displayValue="Category one start" property="valid"/>
   </DataField>
  </DataDictionary>
@@ -342,6 +346,42 @@
    <Apply function="if">
     <Apply function="equal">
      <FieldRef field="variable_six_start"/>
+     <Constant dataType="integer">1</Constant>
+    </Apply>
+    <Constant dataType="integer">1</Constant>
+    <Constant dataType="string">NA::b</Constant>
+   </Apply>
+   <Value value="1" displayValue="Category one">
+    <Extension name="catLabelLong" value="Category one"/>
+   </Value>
+   <Value value="NA::b" displayValue="Missing">
+    <Extension name="catLabelLong" value="Missing"/>
+   </Value>
+  </DerivedField>
+  <DerivedField name="variable_eight" displayName="Variable eight" optype="categorical" dataType="string">
+   <Extension name="labelLong" value="Variable eight"/>
+   <Extension name="units" value="N/A"/>
+   <Apply function="if">
+    <Apply function="equal">
+     <FieldRef field="variable_eight_start"/>
+     <Constant dataType="integer">1</Constant>
+    </Apply>
+    <Constant dataType="integer">1</Constant>
+    <Constant dataType="string">NA::b</Constant>
+   </Apply>
+   <Value value="1" displayValue="Category one">
+    <Extension name="catLabelLong" value="Category one"/>
+   </Value>
+   <Value value="NA::b" displayValue="Missing">
+    <Extension name="catLabelLong" value="Missing"/>
+   </Value>
+  </DerivedField>
+  <DerivedField name="variable_nine" displayName="Variable nine" optype="categorical" dataType="string">
+   <Extension name="labelLong" value="Variable nine"/>
+   <Extension name="units" value="N/A"/>
+   <Apply function="if">
+    <Apply function="equal">
+     <FieldRef field="variable_eight"/>
      <Constant dataType="integer">1</Constant>
     </Apply>
     <Constant dataType="integer">1</Constant>

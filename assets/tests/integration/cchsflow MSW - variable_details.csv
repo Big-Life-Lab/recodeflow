@@ -25,3 +25,7 @@ variable_five,N/A,cat,cchs2003_p,"DerivedVar::[ADL_01, variable_six]",N/A,Func::
 variable_five,N/A,cat,cchs2003_p,"DerivedVar::[ADL_01, variable_six]",N/A,1,1,Category one,Category one,N/A,N/A,N/A,N/A,N/A,
 variable_six,N/A,cat,cchs2001_p,[variable_six_start],cat,1,1,Category one,Category one,N/A,1,Category one start,Variable six start,Variable six start,
 variable_six,N/A,cat,cchs2001_p,[variable_six_start],cat,NA::b,1,Missing,Missing,N/A,else,Else,Variable six start,Variable six start,
+variable_eight,N/A,cat,cchs2001_p,cchs2001_p::variable_eight_start,cat,1,1,Category one,Category one,N/A,1,Category one start,Variable eight start,Variable eight start,
+variable_eight,N/A,cat,cchs2001_p,cchs2001_p::variable_eight_start,cat,NA::b,1,Missing,Missing,N/A,else,Else,Variable eight start,Variable eight start,
+variable_nine,N/A,cat,cchs2001_p,[variable_eight],cat,1,1,Category one,Category one,N/A,1,Category one start,Variable start nine,Variable start nine,
+variable_nine,N/A,cat,cchs2001_p,[variable_eight],cat,NA::b,1,Missing,Missing,N/A,else,Else,Variable start nine,Variable start nine,
