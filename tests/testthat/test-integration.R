@@ -10,7 +10,7 @@ test_that("The PMML file is correctly generated", {
                                 fileEncoding = "UTF-8-BOM")
   vars_sheet <- read.csv("../../assets/tests/integration/cchsflow MSW - variables.csv", stringsAsFactors = FALSE)
   db_name <- "cchs2001_p"
-  vars <- c("ADL_01", "ALW_2A1", "DHHGAGE_cont", "variable_four", "variable_five", "variable_nine")
+  vars <- c("ADL_01", "ALW_2A1", "DHHGAGE_cont", "variable_four", "variable_five", "variable_nine", "variable_ten")
 
   actual_pmml <- recode_to_pmml(
     var_details_sheet,

@@ -29,3 +29,6 @@ variable_eight,N/A,cat,cchs2001_p,cchs2001_p::variable_eight_start,cat,1,1,Categ
 variable_eight,N/A,cat,cchs2001_p,cchs2001_p::variable_eight_start,cat,NA::b,1,Missing,Missing,N/A,else,Else,Variable eight start,Variable eight start,
 variable_nine,N/A,cat,cchs2001_p,[variable_eight],cat,1,1,Category one,Category one,N/A,1,Category one start,Variable start nine,Variable start nine,
 variable_nine,N/A,cat,cchs2001_p,[variable_eight],cat,NA::b,1,Missing,Missing,N/A,else,Else,Variable start nine,Variable start nine,
+variable_ten,N/A,cat,cchs2001_p,cchs2001_p::variable_ten_start,cat,1,2,Category one,Category one,N/A,one,Category one start,Variable ten start,Variable ten start,
+variable_ten,N/A,cat,cchs2001_p,cchs2001_p::variable_ten_start,cat,2,2,Category two,Category two,N/A,two,Category two start,Variable ten start,Variable ten start,
+variable_ten,N/A,cat,cchs2001_p,cchs2001_p::variable_ten_start,cat,NA::b,2,Missing,Missing,N/A,else,Else,Variable ten start,Variable ten start,

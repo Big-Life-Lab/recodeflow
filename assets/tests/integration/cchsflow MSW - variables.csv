@@ -7,3 +7,4 @@ variable_five,Variable five,Variable five,Derived var,Derived var,Categorical,N/
 variable_six,Variable six,Variable six,Derived var,Derived var,Categorical,N/A,cchs2001_p,[variable_six_start]
 variable_eight,Variable eight,Variable eight,N/A,N/A,Categorical,N/A,cchs2001_p,cchs2001_p::variable_eight_start
 variable_nine,Variable nine,Variable nine,N/A,N/A,Categorical,N/A,cchs2001_p,[variable_eight]
+variable_ten,Variable ten,Variable ten,N/A,N/A,Categorical,N/A,cchs2001_p,cchs2001_p::variable_ten_start

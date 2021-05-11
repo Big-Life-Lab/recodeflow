@@ -95,7 +95,13 @@ attach_cat_value_nodes_for_start_var <-
   function(var_details_row, data_field) {
     if (is_rec_from_range(var_details_row)) {
       data_field <- attach_range_value_nodes(var_details_row, data_field)
-    } else if (is_numeric(var_details_row[[pkg.env$columns.recFrom]])) {
+    }
+    # If the start variable value in this row is for "else", do nothing
+    # since this isnt a category
+    else if(var_details_row[[pkg.env$columns.recFrom]] == pkg.env$variable_details$columns.recFrom.elseValue) {
+
+    }
+    else {
       if (var_details_row[[pkg.env$columns.recTo]] == pkg.env$NA_invalid)
         property <- pkg.env$node_attr.property.invalid
       else if (var_details_row[[pkg.env$columns.recTo]] == pkg.env$NA_missing)
@@ -420,14 +426,7 @@ attach_apply_nodes <-
         apply_node
       ))
     }
-    else if (is_numeric(var_details_row[[pkg.env$columns.recFrom]])) {
-      apply_node <-
-        build_numeric_derived_field_apply_node(var_details_row, db_name)
-      return (XML::append.xmlNode(
-        parent_node,
-        attach_apply_nodes(remaining_rows, apply_node, db_name, custom_function_names)
-      ))
-    } else if (is_rec_from_range(var_details_row)) {
+    else if (is_rec_from_range(var_details_row)) {
       apply_node <-
         build_ranged_derived_field_apply_node(var_details_row, db_name)
       return (XML::append.xmlNode(
@@ -435,9 +434,17 @@ attach_apply_nodes <-
         attach_apply_nodes(remaining_rows, apply_node, db_name, custom_function_names)
       ))
     }
-    else {
+    else if (var_details_row[[pkg.env$columns.recFrom]] == pkg.env$variable_details$columns.recFrom.elseValue) {
       const_node <- build_missing_const_node(var_details_row)
       return (XML::append.xmlNode(parent_node, const_node))
+    }
+    else {
+      apply_node <-
+        build_single_rec_from_derived_field_apply_node(var_details_row, db_name)
+      return (XML::append.xmlNode(
+        parent_node,
+        attach_apply_nodes(remaining_rows, apply_node, db_name, custom_function_names)
+      ))
     }
   }
 
@@ -449,23 +456,25 @@ attach_apply_nodes <-
 #' @return Apply node for DerivedField node.
 #'
 #' @examples
-build_numeric_derived_field_apply_node <-
+build_single_rec_from_derived_field_apply_node <-
   function (var_details_row, db_name) {
     field_node <-
       build_variable_field_ref_node(var_details_row, db_name)
+
     const_equal_node <-
       XML::xmlNode(
         pkg.env$node_name.constant,
-        attrs = c(dataType = pkg.env$node_attr.dataType.integer),
+        attrs = c(dataType = get_data_type(var_details_row[[pkg.env$columns.recFrom]])),
         value = var_details_row[[pkg.env$columns.recFrom]]
       )
-    const_val_node <- XML::xmlNode(pkg.env$node_name.constant)
 
+    const_val_node <- XML::xmlNode(pkg.env$node_name.constant)
     if (var_details_row[[pkg.env$columns.recTo]] %in% pkg.env$all_NAs) {
       const_val_node <- build_missing_const_node(var_details_row)
     } else {
       XML::xmlAttrs(const_val_node) <-
-        c(dataType = pkg.env$node_attr.dataType.integer)
+        c(dataType = get_data_type(var_details_row[[pkg.env$columns.recTo]]))
+
       XML::xmlValue(const_val_node) <-
         var_details_row[[pkg.env$columns.recTo]]
     }
@@ -626,4 +635,23 @@ build_missing_const_node <- function (var_details_row) {
     value = var_details_row[[pkg.env$columns.recTo]],
     attrs = c(dataType = pkg.env$node_attr.dataType.string)
   ))
+}
+
+
+#' Returns the PMML dataType attribute to use for a value
+#'
+#' @param value The variable whose value we need the dataType attribute for
+#'
+#' @return string The valye of the dataType attribute
+#' @export
+#'
+#' @examples
+get_data_type <- function(value) {
+  # Supress the "NAs introduced by coercion" warning that comes when the
+  # value cannot be converted to a number
+  if(suppressWarnings(!is.na(as.numeric(value)))) {
+    return(pkg.env$node_attr.dataType.integer)
+  } else {
+    return(pkg.env$node_attr.dataType.string)
+  }
 }
