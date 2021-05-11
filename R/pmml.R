@@ -228,8 +228,7 @@ get_all_start_vars <-
   function(var_name, db_name, variable_details_sheet) {
     all_start_vars <- c()
 
-    variable_details_rows <- variable_details_sheet
-        [get_var_details_row_indices(variable_details_sheet, var_name), ]
+    variable_details_rows <- variable_details_sheet[get_var_details_row_indices(variable_details_sheet, var_name), ]
 
     if(is_derived_var(variable_details_rows)) {
       current_derived_from_vars <-
