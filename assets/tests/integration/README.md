@@ -51,3 +51,8 @@
 # Test conversion when recFrom column has strings
 
 - Rows for `variable_ten`
+
+# Test conversion when recFrom column is else
+
+- Test conversion when `recTo` column is copy
+  - Rows for `variable_eleven`

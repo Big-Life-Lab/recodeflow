@@ -435,8 +435,9 @@ attach_apply_nodes <-
       ))
     }
     else if (var_details_row[[pkg.env$columns.recFrom]] == pkg.env$variable_details$columns.recFrom.elseValue) {
-      const_node <- build_missing_const_node(var_details_row)
-      return (XML::append.xmlNode(parent_node, const_node))
+      rec_to_node <- build_node_for_rec_to(var_details_row, db_name)
+
+      return (XML::append.xmlNode(parent_node, rec_to_node))
     }
     else {
       apply_node <-
@@ -653,5 +654,33 @@ get_data_type <- function(value) {
     return(pkg.env$node_attr.dataType.integer)
   } else {
     return(pkg.env$node_attr.dataType.string)
+  }
+}
+
+
+#' Constructs the PMML node to use for a value in a recEnd column
+#'
+#' @param var_details_row The row in a variable details sheet whose recEnd
+#' column we will parse
+#' @param db_name The database of the start variable
+#'
+#' @return list Contains the PMML node which can be either a Constant or
+#' FieldRef node
+#'
+#' @export
+#'
+#' @examples
+build_node_for_rec_to <- function(var_details_row, db_name) {
+  rec_to <- var_details_row[[pkg.env$columns.recTo]]
+  if (rec_to %in% pkg.env$all_NAs) {
+    return(build_missing_const_node(var_details_row))
+  } else if (rec_to == pkg.env$rec_to_copy) {
+    return(build_variable_field_ref_node(var_details_row, db_name))
+  } else {
+    return(XML::xmlNode(
+      pkg.env$node_name.constant,
+      value = var_details_row[[pkg.env$columns.recTo]],
+      attrs = c(dataType = get_data_type(var_details_row[[pkg.env$columns.recTo]]))
+    ))
   }
 }

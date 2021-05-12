@@ -1,5 +1,5 @@
 <PMML version="4.4" xmlns="http://www.dmg.org/PMML-4_4">
- <DataDictionary numberOfFields="7">
+ <DataDictionary numberOfFields="8">
   <DataField name="RACA_6A" displayName="Needs help - preparing meals" optype="categorical" dataType="string">
    <Extension name="variableStartLabel" value="Because of any condition or health problem, do you need the help of another person in preparing meals?"/>
    <Value value="1" displayValue="Yes" property="valid"/>
@@ -46,6 +46,9 @@
    <Extension name="variableStartLabel" value="Variable ten start"/>
    <Value value="one" displayValue="Category one start" property="valid"/>
    <Value value="two" displayValue="Category two start" property="valid"/>
+  </DataField>
+  <DataField name="variable_eleven_start" displayName="Variable eleven start" optype="continuous" dataType="float">
+   <Extension name="variableStartLabel" value="Variable eleven start"/>
   </DataField>
  </DataDictionary>
  <TransformationDictionary>
@@ -426,6 +429,11 @@
    <Value value="NA::b" displayValue="Missing">
     <Extension name="catLabelLong" value="Missing"/>
    </Value>
+  </DerivedField>
+  <DerivedField name="variable_eleven" displayName="Variable eleven" optype="continuous" dataType="float">
+   <Extension name="labelLong" value="Variable eleven"/>
+   <Extension name="units" value="N/A"/>
+   <FieldRef field="variable_eleven_start" />
   </DerivedField>
   <DefineFunction name="custom_function_one">
    <ParameterField name="a" dataType="double"/>
