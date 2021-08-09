@@ -13,7 +13,6 @@ test_that("Normal variables that depend on derived variables are properly recode
     file.path(getwd(), "../../assets/tests/integration/rec-with-table/variable-details-sheet.csv"),
     fileEncoding = "UTF-8-BOM")
 
-  print("check")
   recoded_data <- recodeflow::rec_with_table(
     data,
     database_name = "db_one",
@@ -22,7 +21,6 @@ test_that("Normal variables that depend on derived variables are properly recode
     custom_function_path = file.path(getwd(), "../../assets/tests/integration/rec-with-table/custom-functions.R")
   )
 
-  print("inside")
   expected_recoded_data <- data.frame(
     var_one = data$var_one_start,
     var_two = data$var_one_start,
