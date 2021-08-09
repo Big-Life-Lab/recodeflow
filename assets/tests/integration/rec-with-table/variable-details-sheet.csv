@@ -1,0 +1,4 @@
+variable,dummyVariable,typeEnd,databaseStart,variableStart,typeStart,recEnd,numValidCat,catLabel,catLabelLong,units,recStart,catStartLabel,variableStartShortLabel,variableStartLabel,notes
+var_one,,cat,db_one,[var_one_start],cat,copy,2,,,,else,,,,
+var_two,,cat,db_one,DerivedVar::[var_one],cat,Func::var_two_func,2,,,,N/A,,,,
+var_three,,cat,db_one,[var_two],cat,copy,2,,,,else,,,,
