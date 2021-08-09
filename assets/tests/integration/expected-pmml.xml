@@ -1,5 +1,5 @@
 <PMML version="4.4" xmlns="http://www.dmg.org/PMML-4_4">
- <DataDictionary numberOfFields="3">
+ <DataDictionary numberOfFields="8">
   <DataField name="RACA_6A" displayName="Needs help - preparing meals" optype="categorical" dataType="string">
    <Extension name="variableStartLabel" value="Because of any condition or health problem, do you need the help of another person in preparing meals?"/>
    <Value value="1" displayValue="Yes" property="valid"/>
@@ -30,25 +30,45 @@
    <Value value="98" displayValue="refusal (98)" property="missing"/>
    <Value value="99" displayValue="not stated (99)" property="missing"/>
   </DataField>
+  <DataField name="start_variable_four" displayName="N/A" optype="categorical" dataType="string">
+   <Extension name="variableStartLabel" value="N/A"/>
+   <Value value="1" displayValue="N/A" property="valid"/>
+  </DataField>
+ <DataField name="variable_six_start" displayName="Variable six start" optype="categorical" dataType="string">
+   <Extension name="variableStartLabel" value="Variable six start"/>
+   <Value value="1" displayValue="Category one start" property="valid"/>
+  </DataField>
+  <DataField name="variable_eight_start" displayName="Variable eight start" optype="categorical" dataType="string">
+   <Extension name="variableStartLabel" value="Variable eight start"/>
+   <Value value="1" displayValue="Category one start" property="valid"/>
+  </DataField>
+  <DataField name="variable_ten_start" displayName="Variable ten start" optype="categorical" dataType="string">
+   <Extension name="variableStartLabel" value="Variable ten start"/>
+   <Value value="one" displayValue="Category one start" property="valid"/>
+   <Value value="two" displayValue="Category two start" property="valid"/>
+  </DataField>
+  <DataField name="variable_eleven_start" displayName="Variable eleven start" optype="continuous" dataType="float">
+   <Extension name="variableStartLabel" value="Variable eleven start"/>
+  </DataField>
  </DataDictionary>
  <TransformationDictionary>
   <DerivedField name="ADL_01" displayName="Help preparing meals" optype="categorical" dataType="string">
    <Extension name="labelLong" value="Needs help - preparing meals"/>
    <Extension name="units" value="N/A"/>
    <Apply function="if">
-    <Apply function="equals">
+    <Apply function="equal">
      <FieldRef field="RACA_6A"/>
      <Constant dataType="integer">1</Constant>
     </Apply>
     <Constant dataType="integer">1</Constant>
     <Apply function="if">
-     <Apply function="equals">
+     <Apply function="equal">
       <FieldRef field="RACA_6A"/>
       <Constant dataType="integer">2</Constant>
      </Apply>
      <Constant dataType="integer">2</Constant>
      <Apply function="if">
-      <Apply function="equals">
+      <Apply function="equal">
        <FieldRef field="RACA_6A"/>
        <Constant dataType="integer">6</Constant>
       </Apply>
@@ -60,7 +80,7 @@
           <FieldRef field="RACA_6A"/>
           <Constant dataType="integer">7</Constant>
          </Apply>
-         <Apply function="equals">
+         <Apply function="equal">
           <FieldRef field="RACA_6A"/>
           <Constant dataType="integer">7</Constant>
          </Apply>
@@ -70,7 +90,7 @@
           <FieldRef field="RACA_6A"/>
           <Constant dataType="integer">9</Constant>
          </Apply>
-         <Apply function="equals">
+         <Apply function="equal">
           <FieldRef field="RACA_6A"/>
           <Constant dataType="integer">9</Constant>
          </Apply>
@@ -105,7 +125,7 @@
        <FieldRef field="ALCA_5A1"/>
        <Constant dataType="integer">1</Constant>
       </Apply>
-      <Apply function="equals">
+      <Apply function="equal">
        <FieldRef field="ALCA_5A1"/>
        <Constant dataType="integer">1</Constant>
       </Apply>
@@ -115,7 +135,7 @@
        <FieldRef field="ALCA_5A1"/>
        <Constant dataType="integer">10</Constant>
       </Apply>
-      <Apply function="equals">
+      <Apply function="equal">
        <FieldRef field="ALCA_5A1"/>
        <Constant dataType="integer">10</Constant>
       </Apply>
@@ -129,7 +149,7 @@
         <FieldRef field="ALCA_5A1"/>
         <Constant dataType="integer">10</Constant>
        </Apply>
-       <Apply function="equals">
+       <Apply function="equal">
         <FieldRef field="ALCA_5A1"/>
         <Constant dataType="integer">10</Constant>
        </Apply>
@@ -163,7 +183,7 @@
           <FieldRef field="ALCA_5A1"/>
           <Constant dataType="integer">40</Constant>
          </Apply>
-         <Apply function="equals">
+         <Apply function="equal">
           <FieldRef field="ALCA_5A1"/>
           <Constant dataType="integer">40</Constant>
          </Apply>
@@ -171,7 +191,7 @@
        </Apply>
        <Constant dataType="integer">4</Constant>
        <Apply function="if">
-        <Apply function="equals">
+        <Apply function="equal">
          <FieldRef field="ALCA_5A1"/>
          <Constant dataType="integer">996</Constant>
         </Apply>
@@ -183,7 +203,7 @@
             <FieldRef field="ALCA_5A1"/>
             <Constant dataType="integer">997</Constant>
            </Apply>
-           <Apply function="equals">
+           <Apply function="equal">
             <FieldRef field="ALCA_5A1"/>
             <Constant dataType="integer">997</Constant>
            </Apply>
@@ -193,7 +213,7 @@
             <FieldRef field="ALCA_5A1"/>
             <Constant dataType="integer">999</Constant>
            </Apply>
-           <Apply function="equals">
+           <Apply function="equal">
             <FieldRef field="ALCA_5A1"/>
             <Constant dataType="integer">999</Constant>
            </Apply>
@@ -230,25 +250,25 @@
    <Extension name="labelLong" value="Converted categorical age"/>
    <Extension name="units" value="Years"/>
    <Apply function="if">
-    <Apply function="equals">
+    <Apply function="equal">
      <FieldRef field="DHHAGAGE"/>
      <Constant dataType="integer">1</Constant>
     </Apply>
     <Constant dataType="integer">13</Constant>
     <Apply function="if">
-     <Apply function="equals">
+     <Apply function="equal">
       <FieldRef field="DHHAGAGE"/>
       <Constant dataType="integer">2</Constant>
      </Apply>
      <Constant dataType="integer">17</Constant>
      <Apply function="if">
-      <Apply function="equals">
+      <Apply function="equal">
        <FieldRef field="DHHAGAGE"/>
        <Constant dataType="integer">3</Constant>
       </Apply>
       <Constant dataType="integer">22</Constant>
       <Apply function="if">
-       <Apply function="equals">
+       <Apply function="equal">
         <FieldRef field="DHHAGAGE"/>
         <Constant dataType="integer">96</Constant>
        </Apply>
@@ -260,7 +280,7 @@
            <FieldRef field="DHHAGAGE"/>
            <Constant dataType="integer">97</Constant>
           </Apply>
-          <Apply function="equals">
+          <Apply function="equal">
            <FieldRef field="DHHAGAGE"/>
            <Constant dataType="integer">97</Constant>
           </Apply>
@@ -270,7 +290,7 @@
            <FieldRef field="DHHAGAGE"/>
            <Constant dataType="integer">99</Constant>
           </Apply>
-          <Apply function="equals">
+          <Apply function="equal">
            <FieldRef field="DHHAGAGE"/>
            <Constant dataType="integer">99</Constant>
           </Apply>
@@ -299,5 +319,137 @@
     <Extension name="catLabelLong" value="missing"/>
    </Value>
   </DerivedField>
+  <DerivedField name="variable_four" displayName="N/A" optype="categorical" dataType="string">
+   <Extension name="labelLong" value="N/A"/>
+   <Extension name="units" value="N/A"/>
+   <Apply function="if">
+    <Apply function="equal">
+     <FieldRef field="start_variable_four"/>
+     <Constant dataType="integer">1</Constant>
+    </Apply>
+    <Constant dataType="integer">1</Constant>
+    <Constant dataType="string">NA::b</Constant>
+   </Apply>
+   <Value value="1" displayValue="N/A">
+    <Extension name="catLabelLong" value="N/A"/>
+   </Value>
+   <Value value="NA::b" displayValue="missing">
+    <Extension name="catLabelLong" value="missing"/>
+   </Value>
+  </DerivedField>
+  <DerivedField name="variable_five" displayName="Variable five" optype="categorical" dataType="string">
+    <Extension name="labelLong" value="Variable five"/>
+    <Extension name="units" value="N/A"/>
+    <Apply function="custom_function_one">
+      <FieldRef field="ADL_01"/>
+      <FieldRef field="variable_six"/>
+    </Apply>
+    <Value value="1" displayValue="Category one">
+      <Extension name="catLabelLong" value="Category one"/>
+    </Value>
+  </DerivedField>
+  <DerivedField name="variable_six" displayName="Variable six" optype="categorical" dataType="string">
+   <Extension name="labelLong" value="Variable six"/>
+   <Extension name="units" value="N/A"/>
+   <Apply function="if">
+    <Apply function="equal">
+     <FieldRef field="variable_six_start"/>
+     <Constant dataType="integer">1</Constant>
+    </Apply>
+    <Constant dataType="integer">1</Constant>
+    <Constant dataType="string">NA::b</Constant>
+   </Apply>
+   <Value value="1" displayValue="Category one">
+    <Extension name="catLabelLong" value="Category one"/>
+   </Value>
+   <Value value="NA::b" displayValue="Missing">
+    <Extension name="catLabelLong" value="Missing"/>
+   </Value>
+  </DerivedField>
+  <DerivedField name="variable_eight" displayName="Variable eight" optype="categorical" dataType="string">
+   <Extension name="labelLong" value="Variable eight"/>
+   <Extension name="units" value="N/A"/>
+   <Apply function="if">
+    <Apply function="equal">
+     <FieldRef field="variable_eight_start"/>
+     <Constant dataType="integer">1</Constant>
+    </Apply>
+    <Constant dataType="integer">1</Constant>
+    <Constant dataType="string">NA::b</Constant>
+   </Apply>
+   <Value value="1" displayValue="Category one">
+    <Extension name="catLabelLong" value="Category one"/>
+   </Value>
+   <Value value="NA::b" displayValue="Missing">
+    <Extension name="catLabelLong" value="Missing"/>
+   </Value>
+  </DerivedField>
+  <DerivedField name="variable_nine" displayName="Variable nine" optype="categorical" dataType="string">
+   <Extension name="labelLong" value="Variable nine"/>
+   <Extension name="units" value="N/A"/>
+   <Apply function="if">
+    <Apply function="equal">
+     <FieldRef field="variable_eight"/>
+     <Constant dataType="integer">1</Constant>
+    </Apply>
+    <Constant dataType="integer">1</Constant>
+    <Constant dataType="string">NA::b</Constant>
+   </Apply>
+   <Value value="1" displayValue="Category one">
+    <Extension name="catLabelLong" value="Category one"/>
+   </Value>
+   <Value value="NA::b" displayValue="Missing">
+    <Extension name="catLabelLong" value="Missing"/>
+   </Value>
+  </DerivedField>
+  <DerivedField name="variable_ten" displayName="Variable ten" optype="categorical" dataType="string">
+   <Extension name="labelLong" value="Variable ten"/>
+   <Extension name="units" value="N/A"/>
+   <Apply function="if">
+    <Apply function="equal">
+     <FieldRef field="variable_ten_start"/>
+     <Constant dataType="string">one</Constant>
+    </Apply>
+    <Constant dataType="integer">1</Constant>
+    <Apply function="if">
+      <Apply function="equal">
+        <FieldRef field="variable_ten_start" />
+        <Constant dataType="string">two</Constant>
+      </Apply>
+      <Constant dataType="integer">2</Constant>
+      <Constant dataType="string">NA::b</Constant>
+    </Apply>
+   </Apply>
+   <Value value="1" displayValue="Category one">
+    <Extension name="catLabelLong" value="Category one"/>
+   </Value>
+   <Value value="2" displayValue="Category two">
+    <Extension name="catLabelLong" value="Category two"/>
+   </Value>
+   <Value value="NA::b" displayValue="Missing">
+    <Extension name="catLabelLong" value="Missing"/>
+   </Value>
+  </DerivedField>
+  <DerivedField name="variable_eleven" displayName="Variable eleven" optype="continuous" dataType="float">
+   <Extension name="labelLong" value="Variable eleven"/>
+   <Extension name="units" value="N/A"/>
+   <FieldRef field="variable_eleven_start" />
+  </DerivedField>
+  <DefineFunction name="custom_function_one">
+   <ParameterField name="a" dataType="double"/>
+   <ParameterField name="b" dataType="double"/>
+   <Apply function="+">
+     <FieldRef field="a" />
+     <FieldRef field="b" />
+   </Apply>
+  </DefineFunction>
+  <DefineFunction name="custom_function_two">
+   <ParameterField name="b" dataType="double"/>
+   <FieldRef field="b"/>
+  </DefineFunction>
+  <DefineFunction name="custom_function_three">
+   <ParameterField name="c" dataType="double"/>
+   <FieldRef field="c"/>
+  </DefineFunction>
  </TransformationDictionary>
 </PMML>

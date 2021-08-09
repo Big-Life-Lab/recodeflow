@@ -29,6 +29,8 @@ pkg.env$node_name.interval <- "Interval"
 pkg.env$node_name.derived_field <- "DerivedField"
 pkg.env$node_name.apply <- "Apply"
 pkg.env$node_name.field_ref <- "FieldRef"
+pkg.env$node_name.local_transformations <- "LocalTransformations"
+pkg.env$node_name.define_function <- "DefineFunction"
 
 pkg.env$node_namespace.pmml <- "http://www.dmg.org/PMML-4_4"
 
@@ -52,7 +54,7 @@ pkg.env$node_attr.function.and <- "and"
 pkg.env$node_attr.function.or <- "or"
 pkg.env$node_attr.function.greater_than <- "greaterThan"
 pkg.env$node_attr.function.less_than <- "lessThan"
-pkg.env$node_attr.function.equals <- "equals"
+pkg.env$node_attr.function.equals <- "equal"
 
 pkg.env$node_attr.dataType.integer <- "integer"
 pkg.env$node_attr.dataType.string <- "string"
@@ -61,6 +63,12 @@ pkg.env$node_attr.dataType.float <- "float"
 pkg.env$node_attr.property.valid <- "valid"
 pkg.env$node_attr.property.invalid <- "invalid"
 pkg.env$node_attr.property.missing <- "missing"
+
+pkg.env$node_attr.DefineFunction.name <- "name"
+
+pkg.env$node_attr.FieldRef.field <- "field"
+
+pkg.env$node_attr.Apply.function <- "function"
 
 pkg.env$columns.Variable <- "variable"
 pkg.env$columns.VariableLabel <- "labelLong"
@@ -78,6 +86,8 @@ pkg.env$columns.ToType <- "typeEnd"
 pkg.env$columns.CatLabel <- "catLabel"
 pkg.env$columns.CatLabelLong <- "catLabelLong"
 pkg.env$columns.Role <- "role"
+
+pkg.env$variable_details$columns.recFrom.elseValue <- "else"
 
 pkg.env$recode.key.id.from <- "id_from::"
 pkg.env$recode.key.func <- "Func::"

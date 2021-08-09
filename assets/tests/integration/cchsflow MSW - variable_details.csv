@@ -1,4 +1,4 @@
-﻿variable,dummyVariable,toType,databaseStart,variableStart,fromType,recTo,numValidCat,catLabel,catLabelLong,units,recFrom,catStartLabel,variableStartShortLabel,variableStartLabel,notes
+variable,dummyVariable,typEnd,databaseStart,variableStart,typeStart,recEnd,numValidCat,catLabel,catLabelLong,units,recStart,catStartLabel,variableStartShortLabel,variableStartLabel,notes
 ADL_01,ADL_01_cat2_1,cat,"cchs2001_p, cchs2003_p, cchs2005_p, cchs2007_2008_p, cchs2009_2010_p, cchs2010_p, cchs2011_2012_p, cchs2012_p, cchs2013_2014_p, cchs2014_p","cchs2001_p::RACA_6A, cchs2003_p::RACC_6A, cchs2005_p::RACE_6A, cchs2007_2008_p::RAC_6A, [ADL_01]",cat,1,2,Yes,Yes,N/A,1,Yes,Needs help - preparing meals,"Because of any condition or health problem, do you need the help of another person in preparing meals?",
 ADL_01,ADL_01_cat2_2,cat,"cchs2001_p, cchs2003_p, cchs2005_p, cchs2007_2008_p, cchs2009_2010_p, cchs2010_p, cchs2011_2012_p, cchs2012_p, cchs2013_2014_p, cchs2014_p","cchs2001_p::RACA_6A, cchs2003_p::RACC_6A, cchs2005_p::RACE_6A, cchs2007_2008_p::RAC_6A, [ADL_01]",cat,2,2,No,No,N/A,2,No,Needs help - preparing meals,"Because of any condition or health problem, do you need the help of another person in preparing meals?",
 ADL_01,ADL_01_cat2_NA::a,cat,"cchs2001_p, cchs2003_p, cchs2005_p, cchs2007_2008_p, cchs2009_2010_p, cchs2010_p, cchs2011_2012_p, cchs2012_p, cchs2013_2014_p, cchs2014_p","cchs2001_p::RACA_6A, cchs2003_p::RACC_6A, cchs2005_p::RACE_6A, cchs2007_2008_p::RAC_6A, [ADL_01]",cat,NA::a,2,not applicable,not applicable,N/A,6,not applicable,Needs help - preparing meals,"Because of any condition or health problem, do you need the help of another person in preparing meals?",
@@ -17,3 +17,19 @@ DHHGAGE_cont,N/A,cont,"cchs2001_p, cchs2003_p",[DHHAGAGE],cat,22,N/A,Age,convert
 DHHGAGE_cont,N/A,cont,"cchs2001_p, cchs2003_p",[DHHAGAGE],cat,NA::a,N/A,not applicable,not applicable,years,96,not applicable,Age,Age - (G),
 DHHGAGE_cont,N/A,cont,"cchs2001_p, cchs2003_p",[DHHAGAGE],cat,NA::b,N/A,missing,missing,years,"[97,99]",don't know (97); refusal (98); not stated (99),Age,Age - (G),"Not applicable, don't know, refusal, not stated (96-99) were options in CCHS 2003, but had zero responses"
 DHHGAGE_cont,N/A,cont,"cchs2001_p, cchs2003_p",[DHHAGAGE],cat,NA::b,N/A,missing,missing,years,else,else,Age,Age - (G),
+variable_four,N/A,cat,cchs2001_p,cchs2001_p::start_variable_four,cat,1,1,N/A,N/A,N/A,1,N/A,N/A,N/A,
+variable_four,N/A,cat,cchs2001_p,cchs2001_p::start_variable_four,cat,NA::b,1,missing,missing,N/A,else,N/A,N/A,N/A,
+variable_five,N/A,cat,cchs2001_p,"DerivedVar::[ADL_01, variable_six]",N/A,Func::custom_function_one,1,N/A,N/A,N/A,N/A,N/A,N/A,N/A,
+variable_five,N/A,cat,cchs2001_p,"DerivedVar::[ADL_01, variable_six]",N/A,1,1,Category one,Category one,N/A,N/A,N/A,N/A,N/A,
+variable_five,N/A,cat,cchs2003_p,"DerivedVar::[ADL_01, variable_six]",N/A,Func::custom_function_one,1,N/A,N/A,N/A,N/A,N/A,N/A,N/A,
+variable_five,N/A,cat,cchs2003_p,"DerivedVar::[ADL_01, variable_six]",N/A,1,1,Category one,Category one,N/A,N/A,N/A,N/A,N/A,
+variable_six,N/A,cat,cchs2001_p,[variable_six_start],cat,1,1,Category one,Category one,N/A,1,Category one start,Variable six start,Variable six start,
+variable_six,N/A,cat,cchs2001_p,[variable_six_start],cat,NA::b,1,Missing,Missing,N/A,else,Else,Variable six start,Variable six start,
+variable_eight,N/A,cat,cchs2001_p,cchs2001_p::variable_eight_start,cat,1,1,Category one,Category one,N/A,1,Category one start,Variable eight start,Variable eight start,
+variable_eight,N/A,cat,cchs2001_p,cchs2001_p::variable_eight_start,cat,NA::b,1,Missing,Missing,N/A,else,Else,Variable eight start,Variable eight start,
+variable_nine,N/A,cat,cchs2001_p,[variable_eight],cat,1,1,Category one,Category one,N/A,1,Category one start,Variable start nine,Variable start nine,
+variable_nine,N/A,cat,cchs2001_p,[variable_eight],cat,NA::b,1,Missing,Missing,N/A,else,Else,Variable start nine,Variable start nine,
+variable_ten,N/A,cat,cchs2001_p,cchs2001_p::variable_ten_start,cat,1,2,Category one,Category one,N/A,one,Category one start,Variable ten start,Variable ten start,
+variable_ten,N/A,cat,cchs2001_p,cchs2001_p::variable_ten_start,cat,2,2,Category two,Category two,N/A,two,Category two start,Variable ten start,Variable ten start,
+variable_ten,N/A,cat,cchs2001_p,cchs2001_p::variable_ten_start,cat,NA::b,2,Missing,Missing,N/A,else,Else,Variable ten start,Variable ten start,
+variable_eleven,N/A,cont,ccchs2001_p,cchs2001_p::variable_eleven_start,cont,copy,N/A,N/A,N/A,N/A,else,Else,Variable eleven start,Variable eleven start,

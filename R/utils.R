@@ -70,7 +70,7 @@ is_numeric <- function(chars) {
 #'
 #' @return Whether recFrom is a range.
 is_rec_from_range <- function(var_details_row) {
-  margins <- get_margins(var_details_row$recFrom)
+  margins <- get_margins(var_details_row[[pkg.env$columns.recFrom]])
   # only consider margins as a range if the endpoints are different
   return (margins[1] != margins[2])
 }
@@ -120,30 +120,53 @@ get_start_var_name <- function(var_details_row, db_name) {
   # The value of the variableStart column for this variable details row
   start_variables = var_details_row$variableStart
 
-  # The regex that will be used to pluck the name of the start variable from
-  # list of start variables and their databases. For example, if the db_name
-  # is cchs2001_p and the list is cchs2001_p::RACA_6A, this regex will pluck out
-  # RACA_6A
-  db_var_regex <- paste0(db_name, pkg.env$db_var_start_infix, "(.+?)[,?]")
-  # Get regex match for variable start
-  db_var_regex_match <- regexec(db_var_regex, start_variables)
-  # Get the start variable for the db passed in the db_name parameter
-  start_var_for_db <- regmatches(start_variables, db_var_regex_match)[[1]][2]
+  # The regex that will be used to pluck the name of the start variable from a
+  # start variable string. For example, if the db_name is cchs2001_p and the
+  # list is cchs2001_p::RACA_6A,this regex will pluck out RACA_6A
+  start_variable_with_db_regex <- paste0(db_name, "::(.+?)$")
+  # Regex to pluck out the start variable from a default variable string
+  # For example, if the string is [ADL_01], this regex will pull out ADL_01
+  default_start_var_regex <- "\\[(.+?)\\]"
+  # Split the start variable column into each start variable string
+  # For example, db1::var1, db2::var2, [var3] would be split into
+  # [db1::var1, db2::var2, [var3]]
+  start_variables_split <- strsplit(start_variables, ",")
+  # The name of the start variable for the passed db_name argument
+  start_variable_for_db <- NA
+  # The name of the default start variable for this start variable string
+  default_start_var <- NA
+  # Go through each of the start variable strings to find either one for this
+  # db or a default one
+  for(i in seq_len(length(start_variables_split[[1]]))) {
+    current_start_variable_str <- start_variables_split[[1]][i]
 
-  # The regex to pluck out the default start variable to use. In the column
-  # of start variables this will be encoded as [RACA_6A]. This regex will
-  # pluck out RACA_6A
-  default_var_regex <- "\\[(.+?)\\]"
-  default_var_match <- regexec(default_var_regex, start_variables)
-  default_var <- regmatches(start_variables, default_var_match)[[1]][2]
+    # Get regex match for variable start
+    db_var_regex_matches <- regmatches(
+      current_start_variable_str,
+      regexec(start_variable_with_db_regex, current_start_variable_str))
+    possible_db_start_var <- db_var_regex_matches[[1]][2]
+    # If we found a start variable for this db then assign it and break out
+    # of the loop since we don't care about the default var
+    if(!is.na(possible_db_start_var)) {
+      start_variable_for_db <- possible_db_start_var
+      break
+    }
 
-  # If there was a start variable for the passed database, return it
-  if(!is.na(start_var_for_db) & nchar(start_var_for_db) != 0) {
-    return(start_var_for_db)
+    # Find the matches for the default var regex in this start variable string
+    default_var_regex_matches <- regmatches(
+      current_start_variable_str,
+      regexec(default_start_var_regex, current_start_variable_str))
+    # Either the name of the default var or NA if it does not match
+    possible_default_var <- default_var_regex_matches[[1]][2]
+    if(!is.na(possible_default_var)) {
+      default_start_var <- possible_default_var
+    }
   }
-  # Otherwise, if there was a default start variable return it
-  else if(nchar(default_var) != 0) {
-    return(default_var)
+
+  if(!is.na(start_variable_for_db)) {
+    return(start_variable_for_db)
+  } else if(!is.na(default_start_var)) {
+    return(default_start_var)
   }
   # Otherwise, throw an error saying we could not find a start variable
   else {
@@ -167,8 +190,8 @@ get_variable_type_data_type <- function (var_details_rows, var_type, is_start_va
   is_categorical <- var_type %in% c(pkg.env$var_details_cat, pkg.env$var_cat)
   if (is_categorical) {
     char_var_details_rows <- ifelse(is_start_var,
-                                    var_details_rows[!is_numeric(var_details_rows$recFrom), ],
-                                    var_details_rows[!is_numeric(var_details_rows$recTo), ])
+                                    var_details_rows[!is_numeric(var_details_rows[[pkg.env$columns.recFrom]]), ],
+                                    var_details_rows[!is_numeric(var_details_rows[[pkg.env$columns.recTo]]), ])
     if (length(char_var_details_rows) > 0) return (pkg.env$node_attr.dataType.string)
     return (pkg.env$node_attr.dataType.integer)
   }
