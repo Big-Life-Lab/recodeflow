@@ -4,12 +4,8 @@
 \alias{attach_derived_field_child_nodes}
 \title{Attach child nodes to DerivedField node.}
 \usage{
-attach_derived_field_child_nodes(
-  derived_field_node,
-  var_details_sheet,
-  var_name,
-  db_name
-)
+attach_derived_field_child_nodes(derived_field_node, var_details_sheet,
+  var_name, db_name)
 }
 \arguments{
 \item{derived_field_node}{DerivedField node to attach child nodes.}

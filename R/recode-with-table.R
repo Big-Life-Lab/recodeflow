@@ -549,23 +549,24 @@ recode_columns <-
            else_default) {
     # Split variables to process into recode map and func
     map_variables_to_process <-
-      variables_details_rows_to_process[grepl("map::", variables_details_rows_to_process[[pkg.env$columns.recTo]]),]
+      variables_details_rows_to_process[grepl(pkg.env$recode.key.map, variables_details_rows_to_process[[pkg.env$columns.recTo]]),]
     if (nrow(map_variables_to_process) > 0) {
-      stop("map:: variables were detected however this feature is not yet supported")
+      stop(paste0(pkg.env$recode.key.map, "variables were detected however this feature is not yet supported"))
     }
 
     id_variables_to_process <-
-      variables_details_rows_to_process[grepl("id_from::", variables_details_rows_to_process[[pkg.env$columns.recTo]]),]
+      variables_details_rows_to_process[grepl(pkg.env$recode.key.id.from, variables_details_rows_to_process[[pkg.env$columns.recTo]]),]
 
     func_variables_to_process <-
-      variables_details_rows_to_process[grepl("Func::", variables_details_rows_to_process[[pkg.env$columns.recTo]]),]
+      variables_details_rows_to_process[grepl(pkg.env$recode.key.func, variables_details_rows_to_process[[pkg.env$columns.recTo]]),]
 
+    non_derived_keys <- c(pkg.env$recode.key.func,pkg.env$recode.key.map,pkg.env$recode.key.id.from)
     rec_variables_to_process <-
       variables_details_rows_to_process[(!grepl(
-        "Func::|map::|id_from::",
+        paste(non_derived_keys,collapse="|"),
         variables_details_rows_to_process[[pkg.env$columns.recTo]]
       )) &
-        (!grepl("DerivedVar::",
+        (!grepl(pkg.env$recode.key.derived.var,
                 variables_details_rows_to_process[[pkg.env$columns.VariableStart]])),]
 
     label_list <- list()
@@ -663,6 +664,9 @@ recode_columns <-
           c(levels(recoded_data[[variable_being_checked]]),
             levels(rows_being_checked[[pkg.env$columns.recTo]]))
 
+        # Range overlap setup
+        checked_data_rows <- c(rep(FALSE, nrow(data)))
+
         for (row in seq_len(nrow(rows_being_checked))) {
           row_being_checked <- rows_being_checked[row,]
           # If cat go check for label and obtain it
@@ -723,6 +727,7 @@ recode_columns <-
             )
             interval <- interval_default
           }
+
           valid_row_index <- compare_value_based_on_interval(
             compare_columns = data_variable_being_checked,
             data = data,
@@ -730,6 +735,14 @@ recode_columns <-
             right_boundary = from_values[[2]],
             interval = interval
           )
+
+          # Check for range duplicates
+          if(all(!checked_data_rows[valid_row_index])){
+            checked_data_rows[valid_row_index] <- TRUE
+          }else{
+            stop(paste0("Overlapping ranges detected for variable", variable_being_checked))
+          }
+
           # Start construction of dataframe for log
           log_table[row, "value_to"] <- value_to_recode_to
           log_table[row, "From"] <-
@@ -915,7 +928,7 @@ update_variable_details_based_on_variable_sheet <-
     variable_details <-
       variable_details[,!(
         names(variable_details) %in% c(
-          pkg.env$columns.VariableType,
+          pkg.env$columns.variablesDetails.typeStart,
           pkg.env$columns.label,
           pkg.env$columns.VariableLabel,
           pkg.env$columns.Units

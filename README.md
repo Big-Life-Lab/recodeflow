@@ -2,12 +2,10 @@
 
 <!-- badges: start -->
 
-[![Lifecycle:
-development](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
+[![Lifecycle: development](https://img.shields.io/badge/lifecycle-experimental-blue.svg)](https://www.tidyverse.org/lifecycle/#experimental) <!--
 [![](https://img.shields.io/cran/v/cchsflow?color=green)](https://CRAN.R-project.org/package=TBA)
 ![](https://img.shields.io/github/v/release/big-life-lab/recodeflow?color=green&label=GitHub)
-[![License:
-MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+--> [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 <!-- badges: end -->
 
@@ -15,67 +13,53 @@ MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.or
 
 ## What is `recodeflow`?
 
-`recodeflow` transforms variables from multiple data sets into harmonize variables.
+`recodeflow` recodes variables from multiple data sets into harmonized variables.
 
-`recodeflow` has the basic functions and templates required to define, transform, and harmonize variables for any dataset.
+`recodeflow` has basic functions and templates required to define, recode, and harmonize variables for any dataset.
 
+## Why should I use `recodeflow`?
 
-## Why should I use `recodeflow`? 
+Recoding and cleaning your data is typically the most time consuming step of your project. Existing functions such as `sjmisc::rec()` and `dplyr:recode()` work well but they are **limited to recoding one variable at a time**. 
 
-Let's walk through an example. 
+The `recodeflow` package takes data cleaning and recoding one step further. `recodeflow` allows you to  recode **multiple variables at the same time**, and **harmonize variables** across similar databases even when the variables and variables' categories change.
 
-Each year, Canadians complete a survey, and the data is collected. The data is coded.  You, a scientist, want to use data from the 10 surveys to answer two research questions **but there's a catch:**
+`recodeflow` also helps to **reduce errors**, **document the recode process**, and ensures your new variables have labels and other **metadata**.
 
-At the survey level: 
-
-- Not every survey question was asked each year.
-- The survey answers changed from year to year. 
-
-At the data level:
-
-- Questions are not coded the same from year to year (e.g., variable names differ)
-- Answers are not coded the same from year to year (e.g., height is coded in meters in some years and feet in other years)
-
-The data is messy! You start the timely and detailed process of cleaning and transforming the data. You think "there must be a better way."
-
-That's where `recodeflow` comes to the rescue. 
-
-With `recodeflow` you can clean and transform your entire dataset with a few lines of code. Even better, once you have defined your variables you have variable sheets you can reuse or share with colleagues - saving you even more time down the line.
+Even if your project has few variables,`recodeflow` can save you time.
 
 
 ## How does `recodeflow` work?
 
-Use templates `variable_sheet` and `variable_details` to list your variables, and state how to transform the each variable.
+Use the worksheets `variables` and `variable_details` to list your variables and state how to recode the each variable.
 
-Once your variables are defined, use `recodeflow` functions to clean and transform your data. The main `recodeflow` function is `rec_with_table` which transforms variables within you dataset(s) based on how you've defined the variable in `variable_sheet` and `variable_details`.
-
-
-## What's does the `recodeflow` package include?
-
-The `recodeflow` package includes: 
-
-- **functions** required to clean and transform variables.
-- **templates:**
-
-  - **`variable_sheet`** a list of variables to transform, and
-  - **`variable_details`** mapping of variables across datasets and a list of instructions for transforming variables.
+Once your variables are defined, use `recodeflow` functions to clean and recode your data. The main `recodeflow` function is `rec_with_table` which recodes variables within you dataset(s) based on how you've defined the variable in the worksheets `variables` and `variable_details`.
 
 
-We've also created the following documentation, to help you understand `recodeflow`:
+## What's included in `recodeflow`?
 
-- **how to guides** examples of how to use `recodeflow` and adapt `recodeflow` for your dataset
-- **articles** that describe package elements (e.g., variable_sheet) in detail 
-- **references** that describe all `recodeflow` functions 
-- **example data** to demonstrate `recodeflow` functions and templates.
+The `recodeflow` package includes:
 
+-   **functions** required to clean and recode variables.
+
+-   **worksheets:**
+
+    -   **`variables`** a list of variables to recode and
+    -   **`variable_details`** mapping of variables across datasets and a list of instructions for recoding variables.
+
+We've also created the following documentation to help you understand `recodeflow`:
+
+-   **how to guides** examples of how to use `recodeflow` and adapt `recodeflow` for your dataset,
+-   **articles** that describe package elements (e.g., variables) in detail,
+-   **references** that describe all `recodeflow` functions, and
+-   **example data** to demonstrate `recodeflow` functions and templates.
 
 ## Where is `recodeflow` used?
 
-Currently `recodeflow` is used in packages that harmonize health surveys and health administrative databases. 
+Currently `recodeflow` is used in packages that harmonize health surveys and health administrative databases.
 
-- `cchsflow` is a package that harmonizes variables across cycles of the Canadian Community Health Survey (CCHS). cchsflow is (published)[https://big-life-lab.github.io/cchsflow/index.html].
--`raiflow` is a package that will harmonize variables within the Resident Assessments Instruments (RAI) from various sources: Canada's Continuing Care Reporting System (CCRS), and Ontario's Resident Assessment Instrutment for Home Care (RAI-HC). `raiflow` is currently underdevelopment. 
+- `cchsflow` is a package that harmonizes variables across cycles of the Canadian Community Health Survey (CCHS). cchsflow is [published](https://big-life-lab.github.io/cchsflow/index.html). 
 
+- `raiflow` is a package that will harmonize variables within the Resident Assessments Instruments (RAI) from various sources: Canada's Continuing Care Reporting System (CCRS) and Ontario's Resident Assessment Instrutment for Home Care (RAI-HC). `raiflow` is currently underdevelopment.
 
 # Roadmap
 
@@ -83,7 +67,4 @@ Projects on the roadmap are at the Github repository recodeflow under the [proje
 
 # Contributing
 
-Please follow the [**recodeflow contribution guide**](https://big-life-lab.github.io/recodeflow/CONTRIBUTING.html) if you
-would like to contribute to the `recodeflow` package.
-
-
+Please follow the [**recodeflow contribution guide**](https://big-life-lab.github.io/recodeflow/CONTRIBUTING.html) if you would like to contribute to the `recodeflow` package.

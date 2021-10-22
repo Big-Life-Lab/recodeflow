@@ -4,22 +4,12 @@
 \alias{rec_with_table}
 \title{Recode with Table}
 \usage{
-rec_with_table(
-  data,
-  variables = NULL,
-  database_name = NULL,
-  variable_details = NULL,
-  else_value = NA,
-  append_to_data = FALSE,
-  log = FALSE,
-  notes = TRUE,
-  var_labels = NULL,
-  custom_function_path = NULL,
-  attach_data_name = FALSE,
-  id_role_name = NULL,
-  name_of_environment_to_load = NULL,
-  append_non_db_columns = FALSE
-)
+rec_with_table(data, variables = NULL, database_name = NULL,
+  variable_details = NULL, else_value = NA, append_to_data = FALSE,
+  log = FALSE, notes = TRUE, var_labels = NULL,
+  custom_function_path = NULL, attach_data_name = FALSE,
+  id_role_name = NULL, name_of_environment_to_load = NULL,
+  append_non_db_columns = FALSE)
 }
 \arguments{
 \item{data}{A dataframe containing the variables to be recoded.

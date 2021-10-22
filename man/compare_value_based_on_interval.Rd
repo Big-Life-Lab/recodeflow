@@ -4,13 +4,8 @@
 \alias{compare_value_based_on_interval}
 \title{Compare Value Based On Interval}
 \usage{
-compare_value_based_on_interval(
-  left_boundary,
-  right_boundary,
-  data,
-  compare_columns,
-  interval
-)
+compare_value_based_on_interval(left_boundary, right_boundary, data,
+  compare_columns, interval)
 }
 \arguments{
 \item{left_boundary}{the min value}

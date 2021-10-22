@@ -4,7 +4,55 @@
 #'
 #' @return Margins as character vector.
 get_margins <- function (chars) {
-  return (trimws(strsplit(chars, ":")[[1]]))
+  trimmed_chars <- trimws(chars)
+  is_singleton <- is_numeric(trimmed_chars)
+  if (is_singleton) return (c(trimmed_chars, trimmed_chars))
+
+  is_range <- grepl(pkg.env$margin_separator, trimmed_chars, fixed = TRUE)
+  if (!is_range) return (c(0, 0))
+
+  margins <- strsplit(substr(trimmed_chars, 2, nchar(trimmed_chars) - 1), pkg.env$margin_separator)[[1]]
+  return (margins)
+}
+
+#' Get closure type for a margin.
+#'
+#' @param chars Character vector.
+#'
+#' @return Closure type.
+#'
+#' @examples
+get_margin_closure <- function (chars) {
+  if (is_left_open(chars)) {
+    if (is_right_open(chars)) return (pkg.env$node_attr.closure.open)
+    return (pkg.env$node_attr.closure.leftOpen)
+  }
+  if (is_right_open(chars)) return (pkg.env$node_attr.closure.rightOpen)
+  return (pkg.env$node_attr.closure.closed)
+}
+
+#' Extract margins from character vector.
+#'
+#' @param chars Character vector.
+#'
+#' @return Whether the left endpoint of an interval is open.
+#'
+#' @examples
+is_left_open <- function (chars) {
+  trimmed_chars <- trimws(chars)
+  return (substr(trimmed_chars, 1, 1) == "(")
+}
+
+#' Extract margins from character vector.
+#'
+#' @param chars Character vector.
+#'
+#' @return Whether the right endpoint of an interval is open.
+#'
+#' @examples
+is_right_open <- function (chars) {
+  trimmed_chars <- trimws(chars)
+  return (substr(trimmed_chars, nchar(trimmed_chars), nchar(trimmed_chars) + 1) == ")")
 }
 
 #' Check if a character object can be converted to a number.
@@ -22,7 +70,9 @@ is_numeric <- function(chars) {
 #'
 #' @return Whether recFrom is a range.
 is_rec_from_range <- function(var_details_row) {
-  return (grepl(":", var_details_row$recFrom, fixed=TRUE))
+  margins <- get_margins(var_details_row$recFrom)
+  # only consider margins as a range if the endpoints are different
+  return (margins[1] != margins[2])
 }
 
 
@@ -261,7 +311,7 @@ label_data <- function(label_list, data_to_label) {
       }
       data_to_label[[variable_name]] <-
         sjlabelled::set_labels(data_to_label[[variable_name]],
-                               labels = label_list[[variable_name]]$values
+                               labels = unlist(label_list[[variable_name]]$values)
         )
       attr(data_to_label[[variable_name]], "labels_long") <-
         label_list[[variable_name]]$values_long
@@ -297,7 +347,7 @@ label_data <- function(label_list, data_to_label) {
 #' @param variables the variables sheet containing variable info
 #'
 #' @return a vector containing the variable names that match the passed roles
-select_vars_by_role <- function(roles, variables){
+select_vars_by_role  <- function(roles, variables){
   # Reduce row looping by only looping over only unique combinations
   unique_roles <- unique(variables[[pkg.env$columns.Role]])
   valid_patern <- c()
@@ -305,6 +355,7 @@ select_vars_by_role <- function(roles, variables){
     # Split by commas to avoid partial matches being false positives
     role_list <- strsplit(role_patern, ",")[[1]]
     for (role in role_list){
+      role <- trimws(role)
       if(role %in% roles){
         valid_patern <- append(valid_patern, role_patern)
       }
@@ -315,8 +366,12 @@ select_vars_by_role <- function(roles, variables){
   if(length(valid_patern)<1){
     stop(paste0(roles, " is not present in variabes"))
   }
-
-  ret <- as.character(variables[variables[[pkg.env$columns.Role]] == valid_patern, pkg.env$columns.Variable][[pkg.env$columns.Variable]])
+  ret <- variables[variables[[pkg.env$columns.Role]] %in% valid_patern, pkg.env$columns.Variable]
+  if(is.data.frame(ret)){
+    ret <- as.character(ret[[pkg.env$columns.Variable]])
+  }else{
+    ret <- as.character(ret)
+  }
 
   return(ret)
 }

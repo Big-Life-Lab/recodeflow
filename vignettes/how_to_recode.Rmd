@@ -1,5 +1,5 @@
 ---
-title: "How to transform variables"
+title: "Recode variables"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{How to guides}     
@@ -11,13 +11,13 @@ knitr::opts_chunk$set(echo = TRUE, collapse = TRUE, comment = "#>")
 source("../R/test_data_generator.R")
 ```
 
-# How to transfrom variables
+We have examples to demonstrate how to recode variables with the _recodeflow_ function [`rec_with_table()`](../reference/rec_with_table.html)
 
-We have examples to demonstrate how to transform variables with the _recodeflow_ function [`rec_with_table()`](../reference/rec_wtih_table.html)
+**Our examples use following packages:**
 
-**Our examples use following packages.**
+Package _recodeflow_ 
 
-Package _recodeflow_ Steps on how to install `recodeflow` are in [how to install](../reference/how_to_install.html)
+Steps on how to install `recodeflow` are in [how to install](../how_to/install.html)
 ```{r results= 'hide', message = FALSE, warning=FALSE}
 #Load the package
 library(recodeflow)
@@ -29,17 +29,18 @@ Package [dplyr](https://www.rdocumentation.org/packages/dplyr/versions/0.7.8) to
 library(dplyr)
 ```
 
-**Example data**
-Our examples use the dataset `pbc` from the package [survival](https://cran.r-project.org/web/packages/survival/index.html). We've split this dataset into two (tester1 and tester2) to mimic real data e.g., the same survey preformed in separate years. We've also added columns (`agegrp5` and `agegrp10`) to this dataset for our examples.
+**Our examples use example data**
+
+Our examples use the dataset `pbc` from the package [survival](https://cran.r-project.org/web/packages/survival/index.html). We've split this dataset in two (tester1 and tester2) to mimic real data e.g., the same survey preformed in separate years. For our examples, we've also added columns (`agegrp5` and `agegrp10`) to this dataset.
 
 
-## Example 1. How to transform a single variable from a single dataset
+## Example 1. Recode a single variable from a single dataset
 
 In our example datasets, the variable `sex` contains the values: m for males and f for females. 
 
-Using dataset tester1, we'll transform the variable `sex` into a harmonized `sex` variable. The harmonized `sex` variable has the values: 0 for males and 1 for females. 
+Using dataset tester1, we'll recode the variable `sex` into a harmonized `sex` variable. The harmonized `sex` variable has the values: 0 for males and 1 for females. 
 
-1) Transform the `sex` variable in tester1.
+1) Recode the `sex` variable in tester1.
 ```{r}
 sex_1 <- rec_with_table(data = tester1, 
                         variables = "sex", 
@@ -53,11 +54,11 @@ sex_1 <- rec_with_table(data = tester1,
 head(sex_1)
 ```
 
-## Example 2. How to transform a single variable across multiple datasets
+## Example 2. Recode a single variable across multiple datasets
 
-We'll transform and combine the variable `sex` for our two datasets. 
+We'll recode and combine the variable `sex` for our two datasets. 
 
-1) Transform the `sex` variable in tester1 and tester2.
+1) Recode the `sex` variable in tester1 and tester2.
 ```{r, warning = FALSE}
 sex_1 <- rec_with_table(data = tester1, 
                         variables = "sex", 
@@ -86,10 +87,6 @@ head(sex_combined)
 tail(sex_combined)
 ```
 
-```{r, echo=FALSE}
-head(sex_combined)
-```
-
 3) Set labels
 
 Labels are lost during the database merging. 
@@ -100,13 +97,13 @@ Use `set_data_labels()` to label the variables in your final dataset. `set_data_
 labeled_sex_combined <- set_data_labels(
   data_to_label = sex_combined,
   variable_details = variable_details,
-  variables_sheet = variables_sheet
+  variables_sheet = variables
 )
 ```
 
-## Example 3. How to transform a single variable, with different categories, from multiple datasets {#example3}
+## Example 3. Recode a single variable, with different categories, from multiple datasets {#example3}
 
-You could have a situation a variable is the same across datasets but its categories change. 
+You could have a situation where a variable is the same across datasets but its categories change. 
 
 In our example data the variable `agegrp` is different in tester1 and tester2. 
 
@@ -115,13 +112,13 @@ In our example data the variable `agegrp` is different in tester1 and tester2.
 
 There are three options to facilitate the use of variables with inconsistent categories across datasets. 
 
-### Option 1: transform category `agegrp` variable into a common variable for only datasets with the same category responses
+### Option 1: recode category `agegrp` variable into a common variable for only datasets with the same category responses
 
-Transform the `agegrp` variable into a common variable only in datasets were the categories are the same. If the categories are different between datasets, separate columns will be created. 
+Recode the `agegrp` variable into a common variable only in datasets were the categories are the same. If the categories are different between datasets, separate columns will be created. 
 
 The categories in the `agegrp` variable in tester1 are different than the categories of `agegrp` in tester2. Therefore, it is not possible to have the same `agegrp` categories across our example data sets.
 
-1) Transform `agegrp5` in tester1 and transform `agegrp10` in tester2.
+1) Recode `agegrp5` in tester1 and recode `agegrp10` in tester2.
 ```{r, warning=FALSE}
 agegrp_1 <- rec_with_table(data = tester1, 
                            variables = "agegrp5", 
@@ -150,14 +147,14 @@ tail(agegrp_combined)
 ```
 
 
-### Option 2: transform the categorical `agegrp` variable into a continuous `age_cont` variable
+### Option 2: recode the categorical `agegrp` variable into a continuous `age_cont` variable
 
-Transform categorical variable `agegrp` into a single harmonized continuous
+Recode categorical variable `agegrp` into a single harmonized continuous
 variable `age_cont`. 
 
 `age_cont` takes the midpoint age of each category for 'agegrp' across datasets. With this option, the categorical variable 'agegrp' from each dataset can be combined into a single dataset.
 
-1) Transform variable `agegrp` in tester1 and `agegrp` in tester2 to the harmonized continuous variable `age_cont`. 
+1) Recode variable `agegrp` in tester1 and `agegrp` in tester2 to the harmonized continuous variable `age_cont`. 
 ```{r, warning=FALSE}
 agegrp_1_cont <- rec_with_table(data = tester1, 
                              variables = "age_cont", 
@@ -185,11 +182,11 @@ tail(agegrp_cont_combined)
 ```
 
 
-### Option 3: transform the categorical `agegrp` variable into a harmonized categorical variable
+### Option 3: recode the categorical `agegrp` variable into a harmonized categorical variable
 
 Dataset tester1 has 5-year age groups (e.g., 30-34, 35-39), and tester2 has 10-year age groups (e.g., 30-39). Therefore, we can collapse the 5-year age groups in dataset tester1 to the same 10-year age groups in dataset tester2.
 
-1) Transform variable `agegrp` in tester1 into `agegrp10`. Transform variable `agegrp` in tester2 into `agegrp10`.
+1) Recode variable `agegrp` in tester1 into `agegrp10`. recode variable `agegrp` in tester2 into `agegrp10`.
 ```{r, warning=FALSE}
 agegrp10_1 <- rec_with_table(data = tester1, 
                              variables = "agegrp10", 
@@ -217,17 +214,17 @@ tail(agegrp10_combined)
 ```
 
 
-## Example 4. How to transform multiple variables from multiple datasets {#example4}
+## Example 4. Recode multiple variables from multiple datasets {#example4}
 
 The variables argument in `rec_with_table()` allows multiple variables to be
-transformed from a dataset. 
+recoded from a dataset. 
 
-In this example, the `age` and `sex` variables from the tester1 and tester2 datasets will be transformed and labeled using `rec_with_table()`. 
+In this example, the `age` and `sex` variables from the tester1 and tester2 datasets will be recoded and labeled using `rec_with_table()`. 
 
-We'll then combine the two transformed datasets into a single dataset and labeled
+We'll then combine the two recoded datasets into a single dataset and labeled
 using `set_data_labels()`.
 
-1) Transform `age` and `sex` in dataset tester1 and tester2
+1) Recode `age` and `sex` in dataset tester1 and tester2
 ```{r, warning=FALSE}
 age_sex_1 <- rec_with_table(data = tester1, 
                             variables = c("age", "sex"), 
@@ -263,11 +260,11 @@ labeled_combined_age_sex <-
   set_data_labels(
       data_to_label = combined_age_sex,
       variable_details = variable_details, 
-      variables_sheet = variables_sheet
+      variables_sheet = variables
       )
 ```
 
-You can check if labels have been added to your transformed dataset by using `get_label()`.
+You can check if labels have been added to your recoded dataset by using `get_label()`.
 
 ```{r, warning=FALSE}
 library(sjlabelled) 
@@ -279,52 +276,50 @@ refer to the [sjlabelled](https://strengejacke.github.io/sjlabelled/reference/)
 package.
 
 
-## Example 5. How transform all variables in variables_sheet {#example5}
+## Example 5. Recode all variables in the variables worksheet {#example5}
 
-All the variables listed in `variables_sheet` worksheet can be transformed with `rec_with_table()`. 
+All the variables listed in `variables` worksheet can be recoded with `rec_with_table()`. 
 
-In this example, all variables specified in the `variables_sheet` worksheet will be transformed and combined for the datasets tester1 and tester2.
+In this example, all variables specified in the `variables` worksheet will be recoded and combined for the datasets tester1 and tester2.
 
 ```{r, echo=FALSE}
 options(htmlwidgets.TOJSON_ARGS = list(na = "string"))
 ```
 
-1) Transform all variables variables_sheet, for dataset tester1
+1) Recode all variables listed in the variables worksheet, for dataset tester1 and dataset tester2
 ```{r, warning=FALSE}
-#Transform all variables listed in variables_sheet, for dataset tester1
-transformed1 <- rec_with_table(data = tester1,
-                          variables = variables_sheet,
+recoded1 <- rec_with_table(data = tester1,
+                          variables = variables,
                           variable_details = variable_details,
                           log = TRUE,
                           )
 
-#Transform all variables listed in variables_sheet, for dataset tester2
-transformed2 <- rec_with_table(data = tester2,
-                          variables = variables_sheet,
+recoded2 <- rec_with_table(data = tester2,
+                          variables = variables,
                           variable_details = variable_details,
                           log = TRUE,
                           )
 ```
 
-2) Combine transformed datasets
+2) Combine recoded datasets
 ```{r, warning=FALSE}
-combined_dataset <- bind_rows(transformed1, transformed2)
+combined_dataset <- bind_rows(recoded1, recoded2)
 ```
 
-3) Set labels for the combined transformed dataset
+3) Set labels for the combined recoded dataset
 ```{r}
 labeled_combined <- set_data_labels(data_to_label = combined_dataset,
                                     variable_details = variable_details,
-                                    variables_sheet = variables_sheet
+                                    variables_sheet = variables
                                     )
 ```
 
-## Example 6: How to know the a data origin in combined datasets {#example6}
+## Example 6: Add the data origin in combined datasets {#example6}
 
 To know the origin of each row of data, you can use the `rec_with_table` argument 
 `attach_data_name`. When the argument `attach_data_name` is set to true it will add a column with the name of the dataset the row is from.
 
-1) Transform variables `age` and `sex` and attach dataset name for tester1 and tester2.
+1) Recode variables `age` and `sex` and attach dataset name for tester1 and tester2.
 ```{r, warning=FALSE}
 age_sex_1 <- rec_with_table(data = tester1,
                             variables = c("age", "sex"), 
@@ -352,22 +347,22 @@ tail(combined_age_sex)
 ```
 
 
-## Example 7. Transform derived variables {#example7}
+## Example 7. Recode derived variables {#example7}
 
-Derived variables are variables that are not in the original dataset; rather they are created using variables the original dataset.
+Derived variables are variables that are not in the original dataset; rather they are created using variables from the original dataset.
 
-Descriptions of derived functions are in the article [derived functions](../reference/derived_variables.html)
+Descriptions of derived functions are in the article [derived functions](../articles/derived_variables.html)
 
 
-To transform a derived variable, you must: 
+To recode a derived variable, you must: 
 
 - create a customized function,
-- defined the derived variable on the worksheets `variables_sheet` and `variable_details`,
-- transform the variables that make up the derived variable. 
+- defined the derived variable on the worksheets `variables` and `variable_details`,
+- recode the variables that make up the derived variable. 
 
 Our example derived variable `example_der` equals `chol` times `bili`.
 
-1) Transform the underlying variables: `chol` and `bili` and the derived variable `example_der` for tester1 and tester2.
+1) Recode the underlying variables: `chol` and `bili` and the derived variable `example_der` for tester1 and tester2.
 ```{r, warning=FALSE}
 derived1 <- rec_with_table(data = tester1,
                           variables = c("chol", "bili","example_der"),
@@ -382,6 +377,5 @@ derived2 <- rec_with_table(data = tester2,
 
 2) Combine the harmonized variables: `chol`, `bili`, and `exampler_der`
 ```{r, warning=FALSE}
-#combine the transformed datasets
 combined_der <- bind_rows(derived1, derived2)
 ```

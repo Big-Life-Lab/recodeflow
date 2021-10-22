@@ -4,14 +4,8 @@
 \alias{recode_columns}
 \title{recode_columns}
 \usage{
-recode_columns(
-  data,
-  variables_details_rows_to_process,
-  data_name,
-  log,
-  print_note,
-  else_default
-)
+recode_columns(data, variables_details_rows_to_process, data_name, log,
+  print_note, else_default)
 }
 \arguments{
 \item{data}{The source database}

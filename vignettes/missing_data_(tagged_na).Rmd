@@ -11,13 +11,11 @@ vignette: >
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Missing data (`NA` --> `tagged_na`)
-
 Base R supports only one type of NA ('not available') to represent missing values. However, your data may include several types of missing data or incomplete category responses. 
 
 To address this issue of a singular "NA", we use the `haven` package [`tagged_na()`](https://haven.tidyverse.org/reference/tagged_na.html) 
 
-`tagged_na()` adds an additional character to any NA values, thereby allowing users to define additional missing data types. `tagged_na()` applies only for numeric values; character based values can use any string to represent NA or missing data. 
+`tagged_na()` adds an additional character to any NA values, enabling users to define additional missing data types. `tagged_na()` applies only for numeric values; character based values can use any string to represent NA or missing data. 
 
 ## recodeflow approach to coding missing data
 
@@ -25,7 +23,7 @@ To address this issue of a singular "NA", we use the `haven` package [`tagged_na
 
 - NA(a) = 'not applicable' 
 - NA(b) = 'missing'
-- Na(c) = 'not asked' which is any variable that was in a dataset.
+- Na(c) = 'not asked'
 
 
 **Summary of `tagged_na` values and their corresponding category values.**

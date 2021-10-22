@@ -15,25 +15,27 @@
 <link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png" />
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png" />
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png" />
-
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -41,10 +43,10 @@
 
 
 
-
 <meta property="og:title" content="Function reference" />
-<meta property="og:image" content="/logo.png" />
-<meta name="twitter:card" content="summary" />
+
+<meta property="og:image" content="/logo.svg" />
+
 
 
 
@@ -62,7 +64,7 @@
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-index">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -76,7 +78,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">recodeflow</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -99,10 +101,10 @@
       <a href="../articles/how_to_install.html">How to install</a>
     </li>
     <li>
-      <a href="../articles/how_to_transform.html">How to transform</a>
+      <a href="../articles/how_to_recode.html">How to transform</a>
     </li>
     <li>
-      <a href="../articles/how_to_add_variables.html">How to add variables</a>
+      <a href="../articles/how_to_use_recodeflow_with_your_data.html">How to add variables</a>
     </li>
   </ul>
 </li>
@@ -114,7 +116,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/variabledetails.html">variable_details</a>
+      <a href="../articles/variable_details.html">variable_details</a>
     </li>
     <li>
       <a href="../articles/variables_sheet.html">variable_sheet</a>
@@ -126,17 +128,21 @@
       <a href="../articles/rec_with_table.html">Rec with table</a>
     </li>
     <li>
-      <a href="../articles/tagged_na_usage.html">How to use tagged_na</a>
+      <a href="../articles/missing_data_(tagged_na).html">How to use tagged_na</a>
     </li>
   </ul>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul>
+      
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/Big-Life-Lab/recodeflow">
+  <a href="https://github.com/Big-Life-Lab/recodeflow/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -168,196 +174,59 @@
     <tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
+          <h2 id="section-recoding" class="hasAnchor"><a href="#section-recoding" class="anchor"></a>Recoding</h2>
+          <p class="section-desc"><p>Functions for recoding data across databases</p></p>
         </th>
       </tr>
+      
+      
+    </tbody><tbody>
+      
+      
       <tr>
-        
-        <td>
-          <p><code><a href="add_data_field_children_for_start_var.html">add_data_field_children_for_start_var()</a></code> </p>
-        </td>
-        <td><p>Add DataField child nodes for start variable.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="attach_apply_nodes.html">attach_apply_nodes()</a></code> </p>
-        </td>
-        <td><p>Attach Apply nodes to a parent node.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="attach_cat_value_nodes_for_start_var.html">attach_cat_value_nodes_for_start_var()</a></code> </p>
-        </td>
-        <td><p>Attach categorical value nodes to DataField node for start variable.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="attach_cont_value_nodes_for_start_var.html">attach_cont_value_nodes_for_start_var()</a></code> </p>
-        </td>
-        <td><p>Attach continuous Value nodes for start variable.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="attach_derived_field_child_nodes.html">attach_derived_field_child_nodes()</a></code> </p>
-        </td>
-        <td><p>Attach child nodes to DerivedField node.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="attach_range_value_nodes.html">attach_range_value_nodes()</a></code> </p>
-        </td>
-        <td><p>Attach Value nodes to DataField node. Used when `recFrom` has a value range.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="build_data_field_for_start_var.html">build_data_field_for_start_var()</a></code> </p>
-        </td>
-        <td><p>Build DataField node for start variable.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="build_data_field_for_var.html">build_data_field_for_var()</a></code> </p>
-        </td>
-        <td><p>Build DataField node for variable.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="build_derived_field_node.html">build_derived_field_node()</a></code> </p>
-        </td>
-        <td><p>Build DerivedField node.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="build_trans_dict.html">build_trans_dict()</a></code> </p>
-        </td>
-        <td><p>Build a TransformationDictionary node.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="build_variable_field_ref_node.html">build_variable_field_ref_node()</a></code> </p>
-        </td>
-        <td><p>Build FieldRef node for variable.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="compare_value_based_on_interval.html">compare_value_based_on_interval()</a></code> </p>
-        </td>
-        <td><p>Compare Value Based On Interval</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="create_id_row.html">create_id_row()</a></code> </p>
-        </td>
-        <td><p>ID role creation</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="create_label_list_element.html">create_label_list_element()</a></code> </p>
-        </td>
-        <td><p>Create label list element</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="example_der_fun.html">example_der_fun()</a></code> </p>
-        </td>
-        <td><p>example_der_fun caluclates chol*bili</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="format_recoded_value.html">format_recoded_value()</a></code> </p>
-        </td>
-        <td><p>Recode NA formatting</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="get_data_variable_name.html">get_data_variable_name()</a></code> </p>
-        </td>
-        <td><p>Get Data Variable Name</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="get_margins.html">get_margins()</a></code> </p>
-        </td>
-        <td><p>Extract margins from character vector.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="get_start_var_name.html">get_start_var_name()</a></code> </p>
-        </td>
-        <td><p>Get variable name from variableStart using database name.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="get_variable_type_data_type.html">get_variable_type_data_type()</a></code> </p>
-        </td>
-        <td><p>Get data type for variable type.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="get_var_details_rows.html">get_var_details_rows()</a></code> </p>
-        </td>
-        <td><p>Get all variable details rows for a variable and database combination.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="get_var_details_row_indices.html">get_var_details_row_indices()</a></code> </p>
-        </td>
-        <td><p>Get all variable details row indices for a variable.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="get_var_sheet_row.html">get_var_sheet_row()</a></code> </p>
-        </td>
-        <td><p>Get variable row from variable sheet.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="is_equal.html">is_equal()</a></code> </p>
-        </td>
-        <td><p>Checks whether two values are equal including NA</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="is_numeric.html">is_numeric()</a></code> </p>
-        </td>
-        <td><p>Check if a character object can be converted to a number.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="is_rec_from_range.html">is_rec_from_range()</a></code> </p>
-        </td>
-        <td><p>Check if recFrom is a range for a variable details row.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="label_data.html">label_data()</a></code> </p>
-        </td>
-        <td><p>label_data</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="recode_columns.html">recode_columns()</a></code> </p>
-        </td>
-        <td><p>recode_columns</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="recode_to_pmml.html">recode_to_pmml()</a></code> </p>
-        </td>
-        <td><p>Creates a PMML document from variable and variable details sheets for specified database.</p></td>
-      </tr><tr>
         
         <td>
           <p><code><a href="rec_with_table.html">rec_with_table()</a></code> </p>
         </td>
         <td><p>Recode with Table</p></td>
-      </tr><tr>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-pmml" class="hasAnchor"><a href="#section-pmml" class="anchor"></a>PMML</h2>
+          <p class="section-desc"><p>Functions for converting recoding metadata into PMML</p></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
         
         <td>
-          <p><code><a href="select_vars_by_role.html">select_vars_by_role()</a></code> </p>
+          <p><code><a href="recode_to_pmml.html">recode_to_pmml()</a></code> </p>
         </td>
-        <td><p>Vars selected by role</p></td>
+        <td><p>Creates a PMML document from variable and variable details sheets for specified database.</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-utility" class="hasAnchor"><a href="#section-utility" class="anchor"></a>Utility</h2>
+          <p class="section-desc"><p>Useful functions for existing pmml/recoded data</p></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="build_trans_dict.html">build_trans_dict()</a></code> </p>
+        </td>
+        <td><p>Build a TransformationDictionary node.</p></td>
       </tr><tr>
         
         <td>
@@ -369,22 +238,21 @@
     </table>
   </div>
 
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#section-all-functions">All functions</a></li>
-    </ul>
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 
 
       <footer>
       <div class="copyright">
-  <p>Developed by Yulric Sequeira, Luke Bailey.</p>
+  <p>Developed by Yulric Sequeira, Luke Bailey, Rostyslav Vyuha.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

@@ -1,5 +1,5 @@
 ---
-title: "variables_sheet worksheet"
+title: "variables worksheet"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{variables.csv}     
@@ -17,35 +17,35 @@ source("../R/test_data_generator.R")
 
 ## Introduction
 
-The `variables_sheet` acts as a reference sheet your project(s), by listing the variables you are using. 
+The `variables` worksheet acts as a reference sheet your project(s), by listing the variables you are using. 
 
-This vignette describes how the `variables_sheet` is organized and how to find variables that you can transform. See also the vignette `variable details`. The [How to guides](../reference/how_to_guides.html) provides examples of how to use the two worksheets. 
+This vignette describes how the `variables` worksheet is organized and how to find variables that you can transform. The [How to guides](../how_to/recode_variables.html) provides examples of how to use the this. 
 
-Read the dataframe `variables_sheet`
+Read the `variables` worksheet
 
 ```{r Read variables.csv, echo=FALSE, message=FALSE, warning=FALSE}
-cat("There are", nrow(variables_sheet), "variables, grouped in", sum(!duplicated(variables_sheet$section)), "sections and", sum(!duplicated(variables_sheet$subject)), "subjects that are available for transformation.")
+cat("There are", nrow(variables), "variables, grouped in", sum(!duplicated(variables$section)), "sections and", sum(!duplicated(variables$subject)), "subjects that are available for transformation.")
 
 ```
 
 ```{r, echo=FALSE}
-cat("You can search for variables in the table below. Try searching for the lab tests. There are", sum(variables_sheet$subject == "lab test"),
+cat("You can search for variables in the table below. Try searching for the lab tests. There are", sum(variables$subject == "lab test"),
     "variables are in the lab test subject. 
     
-    Try sorting the subject column by clicking the up beside the `subject` heading: the top", sum(variables_sheet$subject == "lab test"),
+    Try sorting the subject column by clicking the up beside the `subject` heading: the top", sum(variables$subject == "lab test"),
     "rows of the table should show the lab tests variables:") 
 
-as.character(variables_sheet[variables_sheet$subject == "lab test", "variable"])
+as.character(variables[variables$subject == "lab test", "variable"])
 ```
 
 ```{r echo=FALSE, results='asis', warning=FALSE}
 library(DT)
-datatable(variables_sheet, filter = 'top', options = list(pageLength = 5))
+datatable(variables, filter = 'top', options = list(pageLength = 5))
 ```
 
 ## How the `variables.csv` sheet is organized
 
-In each row there are 8 columns in this worksheet and they are as follows:
+There are 8 columns in this worksheet as follows:
 
 1. **variable:** the name of the final transformed variable.
 
@@ -67,6 +67,6 @@ In each row there are 8 columns in this worksheet and they are as follows:
 
 ## Derived Variables
 
-Derived variables follow the same naming conventions as transformed variables when listed in `variables_sheet`. 
+Derived variables follow the same naming conventions as recoded variables when listed in `variables` worksheet. 
 
 
