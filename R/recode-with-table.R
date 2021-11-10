@@ -49,7 +49,7 @@ is_equal <- function(v1, v2) {
 #'  \describe{
 #'   \item{variable}{Name of the new variable created. The name of the new
 #'   variable can be the same as the original variable if it does not change the original variable definition}
-#'   \item{toType}{type the new variable
+#'   \item{typeEnd}{type the new variable
 #'   \emph{cat = categorical, cont = continuous}}
 #'   \item{databaseStart}{Names of the databases that the original variable can
 #'   come from. Each database name should be seperated by a comma. For eg.,
@@ -60,11 +60,11 @@ is_equal <- function(v1, v2) {
 #'   specified is the name of the variable for all other databases specified in
 #'   databaseStart but not in this column. For eg., ADL_01 would be the original
 #'   variable name in the cchs2005_p and cchs2007_p databases.}
-#'   \item{fromType}{variable type of start variable.
+#'   \item{typeStart}{variable type of start variable.
 #'   \emph{cat = categorical or factor variable}
 #'   \emph{cont = continuous variable (real number or integer)}}
-#'   \item{recTo}{Value to recode to}
-#'   \item{recFrom}{Value/range being recoded from}
+#'   \item{recEnd}{Value to recode to}
+#'   \item{recStart}{Value/range being recoded from}
 #'  }
 #'  Each row in the \emph{variables details} sheet encodes the rule for recoding
 #'  value(s) of the original variable to a category in the new variable. The
@@ -84,10 +84,10 @@ is_equal <- function(v1, v2) {
 #'     \item{multiple values}{Multiple values from the old variable that should
 #'     be recoded into a new category of the new variable should be separated
 #'     with a comma. e.g.,
-#'     \emph{recFrom = "1,2"; recTo = 1}} will recode values of 1 and 2 in the
+#'     \emph{recStart = "1,2"; recEnd = 1}} will recode values of 1 and 2 in the
 #'     original variable to 1 in the new variable
 #'     \item{value range}{A value range is indicated by a colon, e.g.
-#'     \emph{recFrom= "1:4"; recTo = 1} will recode all values from 1 to 4 into 1}
+#'     \emph{recStart= "1:4"; recEnd = 1} will recode all values from 1 to 4 into 1}
 #'     \item{\emph{min} and \emph{max}}{minimum and maximum values
 #'     are indicated by \emph{min} (or \emph{lo}) and \emph{max} (or \emph{hi}),
 #'      e.g. \emph{recFrom = "min:4"; recTo = 1} will recode all values from the
@@ -99,10 +99,10 @@ is_equal <- function(v1, v2) {
 #'     \item{\emph{"copy"}}{the \emph{else} token can be combined with
 #'     \emph{copy}, indicating that all remaining, not yet recoded values should
 #'      stay the same (are copied from the original value), e.g.
-#'      \emph{recFrom = "else"; recTo = "copy"}}
+#'      \emph{recStart = "else"; recEnd = "copy"}}
 #'     \item{\emph{NA}'s}{\emph{NA} values are allowed both for the original
 #'     and the new variable, e.g.
-#'     \emph{recFrom "NA"; recTo = 1. or "recFrom = "3:5"; recTo = "NA"}
+#'     \emph{recStart "NA"; recEnd = 1. or "recStart = "3:5"; recEnd = "NA"}
 #'     (recodes all NA into 1,
 #'     and all values from 3 to 5 into NA in the new variable)}
 #' }
@@ -147,14 +147,14 @@ is_equal <- function(v1, v2) {
 #'   data.frame(
 #'     "variable" = c("time", rep("status", times = 3), rep("trt", times = 2), "age", rep("sex", times = 2), rep("ascites", times = 2), rep("hepato", times = 2), rep("spiders", times = 2), rep("edema", times = 3), "bili", "chol", "albumin", "copper", "alk.phos", "ast", "trig", "platelet", "protime", rep("stage", times = 4)),
 #'     "dummyVariable" = c("NA", "status0", "status1","status2", "trt1","trt2","NA","sexM","sexF", "ascites0", "ascites1","hepato0","hepato1","spiders0","spiders1","edema0.0","edema0.5","edema1.0",rep("NA",times = 9), "stage1", "stage2","stage3","stage4"),
-#'     "toType" = c("cont", rep("cat", times = 3), rep("cat", times = 2), "cont", rep("cat", times = 2), rep("cat", times = 2), rep("cat", times = 2),rep("cat", times = 2), rep("cat", times = 3), rep("cont", times = 9), rep("cat", times = 4)),
+#'     "typeEnd" = c("cont", rep("cat", times = 3), rep("cat", times = 2), "cont", rep("cat", times = 2), rep("cat", times = 2), rep("cat", times = 2),rep("cat", times = 2), rep("cat", times = 3), rep("cont", times = 9), rep("cat", times = 4)),
 #'     "databaseStart" = rep("tester1, tester2", times = 31),
 #'     "variableStart" = c("[time]", rep("[status]", times = 3), rep("[trt]", times = 2), "[age]", rep("[sex]", times = 2), rep("[ascites]", times = 2), rep("[hepato]", times = 2), rep("[spiders]", times = 2), rep("[edema]", times = 3), "[bili]", "[chol]", "[albumin]", "[copper]", "[alk.phos]", "[ast]", "[trig]", "[platelet]", "[protime]", rep("[stage]", times = 4)),
-#'     "fromType" = c("cont", rep("cat", times = 3), rep("cat", times = 2), "cont", rep("cat", times = 2), rep("cat", times = 2), rep("cat", times = 2),rep("cat", times = 2), rep("cat", times = 3), rep("cont", times = 9), rep("cat", times = 4)),
-#'     "recTo" = c("copy", "0", "1","2", "1","2","copy","m","f", "0", "1","0","1","0","1","0.0","0.5","1.0",rep("copy",times = 9), "1", "2","3","4"),
+#'     "typeStart" = c("cont", rep("cat", times = 3), rep("cat", times = 2), "cont", rep("cat", times = 2), rep("cat", times = 2), rep("cat", times = 2),rep("cat", times = 2), rep("cat", times = 3), rep("cont", times = 9), rep("cat", times = 4)),
+#'     "recEnd" = c("copy", "0", "1","2", "1","2","copy","m","f", "0", "1","0","1","0","1","0.0","0.5","1.0",rep("copy",times = 9), "1", "2","3","4"),
 #'     "catLabel" = c("", "status 0", "status 1","status 2", "trt 1","trt 2","","sex m","sex f", "ascites 0", "ascites 1","hepato 0","hepato 1","spiders 0","spiders 1","edema 0.0","edema 0.5","edema 1.0",rep("",times = 9), "stage 1", "stage 2","stage 3","stage 4"),
 #'     "catLabelLong" = c("", "status 0", "status 1","status 2", "trt 1","trt 2","","sex m","sex f", "ascites 0", "ascites 1","hepato 0","hepato 1","spiders 0","spiders 1","edema 0.0","edema 0.5","edema 1.0",rep("",times = 9), "stage 1", "stage 2","stage 3","stage 4"),
-#'     "recFrom" = c("else", "0", "1","2", "1","2","else","m","f", "0", "1","0","1","0","1","0.0","0.5","1.0",rep("else",times = 9), "1", "2","3","4"),
+#'     "recStart" = c("else", "0", "1","2", "1","2","else","m","f", "0", "1","0","1","0","1","0.0","0.5","1.0",rep("else",times = 9), "1", "2","3","4"),
 #'     "catStartLabel" = c("", "status 0", "status 1","status 2", "trt 1","trt 2","","sex m","sex f", "ascites 0", "ascites 1","hepato 0","hepato 1","spiders 0","spiders 1","edema 0.0","edema 0.5","edema 1.0",rep("",times = 9), "stage 1", "stage 2","stage 3","stage 4"),
 #'     "variableStartShortLabel" = c("time", rep("status", times = 3), rep("trt", times = 2), "age", rep("sex", times = 2), rep("ascites", times = 2), rep("hepato", times = 2), rep("spiders", times = 2), rep("edema", times = 3), "bili", "chol", "albumin", "copper", "alk.phos", "ast", "trig", "platelet", "protime", rep("stage", times = 4)),
 #'     "variableStartLabel" = c("time", rep("status", times = 3), rep("trt", times = 2), "age", rep("sex", times = 2), rep("ascites", times = 2), rep("hepato", times = 2), rep("spiders", times = 2), rep("edema", times = 3), "bili", "chol", "albumin", "copper", "alk.phos", "ast", "trig", "platelet", "protime", rep("stage", times = 4)),
