@@ -143,7 +143,7 @@ kable(variable_details[c(7:13), c(1:8)])
 kable(variable_details[c(7:13), c(1:9)])
 ```
 
-10. **catLabelLong:** more detailed label describing the category of a particular variable. This label should be identical to what is recorded in the original data's documentation (e.g., the exact survey question). For derived variables, you can create your own long label.
+10. **catLabelLong:** more detailed label describing the category of a particular variable. If the category is unchanged from original data, this label should be identical to what is recorded in the original data's documentation (e.g., the exact survey question). For derived variables, you can create your own long label.
 
 ```{r, echo=FALSE, warning=FALSE}
 kable(variable_details[c(7:13), c(1:10)])
