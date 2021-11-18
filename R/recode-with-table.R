@@ -558,7 +558,7 @@ recode_columns <-
       variables_details_rows_to_process[grepl(pkg.env$recode.key.id.from, variables_details_rows_to_process[[pkg.env$columns.recTo]]),]
 
     func_variables_to_process <-
-      variables_details_rows_to_process[grepl(pkg.env$recode.key.func, variables_details_rows_to_process[[pkg.env$columns.recTo]]),]
+      variables_details_rows_to_process[grepl(pkg.env$recode.key.derived.var, variables_details_rows_to_process[[pkg.env$columns.VariableStart]]),]
 
     non_derived_keys <- c(pkg.env$recode.key.func,pkg.env$recode.key.map,pkg.env$recode.key.id.from)
     rec_variables_to_process <-
@@ -1012,9 +1012,11 @@ recode_derived_variables <-
     # obtain rows to process and updated variables to Process
     variable_rows <-
       variables_details_rows_to_process[variables_details_rows_to_process[[pkg.env$columns.Variable]] == variable_being_processed,]
+    fun_variable_rows <-
+      variable_rows[grepl(pkg.env$recode.key.func, variable_rows[[pkg.env$columns.recTo]]),]
     variables_details_rows_to_process <-
       variables_details_rows_to_process[variables_details_rows_to_process[[pkg.env$columns.Variable]] != variable_being_processed,]
-    for (row_num in seq_len(nrow(variable_rows))) {
+    for (row_num in seq_len(nrow(fun_variable_rows))) {
       # Check for presence of feeder variables in data and in the
       # variable being processed stack
       feeder_vars <-
@@ -1042,6 +1044,9 @@ recode_derived_variables <-
         )
         var_stack <-
           var_stack[!(var_stack == variable_being_processed)]
+
+        label_list[[as.character(variable_being_processed)]] <-
+          assign(variable_being_processed, create_label_list_element(variable_rows))
 
         return(
           list(
@@ -1092,7 +1097,6 @@ recode_derived_variables <-
       }
 
       # Obtain the function for each row
-      append(label_list, create_label_list_element(variable_rows))
 
       row_being_checked <- variable_rows[row_num,]
       func_cell <-
