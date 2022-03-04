@@ -75,9 +75,24 @@ recode_to_pmml <- function(var_details_sheet, vars_sheet, db_name, vars_to_conve
   initial_vars_to_convert <- vars_to_convert
   # If the user did not pass it then the initial list is the variables
   # from the variables sheet
+  # The initial list of variables should only include those whose database
+  # start matched with the passed db_name argument
   if(is.null(vars_to_convert)) {
-    initial_vars_to_convert <- vars_sheet$variable
+    initial_vars_to_convert <- c()
+    for(variables_sheet_index in seq_len(nrow(vars_sheet))) {
+      # Get the list of databases for the current row by splitting with ","
+      db_names <- trimws(
+        strsplit(vars_sheet[variables_sheet_index, ][[pkg.env$columns.DatabaseStart]], ",")[[1]]
+      )
+      if(db_name %in% db_names) {
+        initial_vars_to_convert <- c(
+          initial_vars_to_convert,
+          vars_sheet[variables_sheet_index, ][[pkg.env$columns.Variable]]
+        )
+      }
+    }
   }
+
   # Go through each variable, find all the variables required to derive it
   # until we reach the end and then add them all to the master list
   for(var_to_convert in initial_vars_to_convert) {
@@ -126,7 +141,6 @@ recode_to_pmml <- function(var_details_sheet, vars_sheet, db_name, vars_to_conve
     }
 
     var_db_details_rows <- get_var_details_rows(var_details_sheet, var_to_convert, db_name)
-
     data_field <- NA
     # If it is not a derived variable then we can add the start variable for
     # this variable to the DataDictionary node
@@ -137,7 +151,7 @@ recode_to_pmml <- function(var_details_sheet, vars_sheet, db_name, vars_to_conve
 
         # If the start variable for thie current variable is in the
         # variables columns then it needs to be added as a DerivedVariable
-        # and not as a DataField. 
+        # and not as a DataField.
         if(var_start_name %in% var_details_sheet[[pkg.env$columns.Variable]]) {
           recognized_vars_to_convert <- c(
               recognized_vars_to_convert, var_start_name)
