@@ -1,24 +1,20 @@
 context("Regression tests for recode_to_pmml")
 
 test_that("The PMML file is correctly generated if the else row is not at the end", {
-  expected_pmml_file <- "../../assets/tests/recode-to-pmml/regression/else-row-expected-pmml.xml"
-  expected_pmml_string <- XML::toString.XMLNode(XML::xmlTreeParse(expected_pmml_file)[[1]]$children$PMML)
+  expected_pmml_file_path <- "../../assets/tests/recode-to-pmml/regression/else-row-expected-pmml.xml"
 
-  var_details_sheet <- read.csv("../../assets/tests/recode-to-pmml/regression/else-row-variable-details.csv",
-                                stringsAsFactors = FALSE,
-                                fileEncoding = "UTF-8-BOM")
-  vars_sheet <- read.csv("../../assets/tests/recode-to-pmml/regression/else-row-variables.csv", stringsAsFactors = FALSE)
+  variable_details_sheet_path <- "../../assets/tests/recode-to-pmml/regression/else-row-variable-details.csv"
+  variables_sheet_path <- "../../assets/tests/recode-to-pmml/regression/else-row-variables.csv"
   db_name <- "database_one"
-  vars <- vars_sheet$variable
+  vars <- NULL
+  custom_function_files <- c()
 
-  actual_pmml <- recode_to_pmml(
-    var_details_sheet,
-    vars_sheet,
+  run_recode_to_pmml_test(
+    variable_details_sheet_path,
+    variables_sheet_path,
     db_name,
-    vars
+    vars,
+    custom_function_files,
+    expected_pmml_file_path
   )
-
-  actual_pmml_string <- XML::toString.XMLNode(actual_pmml)
-
-  expect_equal(actual_pmml_string, expected_pmml_string)
 })
