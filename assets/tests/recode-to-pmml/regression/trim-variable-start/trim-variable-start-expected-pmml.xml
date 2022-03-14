@@ -32,9 +32,6 @@
             <Value value="1" displayValue="variable label one">
                 <Extension name="catLabelLong" value="variable label long one"/>
             </Value>
-            <Value value="0" displayValue="variable label zero">
-                <Extension name="catLabelLong" value="variable label long zero"/>
-            </Value>
         </DerivedField>
     </TransformationDictionary>
 </PMML>

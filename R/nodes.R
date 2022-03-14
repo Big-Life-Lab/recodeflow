@@ -302,14 +302,19 @@ attach_derived_field_child_nodes <-
 
     var_details_rows <-
       get_var_details_rows(var_details_sheet, var_name, db_name)
+    # Move the else row to the bottom so that the else node is applies at the
+    # very end
     else_row <- var_details_rows[[pkg.env$columns.recFrom]] == pkg.env$variable_details$columns.recFrom.elseValue
     var_details_rows <- rbind(var_details_rows[!else_row, ], var_details_rows[else_row, ])
 
     derived_field_node <-
       attach_apply_nodes(var_details_rows, derived_field_node, db_name, custom_function_names)
 
-    for (index in 1:nrow(var_details_rows)) {
-      var_details_row <- var_details_rows[index, ]
+    var_details_with_unique_categories <- var_details_rows[
+      !duplicated(var_details_rows[[pkg.env$columns.recTo]]),
+    ]
+    for (index in 1:nrow(var_details_with_unique_categories)) {
+      var_details_row <- var_details_with_unique_categories[index, ]
 
       if (is_numeric(var_details_row[[pkg.env$columns.recTo]])) {
         derived_field_node <- XML::append.xmlNode(derived_field_node,
