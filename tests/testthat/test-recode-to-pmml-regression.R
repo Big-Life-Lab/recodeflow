@@ -1,10 +1,10 @@
 context("Regression tests for recode_to_pmml")
 
 test_that("The PMML file is correctly generated if the else row is not at the end", {
-  expected_pmml_file_path <- "../../assets/tests/recode-to-pmml/regression/else-row-expected-pmml.xml"
+  expected_pmml_file_path <- "../../assets/tests/recode-to-pmml/regression/else-row/else-row-expected-pmml.xml"
 
-  variable_details_sheet_path <- "../../assets/tests/recode-to-pmml/regression/else-row-variable-details.csv"
-  variables_sheet_path <- "../../assets/tests/recode-to-pmml/regression/else-row-variables.csv"
+  variable_details_sheet_path <- "../../assets/tests/recode-to-pmml/regression/else-row/else-row-variable-details.csv"
+  variables_sheet_path <- "../../assets/tests/recode-to-pmml/regression/else-row/else-row-variables.csv"
   db_name <- "database_one"
   vars <- NULL
   custom_function_files <- c()
