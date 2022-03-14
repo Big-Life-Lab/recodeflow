@@ -299,8 +299,11 @@ attach_derived_field_child_nodes <-
            db_name,
            custom_function_names) {
     added_NAs <- c(character(0))
+
     var_details_rows <-
       get_var_details_rows(var_details_sheet, var_name, db_name)
+    else_row <- var_details_rows[[pkg.env$columns.recFrom]] == pkg.env$variable_details$columns.recFrom.elseValue
+    var_details_rows <- rbind(var_details_rows[!else_row, ], var_details_rows[else_row, ])
 
     derived_field_node <-
       attach_apply_nodes(var_details_rows, derived_field_node, db_name, custom_function_names)
