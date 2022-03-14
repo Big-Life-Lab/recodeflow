@@ -21,7 +21,7 @@ build_data_field_for_start_var <-
       XML::xmlNode(
         pkg.env$node_name.data_field,
         attrs = c(
-          name = var_name,
+          name = trimws(var_name),
           displayName = first_var_details_row$variableStartShortLabel,
           optype = optype,
           dataType = data_type
@@ -621,7 +621,7 @@ build_variable_field_ref_node <-
   function (var_details_row, db_name) {
     return (XML::xmlNode(
       pkg.env$node_name.field_ref,
-      attrs = c(field = get_start_var_name(var_details_row, db_name))
+      attrs = c(field = trimws(get_start_var_name(var_details_row, db_name)))
     ))
   }
 
