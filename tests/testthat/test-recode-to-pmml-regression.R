@@ -1,10 +1,10 @@
 context("Regression tests for recode_to_pmml")
 
-test_that("The PMML file is correctly generated if the else row is not at the end", {
-  expected_pmml_file_path <- "../../assets/tests/recode-to-pmml/regression/else-row/else-row-expected-pmml.xml"
+test_that("RT-1: The PMML file is correctly generated if the else row is not at the end", {
+  expected_pmml_file_path <- "../../assets/tests/recode-to-pmml/regression/rt-1/expected-pmml.xml"
 
-  variable_details_sheet_path <- "../../assets/tests/recode-to-pmml/regression/else-row/else-row-variable-details.csv"
-  variables_sheet_path <- "../../assets/tests/recode-to-pmml/regression/else-row/else-row-variables.csv"
+  variable_details_sheet_path <- "../../assets/tests/recode-to-pmml/regression/rt-1/variable-details.csv"
+  variables_sheet_path <- "../../assets/tests/recode-to-pmml/regression/rt-1/variables.csv"
   db_name <- "database_one"
   vars <- NULL
   custom_function_files <- c()
@@ -19,11 +19,11 @@ test_that("The PMML file is correctly generated if the else row is not at the en
   )
 })
 
-test_that("The start variables names are trimmed in the PMML file", {
-  expected_pmml_file_path <- "../../assets/tests/recode-to-pmml/regression/trim-variable-start/trim-variable-start-expected-pmml.xml"
+test_that("RT-2: The start variables names are trimmed in the PMML file", {
+  expected_pmml_file_path <- "../../assets/tests/recode-to-pmml/regression/rt-2/expected-pmml.xml"
 
-  variable_details_sheet_path <- "../../assets/tests/recode-to-pmml/regression/trim-variable-start/trim-variable-start-variable-details.csv"
-  variables_sheet_path <- "../../assets/tests/recode-to-pmml/regression/trim-variable-start/trim-variable-start-variables.csv"
+  variable_details_sheet_path <- "../../assets/tests/recode-to-pmml/regression/rt-2/variable-details.csv"
+  variables_sheet_path <- "../../assets/tests/recode-to-pmml/regression/rt-2/variables.csv"
   db_name <- "database_one"
   vars <- NULL
   custom_function_files <- c()
@@ -38,11 +38,11 @@ test_that("The start variables names are trimmed in the PMML file", {
   )
 })
 
-test_that("Duplicate Value nodes are not added to DerivedField nodes in the PMML file", {
-  expected_pmml_file_path <- "../../assets/tests/recode-to-pmml/regression/duplicate-value-nodes/duplicate-value-nodes-expected-pmml.xml"
+test_that("RT-3: Duplicate Value nodes are not added to DerivedField nodes in the PMML file", {
+  expected_pmml_file_path <- "../../assets/tests/recode-to-pmml/regression/rt-2/expected-pmml.xml"
 
-  variable_details_sheet_path <- "../../assets/tests/recode-to-pmml/regression/duplicate-value-nodes/duplicate-value-nodes-variable-details.csv"
-  variables_sheet_path <- "../../assets/tests/recode-to-pmml/regression/duplicate-value-nodes/duplicate-value-nodes-variables.csv"
+  variable_details_sheet_path <- "../../assets/tests/recode-to-pmml/regression/rt-2/variable-details.csv"
+  variables_sheet_path <- "../../assets/tests/recode-to-pmml/regression/rt-2/variables.csv"
   db_name <- "database_one"
   vars <- NULL
   custom_function_files <- c()
@@ -60,11 +60,11 @@ test_that("Duplicate Value nodes are not added to DerivedField nodes in the PMML
 # Fixes a bug where if the databaseStart column for the first row in the
 # variable details file for a variable did not contain the database argument
 # it would throw an error rather than move onto the next rows.
-test_that("It succeeds when the first variable details row does not have required database", {
-  expected_pmml_file_path <- "../../assets/tests/recode-to-pmml/regression/no-database-var-details-row/no-database-var-details-row-expected-pmml.xml"
+test_that("RT-4: It succeeds when the first variable details row does not have required database", {
+  expected_pmml_file_path <- "../../assets/tests/recode-to-pmml/regression/rt-2/expected-pmml.xml"
 
-  variable_details_sheet_path <- "../../assets/tests/recode-to-pmml/regression/no-database-var-details-row/no-database-var-details-row-variable-details.csv"
-  variables_sheet_path <- "../../assets/tests/recode-to-pmml/regression/no-database-var-details-row/no-database-var-details-row-variables.csv"
+  variable_details_sheet_path <- "../../assets/tests/recode-to-pmml/regression/rt-2/variable-details.csv"
+  variables_sheet_path <- "../../assets/tests/recode-to-pmml/regression/rt-2/variables.csv"
   db_name <- "database_one"
   vars <- NULL
   custom_function_files <- c()
@@ -83,11 +83,11 @@ test_that("It succeeds when the first variable details row does not have require
 # argument was database_one it would fail. This was because we were using the
 # wrong regex with grepl. Instead of matching the entire word (database_one) we
 # were looking for any string that contained the database argument.
-test_that("RT 4: It succeeds when the variable details file has a part of the database name in its databaseStart column", {
-  expected_pmml_file_path <- "../../assets/tests/recode-to-pmml/regression/recode-to-pmml-rt-4/recode-to-pmml-rt-4-expected-pmml.xml"
+test_that("RT 5: It succeeds when the variable details file has a part of the database name in its databaseStart column", {
+  expected_pmml_file_path <- "../../assets/tests/recode-to-pmml/regression/rt-5/expected-pmml.xml"
 
-  variable_details_sheet_path <- "../../assets/tests/recode-to-pmml/regression/recode-to-pmml-rt-4/recode-to-pmml-rt-4-variable-details.csv"
-  variables_sheet_path <- "../../assets/tests/recode-to-pmml/regression/recode-to-pmml-rt-4/recode-to-pmml-rt-4-variables.csv"
+  variable_details_sheet_path <- "../../assets/tests/recode-to-pmml/regression/rt-5/variable-details.csv"
+  variables_sheet_path <- "../../assets/tests/recode-to-pmml/regression/rt-5/variables.csv"
   db_name <- "database_one"
   vars <- NULL
   custom_function_files <- c()
