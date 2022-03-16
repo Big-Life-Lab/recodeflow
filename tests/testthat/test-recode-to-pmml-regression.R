@@ -101,3 +101,30 @@ test_that("RT 5: It succeeds when the variable details file has a part of the da
     expected_pmml_file_path
   )
 })
+
+# The code was throwing a hard to understand error when no details was found for
+# a variable that was present in the variables sheet.
+test_that("RT 6: Should throw an error when no details is present for a variable found in the variables sheet", {
+  variable_details_sheet <- read.csv(
+    "../../assets/tests/recode-to-pmml/regression/rt-6/variable-details.csv",
+    fileEncoding = "UTF-8-BOM"
+  )
+  variables_sheet <- read.csv(
+    "../../assets/tests/recode-to-pmml/regression/rt-6/variables.csv",
+    fileEncoding = "UTF-8-BOM"
+  )
+  db_name <- 'database_one'
+  vars <- NULL
+  custom_function_files <- c()
+
+  expect_error(
+    recode_to_pmml(
+      variable_details_sheet,
+      variables_sheet,
+      db_name,
+      vars,
+      custom_function_files
+    ),
+    "No rows found for variable variable_one in the variable details sheet. The variable was found in the variables sheet."
+  )
+})

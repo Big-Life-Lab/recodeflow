@@ -247,6 +247,13 @@ get_all_start_vars <-
       var_name,
       db_name
     )
+    if(nrow(variable_details_rows) == 0) {
+      stop(paste(
+        "No rows found for variable",
+        var_name,
+        "in the variable details sheet. The variable was found in the variables sheet."
+      ))
+    }
 
     if(is_derived_var(variable_details_rows)) {
       current_derived_from_vars <-
