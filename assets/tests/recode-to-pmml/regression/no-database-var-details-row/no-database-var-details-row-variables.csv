@@ -1,0 +1,2 @@
+variable,role,variableType,databaseStart,variableStart,units,label,labelLong
+variable_one,,cat,"database_one,database_two","database_one::start_var_one, database_two::start_var_two",N/A,variable label,variable label long

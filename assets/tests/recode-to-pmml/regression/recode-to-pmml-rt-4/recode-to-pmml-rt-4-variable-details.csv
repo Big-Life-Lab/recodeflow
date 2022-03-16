@@ -1,0 +1,4 @@
+variable,typeEnd,databaseStart,variableStart,typeStart,recEnd,catLabel,catLabelLong,NumValidCat,units,recStart,catStartLabel,variableStartLabel,Notes
+variable_one,cat,database_one_a,database_one_a::start_var_two,cat,0,variable label zero,variable label long zero,2,N/A,0,variable start label zero,variable start two label,
+variable_one,cat,database_one,database_one::start_var_one,cat,1,variable label one,variable label long one,2,N/A,1,variable start label one,variable start one label,
+variable_one,cat,"database_one, database_one_a","database_one::start_var_one, database_one_a::start_var_two",cat,0,variable label zero,variable label long zero,2,N/A,else,variable start label missing,variable start label,

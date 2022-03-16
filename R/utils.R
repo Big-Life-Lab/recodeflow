@@ -85,7 +85,10 @@ is_rec_from_range <- function(var_details_row) {
 #' @return All variable details rows for the variable and database combination.
 get_var_details_rows <- function (var_details_sheet, var_name, db_name) {
   var_name_indices <- get_var_details_row_indices(var_details_sheet, var_name)
-  db_indices <- which(grepl(db_name, var_details_sheet$databaseStart), arr.ind = TRUE)
+  # Make sure that if a match is found, the word is the database name itself
+  # rather than containing just a part of it
+  db_name_regex <- paste("\\<", db_name, "\\>", sep = "")
+  db_indices <- which(grepl(db_name_regex, var_details_sheet$databaseStart), arr.ind = TRUE)
   intersect_indices <- intersect(var_name_indices, db_indices)
   return (var_details_sheet[intersect_indices,])
 }

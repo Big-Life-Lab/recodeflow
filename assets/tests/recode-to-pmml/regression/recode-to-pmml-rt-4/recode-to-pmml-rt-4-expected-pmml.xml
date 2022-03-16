@@ -1,0 +1,29 @@
+<PMML version="4.4"
+    xmlns="http://www.dmg.org/PMML-4_4">
+    <DataDictionary numberOfFields="1">
+        <DataField name="start_var_one" optype="categorical" dataType="string">
+            <Extension name="variableStartLabel" value="variable start one label"/>
+            <Value value="1" displayValue="variable start label one" property="valid"/>
+        </DataField>
+    </DataDictionary>
+    <TransformationDictionary>
+        <DerivedField name="variable_one" displayName="variable label" optype="cat" dataType="string">
+            <Extension name="labelLong" value="variable label long"/>
+            <Extension name="units" value="N/A"/>
+            <Apply function="if">
+                <Apply function="equal">
+                    <FieldRef field="start_var_one"/>
+                    <Constant dataType="integer">1</Constant>
+                </Apply>
+                <Constant dataType="integer">1</Constant>
+                <Constant dataType="integer">0</Constant>
+            </Apply>
+            <Value value="1" displayValue="variable label one">
+                <Extension name="catLabelLong" value="variable label long one"/>
+            </Value>
+            <Value value="0" displayValue="variable label zero">
+                <Extension name="catLabelLong" value="variable label long zero"/>
+            </Value>
+        </DerivedField>
+    </TransformationDictionary>
+</PMML>

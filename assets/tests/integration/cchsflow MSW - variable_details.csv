@@ -32,4 +32,4 @@ variable_nine,N/A,cat,cchs2001_p,[variable_eight],cat,NA::b,1,Missing,Missing,N/
 variable_ten,N/A,cat,cchs2001_p,cchs2001_p::variable_ten_start,cat,1,2,Category one,Category one,N/A,one,Category one start,Variable ten start,Variable ten start,
 variable_ten,N/A,cat,cchs2001_p,cchs2001_p::variable_ten_start,cat,2,2,Category two,Category two,N/A,two,Category two start,Variable ten start,Variable ten start,
 variable_ten,N/A,cat,cchs2001_p,cchs2001_p::variable_ten_start,cat,NA::b,2,Missing,Missing,N/A,else,Else,Variable ten start,Variable ten start,
-variable_eleven,N/A,cont,ccchs2001_p,cchs2001_p::variable_eleven_start,cont,copy,N/A,N/A,N/A,N/A,else,Else,Variable eleven start,Variable eleven start,
+variable_eleven,N/A,cont,cchs2001_p,cchs2001_p::variable_eleven_start,cont,copy,N/A,N/A,N/A,N/A,else,Else,Variable eleven start,Variable eleven start,

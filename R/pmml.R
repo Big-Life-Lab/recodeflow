@@ -70,7 +70,6 @@ recode_to_pmml <- function(var_details_sheet, vars_sheet, db_name, vars_to_conve
 
   # 2. Get the vector of variables names that we will need to add to the
   # PMML document
-  all_vars_to_convert <- c()
   # The initial list variables from which we will use to get all the other ones
   initial_vars_to_convert <- vars_to_convert
   # If the user did not pass it then the initial list is the variables
@@ -93,6 +92,7 @@ recode_to_pmml <- function(var_details_sheet, vars_sheet, db_name, vars_to_conve
     }
   }
 
+  all_vars_to_convert <- c()
   # Go through each variable, find all the variables required to derive it
   # until we reach the end and then add them all to the master list
   for(var_to_convert in initial_vars_to_convert) {
@@ -242,7 +242,11 @@ get_all_start_vars <-
   function(var_name, db_name, variable_details_sheet) {
     all_start_vars <- c()
 
-    variable_details_rows <- variable_details_sheet[get_var_details_row_indices(variable_details_sheet, var_name), ]
+    variable_details_rows <- get_var_details_rows(
+      variable_details_sheet,
+      var_name,
+      db_name
+    )
 
     if(is_derived_var(variable_details_rows)) {
       current_derived_from_vars <-
@@ -276,7 +280,7 @@ get_all_start_vars <-
         }
       }
     } else {
-      start_var_name <- get_start_var_name(variable_details_rows, db_name)
+      start_var_name <- get_start_var_name(variable_details_rows[1, ], db_name)
 
       # If the start variable for this variable is in the variables
       # column then it has start variables also. Get them and add them
