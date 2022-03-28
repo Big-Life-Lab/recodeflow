@@ -70,6 +70,13 @@ pkg.env$node_attr.FieldRef.field <- "field"
 
 pkg.env$node_attr.Apply.function <- "function"
 
+pkg.env$node_attr.Value.value <- "value"
+pkg.env$node_attr.Value.displayValue <- "displayValue"
+pkg.env$node_attr.Value.property <- "property"
+
+pkg.env$node_attr.Extension.name <- "name"
+pkg.env$node_attr.Extension.value <- "value"
+
 pkg.env$columns.Variable <- "variable"
 pkg.env$columns.VariableLabel <- "labelLong"
 pkg.env$columns.label <- "label"

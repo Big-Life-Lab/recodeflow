@@ -302,10 +302,10 @@ attach_derived_field_child_nodes <-
 
     var_details_rows <-
       get_var_details_rows(var_details_sheet, var_name, db_name)
-    # Move the else row to the bottom so that the else node is applies at the
+    # Move the else row to the bottom so that the else node is applied at the
     # very end
-    else_row <- var_details_rows[[pkg.env$columns.recFrom]] == pkg.env$variable_details$columns.recFrom.elseValue
-    var_details_rows <- rbind(var_details_rows[!else_row, ], var_details_rows[else_row, ])
+    is_else_row <- var_details_rows[[pkg.env$columns.recFrom]] == pkg.env$variable_details$columns.recFrom.elseValue
+    var_details_rows <- rbind(var_details_rows[!is_else_row, ], var_details_rows[is_else_row, ])
 
     derived_field_node <-
       attach_apply_nodes(var_details_rows, derived_field_node, db_name, custom_function_names)
@@ -335,6 +335,31 @@ attach_derived_field_child_nodes <-
         added_NAs <-
           c(added_NAs, var_details_row[[pkg.env$columns.recTo]])
       }
+    }
+
+    # When a non-derived variable does not have an else row, we add a final
+    # else statement to the transformation that sets the variable to NA::b.
+    # We need to add the Value node for the NA::b category if it has not been
+    # added already.
+    if(sum(is_else_row) == 0 & pkg.env$NA_missing %in% added_NAs == FALSE
+       & !is_derived_var(var_details_rows)) {
+      missing_label <- "Missing"
+      value_node <- construct_value_node(
+        pkg.env$NA_missing,
+        missing_label,
+        pkg.env$node_attr.property.missing
+      )
+      value_node <- XML::append.xmlNode(
+        value_node,
+        construct_extension_node(
+          pkg.env$node_attr.name.cat_label_long,
+          missing_label
+        )
+      )
+      derived_field_node <- XML::append.xmlNode(
+        derived_field_node,
+        value_node
+      )
     }
 
     return (derived_field_node)
@@ -432,6 +457,18 @@ attach_apply_nodes <-
       return (XML::append.xmlNode(
         parent_node,
         apply_node
+      ))
+    }
+    # If the variable details row is NA then there was no else row for this
+    # variable. All other values for this variable should be recoded to an
+    # NA::b, add a constant node for this.
+    else if(is.na(var_details_row)) {
+      return(XML::append.xmlNode(
+        parent_node,
+        construct_constant_node(
+          pkg.env$NA_missing,
+          pkg.env$node_attr.dataType.string
+        )
       ))
     }
     else if (is_rec_from_range(var_details_row)) {
@@ -691,4 +728,35 @@ build_node_for_rec_to <- function(var_details_row, db_name) {
       attrs = c(dataType = get_data_type(var_details_row[[pkg.env$columns.recTo]]))
     ))
   }
+}
+
+construct_constant_node <- function(constant_value, data_type) {
+  return(XML::xmlNode(
+    pkg.env$node_name.constant,
+    value = constant_value,
+    attrs = c(dataType = data_type)
+  ))
+}
+
+construct_value_node <- function(value, display_value, property) {
+  value_node_attrs <- c()
+  value_node_attrs[[pkg.env$node_attr.Value.value]] <- value
+  value_node_attrs[[pkg.env$node_attr.Value.displayValue]] <- display_value
+  value_node_attrs[[pkg.env$node_attr.Value.property]] <- property
+
+  return(XML::xmlNode(
+    pkg.env$node_name.value,
+    attrs = value_node_attrs
+  ))
+}
+
+construct_extension_node <- function(name, value) {
+  extension_node_attrs <- c()
+  extension_node_attrs[[pkg.env$node_attr.Extension.name]] <- name
+  extension_node_attrs[[pkg.env$node_attr.Extension.value]] <- value
+
+  return(XML::xmlNode(
+    pkg.env$node_name.extension,
+    attrs = extension_node_attrs
+  ))
 }
