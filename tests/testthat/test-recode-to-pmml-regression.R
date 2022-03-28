@@ -129,7 +129,7 @@ test_that("RT 6: Should throw an error when no details is present for a variable
   )
 })
 
-test_that("RT-7: Should handle the case where a variable does not have an else row", {
+test_that("RT-7: Should handle the case where a non-derived variable does not have an else row", {
   expected_pmml_file_path <- "../../assets/tests/recode-to-pmml/regression/rt-7/expected-pmml.xml"
 
   variable_details_sheet_path <- "../../assets/tests/recode-to-pmml/regression/rt-7/variable-details.csv"
