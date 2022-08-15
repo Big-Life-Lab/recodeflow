@@ -594,6 +594,7 @@ recode_columns <-
         label_list,
         recoded_data,
         else_default,
+        valid_intervals,
         interval_default,
         print_note,
         log
@@ -642,6 +643,7 @@ recode_columns <-
         label_list,
         recoded_data,
         else_default,
+        valid_intervals,
         interval_default,
         print_note,
         log
@@ -705,6 +707,7 @@ recode_non_derived_variables <- function(
     label_list,
     recoded_data,
     else_default,
+    valid_intervals,
     interval_default,
     print_note,
     log
@@ -813,7 +816,7 @@ recode_non_derived_variables <- function(
         get_data_variable_name(
           data_name = data_name,
           row_being_checked = row_being_checked,
-          variable_to_recode = variable_to_recode,
+          variable_being_checked = variable_to_recode,
           data = data
         )
 
