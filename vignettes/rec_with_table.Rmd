@@ -96,6 +96,8 @@ With `rec_with_table()` the following arguments are only called if you want to m
   
 - `attach_data_name` is set to FALSE. This argument can be used to append a
   column that denotes the name of the dataset each recoded row came from.
+  
+- 
 
 
 
