@@ -1253,14 +1253,6 @@ get_feeder_vars <- function(derived_start_variable) {
   return(feeder_vars)
 }
 
-is_table_feeder_var <- function(feeder_var) {
-  return(grepl(pkg.env$recode.key.tables, feeder_var))
-}
-
-get_table_name <- function(table_feeder_var) {
-  return(trimws(gsub(pkg.env$recode.key.tables, "", table_feeder_var)))
-}
-
 calculate_custom_function_row_value <-
   function(row_values,
            variable_names,

@@ -110,7 +110,7 @@ recode_to_pmml <- function(var_details_sheet, vars_sheet, db_name, vars_to_conve
       }
       table_node <- XML::append.xmlNode(
         table_node,
-        current_row
+        current_row_node
       )
     }
     taxonomy_node <- XML::append.xmlNode(

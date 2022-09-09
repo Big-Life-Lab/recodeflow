@@ -462,8 +462,8 @@ attach_apply_nodes <-
       # each one
       for(derived_from_var in derived_from_vars) {
         # If this variable is referencing a table
-        if(grepl(pkg.env$recode.key.tables, derived_from_var)) {
-          table_name <- trimws(gsub(pkg.env$recode.key.tables, "", derived_from_var))
+        if(is_table_feeder_var(derived_from_var)) {
+          table_name <- get_table_name(derived_from_var)
           if(!table_name %in% table_names) {
             stop(paste("No table found with name", table_name, "for derived variable", all_var_details_rows$variable))
           }
