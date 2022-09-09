@@ -15,6 +15,7 @@ test_that("RT-1: The PMML file is correctly generated if the else row is not at 
     db_name,
     vars,
     custom_function_files,
+    list(),
     expected_pmml_file_path
   )
 })
@@ -34,6 +35,7 @@ test_that("RT-2: The start variables names are trimmed in the PMML file", {
     db_name,
     vars,
     custom_function_files,
+    list(),
     expected_pmml_file_path
   )
 })
@@ -53,6 +55,7 @@ test_that("RT-3: Duplicate Value nodes are not added to DerivedField nodes in th
     db_name,
     vars,
     custom_function_files,
+    list(),
     expected_pmml_file_path
   )
 })
@@ -75,6 +78,7 @@ test_that("RT-4: It succeeds when the first variable details row does not have r
     db_name,
     vars,
     custom_function_files,
+    list(),
     expected_pmml_file_path
   )
 })
@@ -98,6 +102,7 @@ test_that("RT 5: It succeeds when the variable details file has a part of the da
     db_name,
     vars,
     custom_function_files,
+    list(),
     expected_pmml_file_path
   )
 })
@@ -144,6 +149,7 @@ test_that("RT-7: Should handle the case where a non-derived variable does not ha
     db_name,
     vars,
     custom_function_files,
+    list(),
     expected_pmml_file_path
   )
 })

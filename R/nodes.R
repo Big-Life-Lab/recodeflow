@@ -205,6 +205,7 @@ attach_range_value_nodes <- function(var_details_row, data_field) {
 #' @param db_name Database name.
 #' @param custom_function_names vector of strings. Holds the names of functions
 #' parsed from custom function files.
+#' @param table_names vector of strings. The list of tables part of this PMML
 #' @return TransformationDictionary node.
 #' @export
 build_trans_dict <-
@@ -212,14 +213,22 @@ build_trans_dict <-
            var_details_sheet,
            var_names,
            db_name,
-           custom_function_names) {
+           custom_function_names,
+           table_names) {
     trans_dict <- XML::xmlNode(pkg.env$node_name.trans_dict)
 
     for (var_name in var_names) {
       trans_dict <-
         XML::append.xmlNode(
           trans_dict,
-          build_derived_field_node(vars_sheet, var_details_sheet, var_name, db_name, custom_function_names)
+          build_derived_field_node(
+            vars_sheet,
+            var_details_sheet,
+            var_name,
+            db_name,
+            custom_function_names,
+            table_names
+          )
         )
     }
 
@@ -234,6 +243,7 @@ build_trans_dict <-
 #' @param db_name Database name.
 #' @param custom_function_names vector of strings. Holds the names of functions
 #' parsed from custom function files.
+#' @param table_names vector of strings. The list of tables part of this PMML
 #'
 #' @return DerivedField node.
 build_derived_field_node <-
@@ -241,7 +251,8 @@ build_derived_field_node <-
            var_details_sheet,
            var_name,
            db_name,
-           custom_function_names) {
+           custom_function_names,
+           table_names) {
     var_row <- get_var_sheet_row(var_name, vars_sheet)
     var_details_rows <-
       get_var_details_rows(var_details_sheet, var_name, db_name)
@@ -277,7 +288,14 @@ build_derived_field_node <-
     derived_field_node <-
       XML::append.xmlNode(derived_field_node, label_long_node, units_node)
     derived_field_node <-
-      attach_derived_field_child_nodes(derived_field_node, var_details_sheet, var_name, db_name, custom_function_names)
+      attach_derived_field_child_nodes(
+        derived_field_node,
+        var_details_sheet,
+        var_name,
+        db_name,
+        custom_function_names,
+        table_names
+      )
 
     return (derived_field_node)
   }
@@ -290,6 +308,7 @@ build_derived_field_node <-
 #' @param db_name Database name.
 #' @param custom_function_names vector of strings. Holds the names of functions
 #' parsed from custom function files.
+#' @param table_names vector of strings. The list of tables part of this PMML
 #'
 #' @return Updated DerivedField node.
 attach_derived_field_child_nodes <-
@@ -297,7 +316,8 @@ attach_derived_field_child_nodes <-
            var_details_sheet,
            var_name,
            db_name,
-           custom_function_names) {
+           custom_function_names,
+           table_names) {
     added_NAs <- c(character(0))
 
     var_details_rows <-
@@ -308,7 +328,13 @@ attach_derived_field_child_nodes <-
     var_details_rows <- rbind(var_details_rows[!is_else_row, ], var_details_rows[is_else_row, ])
 
     derived_field_node <-
-      attach_apply_nodes(var_details_rows, derived_field_node, db_name, custom_function_names)
+      attach_apply_nodes(
+        var_details_rows,
+        derived_field_node,
+        db_name,
+        custom_function_names,
+        table_names
+      )
 
     var_details_with_unique_categories <- var_details_rows[
       !duplicated(var_details_rows[[pkg.env$columns.recTo]]),
@@ -398,10 +424,12 @@ build_derived_field_value_node <- function(var_details_row) {
 #' @param db_name Database name.
 #' @param custom_function_names vector of strings. Holds the names of functions
 #' parsed from custom function files.
+#' @param table_names vector of strings. Holds the names of tables included
+#' in this model
 #'
 #' @return Updated parent node.
 attach_apply_nodes <-
-  function(all_var_details_rows, parent_node, db_name, custom_function_names) {
+  function(all_var_details_rows, parent_node, db_name, custom_function_names, table_names) {
     var_details_row <- all_var_details_rows[1, ]
     remaining_rows <- all_var_details_rows[-1, ]
     if (nrow(var_details_row) == 0)
@@ -426,19 +454,37 @@ attach_apply_nodes <-
         stop(paste("No custom function found for derved variable", derived_var_name, "with name", derived_var_function_name))
       }
 
-      # Get the list of variables this derived variable is derived from
-      # and convert them all to FieldRef XML nodes
+      # Get the list of variables this derived variable is derived and convert each
+      # of them to their PMML node
       derived_from_vars <- get_start_vars_for_derived_var(all_var_details_rows[1, pkg.env$columns.Variable], all_var_details_rows)
-      field_ref_nodes <- list()
+      derived_from_nodes <- list()
       # Go through each derived from variable and create a field ref node for
       # each one
       for(derived_from_var in derived_from_vars) {
-        field_ref_attrs <- c()
-        field_ref_attrs[[pkg.env$node_attr.FieldRef.field]] <- derived_from_var
-        field_ref_nodes[[length(field_ref_nodes) + 1]] <- XML::xmlNode(
-          pkg.env$node_name.field_ref,
-          attrs = field_ref_attrs
-        )
+        # If this variable is referencing a table
+        if(grepl(pkg.env$recode.key.tables, derived_from_var)) {
+          table_name <- trimws(gsub(pkg.env$recode.key.tables, "", derived_from_var))
+          if(!table_name %in% table_names) {
+            stop(paste("No table found with name", table_name, "for derived variable", all_var_details_rows$variable))
+          }
+          table_locator_attrs <- c()
+          table_locator_attrs[[pkg.env$node_attr.TableLocator.location]] <-
+            pkg.env$node_attr.TableLocator.taxonomy
+          table_locator_attrs[[pkg.env$node_attr.TableLocator.name]] <-
+            table_name
+          table_locator_node <- XML::xmlNode(
+            pkg.env$node_name.table_locator,
+            attrs = table_locator_attrs
+          )
+          derived_from_nodes[[length(derived_from_nodes) + 1]] <- table_locator_node
+        } else {
+          field_ref_attrs <- c()
+          field_ref_attrs[[pkg.env$node_attr.FieldRef.field]] <- derived_from_var
+          derived_from_nodes[[length(derived_from_nodes) + 1]] <- XML::xmlNode(
+            pkg.env$node_name.field_ref,
+            attrs = field_ref_attrs
+          )
+        }
       }
 
       # Create the Apply XML node for this derived variable and add the
@@ -449,8 +495,8 @@ attach_apply_nodes <-
         pkg.env$node_name.apply,
         attrs = apply_node_attrs
       )
-      for(field_ref_node in field_ref_nodes){
-        apply_node <- XML::addChildren(apply_node, field_ref_node)
+      for(derived_from_node in derived_from_nodes) {
+        apply_node <- XML::addChildren(apply_node, derived_from_node)
       }
 
       # Add the Apply node to the parent node and return it
@@ -476,7 +522,13 @@ attach_apply_nodes <-
         build_ranged_derived_field_apply_node(var_details_row, db_name)
       return (XML::append.xmlNode(
         parent_node,
-        attach_apply_nodes(remaining_rows, apply_node, db_name, custom_function_names)
+        attach_apply_nodes(
+          remaining_rows,
+          apply_node,
+          db_name,
+          custom_function_names,
+          table_names
+        )
       ))
     }
     else if (var_details_row[[pkg.env$columns.recFrom]] == pkg.env$variable_details$columns.recFrom.elseValue) {
@@ -489,7 +541,13 @@ attach_apply_nodes <-
         build_single_rec_from_derived_field_apply_node(var_details_row, db_name)
       return (XML::append.xmlNode(
         parent_node,
-        attach_apply_nodes(remaining_rows, apply_node, db_name, custom_function_names)
+        attach_apply_nodes(
+          remaining_rows,
+          apply_node,
+          db_name,
+          custom_function_names,
+          table_names
+        )
       ))
     }
   }

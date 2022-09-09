@@ -4,6 +4,7 @@ run_recode_to_pmml_test <- function(
   db_name,
   vars,
   custom_function_files,
+  table_paths,
   expected_pmml_file_path
 ) {
   expected_pmml_string <- XML::toString.XMLNode(
@@ -28,7 +29,8 @@ run_recode_to_pmml_test <- function(
     variables_sheet,
     db_name,
     vars,
-    custom_function_files
+    custom_function_files,
+    table_paths
   )
   actual_pmml_string <- XML::toString.XMLNode(actual_pmml)
 

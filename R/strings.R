@@ -31,6 +31,11 @@ pkg.env$node_name.apply <- "Apply"
 pkg.env$node_name.field_ref <- "FieldRef"
 pkg.env$node_name.local_transformations <- "LocalTransformations"
 pkg.env$node_name.define_function <- "DefineFunction"
+pkg.env$node_name.table_locator <- "TableLocator"
+pkg.env$node_name.taxonomy <- "Taxonomy"
+pkg.env$node_name.inline_table <- "InlineTable"
+pkg.env$node_name.row <- "row"
+pkg.env$node_name.row_index <- "index"
 
 pkg.env$node_namespace.pmml <- "http://www.dmg.org/PMML-4_4"
 
@@ -76,6 +81,12 @@ pkg.env$node_attr.Value.property <- "property"
 
 pkg.env$node_attr.Extension.name <- "name"
 pkg.env$node_attr.Extension.value <- "value"
+
+pkg.env$node_attr.TableLocator.location <- "location"
+pkg.env$node_attr.TableLocator.taxonomy <- "taxonomy"
+pkg.env$node_attr.TableLocator.name <- "name"
+
+pkg.env$node_attr.Taxonomy.name <- "name"
 
 pkg.env$columns.Variable <- "variable"
 pkg.env$columns.VariableLabel <- "labelLong"

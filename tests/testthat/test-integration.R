@@ -19,6 +19,32 @@ test_that("The PMML file is correctly generated", {
     db_name,
     vars,
     custom_function_files,
+    list(),
+    expected_pmml_file_path
+  )
+})
+
+test_that("RP-2: tables are correctly recoded", {
+  expected_pmml_file_path <- "../../assets/tests/recode-to-pmml/features/rp-2/expected-pmml.xml"
+
+  variable_details_sheet_path <- "../../assets/tests/recode-to-pmml/features/rp-2/variable-details.csv"
+  variables_sheet_path <- "../../assets/tests/recode-to-pmml/features/rp-2/variables.csv"
+  db_name <- "database_one"
+  vars <- c("variable_one", "derived_variable")
+  custom_function_files <- c(
+    "../../assets/tests/recode-to-pmml/features/rp-2/custom-functions.R"
+  )
+  table_paths <- list(
+    "table_one" = "../../assets/tests/recode-to-pmml/features/rp-2/table-one.csv"
+  )
+
+  run_recode_to_pmml_test(
+    variable_details_sheet_path,
+    variables_sheet_path,
+    db_name,
+    vars,
+    custom_function_files,
+    table_paths,
     expected_pmml_file_path
   )
 })
