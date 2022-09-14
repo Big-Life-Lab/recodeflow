@@ -48,3 +48,26 @@ test_that("RP-2: tables are correctly recoded", {
     expected_pmml_file_path
   )
 })
+
+test_that("RP-3: string arguments in derived var are correctly converted", {
+  expected_pmml_file_path <- "../../assets/tests/recode-to-pmml/features/rp-3/expected-pmml.xml"
+
+  variable_details_sheet_path <- "../../assets/tests/recode-to-pmml/features/rp-3/variable-details.csv"
+  variables_sheet_path <- "../../assets/tests/recode-to-pmml/features/rp-3/variables.csv"
+  db_name <- "database_one"
+  vars <- c("variable_one", "derived_variable")
+  custom_function_files <- c(
+    "../../assets/tests/recode-to-pmml/features/rp-3/custom-functions.R"
+  )
+  table_paths <- list()
+
+  run_recode_to_pmml_test(
+    variable_details_sheet_path,
+    variables_sheet_path,
+    db_name,
+    vars,
+    custom_function_files,
+    table_paths,
+    expected_pmml_file_path
+  )
+})

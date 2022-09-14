@@ -1,0 +1,28 @@
+<PMML version="4.4"
+    xmlns="http://www.dmg.org/PMML-4_4">
+    <DataDictionary numberOfFields="1">
+        <DataField name="start_variable" optype="continuous" dataType="float">
+            <Extension name="variableStartLabel" value="N/A"/>
+        </DataField>
+    </DataDictionary>
+    <TransformationDictionary>
+        <DerivedField name="variable_one" displayName="N/A" optype="cont" dataType="float">
+            <Extension name="labelLong" value="N/A"/>
+            <Extension name="units" value="N/A"/>
+            <FieldRef field="start_variable"/>
+        </DerivedField>
+        <DerivedField name="derived_variable" displayName="N/A" optype="cont" dataType="float">
+            <Extension name="labelLong" value="N/A"/>
+            <Extension name="units" value="N/A"/>
+            <Apply function="derived_var">
+                <FieldRef field="variable_one"/>
+                <Constant dataType="string">test</Constant>
+            </Apply>
+        </DerivedField>
+        <DefineFunction name="derived_var">
+            <ParameterField name="variable_one" dataType="double"/>
+            <ParameterField name="str" dataType="double"/>
+            <Constant dataType="double">1</Constant>
+        </DefineFunction>
+    </TransformationDictionary>
+</PMML>

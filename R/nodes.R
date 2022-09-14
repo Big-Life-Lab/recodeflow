@@ -477,7 +477,17 @@ attach_apply_nodes <-
             attrs = table_locator_attrs
           )
           derived_from_nodes[[length(derived_from_nodes) + 1]] <- table_locator_node
-        } else {
+        }
+        # if the derived field is a hardcoded string
+        else if(grepl('".{1,}"', derived_from_var))
+        {
+          constant_node <- construct_constant_node(
+            gsub('"', "", derived_from_var),
+            pkg.env$node_attr.dataType.string
+          )
+          derived_from_nodes[[length(derived_from_nodes) + 1]] <- constant_node
+        }
+        else {
           field_ref_attrs <- c()
           field_ref_attrs[[pkg.env$node_attr.FieldRef.field]] <- derived_from_var
           derived_from_nodes[[length(derived_from_nodes) + 1]] <- XML::xmlNode(
