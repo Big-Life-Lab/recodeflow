@@ -377,19 +377,6 @@ recode_call <-
       if (is.null(variable_details[[pkg.env$columns.label]])) {
         variable_details[[pkg.env$columns.label]] <- NA
       }
-
-      # The variables in the variables details sheet
-      vars_being_recoded <-
-        as.character(unique(variable_details[[pkg.env$columns.Variable]]))
-      if (length(vars_being_recoded) != length(variables)) {
-        missing_vars <- setdiff(variables, vars_being_recoded)
-        warning(
-          paste(
-            missing_vars,
-            "is missing from variable details therefore cannot be recoded"
-          )
-        )
-      }
     }
 
     # Update the labels for variables in the variables details sheet with the
@@ -621,6 +608,7 @@ recode_columns <-
       # get name of var pass to
       derived_return <-
         recode_derived_variables(
+          data = data,
           variable_being_processed = first_row_variable_name,
           recoded_data = recoded_data,
           variables_details_rows_to_process = func_variables_to_process,
@@ -1075,7 +1063,9 @@ format_recoded_value <- function(cell_value, var_type) {
 }
 
 recode_derived_variables <-
-  function(recoded_data,
+  function(
+           data,
+           recoded_data,
            variable_being_processed,
            variables_details_rows_to_process,
            log,
@@ -1113,11 +1103,12 @@ recode_derived_variables <-
             non_func_missing_variables <- c(non_func_missing_variables, feeder_var)
           }
         } else {
-          if(!feeder_var %in% names(recoded_data)) {
+          if(!feeder_var %in% c(names(recoded_data), names(data))) {
             non_func_missing_variables <- c(non_func_missing_variables, feeder_var)
           }
         }
       }
+
       if (length(non_func_missing_variables) > 0) {
         warning(
           paste(
@@ -1160,9 +1151,10 @@ recode_derived_variables <-
       for (one_feeder in feeder_vars) {
         if(!is_table_feeder_var(one_feeder)) {
           # Need to check recoded data again in case a recursion added it
-          if (!one_feeder %in% names(recoded_data)) {
+          if (!one_feeder %in% c(names(data), names(recoded_data))) {
             derived_return <-
               recode_derived_variables(
+                data = data,
                 variable_being_processed = one_feeder,
                 recoded_data = recoded_data,
                 variables_details_rows_to_process = variables_details_rows_to_process,
@@ -1197,7 +1189,12 @@ recode_derived_variables <-
           table_name <- get_table_name(feeder_vars)
           custom_function_args[[table_name]] <- tables[[table_name]]
         } else {
-          custom_function_args[[feeder_var]] <- recoded_data[[feeder_var]]
+          if(feeder_var %in% names(recoded_data)) {
+            custom_function_args[[feeder_var]] <- recoded_data[[feeder_var]]
+          }
+          else {
+            custom_function_args[[feeder_var]] <- data[[feeder_var]]
+          }
         }
       }
       recoded_data[[variable_being_processed]] <- calculate_custom_function_row_value(

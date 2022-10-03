@@ -111,3 +111,61 @@ test_that("Tables work with custom functions", {
 
   on.exit(rm("func_1", envir = .GlobalEnv))
 })
+
+
+test_that("When a variable has a start variable that is not in the variables argument but is in the data, it should continue to recode the variable", {
+  data <- data.frame(
+    start_variable_one = c(1),
+    variable_one = c(2)
+  )
+  variables <- data.frame(
+    variable = c("variable_one", "variable_two", "derived_variable_two"),
+    label = c("", "", ""),
+    labelLong = c("", "", ""),
+    units = c("N/A", "N/A", "N/A"),
+    variableType = c("Continuous", "Continuous", "Cotinuous"),
+    databaseStart = c("database_one", "database_one", "database_one"),
+    variableStart = c("[start_variable_one]","[variable_one]", "DerivedVar::[variable_one]")
+  )
+  database_name <- "database_one"
+  variable_details <- data.frame(
+    variable = c("variable_one", "variable_two", "derived_variable_two"),
+    typeEnd = c("cont", "cont", "cont"),
+    databaseStart = c("database_one", "database_one", "database_one"),
+    variableStart = c("[start_variable_one]","[variable_one]", "DerivedVar::[variable_one]"),
+    typeStart = c("cont", "cont", "cont"),
+    recEnd = c("copy", "copy", "Func::func_1"),
+    numValidCategories = c("N/A", "N/A", "N/A"),
+    recStart = c("else", "else", "N/A"),
+    catLabel = c("", "", ""),
+    catLabelLong = c("", "", "")
+  )
+  tables <- list()
+  # Custom function for the derived variable
+  func_1 <- function(variable_one) {
+    return(variable_one)
+  }
+  .GlobalEnv[["func_1"]] <- func_1
+
+  actual_output <- recodeflow::rec_with_table(
+    data = data,
+    variables = c("variable_two", "derived_variable_two"),
+    variable_details = variable_details,
+    database_name = database_name,
+    tables = tables,
+    append_to_data = TRUE
+  )
+
+  expected_output <- data.frame(
+    start_variable_one = c(1),
+    variable_one = c(2),
+    variable_two = c(2),
+    derived_variable_two = c(2)
+  )
+  attr(expected_output$variable_two, "unit") <- character(0)
+  attr(expected_output$variable_two, "label_long") <- NA_character_
+
+  expect_equal(actual_output, expected_output)
+
+  on.exit(rm("func_1", envir = .GlobalEnv))
+})
