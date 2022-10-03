@@ -54,3 +54,60 @@ test_that("Non-derived variables can be created from derived variables", {
   on.exit(rm("derived_variable", envir = .GlobalEnv))
 })
 
+test_that("Tables work with custom functions", {
+  data <- data.frame(
+    start_var = c(1)
+  )
+  variables <- data.frame(
+    variable = c("derived_variable_one", "derived_variable_two"),
+    label = c("", ""),
+    labelLong = c("", ""),
+    units = c("N/A", "N/A"),
+    variableType = c("Continuous", "Continuous"),
+    databaseStart = c("database_one", "database_one"),
+    variableStart = c("[start_var]", "DerivedVar::[derived_variable_one, tables::table_one]")
+  )
+  database_name <- "database_one"
+  variable_details <- data.frame(
+    variable = c("derived_variable_one", "derived_variable_two"),
+    typeEnd = c("cont", "cont"),
+    databaseStart = c("database_one", "database_one"),
+    variableStart = c("[start_var]", "DerivedVar::[derived_variable_one, tables::table_one]"),
+    typeStart = c("N/A", "N/A"),
+    recEnd = c("copy", "Func::func_1"),
+    numValidCategories = c("N/A", "N/A"),
+    recStart = c("else", "N/A"),
+    catLabel = c("", ""),
+    catLabelLong = c("", "")
+  )
+  tables <- list(
+    table_one = data.frame(
+      derived_variable_one = c(1),
+      derived_variable_two = c(2)
+    )
+  )
+  # Custom function for the derived variable
+  func_1 <- function(derived_variable_one, table_one) {
+    return(table_one[table_one$derived_variable_one == derived_variable_one,]$derived_variable_two)
+  }
+  .GlobalEnv[["func_1"]] <- func_1
+
+  actual_output <- recodeflow::rec_with_table(
+    data = data,
+    variables = variables,
+    variable_details = variable_details,
+    database_name = database_name,
+    tables = tables
+  )
+
+  expected_output <- data.frame(
+    derived_variable_one = c(1),
+    derived_variable_two = c(2)
+  )
+  attr(expected_output$derived_variable_one, "unit") <- "N/A"
+  attr(expected_output$derived_variable_one, "label_long") <- ""
+
+  expect_equal(actual_output, expected_output)
+
+  on.exit(rm("func_1", envir = .GlobalEnv))
+})

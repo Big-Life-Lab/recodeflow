@@ -136,6 +136,7 @@ is_equal <- function(v1, v2) {
 #' @param id_role_name name for the role to be used to generate id column
 #' @param name_of_environment_to_load Name of package to load variables and variable_details from
 #' @param append_non_db_columns boolean determening if data not present in this cycle should be appended as NA
+#' @param tables named list of data.frame A list of reference tables that can be passed as parameters into the function for a derived variable
 #'
 #' @return a dataframe that is recoded according to rules in variable_details.
 #' @importFrom haven tagged_na
@@ -205,7 +206,8 @@ rec_with_table <-
            attach_data_name = FALSE,
            id_role_name = NULL,
            name_of_environment_to_load = NULL,
-           append_non_db_columns = FALSE) {
+           append_non_db_columns = FALSE,
+           tables = list()) {
     # Convert passed id_role_name to list in case its a string.
     # This makes it work with the select_vars_by_role function.
     # if (!is.list(id_role_name)) {
@@ -286,7 +288,8 @@ rec_with_table <-
             append_to_data = append_to_data,
             append_non_db_columns = append_non_db_columns,
             log = log,
-            var_labels = var_labels
+            var_labels = var_labels,
+            tables = tables
           )
         } else {
           stop(
@@ -314,7 +317,8 @@ rec_with_table <-
         append_to_data = append_to_data,
         append_non_db_columns = append_non_db_columns,
         log = log,
-        var_labels = var_labels
+        var_labels = var_labels,
+        tables = tables
       )
       if (attach_data_name) {
         data[["data_name"]] <- database_name
@@ -348,7 +352,8 @@ recode_call <-
            append_to_data,
            append_non_db_columns,
            log,
-           var_labels) {
+           var_labels,
+           tables) {
     # Trim the values in the Variable column of variables details
     variable_details[[pkg.env$columns.Variable]] <-
       trimws(variable_details[[pkg.env$columns.Variable]])
@@ -437,7 +442,8 @@ recode_call <-
         data_name = database_name,
         log = log,
         print_note = print_note,
-        else_default = else_value
+        else_default = else_value,
+        tables = tables
       )
 
     # If this flag is set then,
@@ -546,7 +552,8 @@ recode_columns <-
            data_name,
            log,
            print_note,
-           else_default) {
+           else_default,
+           tables) {
     # Split variables to process into recode map and func
     map_variables_to_process <-
       variables_details_rows_to_process[grepl(pkg.env$recode.key.map, variables_details_rows_to_process[[pkg.env$columns.recTo]]),]
@@ -621,7 +628,8 @@ recode_columns <-
           print_note = print_note,
           else_default = else_default,
           label_list = label_list,
-          var_stack = c()
+          var_stack = c(),
+          tables = tables
         )
       label_list <- derived_return$label_list
       recoded_data <- derived_return$recoded_data
@@ -1074,7 +1082,8 @@ recode_derived_variables <-
            print_note,
            else_default,
            label_list,
-           var_stack) {
+           var_stack,
+           tables) {
     if (nrow(variables_details_rows_to_process) <= 0) {
       stop(paste(
         variable_being_processed,
@@ -1090,19 +1099,25 @@ recode_derived_variables <-
     for (row_num in seq_len(nrow(variable_rows))) {
       # Check for presence of feeder variables in data and in the
       # variable being processed stack
-      feeder_vars <-
-        as.list(strsplit(as.character(variable_rows[row_num,][[pkg.env$columns.VariableStart]]), "::"))[[1]][[2]]
       # Extract the variable names used in the function
-      feeder_vars <- gsub("\\[|\\]", "", feeder_vars)
-      feeder_vars <- as.list(strsplit(feeder_vars, ","))[[1]]
-      feeder_vars <- sapply(feeder_vars, trimws)
+      feeder_vars <- get_feeder_vars(as.character(variable_rows[row_num,][[pkg.env$columns.VariableStart]]))
       used_feeder_vars <- feeder_vars
       # Verify that those variables have been recoded
       feeder_vars <- setdiff(feeder_vars, names(recoded_data))
 
       # Check if the variable has a function to recode
-      non_func_missing_variables <-
-        setdiff(feeder_vars, unique(as.character(variables_details_rows_to_process[[pkg.env$columns.Variable]])))
+      non_func_missing_variables <- c()
+      for(feeder_var in feeder_vars) {
+        if(is_table_feeder_var(feeder_var)) {
+          if(!get_table_name(feeder_var) %in% names(tables)) {
+            non_func_missing_variables <- c(non_func_missing_variables, feeder_var)
+          }
+        } else {
+          if(!feeder_var %in% names(recoded_data)) {
+            non_func_missing_variables <- c(non_func_missing_variables, feeder_var)
+          }
+        }
+      }
       if (length(non_func_missing_variables) > 0) {
         warning(
           paste(
@@ -1143,24 +1158,27 @@ recode_derived_variables <-
 
       # Update var_stack and recurse to get the feeder vars
       for (one_feeder in feeder_vars) {
-        # Need to check recoded data again in case a recursion added it
-        if (!one_feeder %in% names(recoded_data)) {
-          derived_return <-
-            recode_derived_variables(
-              variable_being_processed = one_feeder,
-              recoded_data = recoded_data,
-              variables_details_rows_to_process = variables_details_rows_to_process,
-              log = log,
-              print_note = print_note,
-              else_default = else_default,
-              label_list = label_list,
-              var_stack = var_stack
-            )
-          var_stack <- derived_return$var_stack
-          label_list <- derived_return$label_list
-          recoded_data <- derived_return$recoded_data
-          variables_details_rows_to_process <-
-            derived_return$variables_details_rows_to_process
+        if(!is_table_feeder_var(one_feeder)) {
+          # Need to check recoded data again in case a recursion added it
+          if (!one_feeder %in% names(recoded_data)) {
+            derived_return <-
+              recode_derived_variables(
+                variable_being_processed = one_feeder,
+                recoded_data = recoded_data,
+                variables_details_rows_to_process = variables_details_rows_to_process,
+                log = log,
+                print_note = print_note,
+                else_default = else_default,
+                label_list = label_list,
+                var_stack = var_stack,
+                tables = tables
+              )
+            var_stack <- derived_return$var_stack
+            label_list <- derived_return$label_list
+            recoded_data <- derived_return$recoded_data
+            variables_details_rows_to_process <-
+              derived_return$variables_details_rows_to_process
+          }
         }
       }
 
@@ -1173,25 +1191,29 @@ recode_derived_variables <-
       function_being_used <-
         as.list(strsplit(func_cell, "::"))[[1]][[2]]
 
-      column_value <-
-        recoded_data %>%
-        dplyr::rowwise() %>%
-        dplyr::select(used_feeder_vars) %>%
-        dplyr::do(
-          column_being_added = calculate_custom_function_row_value(
-            .,
-            variable_names = used_feeder_vars,
-            custom_function_name = function_being_used
-          )
-        )
+      custom_function_args <- list()
+      for(feeder_var in used_feeder_vars) {
+        if(is_table_feeder_var(feeder_var)) {
+          table_name <- get_table_name(feeder_vars)
+          custom_function_args[[table_name]] <- tables[[table_name]]
+        } else {
+          custom_function_args[[feeder_var]] <- recoded_data[[feeder_var]]
+        }
+      }
+      recoded_data[[variable_being_processed]] <- calculate_custom_function_row_value(
+        custom_function_args,
+        used_feeder_vars,
+        function_being_used
+      )
+
       # Set type of var
       if (as.character(row_being_checked[[pkg.env$columns.ToType]]) !=
           pkg.env$columns.value.CatType) {
         column_value <-
-          as.numeric(unlist(column_value[["column_being_added"]]))
+          as.numeric(unlist(recoded_data[[variable_being_processed]]))
       } else{
         column_value <-
-          as.factor(unlist(column_value[["column_being_added"]]))
+          as.factor(unlist(recoded_data[[variable_being_processed]]))
       }
       recoded_data[[variable_being_processed]] <-
         column_value
@@ -1209,6 +1231,27 @@ recode_derived_variables <-
       )
     )
   }
+
+get_feeder_vars <- function(derived_start_variable) {
+  feeder_vars_capture_group <- "(.{0,})"
+  feeder_var_regex <- paste(pkg.env$recode.key.derived.var, feeder_vars_capture_group, sep = "")
+
+  feeder_var_string <- NA
+  if(grepl(feeder_var_regex, derived_start_variable)) {
+    feeder_var_string <- regmatches(
+      derived_start_variable,
+      regexec(feeder_var_regex, derived_start_variable)
+    )[[1]][2]
+  }
+  if(is.na(feeder_var_string)) {
+    return(NA)
+  }
+  feeder_var_string <- gsub("\\[|\\]", "", feeder_var_string)
+
+  feeder_vars <- as.list(strsplit(feeder_var_string, ","))[[1]]
+  feeder_vars <- sapply(feeder_vars, trimws)
+  return(feeder_vars)
+}
 
 calculate_custom_function_row_value <-
   function(row_values,

@@ -195,3 +195,48 @@ A derived variable looks like this in `variable_details.csv`
 ```{r, echo=FALSE, warning=FALSE}
 kable(variable_details[64,1:14])
 ```
+
+## Tables
+
+Certain derived variables may need information from a reference table to complete their derivation. For example, imagine a derived variable that has the average sodium consumption for an individual specific to the individual's age and sex. It makes sense to put this information in a table that maps the individual's age and sex to their sodium consumption like below,
+
+```{r, echo = FALSE, warning = FALSE}
+kable(
+  data.frame(
+    age = c(18, 18, 19, 19),
+    sex = c("male", "male", "female", "female"),
+    sodium_consumption = c(1800, 1500, 2100, 1600)
+  )
+)
+```
+
+with the derivation function shown below,
+
+```{r}
+sodium_consumption <- function(age, sex, reference_table) {
+  return(reference_table[reference_table$age == age & reference_table$sex == sex, ]$sodium_consumption)
+}
+```
+
+The reference_table argument in the above function expects a data frame.
+
+Including a table in the start variables for a derived variable can be done using the syntax, `tables::<table_name>` where **<table_name>** should be replaced with the name of the table. For the `sodium_consumption` derived variable, the entry in the variables sheet would be,
+
+```{r, echo = FALSE, warning = FALSE}
+kable(
+  data.frame(
+    variable = c("sodium_consumption"),
+    typeEnd = c("cont"),
+    databaseStart = c("database_one"),
+    variableStart = c("DerivedVar::[age, sex, tables::sodium_reference_table]"),
+    typeStart = c("N/A"),
+    recEnd = c("Func::sodium_consumption"),
+    numValidCategories = c("N/A"),
+    recStart = c("N/A"),
+    catLabel = c(""),
+    catLabelLong = c("")
+  )
+)
+```
+
+When using the `rec_with_table` function, the `tables` argument can be used to include all the tables mentioned in the variables sheet.

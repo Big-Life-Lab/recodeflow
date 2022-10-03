@@ -63,10 +63,62 @@
 #' )
 #'
 #' @export
-recode_to_pmml <- function(var_details_sheet, vars_sheet, db_name, vars_to_convert = NULL, custom_function_files = NULL) {
+recode_to_pmml <- function(var_details_sheet, vars_sheet, db_name, vars_to_convert = NULL, custom_function_files = NULL, table_paths = list()) {
   doc <- XML::xmlNode(pkg.env$node_name.pmml, namespaceDefinitions=c(pkg.env$node_namespace.pmml), attrs=c(version=pkg.env$node_attr.pmml_version))
   dict <- XML::xmlNode(pkg.env$node_name.data_dict)
   recognized_vars_to_convert <- c(character(0))
+
+  # Adds the taxonomy nodes for each table defined in the table_paths argument
+  table_names <- names(table_paths)
+  for(table_name in table_names) {
+    # The Taxonomy node for this table
+    taxonomy_node_attrs <-  c()
+    taxonomy_node_attrs[[pkg.env$node_attr.Taxonomy.name]] <- table_name
+    taxonomy_node <- XML::xmlNode(
+      pkg.env$node_name.taxonomy,
+      attrs = taxonomy_node_attrs
+    )
+
+    # The InlineTable node we will eventually add to the Taxonomy node
+    table_node <- XML::xmlNode(pkg.env$node_name.inline_table)
+    table <- read.csv(
+      table_paths[[table_name]],
+      fileEncoding = "UTF-8-BOM"
+    )
+    for(row_index in 1:nrow(table)) {
+      # The node for the current row in the table
+      current_row_node <- XML::xmlNode(
+        pkg.env$node_name.row
+      )
+      # Add the index of the current row
+      current_row_node <- XML::append.xmlNode(
+        current_row_node,
+        XML::xmlNode(
+          pkg.env$node_name.row_index,
+          row_index
+        )
+      )
+      table_column_names <- colnames(table)
+      for(table_column_name in table_column_names) {
+        current_row_node <- XML::append.xmlNode(
+          current_row_node,
+          XML::xmlNode(
+            table_column_name,
+            table[row_index, table_column_name]
+          )
+        )
+      }
+      table_node <- XML::append.xmlNode(
+        table_node,
+        current_row_node
+      )
+    }
+    taxonomy_node <- XML::append.xmlNode(
+      taxonomy_node,
+      table_node
+    )
+    doc <- XML::append.xmlNode(doc, taxonomy_node)
+  }
 
   # 2. Get the vector of variables names that we will need to add to the
   # PMML document
@@ -141,7 +193,7 @@ recode_to_pmml <- function(var_details_sheet, vars_sheet, db_name, vars_to_conve
     }
 
     var_db_details_rows <- get_var_details_rows(var_details_sheet, var_to_convert, db_name)
-    data_field <- NA
+    data_field <- NULL
     # If it is not a derived variable then we can add the start variable for
     # this variable to the DataDictionary node
     if (!is_derived_var(var_db_details_rows)) {
@@ -166,7 +218,7 @@ recode_to_pmml <- function(var_details_sheet, vars_sheet, db_name, vars_to_conve
         data_field <- build_data_field_for_var(var_to_convert, vars_sheet)
       }
 
-      if (is.null(data_field) | is.na(data_field))
+      if (is.null(data_field))
         print(paste0("Skipping ", var_to_convert, ": Unable to determine fromType."))
       else
         dict <- XML::append.xmlNode(dict, data_field)
@@ -196,7 +248,14 @@ recode_to_pmml <- function(var_details_sheet, vars_sheet, db_name, vars_to_conve
       )
     }
     recognized_vars_to_convert <- unique(recognized_vars_to_convert)
-    trans_dict <- build_trans_dict(vars_sheet, var_details_sheet, recognized_vars_to_convert, db_name, custom_function_names)
+    trans_dict <- build_trans_dict(
+      vars_sheet,
+      var_details_sheet,
+      recognized_vars_to_convert,
+      db_name,
+      custom_function_names,
+      names(table_paths)
+    )
 
     # Iterate through each DefineFunction node in the LocalTransformations node
     for (custom_function_node in custom_function_nodes) {

@@ -1,0 +1,3 @@
+variable,typeEnd,databaseStart,variableStart,typeStart,recEnd,catLabel,catLabelLong,numValidCat,units,recStart,catStartLabel,variableStartLabel,notes
+variable_one,cont,database_one,[start_variable],cont,copy,N/A,N/A,N/A,N/A,else,N/A,N/A,N/A
+derived_variable,cont,database_one,"DerivedVar::[variable_one, ""test""]",N/A,Func::derived_var,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A

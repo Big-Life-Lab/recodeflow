@@ -1,0 +1,47 @@
+<PMML version="4.4"
+    xmlns="http://www.dmg.org/PMML-4_4">
+    <Taxonomy name="table_one">
+        <InlineTable>
+            <row>
+                <index>1</index>
+                <a>1</a>
+                <b>3</b>
+                <c>5</c>
+            </row>
+            <row>
+                <index>2</index>
+                <a>2</a>
+                <b>4</b>
+                <c>6</c>
+            </row>
+        </InlineTable>
+    </Taxonomy>
+    <DataDictionary numberOfFields="1">
+        <DataField name="start_variable" optype="continuous" dataType="float">
+            <Extension name="variableStartLabel" value="N/A"/>
+        </DataField>
+    </DataDictionary>
+    <TransformationDictionary>
+        <DerivedField name="variable_one" displayName="N/A" optype="cont" dataType="float">
+            <Extension name="labelLong" value="N/A"/>
+            <Extension name="units" value="N/A"/>
+            <FieldRef field="start_variable"/>
+        </DerivedField>
+        <DerivedField name="derived_variable" displayName="N/A" optype="cont" dataType="float">
+            <Extension name="labelLong" value="N/A"/>
+            <Extension name="units" value="N/A"/>
+            <Apply function="derived_var">
+                <FieldRef field="variable_one"/>
+                <TableLocator location="taxonomy" name="table_one"/>
+            </Apply>
+        </DerivedField>
+        <DefineFunction name="derived_var">
+            <ParameterField name="variable_one" dataType="double"/>
+            <ParameterField name="table_one" dataType="double"/>
+            <MapValues outputColumn="b">
+                <FieldColumnPair column="a" field="variable_one"/>
+                <TableLocator location="local" name="table_one"/>
+            </MapValues>
+        </DefineFunction>
+    </TransformationDictionary>
+</PMML>
