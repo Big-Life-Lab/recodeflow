@@ -617,7 +617,8 @@ recode_columns <-
           else_default = else_default,
           label_list = label_list,
           var_stack = c(),
-          tables = tables
+          tables = tables,
+          database_name = data_name
         )
       label_list <- derived_return$label_list
       recoded_data <- derived_return$recoded_data
@@ -1073,7 +1074,8 @@ recode_derived_variables <-
            else_default,
            label_list,
            var_stack,
-           tables) {
+           tables,
+           database_name) {
     if (nrow(variables_details_rows_to_process) <= 0) {
       stop(paste(
         variable_being_processed,
@@ -1090,7 +1092,10 @@ recode_derived_variables <-
       # Check for presence of feeder variables in data and in the
       # variable being processed stack
       # Extract the variable names used in the function
-      feeder_vars <- get_feeder_vars(as.character(variable_rows[row_num,][[pkg.env$columns.VariableStart]]))
+      feeder_vars <- get_feeder_vars(
+        as.character(variable_rows[row_num,][[pkg.env$columns.VariableStart]]),
+        database_name
+      )
       used_feeder_vars <- feeder_vars
       # Verify that those variables have been recoded
       feeder_vars <- setdiff(feeder_vars, names(recoded_data))
@@ -1102,7 +1107,11 @@ recode_derived_variables <-
           if(!get_table_name(feeder_var) %in% names(tables)) {
             non_func_missing_variables <- c(non_func_missing_variables, feeder_var)
           }
-        } else {
+        }
+        else if(!is_derived_var(
+          variables_details_rows_to_process[
+            variables_details_rows_to_process[[pkg.env$columns.Variable]] == feeder_var, ])
+        ) {
           if(!feeder_var %in% c(names(recoded_data), names(data))) {
             non_func_missing_variables <- c(non_func_missing_variables, feeder_var)
           }
@@ -1163,7 +1172,8 @@ recode_derived_variables <-
                 else_default = else_default,
                 label_list = label_list,
                 var_stack = var_stack,
-                tables = tables
+                tables = tables,
+                database_name = database_name
               )
             var_stack <- derived_return$var_stack
             label_list <- derived_return$label_list
@@ -1197,6 +1207,7 @@ recode_derived_variables <-
           }
         }
       }
+
       recoded_data[[variable_being_processed]] <- calculate_custom_function_row_value(
         custom_function_args,
         used_feeder_vars,
@@ -1229,15 +1240,45 @@ recode_derived_variables <-
     )
   }
 
-get_feeder_vars <- function(derived_start_variable) {
-  feeder_vars_capture_group <- "(.{0,})"
-  feeder_var_regex <- paste(pkg.env$recode.key.derived.var, feeder_vars_capture_group, sep = "")
+get_feeder_vars <- function(derived_start_variable, database_name) {
+  feeder_vars_capture_group <- "(.{0,}?)"
+
+  # Regex for when the derived variable is the same for all databases
+  # For example, DerivedVar::[var_one]
+  single_derived_var_regex <- paste(
+    pkg.env$recode.key.derived.var, "\\[", feeder_vars_capture_group, "\\]",
+    sep = ""
+  )
+  # Regex to get the derived variables for a certain databases
+  # For example, database_one::DerivedVar::[var_one]
+  database_derived_var_regex <- paste(
+    database_name, "::", single_derived_var_regex,
+    sep = ""
+  )
+  # Regex to get the derived variables for the default derived variable
+  # For example, [DerivedVar::[var_one]]
+  default_derived_var_regex <- paste(
+    "\\[", single_derived_var_regex, "\\]",
+    sep = ""
+  )
 
   feeder_var_string <- NA
-  if(grepl(feeder_var_regex, derived_start_variable)) {
+  if(grepl(database_derived_var_regex, derived_start_variable)) {
     feeder_var_string <- regmatches(
       derived_start_variable,
-      regexec(feeder_var_regex, derived_start_variable)
+      regexec(database_derived_var_regex, derived_start_variable)
+    )[[1]][2]
+  }
+  else if(grepl(default_derived_var_regex, derived_start_variable)) {
+    feeder_var_string <- regmatches(
+      derived_start_variable,
+      regexec(default_derived_var_regex, derived_start_variable)
+    )[[1]][2]
+  }
+  else if(grepl(single_derived_var_regex, derived_start_variable)) {
+    feeder_var_string <- regmatches(
+      derived_start_variable,
+      regexec(single_derived_var_regex, derived_start_variable)
     )[[1]][2]
   }
   if(is.na(feeder_var_string)) {
