@@ -1,57 +1,117 @@
 context("recode_with_table")
 
-test_that("Non-derived variables can be created from derived variables", {
-  data <- data.frame(
-    start_variable_one = c(1)
-  )
-  variables <- data.frame(
-    variable = c("non_derived_variable_one", "derived_variable", "non_derived_variable_two"),
-    label = c("", "", ""),
-    labelLong = c("", "", ""),
-    units = c("N/A", "N/A", "N/A"),
-    variableType = c("Continuous", "Continuous", "Continuous"),
-    databaseStart = c("database_one", "database_one", "database_one"),
-    variableStart = c("[start_variable_one]", "DerivedVar::[non_derived_variable_one]", "derived_variable")
-  )
-  database_name <- "database_one"
-  variable_details <- data.frame(
-    variable = c("non_derived_variable_one", "derived_variable", "non_derived_variable_two"),
-    typeEnd = c("cont", "cont", "cont"),
-    databaseStart = c("database_one", "database_one", "database_one"),
-    variableStart = c("[start_variable_one]", "DerivedVar::[non_derived_variable_one]", "DerivedVar::[derived_variable]"),
-    typeStart = c("cont", "cont", "cont"),
-    recEnd = c("copy", "Func::derived_variable", "copy"),
-    numValidCategories = c(1,"N/A",1),
-    recStart = c("else", "N/A", "else"),
-    catLabel = c("", "", ""),
-    catLabelLong = c("", "", "")
-  )
-  # Custom function for the derived variable
-  derived_variable <- function(non_derived_variable_one) {
-    return(non_derived_variable_one)
-  }
-  .GlobalEnv[["derived_variable"]] <- derived_variable
+describe("Non-function variables", {
+  describe("Start variable is a derived variable", {
+    it("Should correctly recode", {
+      data <- data.frame(
+        start_variable_one = c(1)
+      )
+      variables <- data.frame(
+        variable = c("non_derived_variable_one", "derived_variable", "non_derived_variable_two"),
+        label = c("", "", ""),
+        labelLong = c("", "", ""),
+        units = c("N/A", "N/A", "N/A"),
+        variableType = c("Continuous", "Continuous", "Continuous"),
+        databaseStart = c("database_one", "database_one", "database_one"),
+        variableStart = c("[start_variable_one]", "DerivedVar::[non_derived_variable_one]", "derived_variable")
+      )
+      database_name <- "database_one"
+      variable_details <- data.frame(
+        variable = c("non_derived_variable_one", "derived_variable", "non_derived_variable_two"),
+        typeEnd = c("cont", "cont", "cont"),
+        databaseStart = c("database_one", "database_one", "database_one"),
+        variableStart = c("[start_variable_one]", "DerivedVar::[non_derived_variable_one]", "DerivedVar::[derived_variable]"),
+        typeStart = c("cont", "cont", "cont"),
+        recEnd = c("copy", "Func::derived_variable", "copy"),
+        numValidCategories = c(1,"N/A",1),
+        recStart = c("else", "N/A", "else"),
+        catLabel = c("", "", ""),
+        catLabelLong = c("", "", "")
+      )
+      # Custom function for the derived variable
+      derived_variable <- function(non_derived_variable_one) {
+        return(non_derived_variable_one)
+      }
+      .GlobalEnv[["derived_variable"]] <- derived_variable
 
-  actual_output <- recodeflow::rec_with_table(
-    data = data,
-    variables = variables,
-    variable_details = variable_details,
-    database_name = database_name
-  )
+      actual_output <- recodeflow::rec_with_table(
+        data = data,
+        variables = variables,
+        variable_details = variable_details,
+        database_name = database_name
+      )
 
-  expected_output <- data.frame(
-    non_derived_variable_one = c(1),
-    derived_variable = c(1),
-    non_derived_variable_two = c(1)
-  )
-  attr(expected_output$non_derived_variable_one, "unit") <- "N/A"
-  attr(expected_output$non_derived_variable_one, "label_long") <- ""
-  attr(expected_output$non_derived_variable_two, "unit") <- "N/A"
-  attr(expected_output$non_derived_variable_two, "label_long") <- ""
+      expected_output <- data.frame(
+        non_derived_variable_one = c(1),
+        derived_variable = c(1),
+        non_derived_variable_two = c(1)
+      )
+      attr(expected_output$non_derived_variable_one, "unit") <- "N/A"
+      attr(expected_output$non_derived_variable_one, "label_long") <- ""
+      attr(expected_output$non_derived_variable_two, "unit") <- "N/A"
+      attr(expected_output$non_derived_variable_two, "label_long") <- ""
 
-  expect_equal(actual_output, expected_output)
+      expect_equal(actual_output, expected_output)
 
-  on.exit(rm("derived_variable", envir = .GlobalEnv))
+      on.exit(rm("derived_variable", envir = .GlobalEnv))
+    })
+
+    it("Should correctly recode when the derived variable is categorical", {
+      variables <- data.frame(
+        variable = c("variable_one", "derived_variable_one", "variable_two"),
+        label = c("", "", ""),
+        labelLong = c("", "", ""),
+        units = c("N/A", "N/A", "N/A"),
+        variableType = c("Continuous", "Categorical", "Continuous"),
+        databaseStart = c("database_one", "database_one", "database_one"),
+        variableStart = c("[start_variable_one]", "DerivedVar::[variable_one]", "DerivedVar::[derived_variable_one]")
+      )
+      database_name <- "database_one"
+      variable_details <- data.frame(
+        variable = c("variable_one", "derived_variable_one", "variable_two", "variable_two"),
+        typeEnd = c("cont", "cat", "cont", "cont"),
+        databaseStart = c("database_one", "database_one", "database_one", "database_one"),
+        variableStart = c("[start_variable_one]", "DerivedVar::[variable_one]", "DerivedVar::[derived_variable_one]", "DerivedVar::[derived_variable_one]"),
+        typeStart = c("cont", "cont", "cat", "cat"),
+        recEnd = c("copy", "Func::derived_variable", "2", "copy"),
+        numValidCategories = c("N/A", 1, "N/A", "N/A"),
+        recStart = c("else", "N/A", "1", "else"),
+        catLabel = c("", "", "", ""),
+        catLabelLong = c("", "", "", "")
+      )
+      # Custom function for the derived variable
+      derived_variable <- function(non_derived_variable_one) {
+        return(1)
+      }
+      .GlobalEnv[["derived_variable"]] <- derived_variable
+      data <- data.frame(
+        start_variable_one = c(1)
+      )
+
+      expected_output <- data.frame(
+        variable_one = c(1),
+        derived_variable_one = c(1),
+        variable_two = c(2)
+      )
+      expected_output$derived_variable_one <- as.factor(expected_output$derived_variable_one)
+      attr(expected_output$variable_one, "unit") <- "N/A"
+      attr(expected_output$variable_one, "label_long") <- ""
+      attr(expected_output$variable_two, "unit") <- "N/A"
+      attr(expected_output$variable_two, "label_long") <- ""
+
+      actual_output <- recodeflow::rec_with_table(
+        data = data,
+        variables = variables,
+        variable_details = variable_details,
+        database_name = database_name,
+        tables = list()
+      )
+
+      expect_equal(actual_output, expected_output)
+
+      on.exit(rm("derived_variable", envir = .GlobalEnv))
+    })
+  })
 })
 
 test_that("Tables work with custom functions", {

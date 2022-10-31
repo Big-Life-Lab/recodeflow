@@ -767,8 +767,10 @@ recode_non_derived_variables <- function(
     else_value <-
       format_recoded_value(else_value, label_list[[variable_to_recode]]$type)
     if (is_equal(else_value, "copy")) {
+      # Convert to numeric in case the variable start is categorical
+      # to avoid any factor issues
       recoded_data[variable_to_recode] <-
-        data[data_variable_being_checked]
+        as.numeric(data[data_variable_being_checked])
     } else {
       recoded_data[variable_to_recode] <- else_value
     }
@@ -965,20 +967,20 @@ compare_value_based_on_interval <-
     } else {
       if (interval == "[,]") {
         valid_row_index <-
-          data[[compare_columns]] %in% data[[compare_columns]][which(as.numeric(left_boundary) <= data[[compare_columns]] &
-                                                                       data[[compare_columns]] <= as.numeric(right_boundary))]
+          data[[compare_columns]] %in% data[[compare_columns]][which(as.numeric(left_boundary) <= as.numeric(data[[compare_columns]]) &
+                                                                       as.numeric(data[[compare_columns]]) <= as.numeric(right_boundary))]
       } else if (interval == "[,)") {
         valid_row_index <-
-          data[[compare_columns]] %in% data[[compare_columns]][which(as.numeric(left_boundary) <= data[[compare_columns]] &
-                                                                       data[[compare_columns]] < as.numeric(right_boundary))]
+          data[[compare_columns]] %in% data[[compare_columns]][which(as.numeric(left_boundary) <= as.numeric(data[[compare_columns]]) &
+                                                                       as.numeric(data[[compare_columns]]) < as.numeric(right_boundary))]
       } else if (interval == "(,]") {
         valid_row_index <-
-          data[[compare_columns]] %in% data[[compare_columns]][which(as.numeric(left_boundary) < data[[compare_columns]] &
-                                                                       data[[compare_columns]] <= as.numeric(right_boundary))]
+          data[[compare_columns]] %in% data[[compare_columns]][which(as.numeric(left_boundary) < as.numeric(data[[compare_columns]]) &
+                                                                       as.numeric(data[[compare_columns]]) <= as.numeric(right_boundary))]
       } else if (interval == "(,)") {
         valid_row_index <-
-          data[[compare_columns]] %in% data[[compare_columns]][which(as.numeric(left_boundary) < data[[compare_columns]] &
-                                                                       data[[compare_columns]] < as.numeric(right_boundary))]
+          data[[compare_columns]] %in% data[[compare_columns]][which(as.numeric(left_boundary) < as.numeric(data[[compare_columns]]) &
+                                                                       as.numeric(data[[compare_columns]]) < as.numeric(right_boundary))]
       } else {
         stop("Invalid Argument was passed")
       }
