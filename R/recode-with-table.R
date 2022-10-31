@@ -555,12 +555,16 @@ recode_columns <-
       variables_details_rows_to_process[grepl(pkg.env$recode.key.func, variables_details_rows_to_process[[pkg.env$columns.recTo]]),]
 
     non_derived_keys <- c(pkg.env$recode.key.func,pkg.env$recode.key.map,pkg.env$recode.key.id.from)
-    # These are all the variables which do not need a function to be coded
-    rec_variables_to_process <-
-      variables_details_rows_to_process[(!grepl(
-        paste(non_derived_keys,collapse="|"),
-        variables_details_rows_to_process[[pkg.env$columns.recTo]]
-      )),]
+    # These are all the variables which do not need a function to be recoded
+    rec_variables_to_process <- variables_details_rows_to_process
+    for(variable in unique(variables_details_rows_to_process$variable)) {
+      if(sum(grepl(
+        paste(non_derived_keys, collapse = "|"),
+        rec_variables_to_process[rec_variables_to_process$variable == variable, "recEnd"]
+      )) != 0) {
+        rec_variables_to_process <- rec_variables_to_process[rec_variables_to_process$variable != variable, ]
+      }
+    }
     # Get the indices of the non-function variables which need a DerivedVar to be coded
     derived_start_rec_variables_to_process_indicies <- grepl(pkg.env$recode.key.derived.var, rec_variables_to_process$variableStart)
     # The variables which do not need a derived variable to be coded
@@ -769,13 +773,14 @@ recode_non_derived_variables <- function(
     if (is_equal(else_value, "copy")) {
       # Convert to numeric in case the variable start is categorical
       # to avoid any factor issues
-      recoded_data[variable_to_recode] <-
-        as.numeric(data[data_variable_being_checked])
+      recoded_data[[variable_to_recode]] <-
+        as.numeric(data[[data_variable_being_checked]])
     } else {
       recoded_data[variable_to_recode] <- else_value
     }
     # Catch multiple else rows
-  } else if (length(else_value) > 1) {
+  }
+  else if (length(else_value) > 1) {
     stop(
       paste(
         variable_to_recode,
@@ -1195,26 +1200,32 @@ recode_derived_variables <-
       function_being_used <-
         as.list(strsplit(func_cell, "::"))[[1]][[2]]
 
-      custom_function_args <- list()
-      for(feeder_var in used_feeder_vars) {
-        if(is_table_feeder_var(feeder_var)) {
-          table_name <- get_table_name(feeder_vars)
-          custom_function_args[[table_name]] <- tables[[table_name]]
-        } else {
-          if(feeder_var %in% names(recoded_data)) {
-            custom_function_args[[feeder_var]] <- recoded_data[[feeder_var]]
-          }
-          else {
-            custom_function_args[[feeder_var]] <- data[[feeder_var]]
+      recoded_variable <- c()
+      for(recoded_data_row_index in seq_len(nrow(recoded_data))) {
+        custom_function_args <- list()
+        for(feeder_var in used_feeder_vars) {
+          if(is_table_feeder_var(feeder_var)) {
+            table_name <- get_table_name(feeder_vars)
+            custom_function_args[[table_name]] <- tables[[table_name]]
+          } else {
+            if(feeder_var %in% names(recoded_data)) {
+              custom_function_args[[feeder_var]] <- recoded_data[recoded_data_row_index, feeder_var]
+            }
+            else {
+              custom_function_args[[feeder_var]] <- data[recoded_data_row_index, feeder_var]
+            }
           }
         }
+        recoded_variable <- c(
+          recoded_variable,
+          calculate_custom_function_row_value(
+            custom_function_args,
+            used_feeder_vars,
+            function_being_used
+          )
+        )
       }
-
-      recoded_data[[variable_being_processed]] <- calculate_custom_function_row_value(
-        custom_function_args,
-        used_feeder_vars,
-        function_being_used
-      )
+      recoded_data[[variable_being_processed]] <- recoded_variable
 
       # Set type of var
       if (as.character(row_being_checked[[pkg.env$columns.ToType]]) !=
@@ -1298,8 +1309,7 @@ calculate_custom_function_row_value <-
            variable_names,
            custom_function_name) {
     row_values <- unname(row_values)
-    custom_function_return_value <-
-      do.call(get(custom_function_name), row_values)
+    custom_function_return_value <- do.call(get(custom_function_name), row_values)
 
     return(custom_function_return_value)
   }

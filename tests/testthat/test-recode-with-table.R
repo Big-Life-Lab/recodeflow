@@ -457,4 +457,61 @@ describe("Testing derived variables", {
     on.exit(rm("func_1", envir = .GlobalEnv))
     on.exit(rm("func_2", envir = .GlobalEnv))
   })
+
+  it("Should pass in the function arguments one at a time", {
+    variables <- data.frame(
+      variable = c("variable_one", "derived_variable"),
+      label = c("", ""),
+      labelLong = c("", ""),
+      units = c("N/A", "N/A"),
+      variableType = c("Continuous", "Continuous"),
+      databaseStart = c("database_one", "database_one"),
+      variableStart = c("[start_variable_one]", "DerivedVar::[variable_one]")
+    )
+    variable_details <- data.frame(
+      variable = c("variable_one", "derived_variable"),
+      typeEnd = c("cont", "cont"),
+      databaseStart = c("database_one", "database_one"),
+      variableStart = c("[start_variable_one]", "DerivedVar::[variable_one]"),
+      typeStart = c("cont", "cont"),
+      recEnd = c("copy", "Func::func_1"),
+      numValidCategories = c("N/A", "N/A"),
+      recStart = c("else", "N/A"),
+      catLabel = c("", ""),
+      catLabelLong = c("", "")
+    )
+    data <- data.frame(
+      start_variable_one = c(1, 2)
+    )
+    database_name <- "database_one"
+    tables <- list()
+    # Custom function for the derived variable
+    func_1 <- function(variable_one) {
+      if(length(variable_one) > 1) {
+        return(2)
+      }
+      return(1)
+    }
+    .GlobalEnv[["func_1"]] <- func_1
+
+    expected_output <- data.frame(
+      start_variable_one = c(1, 2),
+      variable_one = c(1, 2),
+      derived_variable = c(1, 1)
+    )
+    attr(expected_output$variable_one, "unit") <- character(0)
+    attr(expected_output$variable_one, "label_long") <- NA_character_
+
+    actual_output <- recodeflow::rec_with_table(
+      data = data,
+      variables = c("variable_one", "derived_variable"),
+      variable_details = variable_details,
+      database_name = database_name,
+      tables = tables,
+      append_to_data = TRUE
+    )
+    expect_equal(actual_output, expected_output)
+
+    on.exit(rm("func_1", envir = .GlobalEnv))
+  })
 })
