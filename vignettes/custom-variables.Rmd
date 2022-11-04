@@ -9,7 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-The role of a custom variable is to avoid the duplication of work that can happen when recoding two variables with the same specification but that represent different information. For example, imagine a database with two columns called `PL` and `SL` that encodes the primary and secondary language that an individual speaks. Both columns are categorical with the same set of categories, **English**, **French**, **Mandarin**, **Hindi** and **N/A**. The last category represents a missing value. An example dataset is shown below,
+The role of a custom variable is to avoid the duplication of work that can happen when recoding two variables with the same specification but that represent different information. For example, imagine a database with two columns called `PL` and `SL` that encodes the primary and secondary language that an individual speaks. Both columns are categorical with the same set of categories, **English**, **French**, **Mandarin**, **Hindi** and **N/A**. The last category represents a "not applicable" value, for example if an individual does not speak a second language. An example dataset is shown below,
 
 ```{r}
 example_dataset <- read.csv(file.path("../assets/vignettes/custom-variables/example-dataset.csv"), fileEncoding = "UTF-8-BOM")
@@ -30,7 +30,7 @@ The recoding will create two new categorical variables, `primary_lang` and `seco
 ```{r}
 recodeing_rules <- data.frame(
   language = c("English", "French", "Mandarin", "Hindi", "N/A"),
-  recoded_value = c(1,2,3,4,999)
+  recoded_value = c(1,2,3,4,"NA(a)")
 )
 
 DT::datatable(recodeing_rules)
@@ -44,7 +44,7 @@ variable_details <- read.csv(file.path("../assets/vignettes/custom-variables/no-
 DT::datatable(variable_details)
 ```
 
-Both variables have 6 rows that encode the recoding rules, four for each language category, one for the `N/A` category, and a final else rule as a catch all for any missed categories. Notice how the specification for both variables are exactly the same, all the categories and recoding rules are identical, the only differences are the variables on which the rules are applied. This makes sense, both variables have the same specification (the same categories) but represent difference concepts (different variable names and labels). Without using a **custom variable** to represent these rules may be a non-issue for just two variables and five categories but imagine this situation scaled to 8 variables and 132 categories! A real use case that prompted this feature, it would be tiring to create the specifications as well as maintain them.
+Both variables have the same specification (the same categories) but represent different concepts (different variable names and labels). With a few variables and categories, it's easy enough to repeat the rules in the respective sheet (variable_details). But imagine this situation scaled to 8 variables and 132 categories - a real use case that prompted this feature! With so many variables and categories, it would be tiring to create the specifications as well as maintain them. A **custom variable** can save you the headache!
 
 The `customVariable` column allows you to specify a "virtual variable", a variable that does not exist in the database, but whose specification can be used by other variables in the database. For example, we can rewrite the above variables details sheet using a custom variables called `language`.
 
@@ -71,6 +71,7 @@ When creating a custom variable,
 1. The `variable` column should the name of the custom variable
 2. The `customVariable` column should be Yes
 3. The `variableStart` and `variableStartLabel` column should be `N/A`. Variables that extend the custom variable will set them.
+4. All the other columns should be completed as normal
 
 When extending a custom variable,
 

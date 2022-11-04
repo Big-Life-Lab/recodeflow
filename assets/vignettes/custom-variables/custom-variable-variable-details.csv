@@ -1,9 +1,9 @@
-﻿variable,customVariable,typeEnd,typeStart,databaseStart,variableStart,variableStartLabel,numValidCat,recEnd,catLabel,catLabelLong,units,recStart,catStartLabel,notes
+variable,customVariable,typeEnd,typeStart,databaseStart,variableStart,variableStartLabel,numValidCat,recEnd,catLabel,catLabelLong,units,recStart,catStartLabel,notes
 language,Yes,cat,cat,database_one,N/A,N/A,5,1,English,English,N/A,English,English,
 language,Yes,cat,cat,database_one,N/A,N/A,5,2,French,English,N/A,French,French,
 language,Yes,cat,cat,database_one,N/A,N/A,5,3,Mandarin,English,N/A,Mandarin,Mandarin,
 language,Yes,cat,cat,database_one,N/A,N/A,5,4,Hindi,English,N/A,Hindi,Hindi,
-language,Yes,cat,cat,database_one,N/A,N/A,5,999,unknown,English,N/A,N/A,unknown,
-language,Yes,cat,cat,database_one,N/A,N/A,5,NA::a,missing,English,N/A,else,N/A,
+language,Yes,cat,cat,database_one,N/A,N/A,5,NA::a,unknown,English,N/A,N/A,unknown,
+language,Yes,cat,cat,database_one,N/A,N/A,5,NA::b,missing,English,N/A,else,N/A,
 primary_language,language,cat,cat,database_one,[PL],Primary Language,N/A,N/A,N/A,N/A,N/A,N/A,N/A,
 secondary_language,language,cat,cat,database_one,[SL],Secondary Language,N/A,N/A,N/A,N/A,N/A,N/A,N/A,
