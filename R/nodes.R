@@ -518,7 +518,7 @@ attach_apply_nodes <-
     # If the variable details row is NA then there was no else row for this
     # variable. All other values for this variable should be recoded to an
     # NA::b, add a constant node for this.
-    else if(is.na(var_details_row)) {
+    else if(is.na(var_details_row[1, "variable"]) | nrow(var_details_row) == 0) {
       return(XML::append.xmlNode(
         parent_node,
         construct_constant_node(
