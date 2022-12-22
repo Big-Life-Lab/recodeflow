@@ -279,7 +279,7 @@ rec_with_table <-
     # is a pre custom variable sheet. Don't run the code.
     if(variable_details_columns$custom_variable$name %in% colnames(variable_details)) {
       no_custom_variables_variable_details <- variable_details[
-        variable_details_columns$custom_variable$name == variable_details_columns$custom_variable$values$no,
+        variable_details[[variable_details_columns$custom_variable$name]] == variable_details_columns$custom_variable$values$no,
       ]
       custom_variable_names <- unique(variable_details[
         variable_details[[variable_details_columns$custom_variable$name]] == variable_details_columns$custom_variable$values$yes,

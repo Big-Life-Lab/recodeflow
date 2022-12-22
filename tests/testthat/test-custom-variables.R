@@ -92,7 +92,7 @@ test_that("Should correct recode multiple non-derived custom variables", {
   expect_equal(actual_data, expected_data)
 })
 
-test_that("Should correctly recode derivec custom variables", {
+test_that("Should correctly recode derived custom variables", {
   variables <- data.frame(
     variable = c("variable_one"),
     label = c(""),
@@ -136,5 +136,52 @@ test_that("Should correctly recode derivec custom variables", {
   )
 
   attributes(expected_data$variable_one) <- attributes(actual_data$variable_one)
+  expect_equal(actual_data, expected_data)
+})
+
+test_that("Should work with non-custom variables", {
+  variables <- data.frame(
+    variable = c("variable_one", "variable_two"),
+    label = c("", ""),
+    labelLong = c("", ""),
+    units = c("N/A", "N/A"),
+    variableType = c("Categorical", "Continuous"),
+    databaseStart = c("database_one", "database_one"),
+    variableStart = c("[start_variable_one]", "[start_variable_two]")
+  )
+  variable_details <- data.frame(
+    variable = c("custom_variable_one", "custom_variable_one", "variable_one", "variable_two"),
+    customVariable = c("Yes", "Yes", "custom_variable_one", "No"),
+    typeEnd = c("cat", "cat", "cat", "cont"),
+    databaseStart = c("database_one", "database_one", "database_one", "database_one"),
+    variableStart = c("N/A", "N/A", "[start_variable_one]", "[start_variable_two]"),
+    typeStart = c("cat", "cat", "cat", "cont"),
+    recEnd = c("1", "2", "N/A", "copy"),
+    numValidCat = c("2", "2", "N/A", "N/A"),
+    recStart = c("1", "else", "N/A", "else"),
+    catLabel = c("", "", "", ""),
+    catLabelLong = c("", "", "", "")
+  )
+  database_name <- "database_one"
+  data <- data.frame(
+    start_variable_one = c(1,3),
+    start_variable_two = c(1,2)
+  )
+
+  expected_data <- data.frame(
+    variable_one = c(1,2),
+    variable_two = c(1,2)
+  )
+  expected_data$variable_one <- as.factor(expected_data$variable_one)
+
+  actual_data <- recodeflow:::rec_with_table(
+    data = data,
+    variables = variables,
+    variable_details = variable_details,
+    database_name = database_name
+  )
+  attributes(expected_data$variable_one) <- attributes(actual_data$variable_one)
+  attributes(expected_data$variable_two) <- attributes(actual_data$variable_two)
+
   expect_equal(actual_data, expected_data)
 })
