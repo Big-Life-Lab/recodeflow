@@ -515,10 +515,11 @@ attach_apply_nodes <-
         apply_node
       ))
     }
-    # If the variable details row is NA then there was no else row for this
+    # If the variable details row has all NA rows then there was no else row for this
     # variable. All other values for this variable should be recoded to an
     # NA::b, add a constant node for this.
-    else if(is.na(var_details_row)) {
+    else if(sum(is.na(var_details_row)) ==
+            nrow(var_details_row) * ncol(var_details_row)) {
       return(XML::append.xmlNode(
         parent_node,
         construct_constant_node(
