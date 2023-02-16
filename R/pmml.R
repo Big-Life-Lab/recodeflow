@@ -315,8 +315,19 @@ get_all_start_vars <-
     }
 
     if(is_derived_var(variable_details_rows)) {
-      current_derived_from_vars <-
-          get_start_vars_for_derived_var(var_name, variable_details_sheet)
+      current_derived_from_vars <- get_derived_from_vars(var_name, variable_details_sheet)
+      current_derived_from_vars <- current_derived_from_vars[sapply(
+        current_derived_from_vars,
+        function(derived_var) {
+          return(derived_var$type == derived_from_var_type$variable)
+        }
+      )]
+      current_derived_from_vars <- sapply(
+        current_derived_from_vars,
+        function(derived_var) {
+          return(derived_var$name)
+        }
+      )
 
       all_start_vars <- c(
         all_start_vars,
@@ -364,37 +375,4 @@ get_all_start_vars <-
 
     # 3. Return the vector of derived from variables removing all duplicates
     return(unique(all_start_vars))
-  }
-
-#' Returns the immediate derived from variables for a derived variable
-#'
-#' @param derived_var string The name of the derived variable
-#' @param variable_details_sheet data.frame A data frame containing a
-#' variable details sheet
-#'
-#' @return vector of strings Contains the derived from variables
-#' @export
-#'
-#' @examples
-get_start_vars_for_derived_var <-
-  function(derived_var, variable_details_sheet) {
-    # 1. Get the string of derived from variables from the variableStart column
-    # For example, if the column value is DerivedVar::[ADL_01, ADL_02], this
-    # will extract "ADL_01, ADL_02"
-
-    # Get all the variable details rows for this derived variable
-    derived_var_variable_details_rows <-
-      variable_details_sheet[get_var_details_row_indices(variable_details_sheet, derived_var), ]
-    # Get the value of the variableStart column with the DerivedVar string
-    derived_from_vars_str <-
-      derived_var_variable_details_rows[1, pkg.env$columns.VariableStart]
-    # Extract the string we want
-    derived_from_string <- regmatches(derived_from_vars_str,
-                                      regexec(derived_var_regex, derived_from_vars_str))[[1]][2]
-
-    # 2. Split the string into its variable names and trim each one before
-    # returning it
-
-    # Each variable name is seperated by a comma
-    return(trimws(strsplit(derived_from_string, ",")[[1]]))
   }

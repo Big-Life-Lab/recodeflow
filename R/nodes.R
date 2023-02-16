@@ -456,14 +456,16 @@ attach_apply_nodes <-
 
       # Get the list of variables this derived variable is derived and convert each
       # of them to their PMML node
-      derived_from_vars <- get_start_vars_for_derived_var(all_var_details_rows[1, pkg.env$columns.Variable], all_var_details_rows)
+      derived_from_vars <- get_derived_from_vars(
+        all_var_details_rows[1, pkg.env$columns.Variable], all_var_details_rows
+      )
       derived_from_nodes <- list()
       # Go through each derived from variable and create a field ref node for
       # each one
       for(derived_from_var in derived_from_vars) {
         # If this variable is referencing a table
-        if(is_table_feeder_var(derived_from_var)) {
-          table_name <- get_table_name(derived_from_var)
+        if(derived_from_var$type == derived_from_var_type$table) {
+          table_name <- derived_from_var$name
           if(!table_name %in% table_names) {
             stop(paste("No table found with name", table_name, "for derived variable", all_var_details_rows$variable))
           }
@@ -479,17 +481,17 @@ attach_apply_nodes <-
           derived_from_nodes[[length(derived_from_nodes) + 1]] <- table_locator_node
         }
         # if the derived field is a hardcoded string
-        else if(grepl('".{1,}"', derived_from_var))
+        else if(derived_from_var$type == derived_from_var_type$constant)
         {
           constant_node <- construct_constant_node(
-            gsub('"', "", derived_from_var),
+            derived_from_var$name,
             pkg.env$node_attr.dataType.string
           )
           derived_from_nodes[[length(derived_from_nodes) + 1]] <- constant_node
         }
         else {
           field_ref_attrs <- c()
-          field_ref_attrs[[pkg.env$node_attr.FieldRef.field]] <- derived_from_var
+          field_ref_attrs[[pkg.env$node_attr.FieldRef.field]] <- derived_from_var$name
           derived_from_nodes[[length(derived_from_nodes) + 1]] <- XML::xmlNode(
             pkg.env$node_name.field_ref,
             attrs = field_ref_attrs
