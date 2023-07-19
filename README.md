@@ -2,12 +2,17 @@
 
 <!-- badges: start -->
 
-[![Lifecycle: development](https://img.shields.io/badge/lifecycle-experimental-blue.svg)](https://www.tidyverse.org/lifecycle/#experimental) <!--
-[![](https://img.shields.io/cran/v/cchsflow?color=green)](https://CRAN.R-project.org/package=TBA)
+[![Lifecycle:
+development](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable-1)
+[![](https://img.shields.io/cran/v/recodeflow?color=green)](https://CRAN.R-project.org/package=recodeflow)
 ![](https://img.shields.io/github/v/release/big-life-lab/recodeflow?color=green&label=GitHub)
---> [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
+[![](https://cranlogs.r-pkg.org/badges/recodeflow)](https://cran.r-project.org/package=recodeflow)
 <!-- badges: end -->
+
+<!-- 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+-->
+
 
 # Introduction
 
