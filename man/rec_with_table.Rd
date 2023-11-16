@@ -4,12 +4,23 @@
 \alias{rec_with_table}
 \title{Recode with Table}
 \usage{
-rec_with_table(data, variables = NULL, database_name = NULL,
-  variable_details = NULL, else_value = NA, append_to_data = FALSE,
-  log = FALSE, notes = TRUE, var_labels = NULL,
-  custom_function_path = NULL, attach_data_name = FALSE,
-  id_role_name = NULL, name_of_environment_to_load = NULL,
-  append_non_db_columns = FALSE)
+rec_with_table(
+  data,
+  variables = NULL,
+  database_name = NULL,
+  variable_details = NULL,
+  else_value = NA,
+  append_to_data = FALSE,
+  log = FALSE,
+  notes = TRUE,
+  var_labels = NULL,
+  custom_function_path = NULL,
+  attach_data_name = FALSE,
+  id_role_name = NULL,
+  name_of_environment_to_load = NULL,
+  append_non_db_columns = FALSE,
+  tables = list()
+)
 }
 \arguments{
 \item{data}{A dataframe containing the variables to be recoded.
@@ -54,6 +65,8 @@ and its functions loaded into the R environment.}
 \item{name_of_environment_to_load}{Name of package to load variables and variable_details from}
 
 \item{append_non_db_columns}{boolean determening if data not present in this cycle should be appended as NA}
+
+\item{tables}{named list of data.frame A list of reference tables that can be passed as parameters into the function for a derived variable}
 }
 \value{
 a dataframe that is recoded according to rules in variable_details.

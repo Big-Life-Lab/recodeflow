@@ -4,8 +4,12 @@
 \alias{get_data_variable_name}
 \title{Get Data Variable Name}
 \usage{
-get_data_variable_name(data_name, data, row_being_checked,
-  variable_being_checked)
+get_data_variable_name(
+  data_name,
+  data,
+  row_being_checked,
+  variable_being_checked
+)
 }
 \arguments{
 \item{data_name}{name of the database being checked}
