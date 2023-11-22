@@ -7,11 +7,10 @@ Authors@R: c(
     person(given = "Luke",family = "Bailey", email = "lbailey@toh.ca", role = c("aut")),
     person(given = "Rostyslav", family = "Vyuha", role = c("aut","cre"), email = "rvyuha@toh.ca"))
 Maintainer: Rostyslav Vyuha <rvyuha@toh.ca>
-Description: Creates PMML documents using variable and variable details sheets.
+Description: Recode and harmonize data using variable and details sheets.
 Depends:
     R (>= 3.1.0)
 Imports:
-    XML (>= 3.98-1.11),
     sjlabelled,
     stringr,
     tidyr,
