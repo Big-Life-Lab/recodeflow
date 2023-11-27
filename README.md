@@ -68,8 +68,6 @@ Currently `recodeflow` is used in packages that harmonize health surveys and hea
 
 # Requirements
 
-* If you plan on using the `recode_to_pmml` function's `custom_function_files` argument, you need access to the `local-transformations-generator` repo
-
 # Roadmap
 
 Projects on the roadmap are at the Github repository recodeflow under the [projects tab](https://github.com/Big-Life-Lab/recodeflow/projects).
