@@ -1313,3 +1313,16 @@ calculate_custom_function_row_value <-
 
     return(custom_function_return_value)
   }
+
+#' Whether a variable in a variables details sheet is a derived variable
+#'
+#' @param variable_details_row A data frame with a single row which will be
+#' checked
+#' @return A boolean
+is_derived_var <- function(variable_details_row) {
+  derived_var_regex <- "DerivedVar::\\[(.+?)\\]|DerivedVar::\\[\\]"
+  return(length(grep(
+    derived_var_regex, variable_details_row[1, pkg.env$columns.VariableStart]
+  )) > 0)
+}
+

@@ -140,6 +140,7 @@ The \href{https://github.com/Big-Life-Lab/recodeflow/blob/master/inst/extdata/PB
 }
 }
 \examples{
+\dontrun{
 var_details <-
   data.frame(
     "variable" = c("time", rep("status", times = 3), rep("trt", times = 2), "age", rep("sex", times = 2), rep("ascites", times = 2), rep("hepato", times = 2), rep("spiders", times = 2), rep("edema", times = 3), "bili", "chol", "albumin", "copper", "alk.phos", "ast", "trig", "platelet", "protime", rep("stage", times = 4)),
@@ -185,5 +186,6 @@ rec_sample2 <- rec_with_table(data = tester2,
 variables = var_sheet,
 variable_details = var_details,
 database_name = db_name2)
+}
 
 }

@@ -77,8 +77,6 @@ variables <-
                         "[example_der]", "tester1::agegrp", "[agegrp]", "[agegrp]")
   )
 
-
-library(survival)
 test1 <- survival::pbc[1:209,]
 test2 <- survival::pbc[210:418,]
 
