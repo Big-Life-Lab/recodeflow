@@ -624,6 +624,7 @@ recode_columns <-
           tables = tables,
           database_name = data_name
         )
+
       label_list <- derived_return$label_list
       recoded_data <- derived_return$recoded_data
       func_variables_to_process <-
@@ -1192,7 +1193,9 @@ recode_derived_variables <-
       }
 
       # Obtain the function for each row
-      append(label_list, create_label_list_element(variable_rows))
+      #append(label_list, create_label_list_element(variable_rows))
+      label_list[[var_stack]] <-
+        create_label_list_element(variable_rows)
 
       row_being_checked <- variable_rows[row_num,]
       func_cell <-
