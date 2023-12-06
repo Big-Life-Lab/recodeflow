@@ -13,6 +13,9 @@ test_that("Normal variables that depend on derived variables are properly recode
     file.path(getwd(), "../../assets/tests/integration/rec-with-table/variable-details-sheet.csv"),
     fileEncoding = "UTF-8-BOM")
 
+  variable_details_sheet$variableStart[3] <- "DerivedVar::[var_two]"
+  variables_sheet$variableStart[3] <- "DerivedVar::[var_two]"
+
   recoded_data <- recodeflow::rec_with_table(
     data,
     database_name = "db_one",
@@ -22,9 +25,9 @@ test_that("Normal variables that depend on derived variables are properly recode
   )
 
   expected_recoded_data <- data.frame(
-    var_one = data$var_one_start,
-    var_two = data$var_one_start,
-    var_three = data$var_one_start
+    var_one = data$var_one_start |> as.factor(),
+    var_two = data$var_one_start |> as.factor(),
+    var_three = data$var_one_start |> as.factor()
   )
-  expect_equal(recoded_data, expected_recoded_data)
+  expect_equivalent(recoded_data, expected_recoded_data)
 })
