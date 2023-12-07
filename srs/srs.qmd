@@ -1,0 +1,453 @@
+---
+title: "recodeflow Software Requirements Specification"
+format: gfm
+execute: 
+  echo: false
+editor: visual
+---
+
+```{r load-packages}
+#| include: false
+
+library(tidyverse)
+library(haven)
+library(cchsflow)
+```
+
+## Goals
+
+-   Solve problems that exist in the re-coding space through enabling users to re-code multiple columns at once and harmonize data across multiple data sets
+
+## Who is this product for?
+
+-   People who code in R and want to harmonize health survey results and health care administrative data
+
+    -   Analysts, with various levels of programming expertise, with the Doug Manuel or Peter Tanuseputro Lab
+
+-   Could be extended to any user who is interested in working in a reproducible manner since the software is technically data set-agnostic
+
+## rec_with_table
+
+-   Re-code data by directly calling this main function (described in detail below)
+
+-   Can be used with any variables/details sheet, including those contained in "flow" packages
+
+### Arguments
+
+*The function should take the following arguments:*
+
+Required:
+
+-   `data`: Data to be re-coded (data frame or list of data frames)
+
+-   `variables`: Name(s) of variable(s) to which to re-code (character vector or data frame, if supplying a variables sheet)
+
+-   `variable_details`: Content of the details sheet containing the re-coding instructions (data frame)
+
+Optional:
+
+-   `database_name`: Name(s) of the database(s) to re-code (character)
+-   `else_value`: Value used to replace "else" (character, integer, complex, logical)
+-   `append_to_data`: Flag to indicate whether to append the re-coded data to the original data (logical)
+-   `log`: Flag to indicate whether to print log messages (logical)
+-   `notes`: Flag to indicate whether to print the contents of the `notes` column of the details sheet
+-   `var_labels`: Value used to populate `label` column of the details sheet (named vector)
+-   `custom_function_path`: Path to the source file that contains function definitions for derived variables (character)
+-   `attach_data_name`: Flag to indicate whether to create a new column in the re-coded data and populate it with the value of `database_name` (logical)
+-   `id_role_name`: Argument passed to helper function to create an ID for each row (?)
+-   `name_of_environment_to_load`: Name of package to load the variables and details sheets from (character)
+-   `append_non_db_columns`: Flag to indicate whether to include variables in the details sheet where `databaseStart == database_name`, but was not re-coded, in the re-coded data.; these columns will be filled in with NA (logical)
+-   `tables`: Name(s) of reference table(s) to use in re-coding (list)
+
+### Feature 1: re-coding a non-derived variable
+
+#### *Feature 1.1: A value to a type of NA*
+
+Subset of sample details sheet (from cchsflow):
+
+```{r feature-1-1-details}
+variable_details |> 
+  filter(variable == "CCC_105") |> 
+  select(variable, recEnd, recStart)
+```
+
+Sample data (before re-coding):
+
+```{r feature-1-1-before}
+data_1_1 <- cchs2017_2018_p |> 
+  select(CCC_120) |> 
+  filter(CCC_120 == 6) |> 
+  slice_head(n = 6)
+data_1_1 
+```
+
+Sample data (after re-coding):
+
+```{r feature-1-1-after}
+data_1_1 |> 
+  mutate(CCC_120 = haven::tagged_na("a"))
+```
+
+-   **When** the user wants to re-code a non-derived variable (CCC_105)
+-   **And** one of the re-coding rules for the variable is to re-code a number to a missing value
+-   **Then** each observation in the original data that matches the value in `recStart` (6) should be re-coded as the corresponding value in `recEnd` (a tagged missing value) in the new data
+
+#### *Feature 1.2.1: A closed interval to a type of NA*
+
+Subset of sample details sheet:
+
+```{r feature-1-2-details}
+variable_details |> 
+  filter(str_detect(databaseStart, "cchs2017_2018_p"), variable == "ADL_01") |> 
+  select(variable, recEnd, recStart)
+```
+
+Sample data (before re-coding):
+
+```{r feature-1-2-before}
+data_1_2 <- tibble(ADL_005 = sample(c(7:9), 5, replace = TRUE))
+data_1_2
+```
+
+Sample data (after re-coding):
+
+```{r feature-1-2-after}
+data_1_2 |> 
+  mutate(ADL_005 = haven::tagged_na("b"))
+```
+
+-   **When** the user wants to re-code a non-derived variable (ADL_01)
+-   **And** one of the re-coding rules for the variable is to re-code a closed interval to a missing value
+-   **Then** each observation in the original data that is contained in the interval in `recStart` (7 ≤ x ≤ 9) should be re-coded as the corresponding value in `recEnd` (a tagged missing value) in the new data
+
+#### *Feature 1.2.2 An open interval to a type of NA*
+
+-   This re-code pair was not observed in the sample details sheet provided in the cchsflow package, but a user may encounter this combination
+
+-   **When** the user wants to re-code a non-derived variable
+
+-   **And** one of the re-coding rules for the variable is to re-code an open interval to a missing value
+
+-   **Then** each observation in the original data that is contained in the interval in `recStart` (a \< x \< b, where a and b are the lower and upper bounds, respectively) should be re-coded as the corresponding value in `recEnd` (a tagged missing value) in the new data
+
+#### *Feature 1.2.3 A left-closed, right-open interval to a type of NA*
+
+-   This re-code pair was not observed in the sample details sheet provided in the cchsflow package, but a user may encounter this combination
+
+-   **When** the user wants to re-code a non-derived variable
+
+-   **And** one of the re-coding rules for the variable is to re-code a left-closed, right-open interval to a missing value
+
+-   **Then** each observation in the original data that is contained in the interval in `recStart` (a ≤ x \< b, where a and b are the lower and upper bounds, respectively) should be re-coded as the corresponding value in `recEnd` (a tagged missing value) in the new data
+
+#### *Feature 1.2.4 A left-open, right-closed interval to a type of NA*
+
+-   This re-code pair was not observed in the sample details sheet provided in the cchsflow package, but a user may encounter this combination
+
+-   **When** the user wants to re-code a non-derived variable
+
+-   **And** one of the re-coding rules for the variable is to re-code a left-open, right-closed interval to a missing value
+
+-   **Then** each observation in the original data that is contained in the interval in `recStart` (a \< x \< b, where a and b are the lower and upper bounds, respectively) should be re-coded as the corresponding value in `recEnd` (a tagged missing value) in the new data
+
+#### *Feature 1.3: An "else" to a type of NA*
+
+Subset of sample details sheet:
+
+```{r feature-1-3-details}
+variable_details |> 
+  filter(str_detect(databaseStart, "cchs2017_2018_p"), variable == "ADL_01") |> 
+  select(variable, recEnd, recStart)
+```
+
+Sample data (before re-coding):
+
+```{r feature-1-3-before}
+data_1_3 <- tibble(ADL_005 = sample(c(7:9), 5, replace = TRUE))
+data_1_3
+```
+
+Sample data (after re-coding):
+
+```{r feature-1-3-after}
+data_1_3 |> 
+  mutate(ADL_005 = haven::tagged_na("b"))
+```
+
+-   **When** the user wants to re-code a non-derived variable (ADL_01)
+-   **And** one of the re-coding rules for the variable is to re-code "else" to a missing value
+-   **Then** each observation in the original data that has not already been captured by another re-coding rule should be re-coded as the corresponding value in `recEnd` (a tagged missing value) in the new data
+
+#### *Feature 1.4: A value to another value*
+
+Subset of sample details sheet:
+
+```{r feature-1-4-details}
+variable_details |> 
+  filter(str_detect(databaseStart, "cchs2017_2018_p"), variable == "SLPG01_cont") |>
+  select(variable, recEnd, recStart)
+```
+
+Sample data (before re-coding):
+
+```{r feature-1-4-before}
+data_1_4 <- cchs2017_2018_p |> 
+  select(SLPG005) |> 
+  arrange(SLPG005) |> 
+  slice_head(n = 6)
+data_1_4
+```
+
+Sample data (after re-coding):
+
+```{r feature-1-4-after}
+data_1_4 |> 
+  mutate(SLPG005 = case_when(SLPG005 == 2 ~ 3.5,
+                             SLPG005 == 3 ~ 4.5))
+```
+
+-   **When** the user wants to re-code a non-derived variable (SLPG01_cont)
+-   **And** one of the re-coding rules for the variable is to re-code a number to another number
+-   **Then** each observation in the original data that matches the value in `recStart` (e.g., 2) should be re-coded as the corresponding value in `recEnd` (e.g., 3.5) in the new data
+
+#### *Feature 1.5.1: From a closed interval to a value*
+
+Subset of sample details sheet:
+
+```{r feature-1-5-details}
+variable_details |> 
+  filter(str_detect(databaseStart, "cchs2017_2018_p"), variable == "DHHGAGE_5") |> 
+  select(variable, recEnd, recStart)
+```
+
+Sample data (before re-coding):
+
+```{r feature-1-5-before}
+data_1_5 <- cchs2017_2018_p |> 
+  select(DHHGAGE) |> 
+  slice_head(n = 6)
+data_1_5
+```
+
+Sample data (after re-coding):
+
+```{r feature-1-5-after}
+data_1_5 |> 
+  mutate(DHHGAGE = case_when(1 <= DHHGAGE & DHHGAGE <= 3 ~ 1,
+                             4 <= DHHGAGE & DHHGAGE <= 7 ~ 2,
+                             8 <= DHHGAGE & DHHGAGE <= 11 ~ 3,
+                             12 <= DHHGAGE & DHHGAGE <= 15 ~ 4,
+                             DHHGAGE == 16 ~ 5))
+```
+
+-   **When** the user wants to re-code a non-derived variable (DHHGAGE_5)
+-   **And** one of the re-coding rules for the variable is to re-code a closed interval to a value
+-   **Then** each observation in the original data that is contained in the interval in `recStart` (e.g., 4 ≤ x ≤ 7) should be re-coded as the corresponding value in `recEnd` (e.g., 2) in the new data
+
+#### *Feature 1.5.2: An open interval to a value*
+
+-   This re-code pair was not observed in the sample details sheet provided in the cchsflow package, but a user may encounter this combination
+
+-   **When** the user wants to re-code a non-derived variable
+
+-   **And** one of the re-coding rules for the variable is to re-code an open interval to a value
+
+-   **Then** each observation in the original data that is contained in the interval in `recStart` (a \< x \< b, where a and b are the lower and upper bounds, respectively) should be re-coded as the corresponding value in `recEnd` in the new data
+
+#### *Feature 1.5.3: A left-closed, right-open interval to a value*
+
+Subset of sample details sheet:
+
+```{r feature-1-5-3-details}
+variable_details |> 
+  filter(str_detect(databaseStart, "cchs2012_s"), variable == "CCC_102_A") |> 
+  select(variable, recEnd, recStart)
+```
+
+Sample data (before re-coding):
+
+```{r feature-1-5-3-before}
+data_1_5_3 <- cchs2012_s |> 
+  select(CCC_102) |> 
+  filter(CCC_102 <= 96) |> 
+  slice_head(n = 6)
+data_1_5_3
+```
+
+Sample data (after re-coding):
+
+```{r feature-1-5-3-after}
+data_1_5_3 |> 
+  mutate(case_when(35 <= CCC_102 & CCC_102 < 40 ~ 7,
+                   40 <= CCC_102 & CCC_102 < 45 ~ 8,
+                   45 <= CCC_102 & CCC_102 < 50 ~ 9,
+                   50 <= CCC_102 & CCC_102 < 55 ~ 10,
+                   55 <= CCC_102 & CCC_102 < 60 ~ 11,
+                   60 <= CCC_102 & CCC_102 < 65 ~ 12,
+                   65 <= CCC_102 & CCC_102 < 70 ~ 13,
+                   70 <= CCC_102 & CCC_102 < 75 ~ 14,
+                   75 <= CCC_102 & CCC_102 < 80 ~ 15))
+```
+
+-   **When** the user wants to re-code a non-derived variable (CCC_102_A)
+
+-   **And** one of the re-coding rules for the variable is to re-code a left-closed, right-open interval to a value
+
+-   **Then** each observation in the original data that is contained in the interval in `recStart` (e.g., 35 ≤ x \< 40) should be re-coded as the corresponding value in `recEnd` (e.g., 7) in the new data
+
+#### *Feature 1.5.4: A left-open, right-closed interval to a value*
+
+-   This re-code pair was not observed in the sample details sheet provided in the cchsflow package, but a user may encounter this combination
+
+-   **When** the user wants to re-code a non-derived variable
+
+-   **And** one of the re-coding rules for the variable is to re-code a left-open, right-closed interval to a value
+
+-   **Then** each observation in the original data that is contained in the interval in `recStart` (a \< x ≤ b, where a and b are the lower and upper bounds, respectively) should be re-coded as the corresponding value in `recEnd` in the new data
+
+#### *Feature 1.6: An "else" to value*
+
+-   This re-code pair was not observed in the sample details sheet provided in the cchsflow package, but a user may encounter this combination
+
+-   **When** the user wants to re-code a non-derived variable
+
+-   **And** one of the re-coding rules for the variable is to re-code "else" to a value
+
+-   **Then** each observation in the original data that has not already been captured by another re-coding rule should be re-coded as the corresponding value in `recEnd` in the new data
+
+#### *Feature 1.7: A value to "copy"*
+
+Subset of sample details sheet:
+
+```{r feature-1-7-details}
+variable_details |> 
+  filter(variable == "FVC_6D") |> 
+  select(variable, recEnd, recStart)
+```
+
+Sample data (before re-coding):
+
+```{r feature-1-7-before}
+data_1_7 <- cchs2012_s |> 
+ select(FVC_6D) |> 
+ slice_head(n = 6)
+data_1_7
+```
+
+Sample data (after re-coding):
+
+```{r feature-1-7-after}
+data_1_7
+```
+
+-   **When** the user wants to re-code a non-derived variable (FVC_6C)
+-   **And** one of the re-coding rules for the variable is to "copy" a value
+-   **Then** each observation in the original data that matches the value in `recStart` (996) should be re-coded as itself in the new data
+
+#### *Feature 1.8.1: A closed interval to "copy"*
+
+Subset of sample details sheet:
+
+```{r feature-1-8-details}
+variable_details |> 
+  filter(variable == "PAYDVDYS") |> 
+  select(variable, recEnd, recStart)
+```
+
+Sample data (before re-coding):
+
+```{r feature-1-8-before}
+data_1_8 <- cchs2017_2018_p |> 
+  select(PAYDVDYS) |> 
+  filter(PAYDVDYS <= 7) |> 
+  slice_head(n = 6)
+data_1_8
+```
+
+Sample data (after re-coding):
+
+```{r feature-1-8-after}
+data_1_8
+```
+
+-   **When** the user wants to re-code a non-derived variable (PAYDVDYS)
+-   **And** one of the re-coding rules for the variable is to "copy" values that fall in an interval
+-   **Then** each observation in the original data that is contained in the interval in `recStart` (0 ≤ x ≤ 7) should be re-coded as itself in the new data
+
+#### *Feature 1.8.2: An open interval to "copy"*
+
+-   This re-code pair was not observed in the sample details sheet provided in the cchsflow package, but a user may encounter this combination
+
+-   **When** the user wants to re-code a non-derived variable
+
+-   **And** one of the re-coding rules for the variable is to "copy" values that fall in an open interval
+
+-   **Then** each observation in the original data that is contained in the interval in `recStart` (a \< x \< b, where a and b are the lower and upper bounds, respectively) should be re-coded as itself in the new data
+
+#### *Feature 1.8.3: A left-closed, right-open interval to "copy"*
+
+-   This re-code pair was not observed in the sample details sheet provided in the cchsflow package, but a user may encounter this combination
+
+-   **When** the user wants to re-code a non-derived variable
+
+-   **And** one of the re-coding rules for the variable is to "copy" values that fall in a left-closed, right-open interval
+
+-   **Then** each observation in the original data that is contained in the interval in `recStart` (a ≤ x \< b, where a and b are the lower and upper bounds, respectively) should be re-coded as itself in the new data
+
+#### *Feature 1.8.4: A left-open, right-closed interval to "copy"*
+
+-   This re-code pair was not observed in the sample details sheet provided in the cchsflow package, but a user may encounter this combination
+
+-   **When** the user wants to re-code a non-derived variable
+
+-   **And** one of the re-coding rules for the variable is to "copy" values that fall in a left-open, right-closed interval
+
+-   **Then** each observation in the original data that is contained in the interval in `recStart` (a \< x ≤ b, where a and b are the lower and upper bounds, respectively) should be re-coded as itself in the new data
+
+#### *Feature 1.9: An "else" to "copy"*
+
+-   This re-code pair was not observed in the sample details sheet provided in the cchsflow package, but a user may encounter this combination
+
+-   **When** the user wants to re-code a non-derived variable
+
+-   **And** one of the re-coding rules for the variable is to "copy" "else"
+
+-   **Then** each observation in the original data that has not already been captured by another re-coding rule should be re-coded as itself in the new data
+
+### Feature 2: re-coding a derived variable
+
+-   TBA
+
+### Feature 3: re-coding a non-derived variable based on a derived variable
+
+-   TBA
+
+### Feature 4: re-coding a derived-variable based on a derived variable
+
+-   TBA
+
+### Feature 5: re-coding a variable with shared factor levels
+
+-   TBA
+
+### Behavior
+
+-   In addition to specifying the variable(s) to which to re-code, the user passes the raw data, the database of origin, and details sheet to the function
+
+-   When re-coding multiple variables:
+
+    -   The order in which variables that do not rely on derived variables for re-coding are handled **does not** matter; therefore, these variables can be re-coded in **parallel**
+
+    -   The order in which variables that rely on derived variables for re-coding are handled **does** matter; therefore, these variables must be re-coded in **series** (order can be determined with the help of a dependency graph)
+
+-   For each variable, validate input data
+
+    -   Check that the database and variable names are present in the details sheet (otherwise, the re-coding instructions are missing)
+
+    -   Check that the details sheet has been filled out in a consistent manner (e.g., units are the same)
+
+-   Re-code according to instructions laid out in details sheet
+
+    -   If an error is detected, "exit gracefully"
+
+-   Return re-coded data; optionally, print out log messages indicating which variables were transformed successfully and which ones were not
