@@ -2,9 +2,9 @@
 
 ## Goals
 
-- Solve problems that exist in the re-coding space through enabling
-  users to re-code multiple columns at once and harmonize data across
-  multiple data sets
+- To provide a reproducible, transparent, and streamlined process to
+  recode and transform data, especially in the context of preparing it
+  for analysis in healthcare research.
 
 ## Who is this product for?
 
@@ -120,18 +120,19 @@ Subset of sample details sheet:
 
 Sample data (before re-coding):
 
-    # A tibble: 5 × 1
+    # A tibble: 6 × 1
       ADL_005
-        <int>
-    1       8
-    2       8
+        <dbl>
+    1       7
+    2       7
     3       8
-    4       7
+    4       8
     5       9
+    6       9
 
 Sample data (after re-coding):
 
-    # A tibble: 5 × 1
+    # A tibble: 6 × 1
       ADL_005
         <dbl>
     1      NA
@@ -139,6 +140,7 @@ Sample data (after re-coding):
     3      NA
     4      NA
     5      NA
+    6      NA
 
 - **When** the user wants to re-code a non-derived variable (ADL_01)
 - **And** one of the re-coding rules for the variable is to re-code a
@@ -215,11 +217,11 @@ Sample data (before re-coding):
     # A tibble: 5 × 1
       ADL_005
         <int>
-    1       7
-    2       8
+    1       8
+    2       7
     3       8
     4       9
-    5       8
+    5       9
 
 Sample data (after re-coding):
 
@@ -304,23 +306,27 @@ Subset of sample details sheet:
 
 Sample data (before re-coding):
 
+    # A tibble: 6 × 1
       DHHGAGE
-    1      16
-    2      14
-    3       9
-    4      10
-    5       9
-    6       6
+        <dbl>
+    1      11
+    2      12
+    3      13
+    4      14
+    5      15
+    6      16
 
 Sample data (after re-coding):
 
+    # A tibble: 6 × 1
       DHHGAGE
-    1       5
+        <dbl>
+    1       3
     2       4
-    3       3
-    4       3
-    5       3
-    6       2
+    3       4
+    4       4
+    5       4
+    6       5
 
 - **When** the user wants to re-code a non-derived variable (DHHGAGE_5)
 - **And** one of the re-coding rules for the variable is to re-code a
@@ -478,36 +484,82 @@ Subset of sample details sheet:
 
 Sample data (before re-coding):
 
+    # A tibble: 6 × 1
       PAYDVDYS
-    1        5
-    2        7
-    3        7
-    4        7
-    5        2
-    6        3
+         <dbl>
+    1        0
+    2        2
+    3        3
+    4        4
+    5        6
+    6        7
 
 Sample data (after re-coding):
 
+    # A tibble: 6 × 1
       PAYDVDYS
-    1        5
-    2        7
-    3        7
-    4        7
-    5        2
-    6        3
+         <dbl>
+    1        0
+    2        2
+    3        3
+    4        4
+    5        6
+    6        7
 
 - **When** the user wants to re-code a non-derived variable (PAYDVDYS)
 - **And** one of the re-coding rules for the variable is to “copy”
   values that fall in an interval
-- **Then** each observation in the original data that falls in the
-  interval defined by `recStart` (0 and 7, inclusive) should be re-coded
-  as itself in the new data
+- **Then** each observation in the original data that is contained in
+  the interval in `recStart` (0 ≤ x ≤ 7) should be re-coded as itself in
+  the new data
 
 #### *Feature 1.8.2: An open interval to “copy”*
 
+- This re-code pair was not observed in the sample details sheet
+  provided in the cchsflow package, but a user may encounter this
+  combination
+
+- **When** the user wants to re-code a non-derived variable
+
+- **And** one of the re-coding rules for the variable is to “copy”
+  values that fall in an open interval
+
+- **Then** each observation in the original data that is contained in
+  the interval in `recStart` (a \< x \< b, where a and b are the lower
+  and upper bounds, respectively) should be re-coded as itself in the
+  new data
+
 #### *Feature 1.8.3: A left-closed, right-open interval to “copy”*
 
+- This re-code pair was not observed in the sample details sheet
+  provided in the cchsflow package, but a user may encounter this
+  combination
+
+- **When** the user wants to re-code a non-derived variable
+
+- **And** one of the re-coding rules for the variable is to “copy”
+  values that fall in a left-closed, right-open interval
+
+- **Then** each observation in the original data that is contained in
+  the interval in `recStart` (a ≤ x \< b, where a and b are the lower
+  and upper bounds, respectively) should be re-coded as itself in the
+  new data
+
 #### *Feature 1.8.4: A left-open, right-closed interval to “copy”*
+
+- This re-code pair was not observed in the sample details sheet
+  provided in the cchsflow package, but a user may encounter this
+  combination
+
+- **When** the user wants to re-code a non-derived variable
+
+- **And** one of the re-coding rules for the variable is to “copy”
+  values that fall in a left-open, right-closed interval
+
+- **Then** each observation in the original data that is contained in
+  the interval in `recStart` (a \< x ≤ b, where a and b are the lower
+  and upper bounds, respectively) should be re-coded as itself in the
+  new data
 
 #### *Feature 1.9: An “else” to “copy”*
 
@@ -548,15 +600,14 @@ Sample data (after re-coding):
 
 - When re-coding multiple variables:
 
-  - The order in which non-derived variables are handled **does not**
-    matter; therefore, these variables can be re-coded in **parallel**
+  - The order in which variables that do not rely on derived variables
+    for re-coding are handled **does not** matter; therefore, these
+    variables can be re-coded in **parallel**
 
-    - Re-coding of non-derived variables can be categorized into nine
-      categories based on the re-code pairs (described in detail below)
-
-  - The order in which derived variables are handled **does** matter;
-    therefore, these variables must be re-coded in **series** (order can
-    be determined with the help of a dependency graph)
+  - The order in which variables that rely on derived variables for
+    re-coding are handled **does** matter; therefore, these variables
+    must be re-coded in **series** (order can be determined with the
+    help of a dependency graph)
 
 - For each variable, validate input data
 

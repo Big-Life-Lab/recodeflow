@@ -16,7 +16,7 @@ library(cchsflow)
 
 ## Goals
 
--   Solve problems that exist in the re-coding space through enabling users to re-code multiple columns at once and harmonize data across multiple data sets
+-   To provide a reproducible, transparent, and streamlined process to recode and transform data, especially in the context of preparing it for analysis in healthcare research.
 
 ## Who is this product for?
 
@@ -105,7 +105,7 @@ variable_details |>
 Sample data (before re-coding):
 
 ```{r feature-1-2-before}
-data_1_2 <- tibble(ADL_005 = sample(c(7:9), 5, replace = TRUE))
+data_1_2 <- tibble(ADL_005 = c(7, 7, 8, 8, 9, 9))
 data_1_2
 ```
 
@@ -223,9 +223,7 @@ variable_details |>
 Sample data (before re-coding):
 
 ```{r feature-1-5-before}
-data_1_5 <- cchs2017_2018_p |> 
-  select(DHHGAGE) |> 
-  slice_head(n = 6)
+data_1_5 <- tibble(DHHGAGE = c(11, 12, 13, 14, 15, 16))
 data_1_5
 ```
 
@@ -233,9 +231,7 @@ Sample data (after re-coding):
 
 ```{r feature-1-5-after}
 data_1_5 |> 
-  mutate(DHHGAGE = case_when(1 <= DHHGAGE & DHHGAGE <= 3 ~ 1,
-                             4 <= DHHGAGE & DHHGAGE <= 7 ~ 2,
-                             8 <= DHHGAGE & DHHGAGE <= 11 ~ 3,
+  mutate(DHHGAGE = case_when(8 <= DHHGAGE & DHHGAGE <= 11 ~ 3,
                              12 <= DHHGAGE & DHHGAGE <= 15 ~ 4,
                              DHHGAGE == 16 ~ 5))
 ```
@@ -357,10 +353,7 @@ variable_details |>
 Sample data (before re-coding):
 
 ```{r feature-1-8-before}
-data_1_8 <- cchs2017_2018_p |> 
-  select(PAYDVDYS) |> 
-  filter(PAYDVDYS <= 7) |> 
-  slice_head(n = 6)
+data_1_8 <- tibble(PAYDVDYS = c(0, 2, 3, 4, 6, 7))
 data_1_8
 ```
 
