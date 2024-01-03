@@ -1,8 +1,8 @@
 ---
-title: "Recode variables"
+title: "How to recode variables"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{How to guides}     
+  %\VignetteIndexEntry{How to recode variables}     
   %\VignetteEngine{knitr::rmarkdown}  %\VignetteEncoding{UTF-8}
 ---
 
