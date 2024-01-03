@@ -269,52 +269,52 @@ rec_with_table <-
     }
 
     # The next code chunk will create the variable details file that does not
-    # have any custom variables. All variables which implement a custom
-    # variable will have their specifications replaced by those of the custom
+    # have any template variables. All variables which implement a template
+    # variable will have their specifications replaced by those of the template
     # variable.
     # This is the variable details sheet that should be used for the
     # rest of the program.
-    no_custom_variables_variable_details <- variable_details
-    # If the custom variable isn't in the variable details sheet then this
-    # is a pre custom variable sheet. Don't run the code.
-    if(variable_details_columns$custom_variable$name %in% colnames(variable_details)) {
-      no_custom_variables_variable_details <- variable_details[
-        variable_details[[variable_details_columns$custom_variable$name]] == variable_details_columns$custom_variable$values$no,
+    no_template_variables_variable_details <- variable_details
+    # If the template variable isn't in the variable details sheet then this
+    # is a pre template variable sheet. Don't run the code.
+    if(variable_details_columns$template_variable$name %in% colnames(variable_details)) {
+      no_template_variables_variable_details <- variable_details[
+        variable_details[[variable_details_columns$template_variable$name]] == variable_details_columns$template_variable$values$no,
       ]
-      custom_variable_names <- unique(variable_details[
-        variable_details[[variable_details_columns$custom_variable$name]] == variable_details_columns$custom_variable$values$yes,
+      template_variable_names <- unique(variable_details[
+        variable_details[[variable_details_columns$template_variable$name]] == variable_details_columns$template_variable$values$yes,
         pkg.env$columns.Variable
       ])
-      for(custom_variable_name in custom_variable_names)
+      for(template_variable_name in template_variable_names)
       {
-        custom_variable_rows <- variable_details[
-          variable_details[[pkg.env$columns.Variable]] == custom_variable_name,
+        template_variable_rows <- variable_details[
+          variable_details[[pkg.env$columns.Variable]] == template_variable_name,
         ]
-        # All variables which implement this custom variable
-        custom_variable_variable_names <- variable_details[
-          variable_details[[variable_details_columns$custom_variable$name]] == custom_variable_name,
+        # All variables which implement this template variable
+        template_variable_variable_names <- variable_details[
+          variable_details[[variable_details_columns$template_variable$name]] == template_variable_name,
           pkg.env$columns.Variable
         ]
-        for(custom_variable_variable_name in custom_variable_variable_names)
+        for(template_variable_variable_name in template_variable_variable_names)
         {
-          custom_variable_variable_rows <- variable_details[
-            variable_details[[pkg.env$columns.Variable]] == custom_variable_variable_name,
+          template_variable_variable_rows <- variable_details[
+            variable_details[[pkg.env$columns.Variable]] == template_variable_variable_name,
           ]
-          updated_custom_variable_variable_rows <- data.frame(
-            custom_variable_rows
+          updated_template_variable_variable_rows <- data.frame(
+            template_variable_rows
           )
-          updated_custom_variable_variable_rows[[pkg.env$columns.Variable]]  <- rep(
-            custom_variable_variable_rows[1, pkg.env$columns.Variable],
-            nrow(custom_variable_rows)
+          updated_template_variable_variable_rows[[pkg.env$columns.Variable]]  <- rep(
+            template_variable_variable_rows[1, pkg.env$columns.Variable],
+            nrow(template_variable_rows)
           )
-          updated_custom_variable_variable_rows[[pkg.env$columns.VariableStart]] <- rep(
-            custom_variable_variable_rows[1, pkg.env$columns.VariableStart],
-            nrow(custom_variable_rows)
+          updated_template_variable_variable_rows[[pkg.env$columns.VariableStart]] <- rep(
+            template_variable_variable_rows[1, pkg.env$columns.VariableStart],
+            nrow(template_variable_rows)
           )
 
-          no_custom_variables_variable_details <- rbind(
-            no_custom_variables_variable_details,
-            updated_custom_variable_variable_rows
+          no_template_variables_variable_details <- rbind(
+            no_template_variables_variable_details,
+            updated_template_variable_variable_rows
           )
         }
       }
@@ -336,7 +336,7 @@ rec_with_table <-
             database_name = database_name,
             print_note = notes,
             else_value = else_value,
-            variable_details = no_custom_variables_variable_details,
+            variable_details = no_template_variables_variable_details,
             append_to_data = append_to_data,
             append_non_db_columns = append_non_db_columns,
             log = log,
@@ -365,7 +365,7 @@ rec_with_table <-
         database_name = database_name,
         print_note = notes,
         else_value = else_value,
-        variable_details = no_custom_variables_variable_details,
+        variable_details = no_template_variables_variable_details,
         append_to_data = append_to_data,
         append_non_db_columns = append_non_db_columns,
         log = log,

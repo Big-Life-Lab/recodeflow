@@ -107,8 +107,8 @@ pkg.env$columns.Role <- "role"
 
 pkg.env$variable_details$columns.recFrom.elseValue <- "else"
 variable_details_columns <- list(
-  custom_variable = list(
-    name = "customVariable",
+  template_variable = list(
+    name = "templateVariable",
     values = list(
       no = "No",
       yes = "Yes"

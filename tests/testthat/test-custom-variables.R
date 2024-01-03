@@ -1,6 +1,6 @@
-context("recode_with_table custom variables")
+context("recode_with_table template variables")
 
-test_that("Should correct recode non-derived custom variables", {
+test_that("Should correct recode non-derived template variables", {
   variables <- data.frame(
     variable = c("variable_one"),
     label = c(""),
@@ -11,8 +11,8 @@ test_that("Should correct recode non-derived custom variables", {
     variableStart = c("[start_variable_one]")
   )
   variable_details <- data.frame(
-    variable = c("custom_variable_one", "custom_variable_one", "variable_one"),
-    customVariable = c("Yes", "Yes", "custom_variable_one"),
+    variable = c("template_variable_one", "template_variable_one", "variable_one"),
+    templateVariable = c("Yes", "Yes", "template_variable_one"),
     typeEnd = c("cat", "cat", "cat"),
     databaseStart = c("database_one", "database_one", "database_one"),
     variableStart = c("N/A", "N/A", "[start_variable_one]"),
@@ -44,7 +44,7 @@ test_that("Should correct recode non-derived custom variables", {
   expect_equal(actual_data, expected_data)
 })
 
-test_that("Should correct recode multiple non-derived custom variables", {
+test_that("Should correct recode multiple non-derived template variables", {
   variables <- data.frame(
     variable = c("variable_one", "variable_two"),
     label = c("", ""),
@@ -55,8 +55,8 @@ test_that("Should correct recode multiple non-derived custom variables", {
     variableStart = c("[start_variable_one]", "[start_variable_two]")
   )
   variable_details <- data.frame(
-    variable = c("custom_variable_one", "custom_variable_one", "custom_variable_two", "custom_variable_two", "variable_one", "variable_two"),
-    customVariable = c("Yes", "Yes", "Yes", "Yes", "custom_variable_one", "custom_variable_two"),
+    variable = c("template_variable_one", "template_variable_one", "template_variable_two", "template_variable_two", "variable_one", "variable_two"),
+    templateVariable = c("Yes", "Yes", "Yes", "Yes", "template_variable_one", "template_variable_two"),
     typeEnd = c("cat", "cat", "cat", "cat", "cat", "cat"),
     databaseStart = c("database_one", "database_one", "database_one", "database_one", "database_one", "database_one"),
     variableStart = c("N/A", "N/A", "N/A", "N/A", "[start_variable_one]", "[start_variable_two]"),
@@ -92,7 +92,7 @@ test_that("Should correct recode multiple non-derived custom variables", {
   expect_equal(actual_data, expected_data)
 })
 
-test_that("Should correctly recode derived custom variables", {
+test_that("Should correctly recode derived template variables", {
   variables <- data.frame(
     variable = c("variable_one"),
     label = c(""),
@@ -103,8 +103,8 @@ test_that("Should correctly recode derived custom variables", {
     variableStart = c("[start_variable_one]")
   )
   variable_details <- data.frame(
-    variable = c("custom_variable_one", "custom_variable_one", "variable_one"),
-    customVariable = c("Yes", "Yes", "custom_variable_one"),
+    variable = c("template_variable_one", "template_variable_one", "variable_one"),
+    templateVariable = c("Yes", "Yes", "template_variable_one"),
     typeEnd = c("cat", "cat", "cat"),
     databaseStart = c("database_one", "database_one", "database_one"),
     variableStart = c("N/A", "N/A", "DerivedVar::[start_variable_one]"),
@@ -139,7 +139,7 @@ test_that("Should correctly recode derived custom variables", {
   expect_equal(actual_data, expected_data)
 })
 
-test_that("Should work with non-custom variables", {
+test_that("Should work with non-template variables", {
   variables <- data.frame(
     variable = c("variable_one", "variable_two"),
     label = c("", ""),
@@ -150,8 +150,8 @@ test_that("Should work with non-custom variables", {
     variableStart = c("[start_variable_one]", "[start_variable_two]")
   )
   variable_details <- data.frame(
-    variable = c("custom_variable_one", "custom_variable_one", "variable_one", "variable_two"),
-    customVariable = c("Yes", "Yes", "custom_variable_one", "No"),
+    variable = c("template_variable_one", "template_variable_one", "variable_one", "variable_two"),
+    templateVariable = c("Yes", "Yes", "template_variable_one", "No"),
     typeEnd = c("cat", "cat", "cat", "cont"),
     databaseStart = c("database_one", "database_one", "database_one", "database_one"),
     variableStart = c("N/A", "N/A", "[start_variable_one]", "[start_variable_two]"),
