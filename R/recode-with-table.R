@@ -531,6 +531,7 @@ get_data_variable_name <-
 #' @param log The option of printing log
 #' @param print_note the option of printing the note columns
 #' @param else_default default else value to use if no else is present
+#' @param tables A list of reference tables
 #'
 #' @return Returns recoded and labeled data
 recode_columns <-

@@ -27,6 +27,8 @@ to this DB}
 \item{print_note}{the option of printing the note columns}
 
 \item{else_default}{default else value to use if no else is present}
+
+\item{tables}{A list of reference tables}
 }
 \value{
 Returns recoded and labeled data
