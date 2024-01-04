@@ -2,13 +2,16 @@
 
 <!-- badges: start -->
 
-[![Lifecycle: development](https://img.shields.io/badge/lifecycle-experimental-blue.svg)](https://www.tidyverse.org/lifecycle/#experimental) <!--
-[![](https://img.shields.io/cran/v/cchsflow?color=green)](https://CRAN.R-project.org/package=TBA)
-![](https://img.shields.io/github/v/release/big-life-lab/recodeflow?color=green&label=GitHub)
---> [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Lifecycle: development](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable-1) [![](https://img.shields.io/cran/v/recodeflow?color=green)](https://CRAN.R-project.org/package=recodeflow) [![](https://cranlogs.r-pkg.org/badges/recodeflow)](https://cran.r-project.org/package=recodeflow) [![R-CMD-check](https://github.com/Big-Life-Lab/recodeflow/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Big-Life-Lab/recodeflow/actions/workflows/R-CMD-check.yaml)
 
 <!-- badges: end -->
 
+```{=html}
+<!-- 
+![](https://img.shields.io/github/v/release/big-life-lab/recodeflow?color=green&label=GitHub)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+-->
+```
 # Introduction
 
 ## What is `recodeflow`?
@@ -19,21 +22,19 @@
 
 ## Why should I use `recodeflow`?
 
-Recoding and cleaning your data is typically the most time consuming step of your project. Existing functions such as `sjmisc::rec()` and `dplyr:recode()` work well but they are **limited to recoding one variable at a time**. 
+Recoding and cleaning your data is typically the most time consuming step of your project. Existing functions such as `sjmisc::rec()` and `dplyr:recode()` work well but they are **limited to recoding one variable at a time**.
 
-The `recodeflow` package takes data cleaning and recoding one step further. `recodeflow` allows you to  recode **multiple variables at the same time**, and **harmonize variables** across similar databases even when the variables and variables' categories change.
+The `recodeflow` package takes data cleaning and recoding one step further. `recodeflow` allows you to recode **multiple variables at the same time**, and **harmonize variables** across similar databases even when the variables and variables' categories change.
 
 `recodeflow` also helps to **reduce errors**, **document the recode process**, and ensures your new variables have labels and other **metadata**.
 
 Even if your project has few variables,`recodeflow` can save you time.
-
 
 ## How does `recodeflow` work?
 
 Use the worksheets `variables` and `variable_details` to list your variables and state how to recode the each variable.
 
 Once your variables are defined, use `recodeflow` functions to clean and recode your data. The main `recodeflow` function is `rec_with_table` which recodes variables within you dataset(s) based on how you've defined the variable in the worksheets `variables` and `variable_details`.
-
 
 ## What's included in `recodeflow`?
 
@@ -57,13 +58,11 @@ We've also created the following documentation to help you understand `recodeflo
 
 Currently `recodeflow` is used in packages that harmonize health surveys and health administrative databases.
 
-- `cchsflow` is a package that harmonizes variables across cycles of the Canadian Community Health Survey (CCHS). cchsflow is [published](https://big-life-lab.github.io/cchsflow/index.html). 
+-   `cchsflow` is a package that harmonizes variables across cycles of the Canadian Community Health Survey (CCHS). cchsflow is [published](https://big-life-lab.github.io/cchsflow/index.html).
 
-- `raiflow` is a package that will harmonize variables within the Resident Assessments Instruments (RAI) from various sources: Canada's Continuing Care Reporting System (CCRS) and Ontario's Resident Assessment Instrutment for Home Care (RAI-HC). `raiflow` is currently underdevelopment.
+-   `raiflow` is a package that will harmonize variables within the Resident Assessments Instruments (RAI) from various sources: Canada's Continuing Care Reporting System (CCRS) and Ontario's Resident Assessment Instrutment for Home Care (RAI-HC). `raiflow` is currently underdevelopment.
 
 # Requirements
-
-* If you plan on using the `recode_to_pmml` function's `custom_function_files` argument, you need access to the `local-transformations-generator` repo
 
 # Roadmap
 

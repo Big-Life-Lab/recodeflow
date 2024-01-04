@@ -44,13 +44,8 @@ reference:
     desc: Functions for recoding data across databases
     contents:
     - rec_with_table
-  - title: "PMML"
-    desc: Functions for converting recoding metadata into PMML
-    contents:
-    - recode_to_pmml
   - title: "Utility"
-    desc: Useful functions for existing pmml/recoded data
+    desc: Other useful functions
     contents:
-    - build_trans_dict
     - set_data_labels
 
