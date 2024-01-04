@@ -1,4 +1,4 @@
-variable,customVariable,typeEnd,typeStart,databaseStart,variableStart,variableStartLabel,numValidCat,recEnd,catLabel,catLabelLong,units,recStart,catStartLabel,notes
+variable,templateVariable,typeEnd,typeStart,databaseStart,variableStart,variableStartLabel,numValidCat,recEnd,catLabel,catLabelLong,units,recStart,catStartLabel,notes
 language,Yes,cat,cat,database_one,N/A,N/A,5,1,English,English,N/A,English,English,
 language,Yes,cat,cat,database_one,N/A,N/A,5,2,French,English,N/A,French,French,
 language,Yes,cat,cat,database_one,N/A,N/A,5,3,Mandarin,English,N/A,Mandarin,Mandarin,
