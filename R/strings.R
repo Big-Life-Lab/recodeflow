@@ -17,6 +17,17 @@ pkg.env$columns.CatLabel <- "catLabel"
 pkg.env$columns.CatLabelLong <- "catLabelLong"
 pkg.env$columns.Role <- "role"
 
+pkg.env$variable_details$columns.recFrom.elseValue <- "else"
+variable_details_columns <- list(
+  template_variable = list(
+    name = "templateVariable",
+    values = list(
+      no = "No",
+      yes = "Yes"
+    )
+  )
+)
+
 pkg.env$recode.key.id.from <- "id_from::"
 pkg.env$recode.key.func <- "Func::"
 pkg.env$recode.key.map <- "map::"

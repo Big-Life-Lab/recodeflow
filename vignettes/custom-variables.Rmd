@@ -1,0 +1,80 @@
+---
+title: "Template Variables"
+author: "Yulric Sequeira"
+date: "2022-10-28"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+The role of a template variable is to avoid the duplication of work that can happen when recoding two variables with the same specification but that represent different information. For example, imagine a database with two columns called `PL` and `SL` that encodes the primary and secondary language that an individual speaks. Both columns are categorical with the same set of categories, **English**, **French**, **Mandarin**, **Hindi** and **N/A**. The last category represents a "not applicable" value, for example if an individual does not speak a second language. An example dataset is shown below,
+
+```{r}
+example_dataset <- read.csv(file.path("../inst/example-dataset.csv"), fileEncoding = "UTF-8-BOM")
+
+DT::datatable(example_dataset)
+```
+
+If we want to use these language variables in a study, we should probably assign a unique number to each category, effectively converting both variables to a numeric categorical variable. We want to **recode** the above example dataset to the one below,
+
+```{r}
+example_dataset <- read.csv(file.path("../inst/recoded-dataset.csv"), fileEncoding = "UTF-8-BOM")
+
+DT::datatable(example_dataset)
+```
+
+The recoding will create two new categorical variables, `primary_lang` and `secondary_lang` from the `PL` and `SL` respectively with the recoding rules shown below,
+
+```{r}
+recoding_rules <- data.frame(
+  language = c("English", "French", "Mandarin", "Hindi", "N/A"),
+  recoded_value = c(1,2,3,4,"NA(a)")
+)
+
+DT::datatable(recoding_rules)
+```
+
+The variable details sheet which encodes the recoding rules above is shown below,
+
+```{r}
+variable_details <- read.csv(file.path("../inst/no-template-variable-variable-details.csv"), fileEncoding = "UTF-8-BOM")
+
+DT::datatable(variable_details)
+```
+
+Both variables have the same specification (the same categories) but represent different concepts (different variable names and labels). With a few variables and categories, it's easy enough to repeat the rules in the respective sheet (variable_details). But imagine this situation scaled to 8 variables and 132 categories - a real use case that prompted this feature! With so many variables and categories, it would be tiring to create the specifications as well as maintain them. A **template variable** can save you the headache!
+
+The `templateVariable` column allows you to specify a "virtual variable", a variable that does not exist in the database, but whose specification can be used by other variables in the database. For example, we can rewrite the above variables details sheet using a template variable called `language`.
+
+```{r}
+variable_details <- read.csv(file.path("../inst/template-variable-variable-details.csv"), fileEncoding = "UTF-8-BOM")
+
+DT::datatable(variable_details)
+```
+
+In the above sheet we have defined a new template variable called `language` (rows 1 to 6) which provides the reusable specifications for other languages in the database. The template variable can now be reused in other concrete variables in the database like the `primary_language` and `secondary_language` variables as defined in rows 7 and 8. To use a template variable, simply set the `templateVariable` column to the name of the template variable.
+
+As we can see, by creating a template variable we can reduce the number of rows in our variable details sheet but more importantly reduce the duplication of rows, which in turn increases maintainability of our sheet.
+
+## Working with template variables
+
+The `templateVariable` column can have one of the following values:
+
+1. **Yes**: Value to set when the row is defining a template variable
+2. **No**: Value to set when the row is defining a normal variable that **does not** extend a template variable
+3. **<template_variable_name>**: The name of a template variable that this row is extending
+
+When creating a template variable, 
+
+1. The `variable` column should be the name of the template variable
+2. The `templateVariable` column should be Yes
+3. The `variableStart` and `variableStartLabel` column should be `N/A`. Variables that extend the template variable will set them.
+4. All the other columns should be completed as normal
+
+When extending a template variable,
+
+1. The template variable column should be set to the name of the template variable being extended
+2. The `typeEnd`, `typeStart`, `databaseStart` columns should be equal to value set in the template variable. The `numValidCat`, `catLabel`, `catLabeLong`, `units`, `recStart`, and `catStartLabel` should be set to N/A. These will come from the template variable.
+3. If the variable is a derived variable then the `recStart` column can be set to a function, otherwise it should be `N/A`.

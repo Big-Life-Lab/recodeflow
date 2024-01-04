@@ -1,0 +1,13 @@
+variable,typeEnd,typeStart,databaseStart,variableStart,variableStartLabel,numValidCat,recEnd,catLabel,catLabelLong,units,recStart,catStartLabel,notes
+primary_lang,cat,cat,database_one,[PL],primary language,5,1,English,English,N/A,English,English,
+primary_lang,cat,cat,database_one,[PL],primary language,5,2,French,English,N/A,French,French,
+primary_lang,cat,cat,database_one,[PL],primary language,5,3,Mandarin,English,N/A,Mandarin,Mandarin,
+primary_lang,cat,cat,database_one,[PL],primary language,5,4,Hindi,English,N/A,Hindi,Hindi,
+primary_lang,cat,cat,database_one,[PL],primary language,5,NA::a,not applicable,not applicable,N/A,N/A,not applicable,
+primary_lang,cat,cat,database_one,[PL],primary language,5,NA::b,missing,English,N/A,else,N/A,
+secondary_lang,cat,cat,database_one,[SL],secondary language,5,1,English,English,N/A,English,English,
+secondary_lang,cat,cat,database_one,[SL],secondary language,5,2,French,English,N/A,French,French,
+secondary_lang,cat,cat,database_one,[SL],secondary language,5,3,Mandarin,English,N/A,Mandarin,Mandarin,
+secondary_lang,cat,cat,database_one,[SL],secondary language,5,4,Hindi,English,N/A,Hindi,Hindi,
+secondary_lang,cat,cat,database_one,[SL],secondary language,5,NA::a,not applicable,not applicable,N/A,N/A,not applicable,
+secondary_lang,cat,cat,database_one,[SL],secondary language,5,NA::b,missing,English,N/A,else,N/A,
