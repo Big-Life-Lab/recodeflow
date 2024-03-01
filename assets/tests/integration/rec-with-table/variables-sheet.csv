@@ -1,0 +1,4 @@
+﻿variable,role,label,labelLong,section,subject,variableType,units,databaseStart,variableStart,description
+var_one,,Variable One,Variable One,,,cat,,db_one,[var_one_start],
+var_two,,Variable Two,Variable Two,,,cat,,db_one,DerivedVar::[var_one],
+var_three,,Variable Three,Variable Three,,,cat,,db_one,[var_two],
