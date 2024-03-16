@@ -44,7 +44,7 @@ is_equal <- function(v1, v2) {
 #' Creates new variables by recoding variables in a dataset using the rules
 #' specified in a variables details sheet
 #'
-#' The \href{https://github.com/Big-Life-Lab/recodeflow/blob/master/inst/extdata/PBC-variableDetails.csv}{variable_details}
+#' The \href{https://github.com/Big-Life-Lab/recodeflow/blob/master/inst/extdata/pbc_variable_details.csv}{variable_details}
 #'  dataframe needs the following columns:
 #'  \describe{
 #'   \item{variable}{Name of the new variable created. The name of the new
