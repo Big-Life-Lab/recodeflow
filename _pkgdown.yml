@@ -48,4 +48,7 @@ reference:
     desc: Other useful functions
     contents:
     - set_data_labels
-
+  - title: "Example worksheets"
+    desc: Examples of worksheets for databases
+    contents:
+    - pbc
