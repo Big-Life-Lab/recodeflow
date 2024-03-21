@@ -7,7 +7,7 @@ pbc_database <- read_yaml("inst/extdata/pbc_database.yaml")
 usethis::use_data(pbc_database, overwrite = TRUE)
 
 # import the pbc_variables.csv file.
-pbc_variables <- read_csv("inst/extdata/pbc_variabes.csv")
+pbc_variables <- read_csv("inst/extdata/pbc_variables.csv")
 usethis::use_data(pbc_variables, overwrite = TRUE)
 
 # import the pbc_variable_details.csv file.
