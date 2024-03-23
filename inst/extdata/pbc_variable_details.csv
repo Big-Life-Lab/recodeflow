@@ -9,8 +9,8 @@ alk.phos,NA,cont,pbc,[alk.phos],cont,copy,"[200,15000]",NA,NA,NA,NA,alk.phos,alk
 alk.phos,NA,cont,pbc,[alk.phos],cont,NA::b,else,NA,missing,missing,NA,alk.phos,alk.phos,NA,NA
 ascites,ascites_cat3_1,cat,pbc,[ascites],cat,0,0,2,ascites 0,ascites 0,ascites 0,ascites,ascites,NA,NA
 ascites,ascites_cat3_2,cat,pbc,[ascites],cat,1,1,2,ascites 1,ascites 1,ascites 1,ascites,ascites,NA,NA
-ascites,ascites_cat3_NA::c,cat,pbc,[ascites],cat,NA::b,else,2,missing,missing,ascites 0,ascites,ascites,NA,NA
-ascites,ascites_cat3_NA::b,cat,pbc,[ascites],cat,NA::a,9,2,not applicable,not applicable,not applicable,NA,ascites,NA,NA
+ascites,ascites_cat3_NA::b,cat,pbc,[ascites],cat,NA::b,else,2,missing,missing,ascites 0,ascites,ascites,NA,NA
+ascites,ascites_cat3_NA::a,cat,pbc,[ascites],cat,NA::a,9,2,not applicable,not applicable,not applicable,NA,ascites,NA,NA
 alk.phos,NA,cont,pbc,[alk.phos],cont,NA::a,99999,NA,not applicable,not applicable,NA,alk.phos,alk.phos,NA,NA
 ast,NA,cont,pbc,[ast],cont,copy,"[20,500]",NA,NA,NA,NA,ast,ast,NA,NA
 ast,NA,cont,pbc,[ast],cont,NA::b,else,NA,missing,missing,NA,ast,ast,NA,NA
