@@ -1,0 +1,184 @@
+---
+title: Scoping Labels
+format:
+  html:
+    embed-resources: true
+---
+
+## Context
+
+Labels are vital pieces of metadata in any study that requires the use of a
+statistical program, especially those that use large datasets with numerous
+variables. Variables in datasets are rarely human readable. For example, the
+[2001 version of the Canadian Community Health Survey](https://www23.statcan.gc.ca/imdb/p2SV.pl?Function=getSurvey&Id=3359)
+(CCHS) has names like **ALCADWKY** for the number of drinks that an individual
+has consumed in the last week and **SMKA_01B** for whether an individual has
+smoked at least one cigarette. In addition to variable names, categories are
+usually numerically coded making it impossible to know what they represent. For
+example, the categorical **SMKA_01B** variable mentioned above has categories
+`1, 2, 6, 7, 8`, and `9` that represent `Yes, No, Not Applicable, Don't Know,
+Refusal`, and `Not Stated` respectively.
+
+Datasets, especially large ones, are usually named this way to reduce storage
+costs, avoid long names, be backwards compatible with previous versions of the
+dataset etc. Data custodians usually provide documentation that maps these
+obscure names to their human readable descriptions, allowing its users to
+understand what each entity within the dataset represents. These human readable
+descriptions are called labels and the mapping files are usually called data
+dictionaries.
+
+Most statistical languages (R, Stata, SAS etc.) provide a way for analysts to
+import these labels into their analysis environment and attach them to the study
+dataset. This is a vital and perhaps one of the first steps in most studies,
+allowing the analyst to explore and use the dataset without needing to
+continuously refer to the data dictionary. 
+
+Keeping the above in mind, the recodeflow library should have full support for
+importing and attaching labels to the recoded dataset with the following high
+level objectives:
+
+- **Enable reproducible, standardized labels**: Use established conventions 
+  within the R ecosystem for importing and attaching labels
+
+- **Facilitate collaboration**: Store labels in human-readable and standardized
+  CSV files to facilitate contribution by everyday users but also enable their 
+  use by analysts.
+
+- **Support data transformations**: Preserve attached labels as data is pivoted,
+  joined, or subsetted, while respecting the changing context of variables.
+
+- **Plan for future needs**: Align with existing R ecosystem packages and keep
+  the possibility of supporting standards such as DDI and LinkML open.
+
+## Scope
+
+### Variable and value labels
+
+There are many entities within a study that can be labelled (variables, columns, 
+column values, datasets etc.) and numerous label metadata that can be attached.
+The library should focus on two types of label metadata, variable and value
+(category) labels. **Variable labels** are short textual descriptions for the
+meaning of each column. **Value labels** are descriptive mappings for the coded
+values of a variable. For example, in the
+[Mayo Clinic Primary Biliary Cholangitis Data](https://stat.ethz.ch/R-manual/R-devel/library/survival/html/pbc.html)
+(pbc) dataset, the time variable has the variable label "number of days between
+registration and the earlier of death, transplantation, or study analysis in
+July, 1986" while the categorical edema variable has value labels `no edema`,
+`untreated`, and `successfully treated for edema despite diuretic therapy` for
+the values 0, 0.5 and 1 respectively. The library should enable users to attach
+these labels to the columns within a dataset and the values within a column.
+
+Keep in mind that value labels  can also apply to continuous variables. For
+example, every continuous variable in the CCHS has special values to encode the
+different types of missing like 99 and 98 for the drinks last week variable that
+represent not answered and not applicable respectively. The library should allow
+users to attach labels to these special values within continuous variables
+without needing to convert them to categorical i.e. to apply labels to only
+certain values in a column.
+
+### Variables and variable details 
+
+The label metadata for variables and values should come from the variables and
+variable details sheets. Using CSV files as the storage format allows
+non-programmers to easily contribute to labels as well as any other metadata
+that the sheets contain. CSV files are ubiquitous and can be easily opened and
+edited using common spreadsheet programs like Excel. In addition, by
+standardizing the columns within the sheets, the data within them can be easily
+parsed and used by any software program. For example, the sheets uses the
+standard that variable labels are encoded in the `label` column in the variables
+sheet.
+
+The library should assume that the sheets are the source of truth for all label 
+metadata and enable its users to label any dataset using this information. 
+
+### R ecosystem 
+
+The library should follow best practices and guidelines from the R community for
+labelling data. This includes using any existing labelling libraries like
+[haven](https://haven.tidyverse.org/) and [labelled](https://larmarange.github.io/labelled/)
+as well as taking inspiration from the [tidyverse](https://www.tidyverse.org/) 
+universe of libraries. Indeed, the library should use functions from these
+libraries to provide labelling functionality as much as possible, using wrappers
+where necessary to add additional functionality, for example to incorporate
+labels from the variables and variable details sheets. This has the advantage of
+the library being integrated in the R ecosystem and allowing the datasets and
+their labels to be exported to [SAS](https://haven.tidyverse.org/reference/read_xpt.html)
+and [Stata](https://haven.tidyverse.org/reference/read_dta.html) formats using
+the functions provided by these libraries.
+
+### Separation of concerns
+
+The library should separate the process of recoding and labels attachment. This
+provides maximum flexibility to the users who may wish to use a different
+framework for attaching labels, a different data source for the labels, or an
+unsupported label source.
+
+### Preserving Labels
+
+The labels that are attached to a dataset should be preserved regardless of the
+transformations applied to the dataset. Examples of transformations include
+filtering, pivoting, mutating etc. Label preservation means that if the labelled
+dataset is used in any R code (internal or external) that modifies it, the
+labels should not be lost or changed unless explicitly done so by the user. The 
+library should ensure this is the behavior for the most popular transformation 
+libraries like [dplyr](https://dplyr.tidyverse.org/) and
+[tidyr](https://tidyr.tidyverse.org/). Any code that could affect the label
+integrity should be documented. 
+
+### Other Metadata Standards
+
+Metadata for labels can exist in other formats like
+[DDI](https://ddialliance.org/) and [LinkML](https://linkml.io/). Manually 
+importing these labels into the sheets or attaching them into the datasets can
+be error prone and cumbersome. The library should provide functionality that
+enables users to use this metadata for example by automatically importing them
+into the sheets.
+
+### Performance
+
+Attaching labels should be performant, should not slow down the recoding process
+or any future operations on the data. The memory footprint of the labels should
+be low for example by storing the variable labels only once per column rather
+than on all rows. The library should ensure performance by running tests against
+large datasets.
+
+### Tagged NA
+
+The library should enable users to label the different missing values that can
+exist in each column of a dataset. Information about these tagged NA values
+(TODO add link) is described elsewhere. The sheets already allow 
+users to encode the different missing values that can exist for a column as well 
+as provide label metadata for them. The library should use this metadata to
+properly label missing values.
+
+### Additional labels
+
+The sheets contain a number of additional label metadata that users may be
+interested in like variable short labels, category short labels, notes etc. As
+mentioned previously the library should focus on variable and value labels, it
+should also provide functionality to enable users to optionally import and
+attach these additional metadata fields as attributes on the dataset.
+
+### Utility functionality 
+
+The library should provide utility functionality to aid with labels, for
+example, 
+
+1. Allowing users to sync the label data between the datasets and the sheets and
+   vice versa. There are instances where the analyst may update the label in the
+   dataset or the sheet gets updated by a user and these changes needs to be
+   synced between the two entities. The library should allow users to do this
+   while also providing information about what labels are out of sync.
+2. Functionality to easily incorporate label information from the sheets into 
+   visualizations, paper tables, Rmarkdown tables etc.
+
+## Conclusion
+
+By standardizing how labels are assigned, stored, and preserved, `recodeflow`
+will streamline label metadata management for data harmonization projects.
+Integrating with `haven` and `labelled` ensures minimal redundancy, while
+CSV-based metadata files guarantees accessibility for non-R collaborators.
+Future steps can include DDI or LinkML export and more robust transformation
+tracking. In the meantime, these core requirements will provide a solid
+foundation for a clear, dependable label management system.
+
