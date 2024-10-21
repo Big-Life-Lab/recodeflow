@@ -1,0 +1,107 @@
+---
+title: Scoping
+format:
+    html:
+        embed-resources: true
+---
+
+## Variable transformation 
+
+The primary purpose of the library is to enable its users to create new variables 
+from existing database(s) in a transparent and reproducible manner. Currently,
+the primary use case is to harmonize the variables of multiple survey cycles.
+
+### Defining the transformation metadata
+
+All the information needed to perform a transformation should be encoded in a data 
+format that is open and machine actionable. Examples include CSV, YAML, and
+JSON. Examples of formats that are open but not machine actionable are plain text 
+files. Microsoft Excel is an example of a format that is machine actionable but 
+not open. Microsoft Word is an example of a format that is neither open not 
+machine actionable. 
+
+Enforcing this encoding creates a separation between the processes of defining 
+how a transformation should be done and actually doing the transformation. This 
+makes it easier for data experts and programmers to work independent of each
+other focusing on the areas that they are most comfortable in. 
+
+Using an open data format enables other users to more easily participate in the 
+first process by pointing out issues in existing transformations, suggesting 
+new transformations etc.
+
+Using a machine actionable format is vital to enable the separation between the 
+processes since it makes it easier to create a software program to automate 
+the process.
+
+### Escape hatches
+
+Recognizing that not all transformations can be encoded in the defined data 
+format perhaps because of its complexity or because it would require a
+change to the library that is yet to be done, the library should allows users 
+to bypass the normal method of creating a transformation.
+
+## Missing values
+
+All data has some of its values missing which makes it important for the library 
+to allows its users to represent it in the transformation metadata. In addition 
+missing values can come in different flavours for example most commonly due to 
+non-response, but also due to the question not being asked, not being in a 
+database etc. which means the library should allow the user to tag the missing 
+value with its type.
+
+## Additional metadata
+
+### Import/Export
+
+"It should be easy import and export metadata from/to other sources, or add
+metadata."
+
+Doug I'm not sure what you meant by the import part. Did you mean:
+
+1. Import the metadata from an external data source into the variables 
+   and variable details sheets. For example, a user would be able to update the 
+   label column with the metadata from a DDI format.
+2. Import and tag the harmonized dataset with metadata from an external file. 
+   This doesn't make much sense to me since all the variables in the harmonized 
+   dataset are created by us so there should not be any metadata out there for it.
+
+For exporting you meant the library should be able to export the metadata from 
+the variables and variable details sheet into another format like DDI.
+
+### Easy to use
+
+"Metadata should be easy to use. You should, for example, be able to make data
+dictionaries at any point in your project"
+
+Did you envision that the library would have functions to create a data dictionary 
+or would have helper functions for it?
+
+I think the first point make sense.
+
+### No duplicates
+
+"You should be able to, “type {metadata} once and use many times” including
+maintaining metadata in machine-actionable form in other projects (journal
+figures, predictive algorithm deployment, etc.)"
+
+I assume you mean helper functions here like get the label for a variable, 
+get the labels for a category etc. Perhaps a internal data format for what is 
+in the variables and variable details sheet that is easier to navigate using code?
+
+### Variables transformation information
+
+"Metadata includes data transformation information (i.e. the variable is a
+spline, dummy variable, interaction, etc.)"
+
+I see this as being in another library for developing predictive algorithms. 
+The other library can build on whats in the variables and variable details sheet 
+to accomplish this purpose.
+
+### Roles
+
+"Building on the above, identify potential ‘roles’ of variables in the project.
+Roles are similar to the same as for tidymodels. An example role are variables
+used in table 1, or variables used as explanatory variables in a model."
+
+Look at the above point I made.
+
