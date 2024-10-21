@@ -1,0 +1,115 @@
+---
+title: Logging
+format:
+  html:
+    embed-resources: true
+references:
+  - id: loggingDef 
+    url: https://coralogix.com/guides/application-performance-monitoring/application-logging-best-practices/#:~:text=Application%20logging%20is%20the%20process,since%20the%20application%20started%20running.
+---
+
+## Context
+
+Logging within a software application refers to the act of recording an 
+event within it [@loggingDef]. The event can be in the present, past, 
+or future. The recording destination can be for example the console by simply 
+printing the event to it, a file or a database for long term storage, a remote server
+etc. Logging is a vital part of any software application to not 
+only inform the user about its state but to also make it easier for its developers 
+to debug any issues that a user may encounter. This document outlines plans to 
+enhance logging in the `recodeflow` library to support the core principle of
+transparent and reproducible data transformations. The proposed enhancements
+will support better error reporting and debugging while preserving the
+packages' accessibility for new users.
+
+## Scope
+
+### Core Requirements 
+
+The implementation should follow best practices from the R community and 
+in particular the packages within the [tidyverse](https://www.tidyverse.org/)
+universe. In
+addition, any existing R packages for logging should be evaluated as 
+potential candidates instead of developing it in house.
+
+Every log should contain a human readable message that makes it easy for the 
+user to understand and act on it if necessary.
+
+The library should provide a summary of the logs recorded at the end of a 
+process.
+
+### Logging levels
+
+Different log statements can have different levels of importance to a user. For example, 
+a statement that records a crash is more important than one that 
+records an invalid argument which in turn is more 
+important than one that records the progress of an ongoing operation. The 
+implementation should use and decide on the different [logging levels](https://sematext.com/blog/logging-levels/)
+for the library. 
+In addition, these should be documented to the user providing 
+examples for each level. 
+Finally, users should be able to 
+filter/subscribe to the levels they're interested in.
+
+### Metadata 
+
+Every log statement should have as much metadata as is necessary to allow the 
+user to understand its context and act on it if needed. In addition, the 
+metadata should be recorded in a machine actionable format to allow users to 
+easily copy it, format it etc. For example, a log statement that records 
+an invalid argument by a user could be formatted as below,
+
+```{r}
+invalid_arg_log <- list(
+  invalid_arg = c(1,2,3),
+  expected_type = numeric,
+  invalid_type = vector,
+  message = "[ERROR] Invalid argument `c(1,2,3)` provided by the user for the 
+             parameter `test`. Expected a numeric but got a vector"
+)
+```
+
+This allows users to easily copy the invalid argument for example to use 
+in a message to the developers. This is in contrast to providing all the
+metadata in the message which would make it harder for the user to copy it especially
+in the case of a complex object.
+
+Finally, metadata from the variables and variables details sheet (for examples, 
+labels, category labels etc.) should be 
+incorporated into the logs where necessary. For example, if the application 
+detects an error when recording a variable then the label for that variable 
+from the sheet should be used.
+
+### Verbosity levels
+
+Displaying all the metadata associated with a log may not make sense for all  
+situations or for all users. For example, first time users of the library may find it overwhelming 
+or users trying to debug their code may find it distracting. The library 
+should allow users to choose the verbosity level of the recorded logs for example 
+a level that shows everything and a level that just displays the message.
+
+### Derived functions
+
+Derived functions have been described [elsewhere](#TODO).
+Whatever logging implementation is chosen, care should be taken to not let it 
+affect the way users write derived functions. This will allow them to more 
+easily bring in their non-recodeflow functions without changing its logging 
+code. Instead, developers of derived functions should be able to opt-into
+recodeflow logging with the library providing clear documentation on how to do 
+so. 
+
+### Customization
+
+The library should enable power users to customize the logging 
+implementation where possible and needed. For example, it should allow users 
+to customize the destination for the logs allowing them to be stored in a database, 
+Amazon S3 etc.
+
+## Out of scope
+
+1. Logs will only be written to set a of sane defaults like to a file or to a 
+   console. The library will not try to support every possible log destination 
+   but will allow users to customize their destination.
+2. Log monitoring as in where the logs generated by the library are monitored 
+   for specific events 
+
