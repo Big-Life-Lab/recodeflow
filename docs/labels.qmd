@@ -125,7 +125,7 @@ First, ensure you have the necessary packages:
 
 ```{r}
 # Install the required packages if you haven't already
-install.packages(c("dplyr", "labelled", "tibble"))
+# install.packages(c("dplyr", "labelled", "tibble"))
 ```
 
 Now, here’s how you can add labels to the PBC dataset:
@@ -152,7 +152,7 @@ variables <- tibble(
 )
 
 # Add labels to the PBC data using the wrapper function
-pbc_data_labelled <- set_recodeflow_labels(pbc_data, variables)
+pbc_data_labelled <- set_recodeflow_labels(pbc_data)
 
 # Check the labels
 var_label(pbc_data_labelled)
@@ -163,4 +163,17 @@ generate_dictionary(pbc_data, details = "full")
 
 ### 2) Helper functions
 
+```{r}
+variables <- tibble(
+  variable = c("id", "age", "bili", "status"),
+  label = c("Patient ID", "Age (years)", "Bilirubin Level (mg/dL)", "Status (alive/dead)"),
+  long_labels = c(
+    "Unique identifier for each patient",
+    "Age of the patient in years",
+    "Level of bilirubin in the patient's blood, measured in milligrams per decilitre",
+    "Patient's current status: alive or dead"
+  ),
+  units = c(NA, "years", "mg/dL", NA)
+)
+```
 to be continued...
