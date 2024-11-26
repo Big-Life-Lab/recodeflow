@@ -1,0 +1,223 @@
+Linter                  Create a 'linter' closure
+T_and_F_symbol_linter   'T' and 'F' symbol linter
+absolute_path_linter    Absolute path linter
+all_linters             Create a linter configuration based on all
+                        available linters
+all_undesirable_functions
+                        Default undesirable functions and operators
+any_duplicated_linter   Require usage of 'anyDuplicated(x) > 0' over
+                        'any(duplicated(x))'
+any_is_na_linter        Require usage of 'anyNA(x)' over
+                        'any(is.na(x))'
+assignment_linter       Assignment linter
+available_linters       Get Linter metadata from a package
+backport_linter         Backport linter
+best_practices_linters
+                        Best practices linters
+boolean_arithmetic_linter
+                        Require usage of boolean operators over
+                        equivalent arithmetic
+brace_linter            Brace linter
+checkstyle_output       Checkstyle Report for lint results
+class_equals_linter     Block comparison of class with '=='
+clear_cache             Clear the lintr cache
+commas_linter           Commas linter
+commented_code_linter   Commented code linter
+common_mistakes_linters
+                        Common mistake linters
+condition_message_linter
+                        Block usage of 'paste()' and 'paste0()' with
+                        messaging functions using '...'
+configurable_linters    Configurable linters
+conjunct_test_linter    Force '&&' conditions to be written separately
+                        where appropriate
+consecutive_assertion_linter
+                        Force consecutive calls to assertions into just
+                        one when possible
+consistency_linters     Consistency linters
+correctness_linters     Correctness linters
+cyclocomp_linter        Cyclomatic complexity linter
+default_linters         Default linters
+default_settings        Default lintr settings
+deprecated_linters      Deprecated linters
+duplicate_argument_linter
+                        Duplicate argument linter
+efficiency_linters      Efficiency linters
+empty_assignment_linter
+                        Block assignment of '{}'
+equals_na_linter        Equality check with NA linter
+exclude                 Exclude lines or files from linting
+executing_linters       Code executing linters
+expect_comparison_linter
+                        Require usage of 'expect_gt(x, y)' over
+                        'expect_true(x > y)' (and similar)
+expect_identical_linter
+                        Require usage of 'expect_identical(x, y)' where
+                        appropriate
+expect_length_linter    Require usage of 'expect_length(x, n)' over
+                        'expect_equal(length(x), n)'
+expect_lint             Lint expectation
+expect_lint_free        Test that the package is lint free
+expect_named_linter     Require usage of 'expect_named(x, n)' over
+                        'expect_equal(names(x), n)'
+expect_not_linter       Require usage of 'expect_false(x)' over
+                        'expect_true(!x)'
+expect_null_linter      Require usage of 'expect_null' for checking
+                        'NULL'
+expect_s3_class_linter
+                        Require usage of 'expect_s3_class()'
+expect_s4_class_linter
+                        Require usage of 'expect_s4_class(x, k)' over
+                        'expect_true(is(x, k))'
+expect_true_false_linter
+                        Require usage of 'expect_true(x)' over
+                        'expect_equal(x, TRUE)'
+expect_type_linter      Require usage of 'expect_type(x, type)' over
+                        'expect_equal(typeof(x), type)'
+extraction_operator_linter
+                        Extraction operator linter
+fixed_regex_linter      Require usage of 'fixed=TRUE' in regular
+                        expressions where appropriate
+for_loop_index_linter   Block usage of for loops directly overwriting
+                        the indexing variable
+function_argument_linter
+                        Function argument linter
+function_left_parentheses_linter
+                        Function left parentheses linter
+function_return_linter
+                        Lint common mistakes/style issues cropping up
+                        from return statements
+get_r_string            Extract text from 'STR_CONST' nodes
+get_source_expressions
+                        Parsed sourced file from a filename
+ids_with_token          Get parsed IDs by token
+if_not_else_linter      Block statements like if (!A) x else y
+ifelse_censor_linter    Block usage of 'ifelse()' where 'pmin()' or
+                        'pmax()' is more appropriate
+implicit_assignment_linter
+                        Avoid implicit assignment in function calls
+implicit_integer_linter
+                        Implicit integer linter
+indentation_linter      Check that indentation is consistent
+infix_spaces_linter     Infix spaces linter
+inner_combine_linter    Require 'c()' to be applied before relatively
+                        expensive vectorized functions
+is_lint_level           Is this an expression- or a file-level source
+                        object?
+is_numeric_linter       Redirect 'is.numeric(x) || is.integer(x)' to
+                        just use 'is.numeric(x)'
+keyword_quote_linter    Block unnecessary quoting in calls
+length_levels_linter    Require usage of nlevels over length(levels(.))
+length_test_linter      Check for a common mistake where length is
+                        applied in the wrong place
+lengths_linter          Require usage of 'lengths()' where possible
+library_call_linter     Library call linter
+line_length_linter      Line length linter
+lint                    Lint a file, directory, or package
+lint-s3                 Create a 'lint' object
+linters                 Available linters
+linters_with_defaults   Create a linter configuration based on defaults
+linters_with_tags       Create a tag-based linter configuration
+literal_coercion_linter
+                        Require usage of correctly-typed literals over
+                        literal coercions
+make_linter_from_xpath
+                        Create a linter from an XPath
+matrix_apply_linter     Require usage of 'colSums(x)' or 'rowSums(x)'
+                        over 'apply(x, ., sum)'
+missing_argument_linter
+                        Missing argument linter
+missing_package_linter
+                        Missing package linter
+modify_defaults         Modify lintr defaults
+namespace_linter        Namespace linter
+nested_ifelse_linter    Block usage of nested 'ifelse()' calls
+nonportable_path_linter
+                        Non-portable path linter
+numeric_leading_zero_linter
+                        Require usage of a leading zero in all
+                        fractional numerics
+object_length_linter    Object length linter
+object_name_linter      Object name linter
+object_usage_linter     Object usage linter
+outer_negation_linter   Require usage of '!any(x)' over 'all(!x)',
+                        '!all(x)' over 'any(!x)'
+package_development_linters
+                        Package development linters
+package_hooks_linter    Package hooks linter
+paren_body_linter       Parenthesis before body linter
+parse_exclusions        read a source file and parse all the excluded
+                        lines from it
+paste_linter            Raise lints for several common poor usages of
+                        'paste()'
+pipe_call_linter        Pipe call linter
+pipe_consistency_linter
+                        Pipe consistency linter
+pipe_continuation_linter
+                        Pipe continuation linter
+pkg_testthat_linters    Testthat linters
+quotes_linter           Character string quote linter
+read_settings           Read lintr settings
+readability_linters     Readability linters
+redundant_equals_linter
+                        Block usage of '==', '!=' on logical vectors
+redundant_ifelse_linter
+                        Prevent 'ifelse()' from being used to produce
+                        'TRUE'/'FALSE' or '1'/'0'
+regex_subset_linter     Require usage of direct methods for subsetting
+                        strings via regex
+repeat_linter           Repeat linter
+robustness_linters      Robustness linters
+routine_registration_linter
+                        Identify unregistered native routines
+sarif_output            SARIF Report for lint results
+scalar_in_linter        Block usage like x %in% "a"
+semicolon_linter        Semicolon linter
+seq_linter              Sequence linter
+sort_linter             Check for common mistakes around sorting
+                        vectors
+spaces_inside_linter    Spaces inside linter
+spaces_left_parentheses_linter
+                        Spaces before parentheses linter
+sprintf_linter          Require correct 'sprintf()' calls
+string_boundary_linter
+                        Require usage of 'startsWith()' and
+                        'endsWith()' over 'grepl()'/'substr()' versions
+strings_as_factors_linter
+                        Identify cases where 'stringsAsFactors' should
+                        be supplied explicitly
+style_linters           Style linters
+system_file_linter      Block usage of 'file.path()' with
+                        'system.file()'
+todo_comment_linter     TODO comment linter
+trailing_blank_lines_linter
+                        Trailing blank lines linter
+trailing_whitespace_linter
+                        Trailing whitespace linter
+undesirable_function_linter
+                        Undesirable function linter
+undesirable_operator_linter
+                        Undesirable operator linter
+unnecessary_concatenation_linter
+                        Unneeded concatenation linter
+unnecessary_lambda_linter
+                        Block usage of anonymous functions in iteration
+                        functions when unnecessary
+unnecessary_nested_if_linter
+                        Avoid unnecessary nested 'if' conditional
+                        statements
+unnecessary_placeholder_linter
+                        Block usage of pipeline placeholders if
+                        unnecessary
+unreachable_code_linter
+                        Block unreachable code and comments following
+                        return statements
+unused_import_linter    Check that imported packages are actually used
+use_lintr               Use lintr in your project
+vector_logic_linter     Enforce usage of scalar logical operators in
+                        conditional statements
+whitespace_linter       Whitespace linter
+xml_nodes_to_lints      Convert an XML node or nodeset into a Lint
+xp_call_name            Get the name of the function matched by an
+                        XPath
+yoda_test_linter        Block obvious "yoda tests"

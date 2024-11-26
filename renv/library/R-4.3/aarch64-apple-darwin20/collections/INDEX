@@ -1,0 +1,10 @@
+cls                     Inspect objects
+collections-package     collections: High Performance Container Data
+                        Types
+deprecated              Deprecated Functions
+deque                   Double Ended Queue
+dict                    Dictionary
+ordered_dict            Ordered Dictionary
+priority_queue          Priority Queue
+queue                   Queue
+stack                   Stack

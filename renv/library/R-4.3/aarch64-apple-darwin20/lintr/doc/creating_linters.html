@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="lintr maintainers" />
+
+<meta name="date" content="2024-03-24" />
+
+<title>Creating new linters</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Creating new linters</h1>
+<h4 class="author">lintr maintainers</h4>
+<h4 class="date">2024-03-24</h4>
+
+
+
+<p>This vignette describes the steps necessary to create a new
+linter.</p>
+<p>See the last section for some details specific to writing new linters
+for <code>{lintr}</code>.</p>
+<p>A good example of a simple linter is the
+<code>pipe_call_linter</code>.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="co">#&#39; Pipe call linter</span></span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="co">#&#39;</span></span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="co">#&#39; Force explicit calls in magrittr pipes, e.g.,</span></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="co">#&#39; `1:3 %&gt;% sum()` instead of `1:3 %&gt;% sum`.</span></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="co">#&#39;</span></span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a><span class="co">#&#39; @evalRd rd_tags(&quot;pipe_call_linter&quot;)</span></span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a><span class="co">#&#39; @seealso [linters] for a complete list of linters available in lintr.</span></span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a><span class="co">#&#39; @export</span></span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a>pipe_call_linter <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a>  xpath <span class="ot">&lt;-</span> <span class="st">&quot;//expr[preceding-sibling::SPECIAL[text() = &#39;%&gt;%&#39;] and *[1][self::SYMBOL]]&quot;</span></span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a>  <span class="fu">Linter</span>(<span class="cf">function</span>(source_expression) {</span>
+<span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a>    <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is_lint_level</span>(source_expression, <span class="st">&quot;expression&quot;</span>)) {</span>
+<span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a>      <span class="fu">return</span>(<span class="fu">list</span>())</span>
+<span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a>    }</span>
+<span id="cb1-16"><a href="#cb1-16" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" tabindex="-1"></a>    xml <span class="ot">&lt;-</span> source_expression<span class="sc">$</span>xml_parsed_content</span>
+<span id="cb1-18"><a href="#cb1-18" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" tabindex="-1"></a>    bad_expr <span class="ot">&lt;-</span> xml2<span class="sc">::</span><span class="fu">xml_find_all</span>(xml, xpath)</span>
+<span id="cb1-20"><a href="#cb1-20" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" tabindex="-1"></a>    <span class="fu">xml_nodes_to_lints</span>(</span>
+<span id="cb1-22"><a href="#cb1-22" tabindex="-1"></a>      bad_expr,</span>
+<span id="cb1-23"><a href="#cb1-23" tabindex="-1"></a>      <span class="at">source_expression =</span> source_expression,</span>
+<span id="cb1-24"><a href="#cb1-24" tabindex="-1"></a>      <span class="at">lint_message =</span> <span class="st">&quot;Use explicit calls in magrittr pipes, i.e., `a %&gt;% foo` should be `a %&gt;% foo()`.&quot;</span>,</span>
+<span id="cb1-25"><a href="#cb1-25" tabindex="-1"></a>      <span class="at">type =</span> <span class="st">&quot;warning&quot;</span></span>
+<span id="cb1-26"><a href="#cb1-26" tabindex="-1"></a>    )</span>
+<span id="cb1-27"><a href="#cb1-27" tabindex="-1"></a>  })</span>
+<span id="cb1-28"><a href="#cb1-28" tabindex="-1"></a>}</span></code></pre></div>
+<p>Let’s walk through the parts of the linter individually.</p>
+<div id="writing-the-linter" class="section level2">
+<h2>Writing the linter</h2>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co">#&#39; Pipe call linter</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="co">#&#39;</span></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co">#&#39; Force explicit calls in magrittr pipes, e.g.,</span></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co">#&#39; `1:3 %&gt;% sum()` instead of `1:3 %&gt;% sum`.</span></span></code></pre></div>
+<p>Describe the linter, giving it a title and briefly covering the
+usages that are discouraged when the linter is active.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="co">#&#39; @evalRd rd_tags(&quot;pipe_call_linter&quot;)</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="co">#&#39; @seealso [linters] for a complete list of linters available in lintr.</span></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="co">#&#39; @export</span></span></code></pre></div>
+<p>These lines (1) generate a Tags section in the documentation for the
+linter<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>;
+(2) link to the full table of available linters; and (3) mark the
+function for export. The most unfamiliar here is probably (1), which can
+be skipped outside of <code>lintr</code> itself.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>pipe_call_linter <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span></code></pre></div>
+<p>Next, we define the name of the new linter. The convention is to
+suffix all linter names with <code>_linter</code>. All
+<code>_linter</code> functions are function factories that return a
+closure that will do the actual linting function. We could define
+additional parameters that are useful for the linter in this function
+declaration (see, e.g. <code>assignment_linter</code>), but
+<code>pipe_call_linter</code> requires no additional arguments.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>xpath <span class="ot">&lt;-</span> <span class="st">&quot;//expr[preceding-sibling::SPECIAL[text() = &#39;%&gt;%&#39;] and *[1][self::SYMBOL]]&quot;</span></span></code></pre></div>
+<p>Here is the core linter logic. <code>xpath</code> is an XPath
+expression for expressions matching the discouraged usage.
+<code>xpath</code> is saved inside the factory code (as opposed to
+inside the linter itself) for efficiency. Often, the <code>xpath</code>
+will be somewhat complicated / involve some assembly code using
+<code>paste()</code> or <code>glue::glue()</code>[^See
+<code>infix_spaces_linter()</code> for an example of this], in which
+case it is preferable to execute this code only once when creating the
+linter; the cached XPath is then re-used on each expression in each file
+where the linter is run.</p>
+<p>Let’s examine the XPath a bit more closely:</p>
+<pre class="xpath"><code>//expr                  # global search (//) for &#39;expr&#39; nodes (R expressions), at any nesting level
+[                       # node[...] looks for any &#39;node&#39; satisfying conditions in ...
+  preceding-sibling::   # &quot;siblings&quot; are at the same nesting level in XML
+    SPECIAL[            # &#39;SPECIAL&#39; is the parse token for infix operators like %% or %+%
+      text() = &#39;%&gt;%&#39;    # text() returns the string associated with this node
+    ]                   #
+  and                   # combine conditions with &#39;and&#39;
+  *                     # match any node
+  [1]                   # match the first such node
+  [self::SYMBOL]        # match if the current node is a &#39;SYMBOL&#39; (i.e., a &#39;name&#39; in R)
+]                       #</code></pre>
+<p>Taken together, that means we want to match <code>expr</code> nodes
+preceded by the <code>%&gt;%</code> infix operator whose first child
+node is a <code>name</code>. That maps pretty closely to the description
+of what the <code>pipe_call_linter</code> is looking for, but there is
+subtlety in mapping between the R code you’re used to and how they show
+up in the XML representation. <code>expr</code> nodes in particular take
+some practice to get accustomed to – use the plentiful XPath-based
+linters in <code>lintr</code> as a guide to get extra practice<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a>. Note:
+<code>xml2</code> implements XPath 1.0, which lacks some helpful
+features available in XPath 2.0.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">Linter</span>(<span class="cf">function</span>(source_expression) {</span></code></pre></div>
+<p>This is the closure. It will be called on the
+<code>source_expression</code> variable that contains the top level
+expressions in the file to be linted. The call to <code>Linter()</code>
+gives this closure the class ‘linter’ (it also guesses the name of the
+linter; see <code>?Linter</code> for more details).</p>
+<p>The raw text of the expression is available from
+<code>source_file$content</code>. However, it is not generally possible
+to implement linters from the raw text – consider
+<code>equals_na_linter</code>. If we just look for <code>== NA</code> in
+the text of the file, we’ll generate many false positives, e.g. in
+comments (such as
+<code># note: is.na() is the proper way to check == NA</code>) or inside
+character literals (such as
+<code>warning(&quot;don&#39;t use == NA to check missingness&quot;)</code>). We’re
+also likely to generate false negatives, for example when
+<code>==</code> and <code>NA</code> appear on different lines! Working
+around these issues using only the un-parsed text in every situation
+amounts to re-implementing the parser.</p>
+<p>Therefore it is recommended to work with the tokens from
+<code>source_file$parsed_content</code> or
+<code>source_file$xml_parsed_content</code>, as they are tokenized from
+the <code>R</code> parser. These tokens are obtained from
+<code>parse()</code> and <code>utils::getParseData()</code> calls done
+prior to calling the new linter. <code>getParseData()</code> returns a
+<code>data.frame</code> with information from the source parse tree of
+the file being linted. A list of tokens is available from <a href="https://github.com/r-devel/r-svn/blob/master/src/main/gram.y#L395-L412">r-source/src/main/gram.y</a>.</p>
+<p><code>source_file$xml_parsed_content</code> uses
+<code>xmlparsedata::xml_parse_data()</code> to convert the
+<code>getParseData()</code> output into an XML tree, which enables
+writing linter logic in <a href="https://www.w3schools.com/xml/xpath_intro.asp">XPath</a>, a
+powerful language for expressing paths within the nested XML data
+structure. Most linters in <code>lintr</code> are built using XPath
+because it is a powerful language for computation on the abstract syntax
+tree / parse tree.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">is_lint_level</span>(source_expression, <span class="st">&quot;expression&quot;</span>)) {</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">list</span>())</span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>}</span></code></pre></div>
+<p>Here, we return early if <code>source_expression</code> is not the
+expression-level object. <code>get_source_expression()</code> returns an
+object that parses the input file in two ways – once is done
+expression-by-expression, the other contains all of the expressions in
+the file. This is done to facilitate caching. Suppose your package has a
+long source file (e.g., 100s of expressions) – rather than run linters
+on every expression every time the file is updated, when caching is
+activated <code>lintr</code> will only run the linter again on
+expressions that have changed.</p>
+<p>Therefore, it is preferable to write expression-level linters
+whenever possible. Two types of exceptions observed in
+<code>lintr</code> are (1) when several or all expressions are
+<em>required</em> to ensure the linter logic applies (e.g.,
+<code>conjunct_test_linter</code> looks for consecutive calls to
+<code>stopifnot()</code>, which will typically appear on consecutive
+expressions) or (2) when the linter logic is very simple &amp; fast to
+compute, so that the overhead of re-running the linter is low (e.g.,
+<code>single_quotes_linter</code>). In those cases, use
+<code>is_lint_level(source_expression, &quot;file&quot;)</code>.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>xml <span class="ot">&lt;-</span> source_expression<span class="sc">$</span>xml_parsed_content</span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>bad_expr <span class="ot">&lt;-</span> xml2<span class="sc">::</span><span class="fu">xml_find_all</span>(xml, xpath)</span></code></pre></div>
+<p><code>source_expression$xml_parsed_content</code> is copied to a
+local variable (this is not strictly necessary but facilitates
+debugging). Then <code>xml2::xml_find_all()</code> is used to execute
+the XPath on this particular expression. Keep in mind that it is
+typically possible for a single expression to generate more than one
+lint – for example, <code>x %&gt;% na.omit %&gt;% sum</code> will
+trigger the <code>pipe_call_linter()</code> twice<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">xml_nodes_to_lints</span>(</span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>  bad_expr,</span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>  <span class="at">source_expression =</span> source_expression,</span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a>  <span class="at">lint_message =</span> <span class="st">&quot;Use explicit calls in magrittr pipes, i.e., `a %&gt;% foo` should be `a %&gt;% foo()`.&quot;</span>,</span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">&quot;warning&quot;</span></span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a>)</span></code></pre></div>
+<p>Finally, we pass the matching XML node(s) to
+<code>xml_nodes_to_lints()</code>, which returns <code>Lint</code>
+objects corresponding to any “bad” usages found in
+<code>source_expression</code>. See <code>?Lint</code> and
+<code>?xml_nodes_to_lints</code> for details about the arguments. Note
+that here, the <code>message</code> for the lint is always the same, but
+for many linters, the message is customized to more closely match the
+observed usage. In such cases, <code>xml_nodes_to_lint()</code> can
+conveniently accept a function in <code>lint_message</code> which takes
+a node as input and converts it to a customized message. See, for
+example, <code>seq_linter</code>.</p>
+</div>
+<div id="writing-linter-tests" class="section level2">
+<h2>Writing linter tests</h2>
+<p>(NB: this section uses the <code>assignment_linter()</code> which has
+simpler examples than <code>pipe_continuation_linter()</code>.)</p>
+<p><code>{lintr}</code> works best inside the <code>{testthat}</code>
+unit testing framework, in particular, <code>{lintr}</code> exports
+<code>lintr::expect_lint()</code> which is designed as a companion to
+other testthat expectations.</p>
+<p>You can define tests inside separate <code>test_that</code> calls.
+Most of the linters use the same default form.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">test_that</span>(<span class="st">&quot;returns the correct linting&quot;</span>, {</span></code></pre></div>
+<p>You then test a series of expectations for the linter using
+<code>expect_lint</code>. Please see <code>?expect_lint</code> for a
+full description of the parameters.</p>
+<p>The main three aspects to test are:</p>
+<ol style="list-style-type: decimal">
+<li>Linter returns no lints when there is nothing to lint, e.g.</li>
+</ol>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="fu">expect_lint</span>(<span class="st">&quot;blah&quot;</span>, <span class="cn">NULL</span>, <span class="fu">assignment_linter</span>())</span></code></pre></div>
+<ol start="2" style="list-style-type: decimal">
+<li>Linter returns a lint when there is something to lint, e.g.</li>
+</ol>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="fu">expect_lint</span>(<span class="st">&quot;blah=1&quot;</span>,</span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>  <span class="fu">rex</span>(<span class="st">&quot;Use &lt;-, not =, for assignment.&quot;</span>),</span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a>  <span class="fu">assignment_linter</span>()</span>
+<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a>)</span></code></pre></div>
+<ol start="3" style="list-style-type: decimal">
+<li>As many edge cases as you can think of that might break it,
+e.g.</li>
+</ol>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="fu">expect_lint</span>(<span class="st">&quot;fun((blah = fun(1)))&quot;</span>,</span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a>  <span class="fu">rex</span>(<span class="st">&quot;Use &lt;-, not =, for assignment.&quot;</span>),</span>
+<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a>  <span class="fu">assignment_linter</span>()</span>
+<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a>)</span></code></pre></div>
+<p>You may want to test that additional <code>lint</code> attributes are
+correct, such as the type, line number, column number, e.g.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="fu">expect_lint</span>(<span class="st">&quot;blah=1&quot;</span>,</span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">message =</span> <span class="st">&quot;assignment&quot;</span>, <span class="at">line_number =</span> <span class="dv">1</span>, <span class="at">column_number =</span> <span class="dv">5</span>, <span class="at">type =</span> <span class="st">&quot;style&quot;</span>),</span>
+<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a>  <span class="fu">assignment_linter</span>()</span>
+<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a>)</span></code></pre></div>
+<p>Finally, it is a good idea to test that your linter reports multiple
+lints if needed, e.g.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="fu">expect_lint</span>(<span class="st">&quot;blah=1; blah=2&quot;</span>,</span>
+<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a>  <span class="fu">list</span>(</span>
+<span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a>    <span class="fu">list</span>(<span class="at">line_number =</span> <span class="dv">1</span>, <span class="at">column_number =</span> <span class="dv">5</span>),</span>
+<span id="cb16-4"><a href="#cb16-4" tabindex="-1"></a>    <span class="fu">list</span>(<span class="at">line_number =</span> <span class="dv">1</span>, <span class="at">column_number =</span> <span class="dv">13</span>),</span>
+<span id="cb16-5"><a href="#cb16-5" tabindex="-1"></a>  )</span>
+<span id="cb16-6"><a href="#cb16-6" tabindex="-1"></a>  <span class="fu">assignment_linter</span>()</span>
+<span id="cb16-7"><a href="#cb16-7" tabindex="-1"></a>)</span></code></pre></div>
+<p>It is always better to write too many tests rather than too few.</p>
+</div>
+<div id="other-utilities-for-writing-custom-linters" class="section level2">
+<h2>Other utilities for writing custom linters</h2>
+<p>Besides <code>is_lint_level()</code>, <code>{lintr}</code> also
+exports some other helpers generally useful for writing custom linters;
+these are used a lot in the internals of our own helpers, and so they’ve
+been tested and demonstrated their utility already.</p>
+<ul>
+<li><code>get_r_string()</code>: Whenever your linter needs to examine
+the value of a character literal (e.g., whether an argument value is set
+to some string), use this to extract the string exactly as R will see
+it. This is especially important to make your logic robust to R-4-style
+raw strings like <code>R&quot;-(hello)-&quot;</code>, which is otherwise difficult
+to express, for example as an XPath.</li>
+</ul>
+</div>
+<div id="contributing-to-lintr" class="section level2">
+<h2>Contributing to <code>{lintr}</code></h2>
+<div id="more-details-about-writing-tests-for-new-lintr-linters" class="section level3">
+<h3>More details about writing tests for new <code>{lintr}</code>
+linters</h3>
+<p>The <code>{lintr}</code> package uses <a href="https://github.com/r-lib/testthat">testthat</a> for testing. You
+can run all of the currently available tests using
+<code>devtools::test()</code>. If you want to run only the tests in a
+given file use the <code>filter</code> argument to
+<code>devtools::test()</code>.</p>
+<p>Linter tests should be put in the <a href="https://github.com/r-lib/lintr/tree/main/tests/testthat">tests/testthat/</a>
+folder. The test filename should be the linter name prefixed by
+<code>test-</code>, e.g.
+<code>test-pipe_continuation_linter.R</code>.</p>
+</div>
+<div id="adding-your-linter-to-the-default_linters" class="section level3">
+<h3>Adding your linter to the default_linters</h3>
+<p>If your linter implements part of the tidyverse style guide you can
+add it to <code>default_linters</code>. This object is created in the
+file <code>zzz.R</code> (this name ensures that it will always run after
+all the linters are defined). Add your linter name to the
+<code>default_linters</code> list before the <code>NULL</code> at the
+end, and add a corresponding test case to the test script
+<code>./tests/testthat/default_linter_testcode.R</code>.</p>
+</div>
+<div id="submit-pull-request" class="section level3">
+<h3>Submit pull request</h3>
+<p>Push your changes to a branch of your fork of the <a href="https://github.com/r-lib/lintr">lintr</a> repository, and submit a
+pull request to get your linter merged into lintr!</p>
+</div>
+</div>
+<div class="footnotes footnotes-end-of-document">
+<hr />
+<ol>
+<li id="fn1"><p>NB: this is a helper function for generating custom Rd
+styling. See R/linter_tags.R.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+<li id="fn2"><p>The W3schools tutorials are also quite helpful; see <a href="https://www.w3schools.com/xml/xpath_intro.asp" class="uri">https://www.w3schools.com/xml/xpath_intro.asp</a><a href="#fnref2" class="footnote-back">↩︎</a></p></li>
+<li id="fn3"><p>This is particularly important if you want the
+<code>message</code> field in the resulting <code>Lint()</code> to vary
+depending on the exact violation that’s found. For
+<code>pipe_call_linter()</code>, the message is always the same. See
+<code>assignment_linter()</code> for an example where the
+<code>message</code> can vary.<a href="#fnref3" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

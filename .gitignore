@@ -4,3 +4,5 @@
 
 # Mac
 .DS_Store
+
+*.code-workspace

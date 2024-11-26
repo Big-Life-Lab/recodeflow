@@ -1,0 +1,21 @@
+Package: cyclocomp
+Title: Cyclomatic Complexity of R Code
+Version: 1.1.1
+Author: Gabor Csardi
+Maintainer: Gabor Csardi <csardi.gabor@gmail.com>
+Description: Cyclomatic complexity is a software metric (measurement),
+    used to indicate the complexity of a program. It is a quantitative
+    measure of the number of linearly independent paths through a program's
+    source code. It was developed by Thomas J. McCabe, Sr. in 1976.
+License: MIT + file LICENSE
+URL: https://github.com/gaborcsardi/cyclocomp
+BugReports: https://github.com/gaborcsardi/cyclocomp/issues
+Imports: callr, crayon, desc, remotes, withr
+Suggests: testthat
+RoxygenNote: 7.2.3
+Encoding: UTF-8
+NeedsCompilation: no
+Packaged: 2023-08-30 12:49:50 UTC; gaborcsardi
+Repository: RSPM
+Date/Publication: 2023-08-30 17:00:22 UTC
+Built: R 4.3.0; ; 2023-08-31 11:46:42 UTC; unix
