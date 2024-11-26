@@ -981,7 +981,7 @@ recode_non_derived_variables <- function(
       )
       if (length(else_value) > 0) {
         extra_row <- nrow(log_table) + 1
-        log_table[extra_row , "value_to"] <- else_value
+        log_table[extra_row , "value_to"] <- as.character(else_value)
         log_table[extra_row , "From"] <-
           "else"
         log_table[extra_row , "rows_recoded"] <-
