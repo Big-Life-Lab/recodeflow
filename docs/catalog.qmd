@@ -1,0 +1,130 @@
+---
+title: Scoping
+format:
+    html:
+        embed-resources: true
+---
+
+# Scope and specifications for the `catalog` object in recodeflow
+
+## Introduction
+
+The `catalog` object is proposed as a structured solution for managing dataset-level metadata in **`recodeflow`**. It follows recodeflow's modular sidecar metadata structures and methods (e.g., `variables` and `variable_details`), and emphasizes interoperability, usability, and extensibility. With its lightweight design, the `catalog` object will support CSV-based workflows, print and summary features, and integration into existing metadata management processes.
+
+------------------------------------------------------------------------
+
+## Use cases
+
+### Primary use cases
+
+1.  **Metadata management**
+    -   Enable a structured and extensible format for documenting dataset-level metadata fields, such as title, description, creator, and license.
+    -   Ensure metadata is easily accessible and modifiable.
+2.  **Print and summary**
+    -   Provide intuitive functions for displaying dataset metadata alongside data summaries to give users a comprehensive overview.
+3.  **Data dictionary generation**
+    -   Support workflows to combine metadata from `catalog`, `variables`, and `variable_details` into a comprehensive data dictionary for documentation and sharing.
+4.  **Interoperability**
+    -   Use CSV as the primary format for importing and exporting metadata.
+    -   Allow future consideration for supporting standards like DDI and PMML.
+5.  **Alignment with sidecars and attributes**
+    -   Integrate seamlessly with workflows by attaching metadata to datasets via attributes, similar to existing `recodeflow` metadata structures.
+
+------------------------------------------------------------------------
+
+## Naming and design alignment
+
+### Why "catalog"?
+
+The term **`catalog`** aligns with widely used metadata standards like DCAT (Data Catalog Vocabulary), which employs "Catalog" and "Dataset" as primary constructs. Unlike alternatives such as **`study`** (tightly coupled to studies) or **`dublin_core`** (too specific), **`catalog`** provides a broader and more intuitive framework for managing dataset-level metadata.
+
+### Integration with sidecars and attributes
+
+-   The `catalog` object will function as a "sidecar," storing metadata in a separate structure and attaching it to datasets via attributes.
+-   This design ensures metadata is modular, flexible, and consistent with `recodeflow`’s existing approach.
+
+------------------------------------------------------------------------
+
+## Existing landscape and interoperability considerations
+
+### Existing R packages
+
+1.  **`tm`**
+    -   Provides Dublin Core metadata support for text corpora.
+    -   Lightweight but text-focused and less relevant for tabular datasets.
+2.  **`dataset`**
+    -   Implements Dublin Core metadata for structured data objects.
+    -   Lacks widespread adoption and flexibility.
+
+### Metadata standards
+
+1.  **Dublin Core**
+    -   A well-established standard for dataset metadata, including fields like `title`, `creator`, and `description`.
+2.  **DCAT**
+    -   A W3C standard for data catalog metadata, building on Dublin Core.
+    -   Adds elements like `Catalog`, `Dataset`, and `Distribution` to support web interoperability.
+
+### Considerations for `tm` and `dataset`
+
+While direct support for **`tm`** or **`dataset`** is not planned, their relevance should be revisited if workflows expand to include text data or complex metadata sharing. Interoperability with these packages may require further discussion.
+
+------------------------------------------------------------------------
+
+## Proposed schema for the `catalog` object
+
+| Field | Description | Example |
+|------------------|-----------------------------|-------------------------|
+| `title` | Name of the dataset/catalog | "Health Survey 2024" |
+| `description` | Detailed description of the dataset | "Survey data on public health metrics." |
+| `creator` | Person or organization responsible for the data | "RecodeFlow Team" |
+| `publisher` | Organization publishing the data | "Public Health Agency" |
+| `subject` | Topics covered by the dataset | "Demography, Health" |
+| `date_created` | When the dataset was created | "2024-01-15" |
+| `date_modified` | Last modification date | "2024-11-29" |
+| `version` | Dataset version | "1.0" |
+| `license` | Licensing information | "CC-BY 4.0" |
+| `contact_point` | Contact for questions about the dataset | "support\@example.org" |
+
+------------------------------------------------------------------------
+
+## Functions for the catalog object
+
+### Core functions
+
+1.  **Attach metadata to data**
+    -   `set_catalog(data, catalog)`: Attach a `catalog` object to a data frame as an attribute.
+2.  **Retrieve metadata**
+    -   `get_catalog(data)`: Retrieve the `catalog` object from a data frame.
+3.  **Print and summary**
+    -   `print.catalog(x)`: Display catalog metadata.
+    -   `summary.catalog(x)`: Summarize metadata for quick inspection.
+
+### Utility functions
+
+1.  **Access or modify fields**
+    -   `catalog_field(catalog, field)`: Access a specific field in the `catalog` object.
+    -   `set_catalog_field(catalog, field, value)`: Update a specific field in the `catalog` object.
+2.  **Integration into workflows**
+    -   Combine with `variables` and `variable_details` for data dictionary generation.
+
+------------------------------------------------------------------------
+
+## Interoperability
+
+### CSV as the primary format
+
+-   Metadata will be imported and exported using CSV files, consistent with workflows for `variables` and `variable_details`.
+
+## **Future considerations**
+
+1.  **DDI and PMML support**
+
+-   Importing and exporting to XML-based formats like DDI or PMML could be explored for interoperability with broader metadata ecosystems.
+
+2.  \*\*Roxygen support (CRAN, help(), pgkdown)
+
+-   Generate or export to data.R RD description code. Importing is challenging because all metadata is unstructured with the `@description` attribute.
+
+2.  **Potential discussion for package interoperability**
+
+-   Further consideration could be given to leveraging packages like tm or dataset to expand compatibility for specific workflows.
