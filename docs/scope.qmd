@@ -8,86 +8,43 @@ format:
 ```{r}
 ```
 
-This document goes through the scope of the recodeflow library by explaining the 
-problems it will aim to solve and those that are outside its purview.
+This document goes through the scope of the recodeflow library by explaining the problems it will aim to solve and those that are outside its purview.
 
-## Context 
+## Context
 
-One of the first steps in any quantitative study is the selection and creation 
-of variables that will be used to answer the research question. However, this 
-process is not usually conducted in a manner that is open and transparent 
-resulting in studies that are:
+One of the first steps in any quantitative study is the selection and creation of variables that will be used to answer the research question. However, this process is not usually conducted in a manner that is open and transparent resulting in studies that are:
 
-1. **Inefficient**: Previous work done by research teams are rarely 
-   transferable to new studies, even if they use the same 
-   variables.
-2. **Non-reproducible**: The lack of transparency makes 
-   it impossible for a published study to be reproduced without help from the 
-   original authors.
-   If enough time has passed since publication, even the original authors may 
-   not remember how the study variables were created. 
+1.  **Inefficient**: Previous work done by research teams are rarely transferable to new studies, even if they use the same variables.
+2.  **Non-reproducible**: The lack of transparency makes it impossible for a published study to be reproduced without help from the original authors. If enough time has passed since publication, even the original authors may not remember how the study variables were created.
 
-This issue is especially a problem in studies developing predictive algorithms. 
-The lack of an open and transparent process and the ever increasing complexity of these algorithms makes it impossible to not 
-only reproduce but also score these algorithms on new data.
+This issue is especially a problem in studies developing predictive algorithms. The lack of an open and transparent process and the ever increasing complexity of these algorithms makes it impossible to not only reproduce but also score these algorithms on new data.
 
-The recodeflow library aims to alleviate these issues within the domain of 
-variable selection/creation. 
+The recodeflow library aims to alleviate these issues within the domain of variable selection/creation.
 
 ## Scope
 
-### Variable metadata 
+### Variable metadata {#variable-metadata}
 
-All the metadata for variable selection and creation 
-should be encoded in a format that is open and machine actionable, allowing it 
-to be easily published along with the main paper. Including this information 
-with the published paper is the first step in making the study easily reproducible.
-Examples of such metadata include variable labels, category labels, the 
-logic for the creation of variables etc. However, this information is rarely
-included. Studies developing predictive
-algorithms are especially hard to reproduce without this information due to the large 
-number of and complexity of the variables included. 
+All the metadata for variable selection and creation should be encoded in a format that is open and machine actionable, allowing it to be easily published along with the main paper. Including this information with the published paper is the first step in making the study easily reproducible. Examples of such metadata include variable labels, category labels, the logic for the creation of variables etc. However, this information is rarely included. Studies developing predictive algorithms are especially hard to reproduce without this information due to the large number of and complexity of the variables included.
 
-The library should aim to fix this problem by developing a schema in an open 
-and machine actionable format that enables researchers to encode this 
-metadata.
-Examples of open and machine actionable formats include CSV, YAML, and
-JSON. Examples of formats that are open but not machine actionable are plain text 
-files. Microsoft Excel is an example of a format that is machine actionable but 
-not open. Microsoft Word is an example of a format that is neither open nor 
-machine actionable. 
+The library should aim to fix this problem by developing a schema in an open and machine actionable format that enables researchers to encode this metadata. Examples of open and machine actionable formats include CSV, YAML, and JSON. Examples of formats that are open but not machine actionable are plain text files. Microsoft Excel is an example of a format that is machine actionable but not open. Microsoft Word is an example of a format that is neither open nor machine actionable.
 
 ### Transformation software
 
-Once the study variables have been selected, the usual 
-next step in the process is the creation of the study dataset 
-in a programming environment such as R or Python.
-However, this translation into code can be error prone for example due to 
-coding errors or misunderstandings between the individual who 
-defines the variables and the one who codes them.
+Once the study variables have been selected, the usual next step in the process is the creation of the study dataset in a programming environment such as R or Python. However, this translation into code can be error prone for example due to coding errors or misunderstandings between the individual who defines the variables and the one who codes them.
 
-The library should aim to fix this problem by developing software that automatically 
-creates a study dataset using the information provided by the investigator 
-in the [above mentioned schema](#variable-metadata). To that end the schema should include all the 
-information required by the software to create the variables in the study dataset. 
-In addition, using a machine actionable format is vital.
+The library should aim to fix this problem by developing software that automatically creates a study dataset using the information provided by the investigator in the [above mentioned schema](#variable-metadata). To that end the schema should include all the information required by the software to create the variables in the study dataset. In addition, using a machine actionable format is vital.
 
-This software will allow for a clear separation between the processes of defining 
-the study variables and using these definitions to create the study dataset,
-making it easier for investigators and analysts to work independent of each
-other.
-
+This software will allow for a clear separation between the processes of defining the study variables and using these definitions to create the study dataset, making it easier for investigators and analysts to work independent of each other.
 
 ### Long to wide and wide to long
 
 A dataset can come in one of two formats:
 
-1. **Long format**: An observation can take up multiple rows.
-2. **Wide format**: An observation takes up a single row. 
+1.  **Long format**: An observation can take up multiple rows.
+2.  **Wide format**: An observation takes up a single row.
 
-There are different reasons for choosing one format over the other but the wide
-data format is usually easier to understand by humans whereas the long data format is 
-preferred for analysis by a computer.
+There are different reasons for choosing one format over the other but the wide data format is usually easier to understand by humans whereas the long data format is preferred for analysis by a computer.
 
 For example, consider a dataset that looks at blood pressure readings over time.
 
@@ -111,88 +68,71 @@ Bob      Feb    118
 Bob      Mar    121
 ```
 
-Notice how in the wide format all the observations for a single patient
-are on one row whereas in the long format its split between three rows. 
+Notice how in the wide format all the observations for a single patient are on one row whereas in the long format its split between three rows.
 
-When creating a study dataset analysts may need to convert the original 
-dataset from one format to another which the library should support.
+When creating a study dataset analysts may need to convert the original dataset from one format to another which the library should support.
 
 ### Escape hatches
 
-Recognizing that not all transformations can be encoded in the defined data 
-format perhaps because of its complexity or because it would require a
-change to the library that is yet to be done, the library should allows users 
-to bypass the normal method of creating a transformation.
+Recognizing that not all transformations can be encoded in the defined data format perhaps because of its complexity or because it would require a change to the library that is yet to be done, the library should allows users to bypass the normal method of creating a transformation.
 
 ### Missing values
 
-All data has some of its values missing which makes it important for the library 
-to allows its users to represent it in the transformation metadata. In addition 
-missing values can come in different flavours for example most commonly due to 
-non-response, but also due to the question not being asked, not being in a 
-database etc. which means the library should allow the user to tag the missing 
-value with its type. Finally, recognizing that the final dataset will most 
-probably be used in another libraries and functions, the library should to its 
-best ability try to allow the missing values to be propoagates in other parts 
-of the code.
+All data has some of its values missing which makes it important for the library to allows its users to represent it in the transformation metadata. In addition missing values can come in different flavours for example most commonly due to non-response, but also due to the question not being asked, not being in a database etc. which means the library should allow the user to tag the missing value with its type. Finally, recognizing that the final dataset will most probably be used in another libraries and functions, the library should to its best ability try to allow the missing values to be propoagates in other parts of the code.
 
 ### Additional metadata
 
 ### Import/Export
 
-"It should be easy import and export metadata from/to other sources, or add
-metadata."
+> Importing and exporting metadata from/to other sources or adding metadata should be easy.
+
+recodeflow stores metadata in `variable` and `variable_details` as a metadata 'sidecar', with three commonly used metadata (variable labels, value labels and tagged NA) stored in attr() using the approach of `haven` and `labelled`.
+
+Getting metadata to and from these two locations (sidecar and attr()) should be easy, and we should consider supporting a few common standards and workflows.
+
+Examples of importing metadata.
+
+1.  Statistical languages that store metadata in their file. SAS, Stata. Haven imports a limited amount of metadata. Variable and value labels.
+2.  CSV files and Excel spreadsheets. This is probably the most common format for storing metadata in a spreadsheet without a well-established format.
+3.  Established metadata sources: Dublin Core, DDI, etc.
+
+Examples that, unfortunately, aren't working well with the R ecosystem.
+
+The R language supports metadata for tables as roxygen, which can then be used with CRAN, help(), and Pkgdown. This is a great start, but there isn't an established practice for structuring the description file. This means it is usually an arduous task to cut and paste variable and value labels. Support rd file parsing may be challenging, but we could more robustly generate data description files and do so in a more standard approach.
 
 Doug I'm not sure what you meant by the import part. Did you mean:
 
-1. Import the metadata from an external data source into the variables 
-   and variable details sheets. For example, a user would be able to update the 
-   label column with the metadata from a DDI format.
-2. Import and tag the harmonized dataset with metadata from an external file. 
-   This doesn't make much sense to me since all the variables in the harmonized 
-   dataset are created by us so there should not be any metadata out there for it.
+1.  Import the metadata from an external data source into the variables and variable details sheets. For example, a user would be able to update the label column with the metadata from a DDI format.
+2.  Import and tag the harmonized dataset with metadata from an external file. This doesn't make much sense to me since all the variables in the harmonized dataset are created by us so there should not be any metadata out there for it.
 
-For exporting you meant the library should be able to export the metadata from 
-the variables and variable details sheet into another format like DDI.
+For exporting you meant the library should be able to export the metadata from the variables and variable details sheet into another format like DDI.
 
 ### Easy to use
 
-"Metadata should be easy to use. You should, for example, be able to make data
-dictionaries at any point in your project"
+"Metadata should be easy to use. You should, for example, be able to make data dictionaries at any point in your project"
 
-Did you envision that the library would have functions to create a data dictionary 
-or would have helper functions for it?
+Did you envision that the library would have functions to create a data dictionary or would have helper functions for it?
 
 I think the first point make sense.
 
 ### No duplicates
 
-"You should be able to, “type {metadata} once and use many times” including
-maintaining metadata in machine-actionable form in other projects (journal
-figures, predictive algorithm deployment, etc.)"
+"You should be able to, “type {metadata} once and use many times” including maintaining metadata in machine-actionable form in other projects (journal figures, predictive algorithm deployment, etc.)"
 
-I assume you mean helper functions here like get the label for a variable, 
-get the labels for a category etc. Perhaps a internal data format for what is 
-in the variables and variable details sheet that is easier to navigate using code?
+I assume you mean helper functions here like get the label for a variable, get the labels for a category etc. Perhaps a internal data format for what is in the variables and variable details sheet that is easier to navigate using code?
 
 ### Variables transformation information
 
-"Metadata includes data transformation information (i.e. the variable is a
-spline, dummy variable, interaction, etc.)"
+"Metadata includes data transformation information (i.e. the variable is a spline, dummy variable, interaction, etc.)"
 
-I see this as being in another library for developing predictive algorithms. 
-The other library can build on whats in the variables and variable details sheet 
-to accomplish this purpose.
+I see this as being in another library for developing predictive algorithms. The other library can build on whats in the variables and variable details sheet to accomplish this purpose.
 
 ### Roles
 
-"Building on the above, identify potential ‘roles’ of variables in the project.
-Roles are similar to the same as for tidymodels. An example role are variables
-used in table 1, or variables used as explanatory variables in a model."
+"Building on the above, identify potential ‘roles’ of variables in the project. Roles are similar to the same as for tidymodels. An example role are variables used in table 1, or variables used as explanatory variables in a model."
 
 Look at the above point I made.
 
 ## Out of scope
 
 ### Multiple table datasets
-
