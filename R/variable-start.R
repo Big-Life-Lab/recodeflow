@@ -4,6 +4,7 @@
 #' particularly for handling table-based variables.
 #'
 #' @name variable-start
+#' @keywords internal
 NULL
 
 # This file has helper functions for the variableStart column and its values
@@ -17,6 +18,7 @@ NULL
 #' is_table_feeder_var("$table:my_lookup") # Returns TRUE
 #' is_table_feeder_var("[regular_var]") # Returns FALSE
 #' is_table_feeder_var("$table:values") # Returns TRUE
+#' @keywords internal
 is_table_feeder_var <- function(feeder_var) {
     return(grepl(pkg.env$recode.key.tables, feeder_var))
 }

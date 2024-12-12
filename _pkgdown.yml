@@ -48,6 +48,9 @@ reference:
     desc: Other useful functions
     contents:
     - set_data_labels
+    - select_vars_by_role
+    - get_table_name
+    - label_data
   - title: "Example worksheets"
     desc: Examples of worksheets for databases
     contents:
