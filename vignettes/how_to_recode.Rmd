@@ -8,7 +8,6 @@ vignette: >
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, collapse = TRUE, comment = "#>")
-source("../R/test_data_generator.R")
 ```
 
 We have examples to demonstrate how to recode variables with the _recodeflow_ function [`rec_with_table()`](../reference/rec_with_table.html)
@@ -33,6 +32,19 @@ library(dplyr)
 
 Our examples use the dataset `pbc` from the package [survival](https://cran.r-project.org/web/packages/survival/index.html). We've split this dataset in two (tester1 and tester2) to mimic real data e.g., the same survey preformed in separate years. For our examples, we've also added columns (`agegrp5` and `agegrp10`) to this dataset.
 
+```{r}
+test1 <- survival::pbc[1:209,]
+test2 <- survival::pbc[210:418,]
+
+#Adapting the data for How To examples. Breaking cont age variable into categories - 5 and 10 year age groups.
+agegrp <- cut(test1$age, breaks = c(25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80), right = FALSE)
+agegrp <- as.numeric(agegrp)
+tester1 <- cbind(test1, agegrp)
+
+agegrp <- cut(test2$age, breaks = c(20, 30, 40, 50, 60, 70, 80), right = FALSE)
+agegrp <- as.numeric(agegrp)
+tester2 <- cbind(test2, agegrp)
+```
 
 ## Example 1. Recode a single variable from a single dataset
 
@@ -44,9 +56,10 @@ Using dataset tester1, we'll recode the variable `sex` into a harmonized `sex` v
 ```{r}
 sex_1 <- rec_with_table(data = tester1, 
                         variables = "sex", 
-                        variable_details = variable_details,
+                        variable_details = recodeflow::tester_variable_details,
                         log = TRUE,
-                        var_labels = c(sex = "sex")
+                        var_labels = c(sex = "sex"),
+                        database_name = 'tester1'
                         )
 ```
 
@@ -62,17 +75,19 @@ We'll recode and combine the variable `sex` for our two datasets.
 ```{r, warning = FALSE}
 sex_1 <- rec_with_table(data = tester1, 
                         variables = "sex", 
-                        variable_details = variable_details, 
+                        variable_details = recodeflow::tester_variable_details,
                         log = TRUE,
-                        var_labels = c(sex = "Sex")
+                        var_labels = c(sex = "Sex"),
+                        database_name = 'tester1'
                         )
 head(sex_1)
 
 sex_2 <- rec_with_table(data = tester2, 
                         variables = "sex", 
-                        variable_details = variable_details, 
+                        variable_details = recodeflow::tester_variable_details,
                         log = TRUE,
-                        var_labels = c(sex = "Sex")
+                        var_labels = c(sex = "Sex"),
+                        database_name = 'tester2'
                         )
 tail(sex_2)
 ```
@@ -96,8 +111,8 @@ Use `set_data_labels()` to label the variables in your final dataset. `set_data_
 ```{r}
 labeled_sex_combined <- set_data_labels(
   data_to_label = sex_combined,
-  variable_details = variable_details,
-  variables_sheet = variables
+  variable_details = recodeflow::tester_variable_details,
+  variables_sheet = recodeflow::tester_variables
 )
 ```
 
@@ -122,16 +137,18 @@ The categories in the `agegrp` variable in tester1 are different than the catego
 ```{r, warning=FALSE}
 agegrp_1 <- rec_with_table(data = tester1, 
                            variables = "agegrp5", 
-                           variable_details = variable_details, 
-                           log = TRUE, 
+                           variable_details = recodeflow::tester_variable_details,
+                           log = TRUE,
+                           database_name = 'tester1'
                            )
 head(agegrp_1)
 
 
 agegrp_2 <- rec_with_table(data = tester2, 
                              variables = "agegrp10", 
-                             variable_details = variable_details, 
-                             log = TRUE)
+                             variable_details = recodeflow::tester_variable_details,
+                             log = TRUE,
+                           database_name = 'tester2')
 head(agegrp_2)
 
 ```
@@ -158,15 +175,17 @@ variable `age_cont`.
 ```{r, warning=FALSE}
 agegrp_1_cont <- rec_with_table(data = tester1, 
                              variables = "age_cont", 
-                             variable_details = variable_details, 
-                             log = TRUE)
+                             variable_details = recodeflow::tester_variable_details,
+                             log = TRUE,
+                           database_name = 'tester1')
 head(agegrp_1_cont)
 
 
 agegrp_2_cont <- rec_with_table(data = tester2, 
                              variables = "age_cont", 
-                             variable_details = variable_details, 
-                             log = TRUE)
+                             variable_details = recodeflow::tester_variable_details,
+                             log = TRUE,
+                           database_name = 'tester2')
 head(agegrp_2_cont)
 
 ```
@@ -190,15 +209,17 @@ Dataset tester1 has 5-year age groups (e.g., 30-34, 35-39), and tester2 has 10-y
 ```{r, warning=FALSE}
 agegrp10_1 <- rec_with_table(data = tester1, 
                              variables = "agegrp10", 
-                             variable_details = variable_details, 
-                             log = TRUE)
+                             variable_details = recodeflow::tester_variable_details,
+                             log = TRUE,
+                           database_name = 'tester1')
 head(agegrp10_1)
 
 
 agegrp10_2 <- rec_with_table(data = tester2, 
                              variables = "agegrp10", 
-                             variable_details = variable_details, 
-                             log = TRUE)
+                             variable_details = recodeflow::tester_variable_details,
+                             log = TRUE,
+                            database_name = 'tester2')
 head(agegrp10_2)
 
 ```
@@ -228,17 +249,18 @@ using `set_data_labels()`.
 ```{r, warning=FALSE}
 age_sex_1 <- rec_with_table(data = tester1, 
                             variables = c("age", "sex"), 
-                            variable_details = variable_details,
+                            variable_details = recodeflow::tester_variable_details,
                             log = TRUE, 
-                            var_labels = c(age = "Age", sex = "Sex")
-                            )
+                            var_labels = c(age = "Age", sex = "Sex"),
+                            database_name = 'tester1')
 head(age_sex_1)
 
 age_sex_2 <- rec_with_table(data = tester2, 
                             variables = c("age", "sex"), 
-                            variable_details = variable_details,
+                            variable_details = recodeflow::tester_variable_details,
                             log = TRUE, 
-                            var_labels = c(age = "Age", sex = "Sex")
+                            var_labels = c(age = "Age", sex = "Sex"),
+                            database_name = 'tester2'
                             )
 head(age_sex_2)
 ```
@@ -259,8 +281,8 @@ Use `set_data_labels()` to label the variables in your final dataset. `set_data_
 labeled_combined_age_sex <- 
   set_data_labels(
       data_to_label = combined_age_sex,
-      variable_details = variable_details, 
-      variables_sheet = variables
+      variable_details = recodeflow::tester_variable_details,
+      variables_sheet = recodeflow::tester_variables
       )
 ```
 
@@ -289,15 +311,17 @@ options(htmlwidgets.TOJSON_ARGS = list(na = "string"))
 1) Recode all variables listed in the variables worksheet, for dataset tester1 and dataset tester2
 ```{r, warning=FALSE}
 recoded1 <- rec_with_table(data = tester1,
-                          variables = variables,
-                          variable_details = variable_details,
+                           variables = recodeflow::tester_variables,
+                           variable_details = recodeflow::tester_variable_details,
                           log = TRUE,
+                           database_name = 'tester1'
                           )
 
 recoded2 <- rec_with_table(data = tester2,
-                          variables = variables,
-                          variable_details = variable_details,
+                           variables = recodeflow::tester_variables,
+                           variable_details = recodeflow::tester_variable_details,
                           log = TRUE,
+                           database_name = 'tester2'
                           )
 ```
 
@@ -309,8 +333,8 @@ combined_dataset <- bind_rows(recoded1, recoded2)
 3) Set labels for the combined recoded dataset
 ```{r}
 labeled_combined <- set_data_labels(data_to_label = combined_dataset,
-                                    variable_details = variable_details,
-                                    variables_sheet = variables
+                                    variable_details = recodeflow::tester_variable_details,
+                                    variables_sheet = recodeflow::tester_variables
                                     )
 ```
 
@@ -323,18 +347,20 @@ To know the origin of each row of data, you can use the `rec_with_table` argumen
 ```{r, warning=FALSE}
 age_sex_1 <- rec_with_table(data = tester1,
                             variables = c("age", "sex"), 
-                            variable_details = variable_details,
+                            variable_details = recodeflow::tester_variable_details,
                             var_labels = c(age = "Age", sex = "Sex"),
                             log = TRUE,
-                            attach_data_name = TRUE
+                            attach_data_name = TRUE,
+                           database_name = 'tester1'
                             )
 
 age_sex_2 <- rec_with_table(data = tester2,
                             variables = c("age", "sex"), 
-                            variable_details = variable_details,
+                            variable_details = recodeflow::tester_variable_details,
                             var_labels = c(age = "Age", sex = "Sex"),
                             log = TRUE,
-                            attach_data_name = TRUE
+                            attach_data_name = TRUE,
+                           database_name = 'tester2'
                             )
 ```
 
@@ -366,13 +392,15 @@ Our example derived variable `example_der` equals `chol` times `bili`.
 ```{r, warning=FALSE}
 derived1 <- rec_with_table(data = tester1,
                           variables = c("chol", "bili","example_der"),
-                          variable_details = variable_details,
-                          log = TRUE)
+                          variable_details = recodeflow::tester_variable_details,
+                          log = TRUE,
+                           database_name = 'tester1')
 
 derived2 <- rec_with_table(data = tester2,
                           variables = c("chol", "bili","example_der"),
-                          variable_details = variable_details,
-                          log = TRUE)
+                          variable_details = recodeflow::tester_variable_details,
+                          log = TRUE,
+                           database_name = 'tester2')
 ```
 
 2) Combine the harmonized variables: `chol`, `bili`, and `exampler_der`

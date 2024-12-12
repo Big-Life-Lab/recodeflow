@@ -4,6 +4,40 @@ library(readr)
 library(usethis)
 library(survival)
 
+variables_sheet_cols <- cols(
+    variable = col_character(),
+    label = col_character(),
+    labelLong = col_character(),
+    subject = col_character(),
+    section = col_character(),
+    variableType = col_character(),
+    databaseStart = col_character(),
+    units = col_character(),  # changed from logical
+    variableStart = col_character(),
+    notes = col_logical(),
+    description = col_logical()
+)
+
+variable_details_sheet_cols <- cols(
+    variable = col_character(),
+    dummyVariable = col_character(),
+    typeEnd = col_character(),
+    typeStart = col_character(),
+    databaseStart = col_character(),
+    variableStart = col_character(),
+    variableStartLabel = col_character(),
+    numValidCat = col_double(),
+    recEnd = col_character(),
+    catLabel = col_character(),
+    catLabelLong = col_character(),
+    units = col_character(),
+    recStart = col_character(),
+    catLabelLong = col_character(),
+    variableStartShortLabel = col_character(),
+    notes = col_character(),
+    .default = col_character()  # for any remaining columns
+)
+
 # ------ pbc.rda data ------
 # Get PBC data from survival package
 data(pbc, package = "survival")
@@ -18,19 +52,7 @@ usethis::use_data(pbc_metadata, overwrite = TRUE)
 # ------ import the pbc_variables.csv file --------
 pbc_variables <- read_csv("inst/extdata/pbc_variables.csv",
     show_col_types = FALSE,
-    col_types = cols(
-        variable = col_character(),
-        label = col_character(),
-        labelLong = col_character(),
-        subject = col_character(),
-        section = col_character(),
-        variableType = col_character(),
-        databaseStart = col_character(),
-        units = col_character(),  # changed from logical
-        variableStart = col_character(),
-        notes = col_logical(),
-        description = col_logical()
-    )
+    col_types = variables_sheet_cols
 )
 
 # Check for any parsing problems
@@ -44,25 +66,7 @@ usethis::use_data(pbc_variables, overwrite = TRUE)
 # ------- import the pbc_variable_details.csv file ------
 pbc_variable_details <- read_csv("inst/extdata/pbc_variable_details.csv",
     show_col_types = FALSE,
-    col_types = cols(
-        variable = col_character(),
-        dummyVariable = col_character(),
-        typeEnd = col_character(),
-        typeStart = col_character(),
-        databaseStart = col_character(),
-        variableStart = col_character(),
-        variableStartLabel = col_character(),
-        numValidCat = col_double(),
-        recEnd = col_character(),
-        catLabel = col_character(),
-        catLabelLong = col_character(),
-        units = col_character(),
-        recStart = col_character(),
-        catLabelLong = col_character(),
-        variableStartShortLabel = col_character(),
-        notes = col_character(),
-        .default = col_character()  # for any remaining columns
-    )
+    col_types = variable_details_sheet_cols
 )
 
 # Check for any parsing problems
@@ -72,3 +76,31 @@ if(nrow(problems(pbc_variable_details)) != 0) {
 }
 
 usethis::use_data(pbc_variable_details, overwrite = TRUE)
+
+# ------ import the tester_variables.csv file --------
+tester_variables <- read_csv("inst/extdata/tester_variables.csv",
+    show_col_types = FALSE,
+    col_types = variables_sheet_cols
+)
+
+# Check for any parsing problems
+if(nrow(problems(tester_variables)) != 0) {
+    print("Problems with tester_variables:")
+    print(problems(tester_variables))
+}
+
+usethis::use_data(tester_variables, overwrite = TRUE)
+
+# ------- import the tester_variable_details.csv file ------
+tester_variable_details <- read_csv("inst/extdata/tester_variable_details.csv",
+    show_col_types = FALSE,
+    col_types = variable_details_sheet_cols
+)
+
+# Check for any parsing problems
+if(nrow(problems(tester_variable_details)) != 0) {
+    print("Problems with tester_variable_details:")
+    print(problems(tester_variable_details))
+}
+
+usethis::use_data(tester_variable_details, overwrite = TRUE)

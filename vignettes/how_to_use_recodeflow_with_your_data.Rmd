@@ -9,8 +9,6 @@ vignette: >
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
-
-source("../R/test_data_generator.R")
 ```
 
 
@@ -59,7 +57,7 @@ Write `stage` in the column **variable** in the six rows.
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 library(knitr)
 library(kableExtra)
-kable(variable_details[58:63, 1], col.names = 'variable')
+kable(recodeflow::tester_variable_details[, 'variable'], col.names = c('variable'))
 ```
 
 2. **typeEnd:** indicates the type of variable (continous or categorical)for the recoded (final) variable. `stage`, which captures the stage of the disease, is a categorical variable in the original dataset and will remain a categorical variable after recoding. 
@@ -67,7 +65,7 @@ kable(variable_details[58:63, 1], col.names = 'variable')
 Write 'cat' in the six rows.
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[58:63, 1:2])
+kable(recodeflow::tester_variable_details)
 ```
 
 3. **typeStart:** indicates the type of variable (continous or categorical) for the original variable. `stage` is a categorical variable in the original dataset. 
@@ -75,7 +73,7 @@ kable(variable_details[58:63, 1:2])
 Write 'cat' in the six rows.
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[58:63, 1:3])
+kable(recodeflow::tester_variable_details)
 ```
 
 4. **databaseStart:** indicates the name of the database(s) from which the original variable(s) is(are) obtained. 
@@ -83,7 +81,7 @@ kable(variable_details[58:63, 1:3])
 Write the dataset names, separated by a comma, in the six rows
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[58:63, 1:4])
+kable(recodeflow::tester_variable_details)
 ```
 
 5. **variableStart:** indicates the original variable name(s) in the database(s). In our example, both datasets have the start variable `stage`. Therefore we can indicate a single variable name here. If the variable names were different, we would need to indicate 'dataset_name::variable_name' separated by commas for each of the datasets.
@@ -91,7 +89,7 @@ kable(variable_details[58:63, 1:4])
 Write the variable name in squared brackets once per row, for all six rows.
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[58:63, 1:5])
+kable(recodeflow::tester_variable_details)
 ```
 
 6. **variableStartLabel:** indicates the original variable lable 
@@ -99,7 +97,7 @@ kable(variable_details[58:63, 1:5])
 Write "stage" in the 6 rows.
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[58:63, 1:6])
+kable(recodeflow::tester_variable_details)
 ```
 
 7. **numValidCat:** indicates the number of valid categories for the final derived variable. In our example, there are four categories for `stage`: 1, 2, 3, and 4. Note that the categories 'not applicable', 'missing', and 'else' are not included in the category count.
@@ -107,7 +105,7 @@ kable(variable_details[58:63, 1:6])
 Write 4 in each of the six rows.
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[58:63, 1:7])
+kable(recodeflow::tester_variable_details)
 ```
 
 8. **recEnd:** indicates the category to which you are recoding each row. For the not applicable rows `NA::a` is written. For the missing and else rows `NA::b` is written. The `haven` package is used for tagging NA in numeric variables.
@@ -115,7 +113,7 @@ kable(variable_details[58:63, 1:7])
 We are not changing the categories `stage`, therefore, the recEnd values for these rows will be the same as the the original data. For the not applicable rows write `NA::a`. For the missing and else rows write `NA::b`.
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[58:63, 1:8])
+kable(recodeflow::tester_variable_details)
 ```
 
 9. **catLabel:** indicates the lable for the recoded categorical level.
@@ -123,7 +121,7 @@ kable(variable_details[58:63, 1:8])
 Write Stage 1, Stage 2, Stage 3, Stage 4, NA, and missing.
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[58:63, 1:9])
+kable(recodeflow::tester_variable_details)
 ```
 
 10. **catLabelLong:** provides a more elaborate lable for the recoded categorical level. If not required, repeat the shorter _catLabel_.
@@ -131,7 +129,7 @@ kable(variable_details[58:63, 1:9])
 Copy values from **catLabel**
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[58:63, 1:10])
+kable(recodeflow::tester_variable_details)
 ```
 
 11. **units:** indicates the unit of measure for the variable. The histologic stage of disease does not have a units of measurement. 
@@ -139,7 +137,7 @@ kable(variable_details[58:63, 1:10])
 Write "N/A" in all six rows.
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[58:63, 1:11])
+kable(recodeflow::tester_variable_details)
 ```
 
 12. **recStart:** indicates the category(ies) from which you are recoding each row. Since we are not combining levels of categories and we are keeping the category levels the same, the recStart column will be identical to recEnd. If multiple categories were being combined into a single category, the original categories would be indicated in square brackets, separated by commas.
@@ -147,7 +145,7 @@ kable(variable_details[58:63, 1:11])
 Write the category level you are recoding each row too. For the not applicable rows `NA::a` is written. For the missing and else rows `NA::b` is written.
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[58:63, 1:12])
+kable(recodeflow::tester_variable_details)
 ```
 
 13. **catStartLabel:** indicates the original variable category label. The `stage` label should be identical to what is shown in the original data documentation. For the missing rows, each missing category is described along with their coded values.
@@ -155,7 +153,7 @@ kable(variable_details[58:63, 1:12])
 Write Stage 1, Stage 2, Stage 3, Stage 4, NA, and missing.
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[58:63, 1:13])
+kable(recodeflow::tester_variable_details)
 ```
 
 14. **notes: ** Capture any important differences in a variable across datasets. For our example, there are no differences across datasets.
@@ -163,7 +161,7 @@ kable(variable_details[58:63, 1:13])
 Write "This is sample survival pbc data" in all six rows.
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[58:63, 1:14])
+kable(recodeflow::tester_variable_details)
 ```
 
 ## `variable_details` for dervived variables
@@ -179,7 +177,7 @@ The same naming convention applies to derived variables with the exception of tw
 A derived variable looks like this in `variable_details.csv`
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[64,1:14])
+kable(recodeflow::tester_variable_details)
 ```
 
 ## How to create the variables worksheet `variables`
@@ -207,7 +205,7 @@ Once mapped and specified on `variable_details`, the `stage` variable can be spe
 ```{r, echo=FALSE, warning=FALSE}
 library(knitr)
 library(kableExtra)
-kable(variables[19, ])
+kable(recodeflow::tester_variables)
 ```
 
 

@@ -9,7 +9,6 @@ vignette: >
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-source("../R/test_data_generator.R")
 ```
 
 ## Introduction
@@ -78,9 +77,12 @@ library(recodeflow)
 
 2) Recode the underlying variables (`chol` and `bili`) and the derived variable (`example_der`).
 ```{r, warning=FALSE}
-derived1 <- rec_with_table(data = tester1,
-                          variables = c("chol", "bili","example_der"),
-                          variable_details = variable_details,
-                          log = TRUE)
+derived1 <- rec_with_table(
+    data = pbc,
+    variables = c("chol", "bili","example_der"),
+    variable_details = recodeflow::tester_variable_details,
+    database_name = 'tester1',
+    log = TRUE)
+print(head(derived1))
 ```
 

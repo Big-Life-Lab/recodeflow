@@ -23,9 +23,12 @@ library(DT)
 library(knitr)
 library(kableExtra)
 
-source("../R/test_data_generator.R")
-
-datatable(variable_details, options = list(pageLength = 2))
+variable_details <- recodeflow::tester_variable_details
+if(exists("variable_details")) {
+  datatable(variable_details, options = list(pageLength = 2))
+} else {
+  message("Example data not loaded")
+}
 cat("In the dataframe `variable_details` there are", nrow(variable_details), "rows and", ncol(variable_details), "columns", "\n\n")
 ```
 
@@ -193,7 +196,7 @@ The same naming convention applies to derived variables with the exception of tw
 A derived variable looks like this in `variable_details.csv`
 
 ```{r, echo=FALSE, warning=FALSE}
-kable(variable_details[64,1:14])
+kable(variable_details[variable_details$variable == "example_der",])
 ```
 
 ## Tables
