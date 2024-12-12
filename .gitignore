@@ -5,3 +5,5 @@
 # Mac
 .DS_Store
 inst/doc
+
+*.code-workspace
