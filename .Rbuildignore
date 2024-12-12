@@ -1,3 +1,5 @@
+^CONTRIBUTING\.md$
+^path$
 ^renv$
 ^renv\.lock$
 ^.*\.Rproj$
@@ -6,3 +8,5 @@
 ^docs$
 ^pkgdown$
 ^\.github$
+^data-raw$
+^path/to/venv/
