@@ -2,8 +2,8 @@
 title: "variables worksheet"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{variables.csv}     
-  %\VignetteEngine{knitr::rmarkdown} 
+  %\VignetteIndexEntry{variables worksheet}
+  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
