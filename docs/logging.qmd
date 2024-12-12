@@ -83,6 +83,46 @@ The logging system follows established software design patterns that promote mai
 
 This pattern reveals complexity only as needed, making our functions approachable while supporting advanced use cases. For example, a new user might start with basic function calls:
 
-\`\`\`r result \<- standardize_age(age_vector, units_vector)
+```r         
+result <- standardize_age(age_vector, units_vector)
+```
 
-recodeflow/ ├── R/ │ ├── core/ \# Core class definitions and methods │ ├── metadata/ \# Metadata management functions │ ├── standards/ \# DDI, PMML, Dublin Core integration │ ├── recode/ \# Recoding functionality │ └── utils/ \# Helper functions ├── tests/ │ └── testthat/ \# Unit tests ├── vignettes/ │ ├── getting-started.Rmd │ ├── metadata-guide.Rmd │ └── etc.Rmd ├── data/ \# Example datasets ├── docs/ \# Project documentation │ └── specifications/ \# Technical specifications └── inst/ └── extdata/ \# Meeting notes and decisions
+As their needs grow, they can add custom logging:
+
+```r
+Copyresult <- standardize_age(age_vector, units_vector, 
+                         log_fn = my_custom_logger)
+```
+
+#### Observer pattern
+This pattern separates the core transformation logic from logging, allowing users to "observe" the process without changing it. This separation means we can enhance logging without touching the core transformation code.
+
+#### Strategy pattern
+This pattern allows different logging approaches through a consistent interface. Users can plug in their preferred logging strategy while our functions remain unchanged.
+
+### R ecosystem compatibility
+Our design prioritizes harmony with existing R workflows:
+
+#### Base R compatibility
+- Uses familiar warning() mechanism by default
+- Follows R's standard approaches to error handling
+- Maintains consistent behavior with base R functions
+
+#### Tidyverse alignment
+- Supports typical tidyverse programming patterns
+- Maintains pipe-friendly interfaces
+- Follows tidyverse naming conventions
+
+#### External logging libraries
+While we acknowledge the existence of established logging libraries like futile.logger and logger, our current focus is on providing essential logging capabilities without introducing additional dependencies. Users who prefer these libraries can integrate them through our custom logging function parameter.
+[Example implementation section remains the same as before]
+### Next steps
+
+Review and refine specifications with team
+Develop prototype implementations
+Test with existing transformation functions
+Gather user feedback on basic logging needs
+Create documentation and examples
+Plan phased rollout of enhancements
+
+We should focus initially on implementing and testing the basic logging capabilities, ensuring they meet our core requirements before considering any advanced features or integrations.
