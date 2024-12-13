@@ -10,8 +10,15 @@ is_table_feeder_var(feeder_var)
 \item{feeder_var}{string The variable start to check}
 }
 \value{
-bool
+logical TRUE if the variable is a table feeder, FALSE otherwise
 }
 \description{
 Checks whether a variable start is a table
 }
+\examples{
+# Check if a variable is a table feeder
+is_table_feeder_var("$table:my_lookup") # Returns TRUE
+is_table_feeder_var("[regular_var]") # Returns FALSE
+is_table_feeder_var("$table:values") # Returns TRUE
+}
+\keyword{internal}

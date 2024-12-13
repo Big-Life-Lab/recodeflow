@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="196px" height="223px" viewBox="0 0 196 223" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>recodeflow</title>
+    <defs>
+        <filter x="-6.4%" y="-5.5%" width="112.8%" height="111.1%" filterUnits="objectBoundingBox" id="filter-1">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="recodeflow" filter="url(#filter-1)" transform="translate(4.000000, 1.000000)">
+            <polygon id="Fill-1" fill="#4472C4" points="0.86066 54.917 93.32903 0.606 187.2497 54.8312 186.4492 162.06663 93.98085 216.377632 0.060129 162.15248"></polygon>
+            <g id="upper-arrow" transform="translate(57.843750, 68.013876) scale(-1, 1) rotate(-109.000000) translate(-57.843750, -68.013876) translate(35.843750, 37.476562)">
+                <path d="M17.4029851,9.19414222 C34.3299366,9.19414222 44,20.8080095 44,35.1344407 C44,49.460872 32.0921108,61.0747392 17.4029851,61.0747392 C10.9724008,61.0747392 5.07484068,58.8489408 0.476033536,55.1441659" id="Path" stroke="#FBF8F8" stroke-width="5" stroke-linecap="round"></path>
+                <polygon id="Triangle" fill="#FBF8F8" points="21.7763434 0.13655099 21.2493589 17.8678943 12.5823135 9.23247536"></polygon>
+            </g>
+            <g id="lower-arrow" transform="translate(138.004716, 148.957209) rotate(66.000000) translate(-138.004716, -148.957209) translate(116.004716, 117.457209)">
+                <path d="M17.047835,10.6007324 C33.9495409,10.6007324 43.605182,22.1972782 43.605182,36.5023424 C43.605182,50.8074067 31.7150527,62.4039525 17.047835,62.4039525 C10.6268415,62.4039525 4.73807729,60.1814737 0.146128996,56.4822243" id="Path" stroke="#FBF8F8" stroke-width="5" stroke-linecap="round"></path>
+                <polygon id="Triangle" fill="#FBF8F8" points="24.3510266 0.308015078 23.7521806 20.4572688 13.9032654 10.6442928"></polygon>
+            </g>
+            <text id="RECODE" font-family="LucidaGrande-Bold, Lucida Grande" font-size="48" font-weight="bold" letter-spacing="0.666666667" fill="#FFBF00">
+                <tspan x="12.4609375" y="122">recode</tspan>
+            </text>
+        </g>
+    </g>
+</svg>

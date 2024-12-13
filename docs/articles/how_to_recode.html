@@ -5,27 +5,27 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Recode variables • recodeflow</title>
+<title>How to recode variables • recodeflow</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
 <link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="Recode variables">
-<meta property="og:description" content="recodeflow">
-<meta property="og:image" content="/logo.svg">
+<script src="../pkgdown.js"></script><meta property="og:title" content="How to recode variables">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -38,22 +38,16 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">recodeflow</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     How To
-     
+
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
@@ -69,9 +63,9 @@
   </ul>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
-     
+
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
@@ -95,15 +89,12 @@
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
-<li>
-  <a href="../news/index.html">Changelog</a>
-</li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/Big-Life-Lab/recodeflow/">
-    <span class="fab fa fab fa-github fa-lg"></span>
-     
+  <a href="https://github.com/Big-Life-Lab/recodeflow/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
+
   </a>
 </li>
       </ul>
@@ -114,1148 +105,1076 @@
 </div>
 <!--/.navbar -->
 
-      
+
 
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Recode variables</h1>
+      <h1 data-toc-skip>How to recode variables</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/Big-Life-Lab/recodeflow/blob/master/vignettes/how_to_recode.Rmd"><code>vignettes/how_to_recode.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/Big-Life-Lab/recodeflow/blob/HEAD/vignettes/how_to_recode.Rmd" class="external-link"><code>vignettes/how_to_recode.Rmd</code></a></small>
       <div class="hidden name"><code>how_to_recode.Rmd</code></div>
 
     </div>
 
     
     
-<p>We have examples to demonstrate how to recode variables with the <em>recodeflow</em> function <a href="../reference/rec_with_table.html"><code>rec_with_table()</code></a></p>
+<p>We have examples to demonstrate how to recode variables with the
+<em>recodeflow</em> function <a href="../reference/rec_with_table.html"><code>rec_with_table()</code></a></p>
 <p><strong>Our examples use following packages:</strong></p>
 <p>Package <em>recodeflow</em></p>
 <p>Steps on how to install <code>recodeflow</code> are in <a href="../how_to/install.html">how to install</a></p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co">#Load the package</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Big-Life-Lab/recodeflow">recodeflow</a></span><span class="op">)</span></code></pre></div>
-<p>Package <a href="https://www.rdocumentation.org/packages/dplyr/versions/0.7.8">dplyr</a> to combine datasets (function: <code>bind_rows</code>).</p>
+<code class="sourceCode R"><span><span class="co">#Load the package</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Big-Life-Lab/recodeflow" class="external-link">recodeflow</a></span><span class="op">)</span></span></code></pre></div>
+<p>Package <a href="https://www.rdocumentation.org/packages/dplyr/versions/0.7.8" class="external-link">dplyr</a>
+to combine datasets (function: <code>bind_rows</code>).</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></code></pre></div>
 <p><strong>Our examples use example data</strong></p>
-<p>Our examples use the dataset <code>pbc</code> from the package <a href="https://cran.r-project.org/web/packages/survival/index.html">survival</a>. We’ve split this dataset in two (tester1 and tester2) to mimic real data e.g., the same survey preformed in separate years. For our examples, we’ve also added columns (<code>agegrp5</code> and <code>agegrp10</code>) to this dataset.</p>
-<div id="example-1--recode-a-single-variable-from-a-single-dataset" class="section level2">
-<h2 class="hasAnchor">
-<a href="#example-1--recode-a-single-variable-from-a-single-dataset" class="anchor"></a>Example 1. Recode a single variable from a single dataset</h2>
-<p>In our example datasets, the variable <code>sex</code> contains the values: m for males and f for females.</p>
-<p>Using dataset tester1, we’ll recode the variable <code>sex</code> into a harmonized <code>sex</code> variable. The harmonized <code>sex</code> variable has the values: 0 for males and 1 for females.</p>
+<p>Our examples use the dataset <code>pbc</code> from the package <a href="https://cran.r-project.org/web/packages/survival/index.html" class="external-link">survival</a>.
+We’ve split this dataset in two (tester1 and tester2) to mimic real data
+e.g., the same survey preformed in separate years. For our examples,
+we’ve also added columns (<code>agegrp5</code> and
+<code>agegrp10</code>) to this dataset.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">test1</span> <span class="op">&lt;-</span> <span class="fu">survival</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/survival/man/pbc.html" class="external-link">pbc</a></span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">209</span>,<span class="op">]</span></span>
+<span><span class="va">test2</span> <span class="op">&lt;-</span> <span class="fu">survival</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/survival/man/pbc.html" class="external-link">pbc</a></span><span class="op">[</span><span class="fl">210</span><span class="op">:</span><span class="fl">418</span>,<span class="op">]</span></span>
+<span></span>
+<span><span class="co">#Adapting the data for How To examples. Breaking cont age variable into categories - 5 and 10 year age groups.</span></span>
+<span><span class="va">agegrp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cut.html" class="external-link">cut</a></span><span class="op">(</span><span class="va">test1</span><span class="op">$</span><span class="va">age</span>, breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">25</span>, <span class="fl">30</span>, <span class="fl">35</span>, <span class="fl">40</span>, <span class="fl">45</span>, <span class="fl">50</span>, <span class="fl">55</span>, <span class="fl">60</span>, <span class="fl">65</span>, <span class="fl">70</span>, <span class="fl">75</span>, <span class="fl">80</span><span class="op">)</span>, right <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">agegrp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">agegrp</span><span class="op">)</span></span>
+<span><span class="va">tester1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">test1</span>, <span class="va">agegrp</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">agegrp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cut.html" class="external-link">cut</a></span><span class="op">(</span><span class="va">test2</span><span class="op">$</span><span class="va">age</span>, breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">20</span>, <span class="fl">30</span>, <span class="fl">40</span>, <span class="fl">50</span>, <span class="fl">60</span>, <span class="fl">70</span>, <span class="fl">80</span><span class="op">)</span>, right <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">agegrp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">agegrp</span><span class="op">)</span></span>
+<span><span class="va">tester2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">test2</span>, <span class="va">agegrp</span><span class="op">)</span></span></code></pre></div>
+<div class="section level2">
+<h2 id="example-1--recode-a-single-variable-from-a-single-dataset">Example 1. Recode a single variable from a single dataset<a class="anchor" aria-label="anchor" href="#example-1--recode-a-single-variable-from-a-single-dataset"></a>
+</h2>
+<p>In our example datasets, the variable <code>sex</code> contains the
+values: m for males and f for females.</p>
+<p>Using dataset tester1, we’ll recode the variable <code>sex</code>
+into a harmonized <code>sex</code> variable. The harmonized
+<code>sex</code> variable has the values: 0 for males and 1 for
+females.</p>
 <ol style="list-style-type: decimal">
 <li>Recode the <code>sex</code> variable in tester1.</li>
 </ol>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">sex_1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rec_with_table.html">rec_with_table</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tester1</span>, 
-                        variables <span class="op">=</span> <span class="st">"sex"</span>, 
-                        variable_details <span class="op">=</span> <span class="va">variable_details</span>,
-                        log <span class="op">=</span> <span class="cn">TRUE</span>,
-                        var_labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>sex <span class="op">=</span> <span class="st">"sex"</span><span class="op">)</span>
-                        <span class="op">)</span>
-<span class="co">#&gt; Using the passed data variable name as database_name</span>
-<span class="co">#&gt; Warning in recode_call(variables = variables, data = data, database_name</span>
-<span class="co">#&gt; = database_name, : is missing from variable details therefore cannot be</span>
-<span class="co">#&gt; recoded</span>
-<span class="co">#&gt; NOTE for sex: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for sex: This is sample survival pbc data</span>
-<span class="co">#&gt; The variable sex was recoded into sex for the database tester1 the following recodes were made:</span>
-<span class="co">#&gt;   value_to From rows_recoded</span>
-<span class="co">#&gt; 1        0    m           27</span>
-<span class="co">#&gt; 2        1    f          182</span>
-<span class="co">#&gt; 3    NA(b) else            0</span></code></pre></div>
-<pre><code>#&gt;   sex
-#&gt; 1   1
-#&gt; 2   1
-#&gt; 3   0
-#&gt; 4   1
-#&gt; 5   1
-#&gt; 6   1</code></pre>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">sex_1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rec_with_table.html">rec_with_table</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tester1</span>, </span>
+<span>                        variables <span class="op">=</span> <span class="st">"sex"</span>, </span>
+<span>                        variable_details <span class="op">=</span> <span class="fu">recodeflow</span><span class="fu">::</span><span class="va"><a href="../reference/tester_variable_details.html">tester_variable_details</a></span>,</span>
+<span>                        log <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                        var_labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>sex <span class="op">=</span> <span class="st">"sex"</span><span class="op">)</span>,</span>
+<span>                        database_name <span class="op">=</span> <span class="st">'tester1'</span></span>
+<span>                        <span class="op">)</span></span>
+<span><span class="co">#&gt; The variable sex was recoded into sex for the database tester1 the following recodes were made:</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 3</span></span></span>
+<span><span class="co">#&gt;   value_to From  rows_recoded</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> m        m               27</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> f        f              182</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> NA::a    9                0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> NA(b)    else             0</span></span></code></pre></div>
+<pre><code><span><span class="co">#&gt;   sex</span></span>
+<span><span class="co">#&gt; 1   f</span></span>
+<span><span class="co">#&gt; 2   f</span></span>
+<span><span class="co">#&gt; 3   m</span></span>
+<span><span class="co">#&gt; 4   f</span></span>
+<span><span class="co">#&gt; 5   f</span></span>
+<span><span class="co">#&gt; 6   f</span></span></code></pre>
 </div>
-<div id="example-2--recode-a-single-variable-across-multiple-datasets" class="section level2">
-<h2 class="hasAnchor">
-<a href="#example-2--recode-a-single-variable-across-multiple-datasets" class="anchor"></a>Example 2. Recode a single variable across multiple datasets</h2>
-<p>We’ll recode and combine the variable <code>sex</code> for our two datasets.</p>
+<div class="section level2">
+<h2 id="example-2--recode-a-single-variable-across-multiple-datasets">Example 2. Recode a single variable across multiple datasets<a class="anchor" aria-label="anchor" href="#example-2--recode-a-single-variable-across-multiple-datasets"></a>
+</h2>
+<p>We’ll recode and combine the variable <code>sex</code> for our two
+datasets.</p>
 <ol style="list-style-type: decimal">
 <li>Recode the <code>sex</code> variable in tester1 and tester2.</li>
 </ol>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">sex_1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rec_with_table.html">rec_with_table</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tester1</span>, 
-                        variables <span class="op">=</span> <span class="st">"sex"</span>, 
-                        variable_details <span class="op">=</span> <span class="va">variable_details</span>, 
-                        log <span class="op">=</span> <span class="cn">TRUE</span>,
-                        var_labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>sex <span class="op">=</span> <span class="st">"Sex"</span><span class="op">)</span>
-                        <span class="op">)</span>
-<span class="co">#&gt; Using the passed data variable name as database_name</span>
-<span class="co">#&gt; NOTE for sex: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for sex: This is sample survival pbc data</span>
-<span class="co">#&gt; The variable sex was recoded into sex for the database tester1 the following recodes were made:</span>
-<span class="co">#&gt;   value_to From rows_recoded</span>
-<span class="co">#&gt; 1        0    m           27</span>
-<span class="co">#&gt; 2        1    f          182</span>
-<span class="co">#&gt; 3    NA(b) else            0</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">sex_1</span><span class="op">)</span>
-<span class="co">#&gt;   sex</span>
-<span class="co">#&gt; 1   1</span>
-<span class="co">#&gt; 2   1</span>
-<span class="co">#&gt; 3   0</span>
-<span class="co">#&gt; 4   1</span>
-<span class="co">#&gt; 5   1</span>
-<span class="co">#&gt; 6   1</span>
-
-<span class="va">sex_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rec_with_table.html">rec_with_table</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tester2</span>, 
-                        variables <span class="op">=</span> <span class="st">"sex"</span>, 
-                        variable_details <span class="op">=</span> <span class="va">variable_details</span>, 
-                        log <span class="op">=</span> <span class="cn">TRUE</span>,
-                        var_labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>sex <span class="op">=</span> <span class="st">"Sex"</span><span class="op">)</span>
-                        <span class="op">)</span>
-<span class="co">#&gt; Using the passed data variable name as database_name</span>
-<span class="co">#&gt; NOTE for sex: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for sex: This is sample survival pbc data</span>
-<span class="co">#&gt; The variable sex was recoded into sex for the database tester2 the following recodes were made:</span>
-<span class="co">#&gt;   value_to From rows_recoded</span>
-<span class="co">#&gt; 1        0    m           17</span>
-<span class="co">#&gt; 2        1    f          192</span>
-<span class="co">#&gt; 3    NA(b) else            0</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">tail</a></span><span class="op">(</span><span class="va">sex_2</span><span class="op">)</span>
-<span class="co">#&gt;     sex</span>
-<span class="co">#&gt; 413   1</span>
-<span class="co">#&gt; 414   1</span>
-<span class="co">#&gt; 415   1</span>
-<span class="co">#&gt; 416   1</span>
-<span class="co">#&gt; 417   1</span>
-<span class="co">#&gt; 418   1</span></code></pre></div>
-<ol start="2" style="list-style-type: decimal">
-<li>Combine the harmonized sex variable from tester1 to the harmonized sex variable in tester2.</li>
-</ol>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">sex_combined</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_rows</a></span><span class="op">(</span><span class="va">sex_1</span>, <span class="va">sex_2</span><span class="op">)</span></code></pre></div>
-<pre><code>#&gt;   sex
-#&gt; 1   1
-#&gt; 2   1
-#&gt; 3   0
-#&gt; 4   1
-#&gt; 5   1
-#&gt; 6   1
-#&gt;     sex
-#&gt; 413   1
-#&gt; 414   1
-#&gt; 415   1
-#&gt; 416   1
-#&gt; 417   1
-#&gt; 418   1</code></pre>
+<code class="sourceCode R"><span><span class="va">sex_1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rec_with_table.html">rec_with_table</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tester1</span>, </span>
+<span>                        variables <span class="op">=</span> <span class="st">"sex"</span>, </span>
+<span>                        variable_details <span class="op">=</span> <span class="fu">recodeflow</span><span class="fu">::</span><span class="va"><a href="../reference/tester_variable_details.html">tester_variable_details</a></span>,</span>
+<span>                        log <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                        var_labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>sex <span class="op">=</span> <span class="st">"Sex"</span><span class="op">)</span>,</span>
+<span>                        database_name <span class="op">=</span> <span class="st">'tester1'</span></span>
+<span>                        <span class="op">)</span></span>
+<span><span class="co">#&gt; The variable sex was recoded into sex for the database tester1 the following recodes were made:</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 3</span></span></span>
+<span><span class="co">#&gt;   value_to From  rows_recoded</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> m        m               27</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> f        f              182</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> NA::a    9                0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> NA(b)    else             0</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">sex_1</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   sex</span></span>
+<span><span class="co">#&gt; 1   f</span></span>
+<span><span class="co">#&gt; 2   f</span></span>
+<span><span class="co">#&gt; 3   m</span></span>
+<span><span class="co">#&gt; 4   f</span></span>
+<span><span class="co">#&gt; 5   f</span></span>
+<span><span class="co">#&gt; 6   f</span></span>
+<span></span>
+<span><span class="va">sex_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rec_with_table.html">rec_with_table</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tester2</span>, </span>
+<span>                        variables <span class="op">=</span> <span class="st">"sex"</span>, </span>
+<span>                        variable_details <span class="op">=</span> <span class="fu">recodeflow</span><span class="fu">::</span><span class="va"><a href="../reference/tester_variable_details.html">tester_variable_details</a></span>,</span>
+<span>                        log <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                        var_labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>sex <span class="op">=</span> <span class="st">"Sex"</span><span class="op">)</span>,</span>
+<span>                        database_name <span class="op">=</span> <span class="st">'tester2'</span></span>
+<span>                        <span class="op">)</span></span>
+<span><span class="co">#&gt; The variable sex was recoded into sex for the database tester2 the following recodes were made:</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 3</span></span></span>
+<span><span class="co">#&gt;   value_to From  rows_recoded</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> m        m               17</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> f        f              192</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> NA::a    9                0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> NA(b)    else             0</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">sex_2</span><span class="op">)</span></span>
+<span><span class="co">#&gt;     sex</span></span>
+<span><span class="co">#&gt; 413   f</span></span>
+<span><span class="co">#&gt; 414   f</span></span>
+<span><span class="co">#&gt; 415   f</span></span>
+<span><span class="co">#&gt; 416   f</span></span>
+<span><span class="co">#&gt; 417   f</span></span>
+<span><span class="co">#&gt; 418   f</span></span></code></pre></div>
+<ol start="2" style="list-style-type: decimal">
+<li>Combine the harmonized sex variable from tester1 to the harmonized
+sex variable in tester2.</li>
+</ol>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">sex_combined</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="va">sex_1</span>, <span class="va">sex_2</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">#&gt;   sex</span></span>
+<span><span class="co">#&gt; 1   f</span></span>
+<span><span class="co">#&gt; 2   f</span></span>
+<span><span class="co">#&gt; 3   m</span></span>
+<span><span class="co">#&gt; 4   f</span></span>
+<span><span class="co">#&gt; 5   f</span></span>
+<span><span class="co">#&gt; 6   f</span></span>
+<span><span class="co">#&gt;     sex</span></span>
+<span><span class="co">#&gt; 413   f</span></span>
+<span><span class="co">#&gt; 414   f</span></span>
+<span><span class="co">#&gt; 415   f</span></span>
+<span><span class="co">#&gt; 416   f</span></span>
+<span><span class="co">#&gt; 417   f</span></span>
+<span><span class="co">#&gt; 418   f</span></span></code></pre>
 <ol start="3" style="list-style-type: decimal">
 <li>Set labels</li>
 </ol>
 <p>Labels are lost during the database merging.</p>
-<p>Use <code><a href="../reference/set_data_labels.html">set_data_labels()</a></code> to label the variables in your final dataset. <code><a href="../reference/set_data_labels.html">set_data_labels()</a></code> sets the labels with the original information in <code>variables</code> and <code>variable_details</code>.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">labeled_sex_combined</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/set_data_labels.html">set_data_labels</a></span><span class="op">(</span>
-  data_to_label <span class="op">=</span> <span class="va">sex_combined</span>,
-  variable_details <span class="op">=</span> <span class="va">variable_details</span>,
-  variables_sheet <span class="op">=</span> <span class="va">variables</span>
-<span class="op">)</span></code></pre></div>
-</div>
-<div id="example3" class="section level2">
-<h2 class="hasAnchor">
-<a href="#example3" class="anchor"></a>Example 3. Recode a single variable, with different categories, from multiple datasets</h2>
-<p>You could have a situation where a variable is the same across datasets but its categories change.</p>
-<p>In our example data the variable <code>agegrp</code> is different in tester1 and tester2.</p>
-<ul>
-<li>In tester1 the <code>agegrp</code> variable is 5-year age groups: 20-24, 25-29, 30-34, etc.</li>
-<li>In tester2 the <code>agegrp</code> variable is 10-year age groups: 20-29, 30-39, 40-49, etc.</li>
-</ul>
-<p>There are three options to facilitate the use of variables with inconsistent categories across datasets.</p>
-<div id="option-1-recode-category-agegrp-variable-into-a-common-variable-for-only-datasets-with-the-same-category-responses" class="section level3">
-<h3 class="hasAnchor">
-<a href="#option-1-recode-category-agegrp-variable-into-a-common-variable-for-only-datasets-with-the-same-category-responses" class="anchor"></a>Option 1: recode category <code>agegrp</code> variable into a common variable for only datasets with the same category responses</h3>
-<p>Recode the <code>agegrp</code> variable into a common variable only in datasets were the categories are the same. If the categories are different between datasets, separate columns will be created.</p>
-<p>The categories in the <code>agegrp</code> variable in tester1 are different than the categories of <code>agegrp</code> in tester2. Therefore, it is not possible to have the same <code>agegrp</code> categories across our example data sets.</p>
-<ol style="list-style-type: decimal">
-<li>Recode <code>agegrp5</code> in tester1 and recode <code>agegrp10</code> in tester2.</li>
-</ol>
+<p>Use <code><a href="../reference/set_data_labels.html">set_data_labels()</a></code> to label the variables in your
+final dataset. <code><a href="../reference/set_data_labels.html">set_data_labels()</a></code> sets the labels with the
+original information in <code>variables</code> and
+<code>variable_details</code>.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">agegrp_1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rec_with_table.html">rec_with_table</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tester1</span>, 
-                           variables <span class="op">=</span> <span class="st">"agegrp5"</span>, 
-                           variable_details <span class="op">=</span> <span class="va">variable_details</span>, 
-                           log <span class="op">=</span> <span class="cn">TRUE</span>, 
-                           <span class="op">)</span>
-<span class="co">#&gt; Using the passed data variable name as database_name</span>
-<span class="co">#&gt; NOTE for agegrp5: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp5: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp5: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp5: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp5: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp5: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp5: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp5: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp5: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp5: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp5: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp5: adapted from sample survival pbc data</span>
-<span class="co">#&gt; The variable agegrp was recoded into agegrp5 for the database tester1 the following recodes were made:</span>
-<span class="co">#&gt;    value_to  From rows_recoded</span>
-<span class="co">#&gt; 1         1     1            2</span>
-<span class="co">#&gt; 2         2     2           12</span>
-<span class="co">#&gt; 3         3     3           15</span>
-<span class="co">#&gt; 4         4     4           37</span>
-<span class="co">#&gt; 5         5     5           37</span>
-<span class="co">#&gt; 6         6     6           40</span>
-<span class="co">#&gt; 7         7     7           28</span>
-<span class="co">#&gt; 8         8     8           21</span>
-<span class="co">#&gt; 9         9     9            9</span>
-<span class="co">#&gt; 10       10    10            6</span>
-<span class="co">#&gt; 11       11    11            2</span>
-<span class="co">#&gt; 12    Na::b Na::b            0</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">agegrp_1</span><span class="op">)</span>
-<span class="co">#&gt;   agegrp5</span>
-<span class="co">#&gt; 1       7</span>
-<span class="co">#&gt; 2       7</span>
-<span class="co">#&gt; 3      10</span>
-<span class="co">#&gt; 4       6</span>
-<span class="co">#&gt; 5       3</span>
-<span class="co">#&gt; 6       9</span>
-
-
-<span class="va">agegrp_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rec_with_table.html">rec_with_table</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tester2</span>, 
-                             variables <span class="op">=</span> <span class="st">"agegrp10"</span>, 
-                             variable_details <span class="op">=</span> <span class="va">variable_details</span>, 
-                             log <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="co">#&gt; Using the passed data variable name as database_name</span>
-<span class="co">#&gt; NOTE for agegrp10: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp10: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp10: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp10: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp10: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp10: adapted from sample survival pbc data</span>
-<span class="co">#&gt; The variable agegrp was recoded into agegrp10 for the database tester2 the following recodes were made:</span>
-<span class="co">#&gt;   value_to From rows_recoded</span>
-<span class="co">#&gt; 1        1    1            1</span>
-<span class="co">#&gt; 2        2    2           39</span>
-<span class="co">#&gt; 3        3    3           52</span>
-<span class="co">#&gt; 4        4    4           67</span>
-<span class="co">#&gt; 5        5    5           45</span>
-<span class="co">#&gt; 6        6    6            5</span>
-<span class="co">#&gt; 7    Na::b else            0</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">agegrp_2</span><span class="op">)</span>
-<span class="co">#&gt;     agegrp10</span>
-<span class="co">#&gt; 210        3</span>
-<span class="co">#&gt; 211        4</span>
-<span class="co">#&gt; 212        3</span>
-<span class="co">#&gt; 213        4</span>
-<span class="co">#&gt; 214        5</span>
-<span class="co">#&gt; 215        3</span></code></pre></div>
-<ol start="2" style="list-style-type: decimal">
-<li>Combine the harmonized variable <code>agegrp5</code> in tester1 with the harmonized <code>agegrp10</code> in tester2.</li>
+<code class="sourceCode R"><span><span class="va">labeled_sex_combined</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/set_data_labels.html">set_data_labels</a></span><span class="op">(</span></span>
+<span>  data_to_label <span class="op">=</span> <span class="va">sex_combined</span>,</span>
+<span>  variable_details <span class="op">=</span> <span class="fu">recodeflow</span><span class="fu">::</span><span class="va"><a href="../reference/tester_variable_details.html">tester_variable_details</a></span>,</span>
+<span>  variables_sheet <span class="op">=</span> <span class="fu">recodeflow</span><span class="fu">::</span><span class="va"><a href="../reference/tester_variables.html">tester_variables</a></span></span>
+<span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="example3">Example 3. Recode a single variable, with different categories, from
+multiple datasets<a class="anchor" aria-label="anchor" href="#example3"></a>
+</h2>
+<p>You could have a situation where a variable is the same across
+datasets but its categories change.</p>
+<p>In our example data the variable <code>agegrp</code> is different in
+tester1 and tester2.</p>
+<ul>
+<li>In tester1 the <code>agegrp</code> variable is 5-year age groups:
+20-24, 25-29, 30-34, etc.</li>
+<li>In tester2 the <code>agegrp</code> variable is 10-year age groups:
+20-29, 30-39, 40-49, etc.</li>
+</ul>
+<p>There are three options to facilitate the use of variables with
+inconsistent categories across datasets.</p>
+<div class="section level3">
+<h3 id="option-1-recode-category-agegrp-variable-into-a-common-variable-for-only-datasets-with-the-same-category-responses">Option 1: recode category <code>agegrp</code> variable into a common
+variable for only datasets with the same category responses<a class="anchor" aria-label="anchor" href="#option-1-recode-category-agegrp-variable-into-a-common-variable-for-only-datasets-with-the-same-category-responses"></a>
+</h3>
+<p>Recode the <code>agegrp</code> variable into a common variable only
+in datasets were the categories are the same. If the categories are
+different between datasets, separate columns will be created.</p>
+<p>The categories in the <code>agegrp</code> variable in tester1 are
+different than the categories of <code>agegrp</code> in tester2.
+Therefore, it is not possible to have the same <code>agegrp</code>
+categories across our example data sets.</p>
+<ol style="list-style-type: decimal">
+<li>Recode <code>agegrp5</code> in tester1 and recode
+<code>agegrp10</code> in tester2.</li>
 </ol>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">agegrp_combined</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_rows</a></span><span class="op">(</span><span class="va">agegrp_1</span>, <span class="va">agegrp_2</span><span class="op">)</span></code></pre></div>
-<pre><code>#&gt;   agegrp5 agegrp10
-#&gt; 1       7     &lt;NA&gt;
-#&gt; 2       7     &lt;NA&gt;
-#&gt; 3      10     &lt;NA&gt;
-#&gt; 4       6     &lt;NA&gt;
-#&gt; 5       3     &lt;NA&gt;
-#&gt; 6       9     &lt;NA&gt;
-#&gt;     agegrp5 agegrp10
-#&gt; 413    &lt;NA&gt;        2
-#&gt; 414    &lt;NA&gt;        5
-#&gt; 415    &lt;NA&gt;        2
-#&gt; 416    &lt;NA&gt;        4
-#&gt; 417    &lt;NA&gt;        4
-#&gt; 418    &lt;NA&gt;        4</code></pre>
-</div>
-<div id="option-2-recode-the-categorical-agegrp-variable-into-a-continuous-age_cont-variable" class="section level3">
-<h3 class="hasAnchor">
-<a href="#option-2-recode-the-categorical-agegrp-variable-into-a-continuous-age_cont-variable" class="anchor"></a>Option 2: recode the categorical <code>agegrp</code> variable into a continuous <code>age_cont</code> variable</h3>
-<p>Recode categorical variable <code>agegrp</code> into a single harmonized continuous variable <code>age_cont</code>.</p>
-<p><code>age_cont</code> takes the midpoint age of each category for ‘agegrp’ across datasets. With this option, the categorical variable ‘agegrp’ from each dataset can be combined into a single dataset.</p>
-<ol style="list-style-type: decimal">
-<li>Recode variable <code>agegrp</code> in tester1 and <code>agegrp</code> in tester2 to the harmonized continuous variable <code>age_cont</code>.</li>
-</ol>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">agegrp_1_cont</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rec_with_table.html">rec_with_table</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tester1</span>, 
-                             variables <span class="op">=</span> <span class="st">"age_cont"</span>, 
-                             variable_details <span class="op">=</span> <span class="va">variable_details</span>, 
-                             log <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="co">#&gt; Using the passed data variable name as database_name</span>
-<span class="co">#&gt; NOTE for age_cont: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for age_cont: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for age_cont: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for age_cont: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for age_cont: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for age_cont: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for age_cont: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for age_cont: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for age_cont: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for age_cont: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for age_cont: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for age_cont: adapted from sample survival pbc data</span>
-<span class="co">#&gt; The variable agegrp was recoded into age_cont for the database tester1 the following recodes were made:</span>
-<span class="co">#&gt;    value_to  From rows_recoded</span>
-<span class="co">#&gt; 1        27     1            2</span>
-<span class="co">#&gt; 2        32     2           12</span>
-<span class="co">#&gt; 3        37     3           15</span>
-<span class="co">#&gt; 4        42     4           37</span>
-<span class="co">#&gt; 5        47     5           37</span>
-<span class="co">#&gt; 6        52     6           40</span>
-<span class="co">#&gt; 7        57     7           28</span>
-<span class="co">#&gt; 8        62     8           21</span>
-<span class="co">#&gt; 9        67     9            9</span>
-<span class="co">#&gt; 10       72    10            6</span>
-<span class="co">#&gt; 11       77    11            2</span>
-<span class="co">#&gt; 12    Na::b Na::b            0</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">agegrp_1_cont</span><span class="op">)</span>
-<span class="co">#&gt;   age_cont</span>
-<span class="co">#&gt; 1       57</span>
-<span class="co">#&gt; 2       57</span>
-<span class="co">#&gt; 3       72</span>
-<span class="co">#&gt; 4       52</span>
-<span class="co">#&gt; 5       37</span>
-<span class="co">#&gt; 6       67</span>
-
-
-<span class="va">agegrp_2_cont</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rec_with_table.html">rec_with_table</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tester2</span>, 
-                             variables <span class="op">=</span> <span class="st">"age_cont"</span>, 
-                             variable_details <span class="op">=</span> <span class="va">variable_details</span>, 
-                             log <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="co">#&gt; Using the passed data variable name as database_name</span>
-<span class="co">#&gt; NOTE for age_cont: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for age_cont: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for age_cont: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for age_cont: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for age_cont: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for age_cont: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for age_cont: adapted from sample survival pbc data</span>
-<span class="co">#&gt; The variable agegrp was recoded into age_cont for the database tester2 the following recodes were made:</span>
-<span class="co">#&gt;   value_to  From rows_recoded</span>
-<span class="co">#&gt; 1       25     1            1</span>
-<span class="co">#&gt; 2       35     2           39</span>
-<span class="co">#&gt; 3       45     3           52</span>
-<span class="co">#&gt; 4       55     4           67</span>
-<span class="co">#&gt; 5       65     5           45</span>
-<span class="co">#&gt; 6       75     6            5</span>
-<span class="co">#&gt; 7    Na::b Na::b            0</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">agegrp_2_cont</span><span class="op">)</span>
-<span class="co">#&gt;     age_cont</span>
-<span class="co">#&gt; 210       45</span>
-<span class="co">#&gt; 211       55</span>
-<span class="co">#&gt; 212       45</span>
-<span class="co">#&gt; 213       55</span>
-<span class="co">#&gt; 214       65</span>
-<span class="co">#&gt; 215       45</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">agegrp_1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rec_with_table.html">rec_with_table</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tester1</span>, </span>
+<span>                           variables <span class="op">=</span> <span class="st">"agegrp5"</span>, </span>
+<span>                           variable_details <span class="op">=</span> <span class="fu">recodeflow</span><span class="fu">::</span><span class="va"><a href="../reference/tester_variable_details.html">tester_variable_details</a></span>,</span>
+<span>                           log <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                           database_name <span class="op">=</span> <span class="st">'tester1'</span></span>
+<span>                           <span class="op">)</span></span>
+<span><span class="co">#&gt; The variable agegrp was recoded into agegrp5 for the database tester1 the following recodes were made:</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 12 × 3</span></span></span>
+<span><span class="co">#&gt;    value_to From  rows_recoded</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 1        1                2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 2        2               12</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 3        3               15</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 4        4               37</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 5        5               37</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 6        6               40</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 7        7               28</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 8        8               21</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 9        9                9</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 10       10               6</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> 11       11               2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> Na::b    else             0</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">agegrp_1</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   agegrp5</span></span>
+<span><span class="co">#&gt; 1       7</span></span>
+<span><span class="co">#&gt; 2       7</span></span>
+<span><span class="co">#&gt; 3      10</span></span>
+<span><span class="co">#&gt; 4       6</span></span>
+<span><span class="co">#&gt; 5       3</span></span>
+<span><span class="co">#&gt; 6       9</span></span>
+<span></span>
+<span></span>
+<span><span class="va">agegrp_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rec_with_table.html">rec_with_table</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tester2</span>, </span>
+<span>                             variables <span class="op">=</span> <span class="st">"agegrp10"</span>, </span>
+<span>                             variable_details <span class="op">=</span> <span class="fu">recodeflow</span><span class="fu">::</span><span class="va"><a href="../reference/tester_variable_details.html">tester_variable_details</a></span>,</span>
+<span>                             log <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                           database_name <span class="op">=</span> <span class="st">'tester2'</span><span class="op">)</span></span>
+<span><span class="co">#&gt; The variable agegrp was recoded into agegrp10 for the database tester2 the following recodes were made:</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 7 × 3</span></span></span>
+<span><span class="co">#&gt;   value_to From  rows_recoded</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 1        1                1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> 2        2               39</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> 3        3               52</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> 4        4               67</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> 5        5               45</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> 6        6                5</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> NA(b)    else             0</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">agegrp_2</span><span class="op">)</span></span>
+<span><span class="co">#&gt;     agegrp10</span></span>
+<span><span class="co">#&gt; 210        3</span></span>
+<span><span class="co">#&gt; 211        4</span></span>
+<span><span class="co">#&gt; 212        3</span></span>
+<span><span class="co">#&gt; 213        4</span></span>
+<span><span class="co">#&gt; 214        5</span></span>
+<span><span class="co">#&gt; 215        3</span></span></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
-<li>Combine the harmonized continous variable <code>age_cont</code> from tester1 and tester2.</li>
+<li>Combine the harmonized variable <code>agegrp5</code> in tester1 with
+the harmonized <code>agegrp10</code> in tester2.</li>
+</ol>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">agegrp_combined</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="va">agegrp_1</span>, <span class="va">agegrp_2</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">#&gt;   agegrp5 agegrp10</span></span>
+<span><span class="co">#&gt; 1       7     &lt;NA&gt;</span></span>
+<span><span class="co">#&gt; 2       7     &lt;NA&gt;</span></span>
+<span><span class="co">#&gt; 3      10     &lt;NA&gt;</span></span>
+<span><span class="co">#&gt; 4       6     &lt;NA&gt;</span></span>
+<span><span class="co">#&gt; 5       3     &lt;NA&gt;</span></span>
+<span><span class="co">#&gt; 6       9     &lt;NA&gt;</span></span>
+<span><span class="co">#&gt;     agegrp5 agegrp10</span></span>
+<span><span class="co">#&gt; 413    &lt;NA&gt;        2</span></span>
+<span><span class="co">#&gt; 414    &lt;NA&gt;        5</span></span>
+<span><span class="co">#&gt; 415    &lt;NA&gt;        2</span></span>
+<span><span class="co">#&gt; 416    &lt;NA&gt;        4</span></span>
+<span><span class="co">#&gt; 417    &lt;NA&gt;        4</span></span>
+<span><span class="co">#&gt; 418    &lt;NA&gt;        4</span></span></code></pre>
+</div>
+<div class="section level3">
+<h3 id="option-2-recode-the-categorical-agegrp-variable-into-a-continuous-age_cont-variable">Option 2: recode the categorical <code>agegrp</code> variable into a
+continuous <code>age_cont</code> variable<a class="anchor" aria-label="anchor" href="#option-2-recode-the-categorical-agegrp-variable-into-a-continuous-age_cont-variable"></a>
+</h3>
+<p>Recode categorical variable <code>agegrp</code> into a single
+harmonized continuous variable <code>age_cont</code>.</p>
+<p><code>age_cont</code> takes the midpoint age of each category for
+‘agegrp’ across datasets. With this option, the categorical variable
+‘agegrp’ from each dataset can be combined into a single dataset.</p>
+<ol style="list-style-type: decimal">
+<li>Recode variable <code>agegrp</code> in tester1 and
+<code>agegrp</code> in tester2 to the harmonized continuous variable
+<code>age_cont</code>.</li>
 </ol>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">agegrp_cont_combined</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_rows</a></span><span class="op">(</span><span class="va">agegrp_1_cont</span>, <span class="va">agegrp_2_cont</span><span class="op">)</span></code></pre></div>
-<pre><code>#&gt;   age_cont
-#&gt; 1       57
-#&gt; 2       57
-#&gt; 3       72
-#&gt; 4       52
-#&gt; 5       37
-#&gt; 6       67
-#&gt;     age_cont
-#&gt; 413       35
-#&gt; 414       65
-#&gt; 415       35
-#&gt; 416       55
-#&gt; 417       55
-#&gt; 418       55</code></pre>
-</div>
-<div id="option-3-recode-the-categorical-agegrp-variable-into-a-harmonized-categorical-variable" class="section level3">
-<h3 class="hasAnchor">
-<a href="#option-3-recode-the-categorical-agegrp-variable-into-a-harmonized-categorical-variable" class="anchor"></a>Option 3: recode the categorical <code>agegrp</code> variable into a harmonized categorical variable</h3>
-<p>Dataset tester1 has 5-year age groups (e.g., 30-34, 35-39), and tester2 has 10-year age groups (e.g., 30-39). Therefore, we can collapse the 5-year age groups in dataset tester1 to the same 10-year age groups in dataset tester2.</p>
-<ol style="list-style-type: decimal">
-<li>Recode variable <code>agegrp</code> in tester1 into <code>agegrp10</code>. recode variable <code>agegrp</code> in tester2 into <code>agegrp10</code>.</li>
-</ol>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">agegrp10_1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rec_with_table.html">rec_with_table</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tester1</span>, 
-                             variables <span class="op">=</span> <span class="st">"agegrp10"</span>, 
-                             variable_details <span class="op">=</span> <span class="va">variable_details</span>, 
-                             log <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="co">#&gt; Using the passed data variable name as database_name</span>
-<span class="co">#&gt; NOTE for agegrp10: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp10: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp10: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp10: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp10: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp10: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp10: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp10: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp10: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp10: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp10: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp10: adapted from sample survival pbc data</span>
-<span class="co">#&gt; The variable agegrp was recoded into agegrp10 for the database tester1 the following recodes were made:</span>
-<span class="co">#&gt;    value_to  From rows_recoded</span>
-<span class="co">#&gt; 1         1     1            2</span>
-<span class="co">#&gt; 2         2     2           12</span>
-<span class="co">#&gt; 3         2     3           15</span>
-<span class="co">#&gt; 4         3     4           37</span>
-<span class="co">#&gt; 5         3     5           37</span>
-<span class="co">#&gt; 6         4     6           40</span>
-<span class="co">#&gt; 7         4     7           28</span>
-<span class="co">#&gt; 8         5     8           21</span>
-<span class="co">#&gt; 9         5     9            9</span>
-<span class="co">#&gt; 10        6    10            6</span>
-<span class="co">#&gt; 11        6    11            2</span>
-<span class="co">#&gt; 12    Na::b Na::b            0</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">agegrp10_1</span><span class="op">)</span>
-<span class="co">#&gt;   agegrp10</span>
-<span class="co">#&gt; 1        4</span>
-<span class="co">#&gt; 2        4</span>
-<span class="co">#&gt; 3        6</span>
-<span class="co">#&gt; 4        4</span>
-<span class="co">#&gt; 5        2</span>
-<span class="co">#&gt; 6        5</span>
-
-
-<span class="va">agegrp10_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rec_with_table.html">rec_with_table</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tester2</span>, 
-                             variables <span class="op">=</span> <span class="st">"agegrp10"</span>, 
-                             variable_details <span class="op">=</span> <span class="va">variable_details</span>, 
-                             log <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="co">#&gt; Using the passed data variable name as database_name</span>
-<span class="co">#&gt; NOTE for agegrp10: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp10: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp10: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp10: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp10: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp10: adapted from sample survival pbc data</span>
-<span class="co">#&gt; The variable agegrp was recoded into agegrp10 for the database tester2 the following recodes were made:</span>
-<span class="co">#&gt;   value_to From rows_recoded</span>
-<span class="co">#&gt; 1        1    1            1</span>
-<span class="co">#&gt; 2        2    2           39</span>
-<span class="co">#&gt; 3        3    3           52</span>
-<span class="co">#&gt; 4        4    4           67</span>
-<span class="co">#&gt; 5        5    5           45</span>
-<span class="co">#&gt; 6        6    6            5</span>
-<span class="co">#&gt; 7    Na::b else            0</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">agegrp10_2</span><span class="op">)</span>
-<span class="co">#&gt;     agegrp10</span>
-<span class="co">#&gt; 210        3</span>
-<span class="co">#&gt; 211        4</span>
-<span class="co">#&gt; 212        3</span>
-<span class="co">#&gt; 213        4</span>
-<span class="co">#&gt; 214        5</span>
-<span class="co">#&gt; 215        3</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">agegrp_1_cont</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rec_with_table.html">rec_with_table</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tester1</span>, </span>
+<span>                             variables <span class="op">=</span> <span class="st">"age_cont"</span>, </span>
+<span>                             variable_details <span class="op">=</span> <span class="fu">recodeflow</span><span class="fu">::</span><span class="va"><a href="../reference/tester_variable_details.html">tester_variable_details</a></span>,</span>
+<span>                             log <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                           database_name <span class="op">=</span> <span class="st">'tester1'</span><span class="op">)</span></span>
+<span><span class="co">#&gt; The variable agegrp was recoded into age_cont for the database tester1 the following recodes were made:</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 12 × 3</span></span></span>
+<span><span class="co">#&gt;    value_to From  rows_recoded</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 27       1                2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 32       2               12</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 37       3               15</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 42       4               37</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 47       5               37</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 52       6               40</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 57       7               28</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 62       8               21</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 67       9                9</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 72       10               6</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> 77       11               2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> <span style="color: #BB0000;">NA</span>       else             0</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">agegrp_1_cont</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   age_cont</span></span>
+<span><span class="co">#&gt; 1       57</span></span>
+<span><span class="co">#&gt; 2       57</span></span>
+<span><span class="co">#&gt; 3       72</span></span>
+<span><span class="co">#&gt; 4       52</span></span>
+<span><span class="co">#&gt; 5       37</span></span>
+<span><span class="co">#&gt; 6       67</span></span>
+<span></span>
+<span></span>
+<span><span class="va">agegrp_2_cont</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rec_with_table.html">rec_with_table</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tester2</span>, </span>
+<span>                             variables <span class="op">=</span> <span class="st">"age_cont"</span>, </span>
+<span>                             variable_details <span class="op">=</span> <span class="fu">recodeflow</span><span class="fu">::</span><span class="va"><a href="../reference/tester_variable_details.html">tester_variable_details</a></span>,</span>
+<span>                             log <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                           database_name <span class="op">=</span> <span class="st">'tester2'</span><span class="op">)</span></span>
+<span><span class="co">#&gt; The variable agegrp was recoded into age_cont for the database tester2 the following recodes were made:</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 7 × 3</span></span></span>
+<span><span class="co">#&gt;   value_to From  rows_recoded</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 25       1                1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> 35       2               39</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> 45       3               52</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> 55       4               67</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> 65       5               45</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> 75       6                5</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> <span style="color: #BB0000;">NA</span>       else             0</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">agegrp_2_cont</span><span class="op">)</span></span>
+<span><span class="co">#&gt;     age_cont</span></span>
+<span><span class="co">#&gt; 210       45</span></span>
+<span><span class="co">#&gt; 211       55</span></span>
+<span><span class="co">#&gt; 212       45</span></span>
+<span><span class="co">#&gt; 213       55</span></span>
+<span><span class="co">#&gt; 214       65</span></span>
+<span><span class="co">#&gt; 215       45</span></span></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
-<li>Combine the harmonized categorical variable <code>age_cat</code> from tester1 and tester2.</li>
+<li>Combine the harmonized continous variable <code>age_cont</code> from
+tester1 and tester2.</li>
+</ol>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">agegrp_cont_combined</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="va">agegrp_1_cont</span>, <span class="va">agegrp_2_cont</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">#&gt;   age_cont</span></span>
+<span><span class="co">#&gt; 1       57</span></span>
+<span><span class="co">#&gt; 2       57</span></span>
+<span><span class="co">#&gt; 3       72</span></span>
+<span><span class="co">#&gt; 4       52</span></span>
+<span><span class="co">#&gt; 5       37</span></span>
+<span><span class="co">#&gt; 6       67</span></span>
+<span><span class="co">#&gt;     age_cont</span></span>
+<span><span class="co">#&gt; 413       35</span></span>
+<span><span class="co">#&gt; 414       65</span></span>
+<span><span class="co">#&gt; 415       35</span></span>
+<span><span class="co">#&gt; 416       55</span></span>
+<span><span class="co">#&gt; 417       55</span></span>
+<span><span class="co">#&gt; 418       55</span></span></code></pre>
+</div>
+<div class="section level3">
+<h3 id="option-3-recode-the-categorical-agegrp-variable-into-a-harmonized-categorical-variable">Option 3: recode the categorical <code>agegrp</code> variable into a
+harmonized categorical variable<a class="anchor" aria-label="anchor" href="#option-3-recode-the-categorical-agegrp-variable-into-a-harmonized-categorical-variable"></a>
+</h3>
+<p>Dataset tester1 has 5-year age groups (e.g., 30-34, 35-39), and
+tester2 has 10-year age groups (e.g., 30-39). Therefore, we can collapse
+the 5-year age groups in dataset tester1 to the same 10-year age groups
+in dataset tester2.</p>
+<ol style="list-style-type: decimal">
+<li>Recode variable <code>agegrp</code> in tester1 into
+<code>agegrp10</code>. recode variable <code>agegrp</code> in tester2
+into <code>agegrp10</code>.</li>
 </ol>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">agegrp10_combined</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_rows</a></span><span class="op">(</span><span class="va">agegrp10_1</span>, <span class="va">agegrp10_2</span><span class="op">)</span></code></pre></div>
-<pre><code>#&gt;   agegrp10
-#&gt; 1        4
-#&gt; 2        4
-#&gt; 3        6
-#&gt; 4        4
-#&gt; 5        2
-#&gt; 6        5
-#&gt;     agegrp10
-#&gt; 413        2
-#&gt; 414        5
-#&gt; 415        2
-#&gt; 416        4
-#&gt; 417        4
-#&gt; 418        4</code></pre>
-</div>
-</div>
-<div id="example4" class="section level2">
-<h2 class="hasAnchor">
-<a href="#example4" class="anchor"></a>Example 4. Recode multiple variables from multiple datasets</h2>
-<p>The variables argument in <code><a href="../reference/rec_with_table.html">rec_with_table()</a></code> allows multiple variables to be recoded from a dataset.</p>
-<p>In this example, the <code>age</code> and <code>sex</code> variables from the tester1 and tester2 datasets will be recoded and labeled using <code><a href="../reference/rec_with_table.html">rec_with_table()</a></code>.</p>
-<p>We’ll then combine the two recoded datasets into a single dataset and labeled using <code><a href="../reference/set_data_labels.html">set_data_labels()</a></code>.</p>
-<ol style="list-style-type: decimal">
-<li>Recode <code>age</code> and <code>sex</code> in dataset tester1 and tester2</li>
-</ol>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">age_sex_1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rec_with_table.html">rec_with_table</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tester1</span>, 
-                            variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"age"</span>, <span class="st">"sex"</span><span class="op">)</span>, 
-                            variable_details <span class="op">=</span> <span class="va">variable_details</span>,
-                            log <span class="op">=</span> <span class="cn">TRUE</span>, 
-                            var_labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>age <span class="op">=</span> <span class="st">"Age"</span>, sex <span class="op">=</span> <span class="st">"Sex"</span><span class="op">)</span>
-                            <span class="op">)</span>
-<span class="co">#&gt; Using the passed data variable name as database_name</span>
-<span class="co">#&gt; NOTE for age: This is sample survival pbc data</span>
-<span class="co">#&gt; The variable age was recoded into age for the database tester1 the following recodes were made:</span>
-<span class="co">#&gt;   value_to    From rows_recoded</span>
-<span class="co">#&gt; 1     copy [25,79]          209</span>
-<span class="co">#&gt; 2     &lt;NA&gt;    else            0</span>
-<span class="co">#&gt; NOTE for sex: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for sex: This is sample survival pbc data</span>
-<span class="co">#&gt; The variable sex was recoded into sex for the database tester1 the following recodes were made:</span>
-<span class="co">#&gt;   value_to From rows_recoded</span>
-<span class="co">#&gt; 1        0    m           27</span>
-<span class="co">#&gt; 2        1    f          182</span>
-<span class="co">#&gt; 3    NA(b) else            0</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">age_sex_1</span><span class="op">)</span>
-<span class="co">#&gt;        age sex</span>
-<span class="co">#&gt; 1 58.76523   1</span>
-<span class="co">#&gt; 2 56.44627   1</span>
-<span class="co">#&gt; 3 70.07255   0</span>
-<span class="co">#&gt; 4 54.74059   1</span>
-<span class="co">#&gt; 5 38.10541   1</span>
-<span class="co">#&gt; 6 66.25873   1</span>
-
-<span class="va">age_sex_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rec_with_table.html">rec_with_table</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tester2</span>, 
-                            variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"age"</span>, <span class="st">"sex"</span><span class="op">)</span>, 
-                            variable_details <span class="op">=</span> <span class="va">variable_details</span>,
-                            log <span class="op">=</span> <span class="cn">TRUE</span>, 
-                            var_labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>age <span class="op">=</span> <span class="st">"Age"</span>, sex <span class="op">=</span> <span class="st">"Sex"</span><span class="op">)</span>
-                            <span class="op">)</span>
-<span class="co">#&gt; Using the passed data variable name as database_name</span>
-<span class="co">#&gt; NOTE for age: This is sample survival pbc data</span>
-<span class="co">#&gt; The variable age was recoded into age for the database tester2 the following recodes were made:</span>
-<span class="co">#&gt;   value_to    From rows_recoded</span>
-<span class="co">#&gt; 1     copy [25,79]          209</span>
-<span class="co">#&gt; 2     &lt;NA&gt;    else            0</span>
-<span class="co">#&gt; NOTE for sex: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for sex: This is sample survival pbc data</span>
-<span class="co">#&gt; The variable sex was recoded into sex for the database tester2 the following recodes were made:</span>
-<span class="co">#&gt;   value_to From rows_recoded</span>
-<span class="co">#&gt; 1        0    m           17</span>
-<span class="co">#&gt; 2        1    f          192</span>
-<span class="co">#&gt; 3    NA(b) else            0</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">age_sex_2</span><span class="op">)</span>
-<span class="co">#&gt;          age sex</span>
-<span class="co">#&gt; 210 49.76318   0</span>
-<span class="co">#&gt; 211 52.91444   1</span>
-<span class="co">#&gt; 212 47.26352   1</span>
-<span class="co">#&gt; 213 50.20397   1</span>
-<span class="co">#&gt; 214 69.34702   1</span>
-<span class="co">#&gt; 215 41.16906   1</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">agegrp10_1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rec_with_table.html">rec_with_table</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tester1</span>, </span>
+<span>                             variables <span class="op">=</span> <span class="st">"agegrp10"</span>, </span>
+<span>                             variable_details <span class="op">=</span> <span class="fu">recodeflow</span><span class="fu">::</span><span class="va"><a href="../reference/tester_variable_details.html">tester_variable_details</a></span>,</span>
+<span>                             log <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                           database_name <span class="op">=</span> <span class="st">'tester1'</span><span class="op">)</span></span>
+<span><span class="co">#&gt; The variable agegrp was recoded into agegrp10 for the database tester1 the following recodes were made:</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 12 × 3</span></span></span>
+<span><span class="co">#&gt;    value_to From  rows_recoded</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 1        1                2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 2        2               12</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 2        3               15</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 3        4               37</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 3        5               37</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 4        6               40</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 4        7               28</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 5        8               21</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 5        9                9</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 6        10               6</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> 6        11               2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> NA(b)    else             0</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">agegrp10_1</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   agegrp10</span></span>
+<span><span class="co">#&gt; 1        4</span></span>
+<span><span class="co">#&gt; 2        4</span></span>
+<span><span class="co">#&gt; 3        6</span></span>
+<span><span class="co">#&gt; 4        4</span></span>
+<span><span class="co">#&gt; 5        2</span></span>
+<span><span class="co">#&gt; 6        5</span></span>
+<span></span>
+<span></span>
+<span><span class="va">agegrp10_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rec_with_table.html">rec_with_table</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tester2</span>, </span>
+<span>                             variables <span class="op">=</span> <span class="st">"agegrp10"</span>, </span>
+<span>                             variable_details <span class="op">=</span> <span class="fu">recodeflow</span><span class="fu">::</span><span class="va"><a href="../reference/tester_variable_details.html">tester_variable_details</a></span>,</span>
+<span>                             log <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                            database_name <span class="op">=</span> <span class="st">'tester2'</span><span class="op">)</span></span>
+<span><span class="co">#&gt; The variable agegrp was recoded into agegrp10 for the database tester2 the following recodes were made:</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 7 × 3</span></span></span>
+<span><span class="co">#&gt;   value_to From  rows_recoded</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 1        1                1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> 2        2               39</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> 3        3               52</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> 4        4               67</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> 5        5               45</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> 6        6                5</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> NA(b)    else             0</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">agegrp10_2</span><span class="op">)</span></span>
+<span><span class="co">#&gt;     agegrp10</span></span>
+<span><span class="co">#&gt; 210        3</span></span>
+<span><span class="co">#&gt; 211        4</span></span>
+<span><span class="co">#&gt; 212        3</span></span>
+<span><span class="co">#&gt; 213        4</span></span>
+<span><span class="co">#&gt; 214        5</span></span>
+<span><span class="co">#&gt; 215        3</span></span></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
-<li>Combine the harmonized variables <code>age</code> and <code>sex</code> from tester1 and tester2.</li>
+<li>Combine the harmonized categorical variable <code>age_cat</code>
+from tester1 and tester2.</li>
+</ol>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">agegrp10_combined</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="va">agegrp10_1</span>, <span class="va">agegrp10_2</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">#&gt;   agegrp10</span></span>
+<span><span class="co">#&gt; 1        4</span></span>
+<span><span class="co">#&gt; 2        4</span></span>
+<span><span class="co">#&gt; 3        6</span></span>
+<span><span class="co">#&gt; 4        4</span></span>
+<span><span class="co">#&gt; 5        2</span></span>
+<span><span class="co">#&gt; 6        5</span></span>
+<span><span class="co">#&gt;     agegrp10</span></span>
+<span><span class="co">#&gt; 413        2</span></span>
+<span><span class="co">#&gt; 414        5</span></span>
+<span><span class="co">#&gt; 415        2</span></span>
+<span><span class="co">#&gt; 416        4</span></span>
+<span><span class="co">#&gt; 417        4</span></span>
+<span><span class="co">#&gt; 418        4</span></span></code></pre>
+</div>
+</div>
+<div class="section level2">
+<h2 id="example4">Example 4. Recode multiple variables from multiple datasets<a class="anchor" aria-label="anchor" href="#example4"></a>
+</h2>
+<p>The variables argument in <code><a href="../reference/rec_with_table.html">rec_with_table()</a></code> allows
+multiple variables to be recoded from a dataset.</p>
+<p>In this example, the <code>age</code> and <code>sex</code> variables
+from the tester1 and tester2 datasets will be recoded and labeled using
+<code><a href="../reference/rec_with_table.html">rec_with_table()</a></code>.</p>
+<p>We’ll then combine the two recoded datasets into a single dataset and
+labeled using <code><a href="../reference/set_data_labels.html">set_data_labels()</a></code>.</p>
+<ol style="list-style-type: decimal">
+<li>Recode <code>age</code> and <code>sex</code> in dataset tester1 and
+tester2</li>
 </ol>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">combined_age_sex</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_rows</a></span><span class="op">(</span><span class="va">age_sex_1</span>, <span class="va">age_sex_2</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">combined_age_sex</span><span class="op">)</span>
-<span class="co">#&gt;        age sex</span>
-<span class="co">#&gt; 1 58.76523   1</span>
-<span class="co">#&gt; 2 56.44627   1</span>
-<span class="co">#&gt; 3 70.07255   0</span>
-<span class="co">#&gt; 4 54.74059   1</span>
-<span class="co">#&gt; 5 38.10541   1</span>
-<span class="co">#&gt; 6 66.25873   1</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">age_sex_1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rec_with_table.html">rec_with_table</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tester1</span>, </span>
+<span>                            variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"age"</span>, <span class="st">"sex"</span><span class="op">)</span>, </span>
+<span>                            variable_details <span class="op">=</span> <span class="fu">recodeflow</span><span class="fu">::</span><span class="va"><a href="../reference/tester_variable_details.html">tester_variable_details</a></span>,</span>
+<span>                            log <span class="op">=</span> <span class="cn">TRUE</span>, </span>
+<span>                            var_labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>age <span class="op">=</span> <span class="st">"Age"</span>, sex <span class="op">=</span> <span class="st">"Sex"</span><span class="op">)</span>,</span>
+<span>                            database_name <span class="op">=</span> <span class="st">'tester1'</span><span class="op">)</span></span>
+<span><span class="co">#&gt; The variable age was recoded into age for the database tester1 the following recodes were made:</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 3</span></span></span>
+<span><span class="co">#&gt;   value_to From    rows_recoded</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> copy     [20,80]          209</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> NA::a    999                0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> <span style="color: #BB0000;">NA</span>       else               0</span></span>
+<span><span class="co">#&gt; The variable sex was recoded into sex for the database tester1 the following recodes were made:</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 3</span></span></span>
+<span><span class="co">#&gt;   value_to From  rows_recoded</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> m        m               27</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> f        f              182</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> NA::a    9                0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> NA(b)    else             0</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">age_sex_1</span><span class="op">)</span></span>
+<span><span class="co">#&gt;        age sex</span></span>
+<span><span class="co">#&gt; 1 58.76523   f</span></span>
+<span><span class="co">#&gt; 2 56.44627   f</span></span>
+<span><span class="co">#&gt; 3 70.07255   m</span></span>
+<span><span class="co">#&gt; 4 54.74059   f</span></span>
+<span><span class="co">#&gt; 5 38.10541   f</span></span>
+<span><span class="co">#&gt; 6 66.25873   f</span></span>
+<span></span>
+<span><span class="va">age_sex_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rec_with_table.html">rec_with_table</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tester2</span>, </span>
+<span>                            variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"age"</span>, <span class="st">"sex"</span><span class="op">)</span>, </span>
+<span>                            variable_details <span class="op">=</span> <span class="fu">recodeflow</span><span class="fu">::</span><span class="va"><a href="../reference/tester_variable_details.html">tester_variable_details</a></span>,</span>
+<span>                            log <span class="op">=</span> <span class="cn">TRUE</span>, </span>
+<span>                            var_labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>age <span class="op">=</span> <span class="st">"Age"</span>, sex <span class="op">=</span> <span class="st">"Sex"</span><span class="op">)</span>,</span>
+<span>                            database_name <span class="op">=</span> <span class="st">'tester2'</span></span>
+<span>                            <span class="op">)</span></span>
+<span><span class="co">#&gt; The variable age was recoded into age for the database tester2 the following recodes were made:</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 3</span></span></span>
+<span><span class="co">#&gt;   value_to From    rows_recoded</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> copy     [20,80]          209</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> NA::a    999                0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> <span style="color: #BB0000;">NA</span>       else               0</span></span>
+<span><span class="co">#&gt; The variable sex was recoded into sex for the database tester2 the following recodes were made:</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 3</span></span></span>
+<span><span class="co">#&gt;   value_to From  rows_recoded</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> m        m               17</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> f        f              192</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> NA::a    9                0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> NA(b)    else             0</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">age_sex_2</span><span class="op">)</span></span>
+<span><span class="co">#&gt;          age sex</span></span>
+<span><span class="co">#&gt; 210 49.76318   m</span></span>
+<span><span class="co">#&gt; 211 52.91444   f</span></span>
+<span><span class="co">#&gt; 212 47.26352   f</span></span>
+<span><span class="co">#&gt; 213 50.20397   f</span></span>
+<span><span class="co">#&gt; 214 69.34702   f</span></span>
+<span><span class="co">#&gt; 215 41.16906   f</span></span></code></pre></div>
+<ol start="2" style="list-style-type: decimal">
+<li>Combine the harmonized variables <code>age</code> and
+<code>sex</code> from tester1 and tester2.</li>
+</ol>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">combined_age_sex</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="va">age_sex_1</span>, <span class="va">age_sex_2</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">combined_age_sex</span><span class="op">)</span></span>
+<span><span class="co">#&gt;        age sex</span></span>
+<span><span class="co">#&gt; 1 58.76523   f</span></span>
+<span><span class="co">#&gt; 2 56.44627   f</span></span>
+<span><span class="co">#&gt; 3 70.07255   m</span></span>
+<span><span class="co">#&gt; 4 54.74059   f</span></span>
+<span><span class="co">#&gt; 5 38.10541   f</span></span>
+<span><span class="co">#&gt; 6 66.25873   f</span></span></code></pre></div>
 <ol start="3" style="list-style-type: decimal">
 <li>Set labels</li>
 </ol>
-<p>Use <code><a href="../reference/set_data_labels.html">set_data_labels()</a></code> to label the variables in your final dataset. <code><a href="../reference/set_data_labels.html">set_data_labels()</a></code> sets the labels with the original information in <code>variables</code> and <code>variable_details</code>.</p>
-<p><code>var_labels</code> can be used all the variables in <code>variables.csv</code> or a subset of variables.</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">labeled_combined_age_sex</span> <span class="op">&lt;-</span> 
-  <span class="fu"><a href="../reference/set_data_labels.html">set_data_labels</a></span><span class="op">(</span>
-      data_to_label <span class="op">=</span> <span class="va">combined_age_sex</span>,
-      variable_details <span class="op">=</span> <span class="va">variable_details</span>, 
-      variables_sheet <span class="op">=</span> <span class="va">variables</span>
-      <span class="op">)</span></code></pre></div>
-<p>You can check if labels have been added to your recoded dataset by using <code><a href="https://strengejacke.github.io/sjlabelled/reference/get_label.html">get_label()</a></code>.</p>
+<p>Use <code><a href="../reference/set_data_labels.html">set_data_labels()</a></code> to label the variables in your
+final dataset. <code><a href="../reference/set_data_labels.html">set_data_labels()</a></code> sets the labels with the
+original information in <code>variables</code> and
+<code>variable_details</code>.</p>
+<p><code>var_labels</code> can be used all the variables in
+<code>variables.csv</code> or a subset of variables.</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://strengejacke.github.io/sjlabelled">sjlabelled</a></span><span class="op">)</span> 
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: 'sjlabelled'</span>
-<span class="co">#&gt; The following object is masked from 'package:dplyr':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     as_label</span>
-<span class="fu"><a href="https://strengejacke.github.io/sjlabelled/reference/get_label.html">get_label</a></span><span class="op">(</span><span class="va">labeled_combined_age_sex</span><span class="op">)</span>
-<span class="co">#&gt;   age   sex </span>
-<span class="co">#&gt; "age" "sex"</span></code></pre></div>
-<p>For more information on <code><a href="https://strengejacke.github.io/sjlabelled/reference/get_label.html">get_label()</a></code> and other label helper functions, please refer to the <a href="https://strengejacke.github.io/sjlabelled/reference/">sjlabelled</a> package.</p>
-</div>
-<div id="example5" class="section level2">
-<h2 class="hasAnchor">
-<a href="#example5" class="anchor"></a>Example 5. Recode all variables in the variables worksheet</h2>
-<p>All the variables listed in <code>variables</code> worksheet can be recoded with <code><a href="../reference/rec_with_table.html">rec_with_table()</a></code>.</p>
-<p>In this example, all variables specified in the <code>variables</code> worksheet will be recoded and combined for the datasets tester1 and tester2.</p>
-<ol style="list-style-type: decimal">
-<li>Recode all variables listed in the variables worksheet, for dataset tester1 and dataset tester2</li>
-</ol>
+<code class="sourceCode R"><span><span class="va">labeled_combined_age_sex</span> <span class="op">&lt;-</span> </span>
+<span>  <span class="fu"><a href="../reference/set_data_labels.html">set_data_labels</a></span><span class="op">(</span></span>
+<span>      data_to_label <span class="op">=</span> <span class="va">combined_age_sex</span>,</span>
+<span>      variable_details <span class="op">=</span> <span class="fu">recodeflow</span><span class="fu">::</span><span class="va"><a href="../reference/tester_variable_details.html">tester_variable_details</a></span>,</span>
+<span>      variables_sheet <span class="op">=</span> <span class="fu">recodeflow</span><span class="fu">::</span><span class="va"><a href="../reference/tester_variables.html">tester_variables</a></span></span>
+<span>      <span class="op">)</span></span></code></pre></div>
+<p>You can check if labels have been added to your recoded dataset by
+using <code><a href="https://strengejacke.github.io/sjlabelled/reference/get_label.html" class="external-link">get_label()</a></code>.</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">recoded1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rec_with_table.html">rec_with_table</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tester1</span>,
-                          variables <span class="op">=</span> <span class="va">variables</span>,
-                          variable_details <span class="op">=</span> <span class="va">variable_details</span>,
-                          log <span class="op">=</span> <span class="cn">TRUE</span>,
-                          <span class="op">)</span>
-<span class="co">#&gt; Using the passed data variable name as database_name</span>
-<span class="co">#&gt; NOTE for age: This is sample survival pbc data</span>
-<span class="co">#&gt; The variable age was recoded into age for the database tester1 the following recodes were made:</span>
-<span class="co">#&gt;   value_to    From rows_recoded</span>
-<span class="co">#&gt; 1     copy [25,79]          209</span>
-<span class="co">#&gt; 2     &lt;NA&gt;    else            0</span>
-<span class="co">#&gt; NOTE for age_cont: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for age_cont: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for age_cont: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for age_cont: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for age_cont: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for age_cont: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for age_cont: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for age_cont: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for age_cont: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for age_cont: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for age_cont: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for age_cont: adapted from sample survival pbc data</span>
-<span class="co">#&gt; The variable agegrp was recoded into age_cont for the database tester1 the following recodes were made:</span>
-<span class="co">#&gt;    value_to  From rows_recoded</span>
-<span class="co">#&gt; 1        52     6           40</span>
-<span class="co">#&gt; 2        27     1            2</span>
-<span class="co">#&gt; 3        32     2           12</span>
-<span class="co">#&gt; 4        37     3           15</span>
-<span class="co">#&gt; 5        42     4           37</span>
-<span class="co">#&gt; 6        47     5           37</span>
-<span class="co">#&gt; 7        57     7           28</span>
-<span class="co">#&gt; 8        62     8           21</span>
-<span class="co">#&gt; 9        67     9            9</span>
-<span class="co">#&gt; 10       72    10            6</span>
-<span class="co">#&gt; 11       77    11            2</span>
-<span class="co">#&gt; 12    Na::b Na::b            0</span>
-<span class="co">#&gt; NOTE for agegrp10: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp10: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp10: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp10: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp10: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp10: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp10: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp10: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp10: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp10: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp10: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp10: adapted from sample survival pbc data</span>
-<span class="co">#&gt; The variable agegrp was recoded into agegrp10 for the database tester1 the following recodes were made:</span>
-<span class="co">#&gt;    value_to  From rows_recoded</span>
-<span class="co">#&gt; 1         5     8           21</span>
-<span class="co">#&gt; 2         5     9            9</span>
-<span class="co">#&gt; 3         6    10            6</span>
-<span class="co">#&gt; 4         6    11            2</span>
-<span class="co">#&gt; 5     Na::b Na::b            0</span>
-<span class="co">#&gt; 6         3     4           37</span>
-<span class="co">#&gt; 7         1     1            2</span>
-<span class="co">#&gt; 8         2     2           12</span>
-<span class="co">#&gt; 9         2     3           15</span>
-<span class="co">#&gt; 10        3     5           37</span>
-<span class="co">#&gt; 11        4     6           40</span>
-<span class="co">#&gt; 12        4     7           28</span>
-<span class="co">#&gt; NOTE for agegrp5: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp5: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp5: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp5: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp5: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp5: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp5: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp5: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp5: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp5: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp5: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp5: adapted from sample survival pbc data</span>
-<span class="co">#&gt; The variable agegrp was recoded into agegrp5 for the database tester1 the following recodes were made:</span>
-<span class="co">#&gt;    value_to  From rows_recoded</span>
-<span class="co">#&gt; 1         1     1            2</span>
-<span class="co">#&gt; 2         2     2           12</span>
-<span class="co">#&gt; 3         3     3           15</span>
-<span class="co">#&gt; 4         4     4           37</span>
-<span class="co">#&gt; 5         5     5           37</span>
-<span class="co">#&gt; 6         6     6           40</span>
-<span class="co">#&gt; 7         7     7           28</span>
-<span class="co">#&gt; 8         8     8           21</span>
-<span class="co">#&gt; 9         9     9            9</span>
-<span class="co">#&gt; 10       10    10            6</span>
-<span class="co">#&gt; 11       11    11            2</span>
-<span class="co">#&gt; 12    Na::b Na::b            0</span>
-<span class="co">#&gt; NOTE for albumin: This is sample survival pbc data</span>
-<span class="co">#&gt; The variable albumin was recoded into albumin for the database tester1 the following recodes were made:</span>
-<span class="co">#&gt;   value_to          From rows_recoded</span>
-<span class="co">#&gt; 1     copy [1.960, 4.64]          209</span>
-<span class="co">#&gt; 2     &lt;NA&gt;          else            0</span>
-<span class="co">#&gt; NOTE for alk.phos: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for alk.phos: This is sample survival pbc data</span>
-<span class="co">#&gt; The variable alk.phos was recoded into alk.phos for the database tester1 the following recodes were made:</span>
-<span class="co">#&gt;   value_to         From rows_recoded</span>
-<span class="co">#&gt; 1     copy [289, 13863]          209</span>
-<span class="co">#&gt; 2    Na::a           NA            0</span>
-<span class="co">#&gt; 3     &lt;NA&gt;         else            0</span>
-<span class="co">#&gt; NOTE for ascites: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for ascites: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for ascites: This is sample survival pbc data</span>
-<span class="co">#&gt; The variable ascites was recoded into ascites for the database tester1 the following recodes were made:</span>
-<span class="co">#&gt;   value_to From rows_recoded</span>
-<span class="co">#&gt; 1        0    0          191</span>
-<span class="co">#&gt; 2        1    1           18</span>
-<span class="co">#&gt; 3    NA::a   NA            0</span>
-<span class="co">#&gt; 4    NA(b) else            0</span>
-<span class="co">#&gt; NOTE for ast: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for ast: This is sample survival pbc data</span>
-<span class="co">#&gt; The variable ast was recoded into ast for the database tester1 the following recodes were made:</span>
-<span class="co">#&gt;   value_to      From rows_recoded</span>
-<span class="co">#&gt; 1     copy [26, 458]          209</span>
-<span class="co">#&gt; 2    Na::a        NA            0</span>
-<span class="co">#&gt; 3     &lt;NA&gt;      else            0</span>
-<span class="co">#&gt; NOTE for bili: This is sample survival pbc data</span>
-<span class="co">#&gt; The variable bili was recoded into bili for the database tester1 the following recodes were made:</span>
-<span class="co">#&gt;   value_to   From rows_recoded</span>
-<span class="co">#&gt; 1     copy [0,28]          209</span>
-<span class="co">#&gt; 2     &lt;NA&gt;   else            0</span>
-<span class="co">#&gt; NOTE for chol: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for chol: This is sample survival pbc data</span>
-<span class="co">#&gt; The variable chol was recoded into chol for the database tester1 the following recodes were made:</span>
-<span class="co">#&gt;   value_to        From rows_recoded</span>
-<span class="co">#&gt; 1     copy [120, 1775]          186</span>
-<span class="co">#&gt; 2    Na::a          NA            0</span>
-<span class="co">#&gt; 3     &lt;NA&gt;        else           23</span>
-<span class="co">#&gt; NOTE for copper: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for copper: This is sample survival pbc data</span>
-<span class="co">#&gt; The variable copper was recoded into copper for the database tester1 the following recodes were made:</span>
-<span class="co">#&gt;   value_to    From rows_recoded</span>
-<span class="co">#&gt; 1     copy [4,588]          208</span>
-<span class="co">#&gt; 2    Na::a      NA            0</span>
-<span class="co">#&gt; 3     &lt;NA&gt;    else            1</span>
-<span class="co">#&gt; NOTE for edema: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for edema: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for edema: This is sample survival pbc data</span>
-<span class="co">#&gt; The variable edema was recoded into edema for the database tester1 the following recodes were made:</span>
-<span class="co">#&gt;   value_to From rows_recoded</span>
-<span class="co">#&gt; 1      0.0  0.0          171</span>
-<span class="co">#&gt; 2      0.5  0.5           22</span>
-<span class="co">#&gt; 3      1.0  1.0           16</span>
-<span class="co">#&gt; 4    Na::b else            0</span>
-<span class="co">#&gt; NOTE for hepato: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for hepato: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for hepato: This is sample survival pbc data</span>
-<span class="co">#&gt; The variable hepato was recoded into hepato for the database tester1 the following recodes were made:</span>
-<span class="co">#&gt;   value_to From rows_recoded</span>
-<span class="co">#&gt; 1        0    0          102</span>
-<span class="co">#&gt; 2        1    1          107</span>
-<span class="co">#&gt; 3    NA::a   NA            0</span>
-<span class="co">#&gt; 4    NA(b) else            0</span>
-<span class="co">#&gt; NOTE for platelet: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for platelet: This is sample survival pbc data</span>
-<span class="co">#&gt; The variable platelet was recoded into platelet for the database tester1 the following recodes were made:</span>
-<span class="co">#&gt;   value_to      From rows_recoded</span>
-<span class="co">#&gt; 1     copy [62, 721]          205</span>
-<span class="co">#&gt; 2    Na::a        NA            0</span>
-<span class="co">#&gt; 3     &lt;NA&gt;      else            4</span>
-<span class="co">#&gt; NOTE for protime: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for protime: This is sample survival pbc data</span>
-<span class="co">#&gt; The variable protime was recoded into protime for the database tester1 the following recodes were made:</span>
-<span class="co">#&gt;   value_to   From rows_recoded</span>
-<span class="co">#&gt; 1     copy [9,18]          209</span>
-<span class="co">#&gt; 2    Na::a     NA            0</span>
-<span class="co">#&gt; 3     &lt;NA&gt;   else            0</span>
-<span class="co">#&gt; NOTE for sex: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for sex: This is sample survival pbc data</span>
-<span class="co">#&gt; The variable sex was recoded into sex for the database tester1 the following recodes were made:</span>
-<span class="co">#&gt;   value_to From rows_recoded</span>
-<span class="co">#&gt; 1        0    m           27</span>
-<span class="co">#&gt; 2        1    f          182</span>
-<span class="co">#&gt; 3    NA(b) else            0</span>
-<span class="co">#&gt; NOTE for spiders: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for spiders: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for spiders: This is sample survival pbc data</span>
-<span class="co">#&gt; The variable spiders was recoded into spiders for the database tester1 the following recodes were made:</span>
-<span class="co">#&gt;   value_to From rows_recoded</span>
-<span class="co">#&gt; 1        0    0          145</span>
-<span class="co">#&gt; 2        1    1           64</span>
-<span class="co">#&gt; 3    NA::a   NA            0</span>
-<span class="co">#&gt; 4    NA(b) else            0</span>
-<span class="co">#&gt; NOTE for stage: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for stage: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for stage: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for stage: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for stage: This is sample survival pbc data</span>
-<span class="co">#&gt; The variable stage was recoded into stage for the database tester1 the following recodes were made:</span>
-<span class="co">#&gt;   value_to From rows_recoded</span>
-<span class="co">#&gt; 1        1    1           12</span>
-<span class="co">#&gt; 2        2    2           46</span>
-<span class="co">#&gt; 3        3    3           77</span>
-<span class="co">#&gt; 4        4    4           74</span>
-<span class="co">#&gt; 5    Na::a   Na            0</span>
-<span class="co">#&gt; 6    NA(b) else            0</span>
-<span class="co">#&gt; NOTE for status: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for status: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for status: This is sample survival pbc data</span>
-<span class="co">#&gt; The variable status was recoded into status for the database tester1 the following recodes were made:</span>
-<span class="co">#&gt;   value_to From rows_recoded</span>
-<span class="co">#&gt; 1        0    0           94</span>
-<span class="co">#&gt; 2        1    1            7</span>
-<span class="co">#&gt; 3        2    2          108</span>
-<span class="co">#&gt; 4    NA(b) else            0</span>
-<span class="co">#&gt; NOTE for time: This is sample survival pbc data</span>
-<span class="co">#&gt; The variable time was recoded into time for the database tester1 the following recodes were made:</span>
-<span class="co">#&gt;   value_to     From rows_recoded</span>
-<span class="co">#&gt; 1     copy [0,4556]          209</span>
-<span class="co">#&gt; 2     &lt;NA&gt;     else            0</span>
-<span class="co">#&gt; NOTE for trig: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for trig: This is sample survival pbc data</span>
-<span class="co">#&gt; The variable trig was recoded into trig for the database tester1 the following recodes were made:</span>
-<span class="co">#&gt;   value_to      From rows_recoded</span>
-<span class="co">#&gt; 1     copy [33, 598]          185</span>
-<span class="co">#&gt; 2    Na::a        NA            0</span>
-<span class="co">#&gt; 3     &lt;NA&gt;      else           24</span>
-<span class="co">#&gt; NOTE for trt: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for trt: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for trt: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for trt: This is sample survival pbc data</span>
-<span class="co">#&gt; The variable trt was recoded into trt for the database tester1 the following recodes were made:</span>
-<span class="co">#&gt;   value_to From rows_recoded</span>
-<span class="co">#&gt; 1        1    1          106</span>
-<span class="co">#&gt; 2        2    2          103</span>
-<span class="co">#&gt; 3        3    3            0</span>
-<span class="co">#&gt; 4    NA::a   NA            0</span>
-<span class="co">#&gt; 5    NA(b) else            0</span>
-
-<span class="va">recoded2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rec_with_table.html">rec_with_table</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tester2</span>,
-                          variables <span class="op">=</span> <span class="va">variables</span>,
-                          variable_details <span class="op">=</span> <span class="va">variable_details</span>,
-                          log <span class="op">=</span> <span class="cn">TRUE</span>,
-                          <span class="op">)</span>
-<span class="co">#&gt; Using the passed data variable name as database_name</span>
-<span class="co">#&gt; NOTE for age: This is sample survival pbc data</span>
-<span class="co">#&gt; The variable age was recoded into age for the database tester2 the following recodes were made:</span>
-<span class="co">#&gt;   value_to    From rows_recoded</span>
-<span class="co">#&gt; 1     copy [25,79]          209</span>
-<span class="co">#&gt; 2     &lt;NA&gt;    else            0</span>
-<span class="co">#&gt; NOTE for age_cont: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for age_cont: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for age_cont: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for age_cont: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for age_cont: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for age_cont: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for age_cont: adapted from sample survival pbc data</span>
-<span class="co">#&gt; The variable agegrp was recoded into age_cont for the database tester2 the following recodes were made:</span>
-<span class="co">#&gt;   value_to  From rows_recoded</span>
-<span class="co">#&gt; 1    Na::b Na::b            0</span>
-<span class="co">#&gt; 2       25     1            1</span>
-<span class="co">#&gt; 3       35     2           39</span>
-<span class="co">#&gt; 4       45     3           52</span>
-<span class="co">#&gt; 5       55     4           67</span>
-<span class="co">#&gt; 6       65     5           45</span>
-<span class="co">#&gt; 7       75     6            5</span>
-<span class="co">#&gt; NOTE for agegrp10: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp10: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp10: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp10: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp10: adapted from sample survival pbc data</span>
-<span class="co">#&gt; NOTE for agegrp10: adapted from sample survival pbc data</span>
-<span class="co">#&gt; The variable agegrp was recoded into agegrp10 for the database tester2 the following recodes were made:</span>
-<span class="co">#&gt;   value_to From rows_recoded</span>
-<span class="co">#&gt; 1        1    1            1</span>
-<span class="co">#&gt; 2        2    2           39</span>
-<span class="co">#&gt; 3        3    3           52</span>
-<span class="co">#&gt; 4        4    4           67</span>
-<span class="co">#&gt; 5        5    5           45</span>
-<span class="co">#&gt; 6        6    6            5</span>
-<span class="co">#&gt; 7    Na::b else            0</span>
-<span class="co">#&gt; NOTE for albumin: This is sample survival pbc data</span>
-<span class="co">#&gt; The variable albumin was recoded into albumin for the database tester2 the following recodes were made:</span>
-<span class="co">#&gt;   value_to          From rows_recoded</span>
-<span class="co">#&gt; 1     copy [1.960, 4.64]          209</span>
-<span class="co">#&gt; 2     &lt;NA&gt;          else            0</span>
-<span class="co">#&gt; NOTE for alk.phos: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for alk.phos: This is sample survival pbc data</span>
-<span class="co">#&gt; The variable alk.phos was recoded into alk.phos for the database tester2 the following recodes were made:</span>
-<span class="co">#&gt;   value_to         From rows_recoded</span>
-<span class="co">#&gt; 1     copy [289, 13863]          103</span>
-<span class="co">#&gt; 2    Na::a           NA            0</span>
-<span class="co">#&gt; 3     &lt;NA&gt;         else          106</span>
-<span class="co">#&gt; NOTE for ascites: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for ascites: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for ascites: This is sample survival pbc data</span>
-<span class="co">#&gt; The variable ascites was recoded into ascites for the database tester2 the following recodes were made:</span>
-<span class="co">#&gt;   value_to From rows_recoded</span>
-<span class="co">#&gt; 1        0    0           97</span>
-<span class="co">#&gt; 2        1    1            6</span>
-<span class="co">#&gt; 3    NA::a   NA            0</span>
-<span class="co">#&gt; 4    NA(b) else          106</span>
-<span class="co">#&gt; NOTE for ast: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for ast: This is sample survival pbc data</span>
-<span class="co">#&gt; The variable ast was recoded into ast for the database tester2 the following recodes were made:</span>
-<span class="co">#&gt;   value_to      From rows_recoded</span>
-<span class="co">#&gt; 1     copy [26, 458]          103</span>
-<span class="co">#&gt; 2    Na::a        NA            0</span>
-<span class="co">#&gt; 3     &lt;NA&gt;      else          106</span>
-<span class="co">#&gt; NOTE for bili: This is sample survival pbc data</span>
-<span class="co">#&gt; The variable bili was recoded into bili for the database tester2 the following recodes were made:</span>
-<span class="co">#&gt;   value_to   From rows_recoded</span>
-<span class="co">#&gt; 1     copy [0,28]          209</span>
-<span class="co">#&gt; 2     &lt;NA&gt;   else            0</span>
-<span class="co">#&gt; NOTE for chol: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for chol: This is sample survival pbc data</span>
-<span class="co">#&gt; The variable chol was recoded into chol for the database tester2 the following recodes were made:</span>
-<span class="co">#&gt;   value_to        From rows_recoded</span>
-<span class="co">#&gt; 1     copy [120, 1775]           98</span>
-<span class="co">#&gt; 2    Na::a          NA            0</span>
-<span class="co">#&gt; 3     &lt;NA&gt;        else          111</span>
-<span class="co">#&gt; NOTE for copper: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for copper: This is sample survival pbc data</span>
-<span class="co">#&gt; The variable copper was recoded into copper for the database tester2 the following recodes were made:</span>
-<span class="co">#&gt;   value_to    From rows_recoded</span>
-<span class="co">#&gt; 1     copy [4,588]          102</span>
-<span class="co">#&gt; 2    Na::a      NA            0</span>
-<span class="co">#&gt; 3     &lt;NA&gt;    else          107</span>
-<span class="co">#&gt; NOTE for edema: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for edema: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for edema: This is sample survival pbc data</span>
-<span class="co">#&gt; The variable edema was recoded into edema for the database tester2 the following recodes were made:</span>
-<span class="co">#&gt;   value_to From rows_recoded</span>
-<span class="co">#&gt; 1      0.0  0.0          183</span>
-<span class="co">#&gt; 2      0.5  0.5           22</span>
-<span class="co">#&gt; 3      1.0  1.0            4</span>
-<span class="co">#&gt; 4    Na::b else            0</span>
-<span class="co">#&gt; NOTE for hepato: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for hepato: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for hepato: This is sample survival pbc data</span>
-<span class="co">#&gt; The variable hepato was recoded into hepato for the database tester2 the following recodes were made:</span>
-<span class="co">#&gt;   value_to From rows_recoded</span>
-<span class="co">#&gt; 1        0    0           50</span>
-<span class="co">#&gt; 2        1    1           53</span>
-<span class="co">#&gt; 3    NA::a   NA            0</span>
-<span class="co">#&gt; 4    NA(b) else          106</span>
-<span class="co">#&gt; NOTE for platelet: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for platelet: This is sample survival pbc data</span>
-<span class="co">#&gt; The variable platelet was recoded into platelet for the database tester2 the following recodes were made:</span>
-<span class="co">#&gt;   value_to      From rows_recoded</span>
-<span class="co">#&gt; 1     copy [62, 721]          202</span>
-<span class="co">#&gt; 2    Na::a        NA            0</span>
-<span class="co">#&gt; 3     &lt;NA&gt;      else            7</span>
-<span class="co">#&gt; NOTE for protime: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for protime: This is sample survival pbc data</span>
-<span class="co">#&gt; The variable protime was recoded into protime for the database tester2 the following recodes were made:</span>
-<span class="co">#&gt;   value_to   From rows_recoded</span>
-<span class="co">#&gt; 1     copy [9,18]          207</span>
-<span class="co">#&gt; 2    Na::a     NA            0</span>
-<span class="co">#&gt; 3     &lt;NA&gt;   else            2</span>
-<span class="co">#&gt; NOTE for sex: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for sex: This is sample survival pbc data</span>
-<span class="co">#&gt; The variable sex was recoded into sex for the database tester2 the following recodes were made:</span>
-<span class="co">#&gt;   value_to From rows_recoded</span>
-<span class="co">#&gt; 1        0    m           17</span>
-<span class="co">#&gt; 2        1    f          192</span>
-<span class="co">#&gt; 3    NA(b) else            0</span>
-<span class="co">#&gt; NOTE for spiders: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for spiders: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for spiders: This is sample survival pbc data</span>
-<span class="co">#&gt; The variable spiders was recoded into spiders for the database tester2 the following recodes were made:</span>
-<span class="co">#&gt;   value_to From rows_recoded</span>
-<span class="co">#&gt; 1        0    0           77</span>
-<span class="co">#&gt; 2        1    1           26</span>
-<span class="co">#&gt; 3    NA::a   NA            0</span>
-<span class="co">#&gt; 4    NA(b) else          106</span>
-<span class="co">#&gt; NOTE for stage: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for stage: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for stage: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for stage: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for stage: This is sample survival pbc data</span>
-<span class="co">#&gt; The variable stage was recoded into stage for the database tester2 the following recodes were made:</span>
-<span class="co">#&gt;   value_to From rows_recoded</span>
-<span class="co">#&gt; 1        1    1            9</span>
-<span class="co">#&gt; 2        2    2           46</span>
-<span class="co">#&gt; 3        3    3           78</span>
-<span class="co">#&gt; 4        4    4           70</span>
-<span class="co">#&gt; 5    Na::a   Na            0</span>
-<span class="co">#&gt; 6    NA(b) else            6</span>
-<span class="co">#&gt; NOTE for status: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for status: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for status: This is sample survival pbc data</span>
-<span class="co">#&gt; The variable status was recoded into status for the database tester2 the following recodes were made:</span>
-<span class="co">#&gt;   value_to From rows_recoded</span>
-<span class="co">#&gt; 1        0    0          138</span>
-<span class="co">#&gt; 2        1    1           18</span>
-<span class="co">#&gt; 3        2    2           53</span>
-<span class="co">#&gt; 4    NA(b) else            0</span>
-<span class="co">#&gt; NOTE for time: This is sample survival pbc data</span>
-<span class="co">#&gt; The variable time was recoded into time for the database tester2 the following recodes were made:</span>
-<span class="co">#&gt;   value_to     From rows_recoded</span>
-<span class="co">#&gt; 1     copy [0,4556]          208</span>
-<span class="co">#&gt; 2     &lt;NA&gt;     else            1</span>
-<span class="co">#&gt; NOTE for trig: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for trig: This is sample survival pbc data</span>
-<span class="co">#&gt; The variable trig was recoded into trig for the database tester2 the following recodes were made:</span>
-<span class="co">#&gt;   value_to      From rows_recoded</span>
-<span class="co">#&gt; 1     copy [33, 598]           97</span>
-<span class="co">#&gt; 2    Na::a        NA            0</span>
-<span class="co">#&gt; 3     &lt;NA&gt;      else          112</span>
-<span class="co">#&gt; NOTE for trt: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for trt: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for trt: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for trt: This is sample survival pbc data</span>
-<span class="co">#&gt; The variable trt was recoded into trt for the database tester2 the following recodes were made:</span>
-<span class="co">#&gt;   value_to From rows_recoded</span>
-<span class="co">#&gt; 1        1    1           52</span>
-<span class="co">#&gt; 2        2    2           51</span>
-<span class="co">#&gt; 3        3    3            0</span>
-<span class="co">#&gt; 4    NA::a   NA            0</span>
-<span class="co">#&gt; 5    NA(b) else          106</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://strengejacke.github.io/sjlabelled/" class="external-link">sjlabelled</a></span><span class="op">)</span> </span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Attaching package: 'sjlabelled'</span></span>
+<span><span class="co">#&gt; The following object is masked from 'package:dplyr':</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     as_label</span></span>
+<span><span class="fu"><a href="https://strengejacke.github.io/sjlabelled/reference/get_label.html" class="external-link">get_label</a></span><span class="op">(</span><span class="va">labeled_combined_age_sex</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   age   sex </span></span>
+<span><span class="co">#&gt; "age" "sex"</span></span></code></pre></div>
+<p>For more information on <code><a href="https://strengejacke.github.io/sjlabelled/reference/get_label.html" class="external-link">get_label()</a></code> and other label
+helper functions, please refer to the <a href="https://strengejacke.github.io/sjlabelled/reference/" class="external-link">sjlabelled</a>
+package.</p>
+</div>
+<div class="section level2">
+<h2 id="example5">Example 5. Recode all variables in the variables worksheet<a class="anchor" aria-label="anchor" href="#example5"></a>
+</h2>
+<p>All the variables listed in <code>variables</code> worksheet can be
+recoded with <code><a href="../reference/rec_with_table.html">rec_with_table()</a></code>.</p>
+<p>In this example, all variables specified in the
+<code>variables</code> worksheet will be recoded and combined for the
+datasets tester1 and tester2.</p>
+<ol style="list-style-type: decimal">
+<li>Recode all variables listed in the variables worksheet, for dataset
+tester1 and dataset tester2</li>
+</ol>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">recoded1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rec_with_table.html">rec_with_table</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tester1</span>,</span>
+<span>                           variables <span class="op">=</span> <span class="fu">recodeflow</span><span class="fu">::</span><span class="va"><a href="../reference/tester_variables.html">tester_variables</a></span>,</span>
+<span>                           variable_details <span class="op">=</span> <span class="fu">recodeflow</span><span class="fu">::</span><span class="va"><a href="../reference/tester_variable_details.html">tester_variable_details</a></span>,</span>
+<span>                          log <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                           database_name <span class="op">=</span> <span class="st">'tester1'</span></span>
+<span>                          <span class="op">)</span></span>
+<span><span class="co">#&gt; The variable age was recoded into age for the database tester1 the following recodes were made:</span></span>
+<span><span class="co">#&gt;   value_to    From rows_recoded</span></span>
+<span><span class="co">#&gt; 1     copy [20,80]          209</span></span>
+<span><span class="co">#&gt; 2    NA::a     999            0</span></span>
+<span><span class="co">#&gt; 3     &lt;NA&gt;    else            0</span></span>
+<span><span class="co">#&gt; The variable agegrp was recoded into age_cont for the database tester1 the following recodes were made:</span></span>
+<span><span class="co">#&gt;    value_to From rows_recoded</span></span>
+<span><span class="co">#&gt; 1        52    6           40</span></span>
+<span><span class="co">#&gt; 2        27    1            2</span></span>
+<span><span class="co">#&gt; 3        32    2           12</span></span>
+<span><span class="co">#&gt; 4        37    3           15</span></span>
+<span><span class="co">#&gt; 5        42    4           37</span></span>
+<span><span class="co">#&gt; 6        47    5           37</span></span>
+<span><span class="co">#&gt; 7        57    7           28</span></span>
+<span><span class="co">#&gt; 8        62    8           21</span></span>
+<span><span class="co">#&gt; 9        67    9            9</span></span>
+<span><span class="co">#&gt; 10       72   10            6</span></span>
+<span><span class="co">#&gt; 11       77   11            2</span></span>
+<span><span class="co">#&gt; 12     &lt;NA&gt; else            0</span></span>
+<span><span class="co">#&gt; The variable agegrp was recoded into agegrp10 for the database tester1 the following recodes were made:</span></span>
+<span><span class="co">#&gt;    value_to From rows_recoded</span></span>
+<span><span class="co">#&gt; 1         6   10            6</span></span>
+<span><span class="co">#&gt; 2         6   11            2</span></span>
+<span><span class="co">#&gt; 3         2    3           15</span></span>
+<span><span class="co">#&gt; 4         3    4           37</span></span>
+<span><span class="co">#&gt; 5         1    1            2</span></span>
+<span><span class="co">#&gt; 6         2    2           12</span></span>
+<span><span class="co">#&gt; 7         4    7           28</span></span>
+<span><span class="co">#&gt; 8         5    8           21</span></span>
+<span><span class="co">#&gt; 9         3    5           37</span></span>
+<span><span class="co">#&gt; 10        4    6           40</span></span>
+<span><span class="co">#&gt; 11        5    9            9</span></span>
+<span><span class="co">#&gt; 12    NA(b) else            0</span></span>
+<span><span class="co">#&gt; The variable agegrp was recoded into agegrp5 for the database tester1 the following recodes were made:</span></span>
+<span><span class="co">#&gt;    value_to From rows_recoded</span></span>
+<span><span class="co">#&gt; 1         4    4           37</span></span>
+<span><span class="co">#&gt; 2         5    5           37</span></span>
+<span><span class="co">#&gt; 3         1    1            2</span></span>
+<span><span class="co">#&gt; 4         2    2           12</span></span>
+<span><span class="co">#&gt; 5         3    3           15</span></span>
+<span><span class="co">#&gt; 6         9    9            9</span></span>
+<span><span class="co">#&gt; 7         6    6           40</span></span>
+<span><span class="co">#&gt; 8         7    7           28</span></span>
+<span><span class="co">#&gt; 9         8    8           21</span></span>
+<span><span class="co">#&gt; 10       10   10            6</span></span>
+<span><span class="co">#&gt; 11       11   11            2</span></span>
+<span><span class="co">#&gt; 12    Na::b else            0</span></span>
+<span><span class="co">#&gt; The variable albumin was recoded into albumin for the database tester1 the following recodes were made:</span></span>
+<span><span class="co">#&gt;   value_to  From rows_recoded</span></span>
+<span><span class="co">#&gt; 1     copy [1,5]          209</span></span>
+<span><span class="co">#&gt; 2    NA::a    99            0</span></span>
+<span><span class="co">#&gt; 3     &lt;NA&gt;  else            0</span></span>
+<span><span class="co">#&gt; The variable alk.phos was recoded into alk.phos for the database tester1 the following recodes were made:</span></span>
+<span><span class="co">#&gt;   value_to        From rows_recoded</span></span>
+<span><span class="co">#&gt; 1     copy [200,15000]          209</span></span>
+<span><span class="co">#&gt; 2    NA::a       99999            0</span></span>
+<span><span class="co">#&gt; 3     &lt;NA&gt;        else            0</span></span>
+<span><span class="co">#&gt; The variable ascites was recoded into ascites for the database tester1 the following recodes were made:</span></span>
+<span><span class="co">#&gt;   value_to From rows_recoded</span></span>
+<span><span class="co">#&gt; 1        1    1           18</span></span>
+<span><span class="co">#&gt; 2    NA::a    9            0</span></span>
+<span><span class="co">#&gt; 3        0    0          191</span></span>
+<span><span class="co">#&gt; 4    NA(b) else            0</span></span>
+<span><span class="co">#&gt; The variable ast was recoded into ast for the database tester1 the following recodes were made:</span></span>
+<span><span class="co">#&gt;   value_to     From rows_recoded</span></span>
+<span><span class="co">#&gt; 1     copy [20,500]          209</span></span>
+<span><span class="co">#&gt; 2    NA::a     9999            0</span></span>
+<span><span class="co">#&gt; 3     &lt;NA&gt;     else            0</span></span>
+<span><span class="co">#&gt; The variable bili was recoded into bili for the database tester1 the following recodes were made:</span></span>
+<span><span class="co">#&gt;   value_to    From rows_recoded</span></span>
+<span><span class="co">#&gt; 1     copy [0,100]          209</span></span>
+<span><span class="co">#&gt; 2     &lt;NA&gt;    else            0</span></span>
+<span><span class="co">#&gt; The variable chol was recoded into chol for the database tester1 the following recodes were made:</span></span>
+<span><span class="co">#&gt;   value_to       From rows_recoded</span></span>
+<span><span class="co">#&gt; 1     copy [100,2000]          186</span></span>
+<span><span class="co">#&gt; 2    NA::a       9999            0</span></span>
+<span><span class="co">#&gt; 3     &lt;NA&gt;       else           23</span></span>
+<span><span class="co">#&gt; The variable copper was recoded into copper for the database tester1 the following recodes were made:</span></span>
+<span><span class="co">#&gt;   value_to     From rows_recoded</span></span>
+<span><span class="co">#&gt; 1     copy [0,1000]          208</span></span>
+<span><span class="co">#&gt; 2    NA::a     9999            0</span></span>
+<span><span class="co">#&gt; 3     &lt;NA&gt;     else            1</span></span>
+<span><span class="co">#&gt; The variable edema was recoded into edema for the database tester1 the following recodes were made:</span></span>
+<span><span class="co">#&gt;   value_to From rows_recoded</span></span>
+<span><span class="co">#&gt; 1      0.5  0.5           22</span></span>
+<span><span class="co">#&gt; 2        1    1           16</span></span>
+<span><span class="co">#&gt; 3        0    0          171</span></span>
+<span><span class="co">#&gt; 4    NA::a    9            0</span></span>
+<span><span class="co">#&gt; 5    NA(b) else            0</span></span>
+<span><span class="co">#&gt; The variable hepato was recoded into hepato for the database tester1 the following recodes were made:</span></span>
+<span><span class="co">#&gt;   value_to From rows_recoded</span></span>
+<span><span class="co">#&gt; 1        0    0          102</span></span>
+<span><span class="co">#&gt; 2        1    1          107</span></span>
+<span><span class="co">#&gt; 3    NA::a    9            0</span></span>
+<span><span class="co">#&gt; 4    NA(b) else            0</span></span>
+<span><span class="co">#&gt; The variable platelet was recoded into platelet for the database tester1 the following recodes were made:</span></span>
+<span><span class="co">#&gt;   value_to     From rows_recoded</span></span>
+<span><span class="co">#&gt; 1     copy [0,1000]          205</span></span>
+<span><span class="co">#&gt; 2    NA::a     9999            0</span></span>
+<span><span class="co">#&gt; 3     &lt;NA&gt;     else            4</span></span>
+<span><span class="co">#&gt; The variable protime was recoded into protime for the database tester1 the following recodes were made:</span></span>
+<span><span class="co">#&gt;   value_to    From rows_recoded</span></span>
+<span><span class="co">#&gt; 1     copy [5, 30]          209</span></span>
+<span><span class="co">#&gt; 2    NA::a      99            0</span></span>
+<span><span class="co">#&gt; 3     &lt;NA&gt;    else            0</span></span>
+<span><span class="co">#&gt; The variable sex was recoded into sex for the database tester1 the following recodes were made:</span></span>
+<span><span class="co">#&gt;   value_to From rows_recoded</span></span>
+<span><span class="co">#&gt; 1        m    m           27</span></span>
+<span><span class="co">#&gt; 2    NA::a    9            0</span></span>
+<span><span class="co">#&gt; 3        f    f          182</span></span>
+<span><span class="co">#&gt; 4    NA(b) else            0</span></span>
+<span><span class="co">#&gt; The variable spiders was recoded into spiders for the database tester1 the following recodes were made:</span></span>
+<span><span class="co">#&gt;   value_to From rows_recoded</span></span>
+<span><span class="co">#&gt; 1        0    0          145</span></span>
+<span><span class="co">#&gt; 2    NA::a    9            0</span></span>
+<span><span class="co">#&gt; 3        1    1           64</span></span>
+<span><span class="co">#&gt; 4    NA(b) else            0</span></span>
+<span><span class="co">#&gt; The variable stage was recoded into stage for the database tester1 the following recodes were made:</span></span>
+<span><span class="co">#&gt;   value_to From rows_recoded</span></span>
+<span><span class="co">#&gt; 1        1    1           12</span></span>
+<span><span class="co">#&gt; 2        2    2           46</span></span>
+<span><span class="co">#&gt; 3        4    4           74</span></span>
+<span><span class="co">#&gt; 4    NA::a    9            0</span></span>
+<span><span class="co">#&gt; 5        3    3           77</span></span>
+<span><span class="co">#&gt; 6    NA(b) else            0</span></span>
+<span><span class="co">#&gt; The variable status was recoded into status for the database tester1 the following recodes were made:</span></span>
+<span><span class="co">#&gt;   value_to From rows_recoded</span></span>
+<span><span class="co">#&gt; 1        1    1            7</span></span>
+<span><span class="co">#&gt; 2        2    2          108</span></span>
+<span><span class="co">#&gt; 3        0    0           94</span></span>
+<span><span class="co">#&gt; 4    NA::a    9            0</span></span>
+<span><span class="co">#&gt; 5    NA(b) else            0</span></span>
+<span><span class="co">#&gt; The variable time was recoded into time for the database tester1 the following recodes were made:</span></span>
+<span><span class="co">#&gt;   value_to     From rows_recoded</span></span>
+<span><span class="co">#&gt; 1     copy [0,5000]          209</span></span>
+<span><span class="co">#&gt; 2    NA::a     9999            0</span></span>
+<span><span class="co">#&gt; 3     &lt;NA&gt;     else            0</span></span>
+<span><span class="co">#&gt; The variable trig was recoded into trig for the database tester1 the following recodes were made:</span></span>
+<span><span class="co">#&gt;   value_to     From rows_recoded</span></span>
+<span><span class="co">#&gt; 1     copy [0,1000]          185</span></span>
+<span><span class="co">#&gt; 2    NA::a     9999            0</span></span>
+<span><span class="co">#&gt; 3     &lt;NA&gt;     else           24</span></span>
+<span><span class="co">#&gt; The variable trt was recoded into trt for the database tester1 the following recodes were made:</span></span>
+<span><span class="co">#&gt;   value_to From rows_recoded</span></span>
+<span><span class="co">#&gt; 1        2    2          103</span></span>
+<span><span class="co">#&gt; 2    NA::a    9            0</span></span>
+<span><span class="co">#&gt; 3        1    1          106</span></span>
+<span><span class="co">#&gt; 4    NA(b) else            0</span></span>
+<span></span>
+<span><span class="va">recoded2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rec_with_table.html">rec_with_table</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tester2</span>,</span>
+<span>                           variables <span class="op">=</span> <span class="fu">recodeflow</span><span class="fu">::</span><span class="va"><a href="../reference/tester_variables.html">tester_variables</a></span>,</span>
+<span>                           variable_details <span class="op">=</span> <span class="fu">recodeflow</span><span class="fu">::</span><span class="va"><a href="../reference/tester_variable_details.html">tester_variable_details</a></span>,</span>
+<span>                          log <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                           database_name <span class="op">=</span> <span class="st">'tester2'</span></span>
+<span>                          <span class="op">)</span></span>
+<span><span class="co">#&gt; The variable age was recoded into age for the database tester2 the following recodes were made:</span></span>
+<span><span class="co">#&gt;   value_to    From rows_recoded</span></span>
+<span><span class="co">#&gt; 1     copy [20,80]          209</span></span>
+<span><span class="co">#&gt; 2    NA::a     999            0</span></span>
+<span><span class="co">#&gt; 3     &lt;NA&gt;    else            0</span></span>
+<span><span class="co">#&gt; The variable agegrp was recoded into age_cont for the database tester2 the following recodes were made:</span></span>
+<span><span class="co">#&gt;   value_to From rows_recoded</span></span>
+<span><span class="co">#&gt; 1       25    1            1</span></span>
+<span><span class="co">#&gt; 2       35    2           39</span></span>
+<span><span class="co">#&gt; 3       45    3           52</span></span>
+<span><span class="co">#&gt; 4       55    4           67</span></span>
+<span><span class="co">#&gt; 5       65    5           45</span></span>
+<span><span class="co">#&gt; 6       75    6            5</span></span>
+<span><span class="co">#&gt; 7     &lt;NA&gt; else            0</span></span>
+<span><span class="co">#&gt; The variable agegrp was recoded into agegrp10 for the database tester2 the following recodes were made:</span></span>
+<span><span class="co">#&gt;   value_to From rows_recoded</span></span>
+<span><span class="co">#&gt; 1        1    1            1</span></span>
+<span><span class="co">#&gt; 2        2    2           39</span></span>
+<span><span class="co">#&gt; 3        3    3           52</span></span>
+<span><span class="co">#&gt; 4        4    4           67</span></span>
+<span><span class="co">#&gt; 5        5    5           45</span></span>
+<span><span class="co">#&gt; 6        6    6            5</span></span>
+<span><span class="co">#&gt; 7    NA(b) else            0</span></span>
+<span><span class="co">#&gt; The variable albumin was recoded into albumin for the database tester2 the following recodes were made:</span></span>
+<span><span class="co">#&gt;   value_to  From rows_recoded</span></span>
+<span><span class="co">#&gt; 1     copy [1,5]          209</span></span>
+<span><span class="co">#&gt; 2    NA::a    99            0</span></span>
+<span><span class="co">#&gt; 3     &lt;NA&gt;  else            0</span></span>
+<span><span class="co">#&gt; The variable alk.phos was recoded into alk.phos for the database tester2 the following recodes were made:</span></span>
+<span><span class="co">#&gt;   value_to        From rows_recoded</span></span>
+<span><span class="co">#&gt; 1     copy [200,15000]          103</span></span>
+<span><span class="co">#&gt; 2    NA::a       99999            0</span></span>
+<span><span class="co">#&gt; 3     &lt;NA&gt;        else          106</span></span>
+<span><span class="co">#&gt; The variable ascites was recoded into ascites for the database tester2 the following recodes were made:</span></span>
+<span><span class="co">#&gt;   value_to From rows_recoded</span></span>
+<span><span class="co">#&gt; 1        1    1            6</span></span>
+<span><span class="co">#&gt; 2    NA::a    9            0</span></span>
+<span><span class="co">#&gt; 3        0    0           97</span></span>
+<span><span class="co">#&gt; 4    NA(b) else          106</span></span>
+<span><span class="co">#&gt; The variable ast was recoded into ast for the database tester2 the following recodes were made:</span></span>
+<span><span class="co">#&gt;   value_to     From rows_recoded</span></span>
+<span><span class="co">#&gt; 1     copy [20,500]          103</span></span>
+<span><span class="co">#&gt; 2    NA::a     9999            0</span></span>
+<span><span class="co">#&gt; 3     &lt;NA&gt;     else          106</span></span>
+<span><span class="co">#&gt; The variable bili was recoded into bili for the database tester2 the following recodes were made:</span></span>
+<span><span class="co">#&gt;   value_to    From rows_recoded</span></span>
+<span><span class="co">#&gt; 1     copy [0,100]          209</span></span>
+<span><span class="co">#&gt; 2     &lt;NA&gt;    else            0</span></span>
+<span><span class="co">#&gt; The variable chol was recoded into chol for the database tester2 the following recodes were made:</span></span>
+<span><span class="co">#&gt;   value_to       From rows_recoded</span></span>
+<span><span class="co">#&gt; 1     copy [100,2000]           98</span></span>
+<span><span class="co">#&gt; 2    NA::a       9999            0</span></span>
+<span><span class="co">#&gt; 3     &lt;NA&gt;       else          111</span></span>
+<span><span class="co">#&gt; The variable copper was recoded into copper for the database tester2 the following recodes were made:</span></span>
+<span><span class="co">#&gt;   value_to     From rows_recoded</span></span>
+<span><span class="co">#&gt; 1     copy [0,1000]          102</span></span>
+<span><span class="co">#&gt; 2    NA::a     9999            0</span></span>
+<span><span class="co">#&gt; 3     &lt;NA&gt;     else          107</span></span>
+<span><span class="co">#&gt; The variable edema was recoded into edema for the database tester2 the following recodes were made:</span></span>
+<span><span class="co">#&gt;   value_to From rows_recoded</span></span>
+<span><span class="co">#&gt; 1      0.5  0.5           22</span></span>
+<span><span class="co">#&gt; 2        1    1            4</span></span>
+<span><span class="co">#&gt; 3        0    0          183</span></span>
+<span><span class="co">#&gt; 4    NA::a    9            0</span></span>
+<span><span class="co">#&gt; 5    NA(b) else            0</span></span>
+<span><span class="co">#&gt; The variable hepato was recoded into hepato for the database tester2 the following recodes were made:</span></span>
+<span><span class="co">#&gt;   value_to From rows_recoded</span></span>
+<span><span class="co">#&gt; 1        0    0           50</span></span>
+<span><span class="co">#&gt; 2        1    1           53</span></span>
+<span><span class="co">#&gt; 3    NA::a    9            0</span></span>
+<span><span class="co">#&gt; 4    NA(b) else          106</span></span>
+<span><span class="co">#&gt; The variable platelet was recoded into platelet for the database tester2 the following recodes were made:</span></span>
+<span><span class="co">#&gt;   value_to     From rows_recoded</span></span>
+<span><span class="co">#&gt; 1     copy [0,1000]          202</span></span>
+<span><span class="co">#&gt; 2    NA::a     9999            0</span></span>
+<span><span class="co">#&gt; 3     &lt;NA&gt;     else            7</span></span>
+<span><span class="co">#&gt; The variable protime was recoded into protime for the database tester2 the following recodes were made:</span></span>
+<span><span class="co">#&gt;   value_to    From rows_recoded</span></span>
+<span><span class="co">#&gt; 1     copy [5, 30]          207</span></span>
+<span><span class="co">#&gt; 2    NA::a      99            0</span></span>
+<span><span class="co">#&gt; 3     &lt;NA&gt;    else            2</span></span>
+<span><span class="co">#&gt; The variable sex was recoded into sex for the database tester2 the following recodes were made:</span></span>
+<span><span class="co">#&gt;   value_to From rows_recoded</span></span>
+<span><span class="co">#&gt; 1        m    m           17</span></span>
+<span><span class="co">#&gt; 2    NA::a    9            0</span></span>
+<span><span class="co">#&gt; 3        f    f          192</span></span>
+<span><span class="co">#&gt; 4    NA(b) else            0</span></span>
+<span><span class="co">#&gt; The variable spiders was recoded into spiders for the database tester2 the following recodes were made:</span></span>
+<span><span class="co">#&gt;   value_to From rows_recoded</span></span>
+<span><span class="co">#&gt; 1        0    0           77</span></span>
+<span><span class="co">#&gt; 2    NA::a    9            0</span></span>
+<span><span class="co">#&gt; 3        1    1           26</span></span>
+<span><span class="co">#&gt; 4    NA(b) else          106</span></span>
+<span><span class="co">#&gt; The variable stage was recoded into stage for the database tester2 the following recodes were made:</span></span>
+<span><span class="co">#&gt;   value_to From rows_recoded</span></span>
+<span><span class="co">#&gt; 1        1    1            9</span></span>
+<span><span class="co">#&gt; 2        2    2           46</span></span>
+<span><span class="co">#&gt; 3        4    4           70</span></span>
+<span><span class="co">#&gt; 4    NA::a    9            0</span></span>
+<span><span class="co">#&gt; 5        3    3           78</span></span>
+<span><span class="co">#&gt; 6    NA(b) else            6</span></span>
+<span><span class="co">#&gt; The variable status was recoded into status for the database tester2 the following recodes were made:</span></span>
+<span><span class="co">#&gt;   value_to From rows_recoded</span></span>
+<span><span class="co">#&gt; 1        1    1           18</span></span>
+<span><span class="co">#&gt; 2        2    2           53</span></span>
+<span><span class="co">#&gt; 3        0    0          138</span></span>
+<span><span class="co">#&gt; 4    NA::a    9            0</span></span>
+<span><span class="co">#&gt; 5    NA(b) else            0</span></span>
+<span><span class="co">#&gt; The variable time was recoded into time for the database tester2 the following recodes were made:</span></span>
+<span><span class="co">#&gt;   value_to     From rows_recoded</span></span>
+<span><span class="co">#&gt; 1     copy [0,5000]          209</span></span>
+<span><span class="co">#&gt; 2    NA::a     9999            0</span></span>
+<span><span class="co">#&gt; 3     &lt;NA&gt;     else            0</span></span>
+<span><span class="co">#&gt; The variable trig was recoded into trig for the database tester2 the following recodes were made:</span></span>
+<span><span class="co">#&gt;   value_to     From rows_recoded</span></span>
+<span><span class="co">#&gt; 1     copy [0,1000]           97</span></span>
+<span><span class="co">#&gt; 2    NA::a     9999            0</span></span>
+<span><span class="co">#&gt; 3     &lt;NA&gt;     else          112</span></span>
+<span><span class="co">#&gt; The variable trt was recoded into trt for the database tester2 the following recodes were made:</span></span>
+<span><span class="co">#&gt;   value_to From rows_recoded</span></span>
+<span><span class="co">#&gt; 1        2    2           51</span></span>
+<span><span class="co">#&gt; 2    NA::a    9            0</span></span>
+<span><span class="co">#&gt; 3        1    1           52</span></span>
+<span><span class="co">#&gt; 4    NA(b) else          106</span></span></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
 <li>Combine recoded datasets</li>
 </ol>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">combined_dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_rows</a></span><span class="op">(</span><span class="va">recoded1</span>, <span class="va">recoded2</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">combined_dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="va">recoded1</span>, <span class="va">recoded2</span><span class="op">)</span></span></code></pre></div>
 <ol start="3" style="list-style-type: decimal">
 <li>Set labels for the combined recoded dataset</li>
 </ol>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">labeled_combined</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/set_data_labels.html">set_data_labels</a></span><span class="op">(</span>data_to_label <span class="op">=</span> <span class="va">combined_dataset</span>,
-                                    variable_details <span class="op">=</span> <span class="va">variable_details</span>,
-                                    variables_sheet <span class="op">=</span> <span class="va">variables</span>
-                                    <span class="op">)</span></code></pre></div>
-</div>
-<div id="example6" class="section level2">
-<h2 class="hasAnchor">
-<a href="#example6" class="anchor"></a>Example 6: Add the data origin in combined datasets</h2>
-<p>To know the origin of each row of data, you can use the <code>rec_with_table</code> argument <code>attach_data_name</code>. When the argument <code>attach_data_name</code> is set to true it will add a column with the name of the dataset the row is from.</p>
-<ol style="list-style-type: decimal">
-<li>Recode variables <code>age</code> and <code>sex</code> and attach dataset name for tester1 and tester2.</li>
-</ol>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">age_sex_1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rec_with_table.html">rec_with_table</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tester1</span>,
-                            variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"age"</span>, <span class="st">"sex"</span><span class="op">)</span>, 
-                            variable_details <span class="op">=</span> <span class="va">variable_details</span>,
-                            var_labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>age <span class="op">=</span> <span class="st">"Age"</span>, sex <span class="op">=</span> <span class="st">"Sex"</span><span class="op">)</span>,
-                            log <span class="op">=</span> <span class="cn">TRUE</span>,
-                            attach_data_name <span class="op">=</span> <span class="cn">TRUE</span>
-                            <span class="op">)</span>
-<span class="co">#&gt; Using the passed data variable name as database_name</span>
-<span class="co">#&gt; NOTE for age: This is sample survival pbc data</span>
-<span class="co">#&gt; The variable age was recoded into age for the database tester1 the following recodes were made:</span>
-<span class="co">#&gt;   value_to    From rows_recoded</span>
-<span class="co">#&gt; 1     copy [25,79]          209</span>
-<span class="co">#&gt; 2     &lt;NA&gt;    else            0</span>
-<span class="co">#&gt; NOTE for sex: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for sex: This is sample survival pbc data</span>
-<span class="co">#&gt; The variable sex was recoded into sex for the database tester1 the following recodes were made:</span>
-<span class="co">#&gt;   value_to From rows_recoded</span>
-<span class="co">#&gt; 1        0    m           27</span>
-<span class="co">#&gt; 2        1    f          182</span>
-<span class="co">#&gt; 3    NA(b) else            0</span>
-
-<span class="va">age_sex_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rec_with_table.html">rec_with_table</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tester2</span>,
-                            variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"age"</span>, <span class="st">"sex"</span><span class="op">)</span>, 
-                            variable_details <span class="op">=</span> <span class="va">variable_details</span>,
-                            var_labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>age <span class="op">=</span> <span class="st">"Age"</span>, sex <span class="op">=</span> <span class="st">"Sex"</span><span class="op">)</span>,
-                            log <span class="op">=</span> <span class="cn">TRUE</span>,
-                            attach_data_name <span class="op">=</span> <span class="cn">TRUE</span>
-                            <span class="op">)</span>
-<span class="co">#&gt; Using the passed data variable name as database_name</span>
-<span class="co">#&gt; NOTE for age: This is sample survival pbc data</span>
-<span class="co">#&gt; The variable age was recoded into age for the database tester2 the following recodes were made:</span>
-<span class="co">#&gt;   value_to    From rows_recoded</span>
-<span class="co">#&gt; 1     copy [25,79]          209</span>
-<span class="co">#&gt; 2     &lt;NA&gt;    else            0</span>
-<span class="co">#&gt; NOTE for sex: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for sex: This is sample survival pbc data</span>
-<span class="co">#&gt; The variable sex was recoded into sex for the database tester2 the following recodes were made:</span>
-<span class="co">#&gt;   value_to From rows_recoded</span>
-<span class="co">#&gt; 1        0    m           17</span>
-<span class="co">#&gt; 2        1    f          192</span>
-<span class="co">#&gt; 3    NA(b) else            0</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">labeled_combined</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/set_data_labels.html">set_data_labels</a></span><span class="op">(</span>data_to_label <span class="op">=</span> <span class="va">combined_dataset</span>,</span>
+<span>                                    variable_details <span class="op">=</span> <span class="fu">recodeflow</span><span class="fu">::</span><span class="va"><a href="../reference/tester_variable_details.html">tester_variable_details</a></span>,</span>
+<span>                                    variables_sheet <span class="op">=</span> <span class="fu">recodeflow</span><span class="fu">::</span><span class="va"><a href="../reference/tester_variables.html">tester_variables</a></span></span>
+<span>                                    <span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="example6">Example 6: Add the data origin in combined datasets<a class="anchor" aria-label="anchor" href="#example6"></a>
+</h2>
+<p>To know the origin of each row of data, you can use the
+<code>rec_with_table</code> argument <code>attach_data_name</code>. When
+the argument <code>attach_data_name</code> is set to true it will add a
+column with the name of the dataset the row is from.</p>
+<ol style="list-style-type: decimal">
+<li>Recode variables <code>age</code> and <code>sex</code> and attach
+dataset name for tester1 and tester2.</li>
+</ol>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">age_sex_1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rec_with_table.html">rec_with_table</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tester1</span>,</span>
+<span>                            variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"age"</span>, <span class="st">"sex"</span><span class="op">)</span>, </span>
+<span>                            variable_details <span class="op">=</span> <span class="fu">recodeflow</span><span class="fu">::</span><span class="va"><a href="../reference/tester_variable_details.html">tester_variable_details</a></span>,</span>
+<span>                            var_labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>age <span class="op">=</span> <span class="st">"Age"</span>, sex <span class="op">=</span> <span class="st">"Sex"</span><span class="op">)</span>,</span>
+<span>                            log <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                            attach_data_name <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                           database_name <span class="op">=</span> <span class="st">'tester1'</span></span>
+<span>                            <span class="op">)</span></span>
+<span><span class="co">#&gt; The variable age was recoded into age for the database tester1 the following recodes were made:</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 3</span></span></span>
+<span><span class="co">#&gt;   value_to From    rows_recoded</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> copy     [20,80]          209</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> NA::a    999                0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> <span style="color: #BB0000;">NA</span>       else               0</span></span>
+<span><span class="co">#&gt; The variable sex was recoded into sex for the database tester1 the following recodes were made:</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 3</span></span></span>
+<span><span class="co">#&gt;   value_to From  rows_recoded</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> m        m               27</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> f        f              182</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> NA::a    9                0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> NA(b)    else             0</span></span>
+<span></span>
+<span><span class="va">age_sex_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rec_with_table.html">rec_with_table</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tester2</span>,</span>
+<span>                            variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"age"</span>, <span class="st">"sex"</span><span class="op">)</span>, </span>
+<span>                            variable_details <span class="op">=</span> <span class="fu">recodeflow</span><span class="fu">::</span><span class="va"><a href="../reference/tester_variable_details.html">tester_variable_details</a></span>,</span>
+<span>                            var_labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>age <span class="op">=</span> <span class="st">"Age"</span>, sex <span class="op">=</span> <span class="st">"Sex"</span><span class="op">)</span>,</span>
+<span>                            log <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                            attach_data_name <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                           database_name <span class="op">=</span> <span class="st">'tester2'</span></span>
+<span>                            <span class="op">)</span></span>
+<span><span class="co">#&gt; The variable age was recoded into age for the database tester2 the following recodes were made:</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 3</span></span></span>
+<span><span class="co">#&gt;   value_to From    rows_recoded</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> copy     [20,80]          209</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> NA::a    999                0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> <span style="color: #BB0000;">NA</span>       else               0</span></span>
+<span><span class="co">#&gt; The variable sex was recoded into sex for the database tester2 the following recodes were made:</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 3</span></span></span>
+<span><span class="co">#&gt;   value_to From  rows_recoded</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> m        m               17</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> f        f              192</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> NA::a    9                0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> NA(b)    else             0</span></span></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
 <li>Combine the harmonized datasets</li>
 </ol>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">combined_age_sex</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_rows</a></span><span class="op">(</span><span class="va">age_sex_1</span>, <span class="va">age_sex_2</span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">combined_age_sex</span><span class="op">)</span>
-<span class="co">#&gt;        age sex data_name</span>
-<span class="co">#&gt; 1 58.76523   1   tester1</span>
-<span class="co">#&gt; 2 56.44627   1   tester1</span>
-<span class="co">#&gt; 3 70.07255   0   tester1</span>
-<span class="co">#&gt; 4 54.74059   1   tester1</span>
-<span class="co">#&gt; 5 38.10541   1   tester1</span>
-<span class="co">#&gt; 6 66.25873   1   tester1</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">tail</a></span><span class="op">(</span><span class="va">combined_age_sex</span><span class="op">)</span>
-<span class="co">#&gt;          age sex data_name</span>
-<span class="co">#&gt; 413 35.00068   1   tester2</span>
-<span class="co">#&gt; 414 67.00068   1   tester2</span>
-<span class="co">#&gt; 415 39.00068   1   tester2</span>
-<span class="co">#&gt; 416 56.99932   1   tester2</span>
-<span class="co">#&gt; 417 58.00137   1   tester2</span>
-<span class="co">#&gt; 418 52.99932   1   tester2</span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">combined_age_sex</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="va">age_sex_1</span>, <span class="va">age_sex_2</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">combined_age_sex</span><span class="op">)</span></span>
+<span><span class="co">#&gt;        age sex data_name</span></span>
+<span><span class="co">#&gt; 1 58.76523   f   tester1</span></span>
+<span><span class="co">#&gt; 2 56.44627   f   tester1</span></span>
+<span><span class="co">#&gt; 3 70.07255   m   tester1</span></span>
+<span><span class="co">#&gt; 4 54.74059   f   tester1</span></span>
+<span><span class="co">#&gt; 5 38.10541   f   tester1</span></span>
+<span><span class="co">#&gt; 6 66.25873   f   tester1</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">combined_age_sex</span><span class="op">)</span></span>
+<span><span class="co">#&gt;          age sex data_name</span></span>
+<span><span class="co">#&gt; 413 35.00068   f   tester2</span></span>
+<span><span class="co">#&gt; 414 67.00068   f   tester2</span></span>
+<span><span class="co">#&gt; 415 39.00068   f   tester2</span></span>
+<span><span class="co">#&gt; 416 56.99932   f   tester2</span></span>
+<span><span class="co">#&gt; 417 58.00137   f   tester2</span></span>
+<span><span class="co">#&gt; 418 52.99932   f   tester2</span></span></code></pre></div>
 </div>
-<div id="example7" class="section level2">
-<h2 class="hasAnchor">
-<a href="#example7" class="anchor"></a>Example 7. Recode derived variables</h2>
-<p>Derived variables are variables that are not in the original dataset; rather they are created using variables from the original dataset.</p>
+<div class="section level2">
+<h2 id="example7">Example 7. Recode derived variables<a class="anchor" aria-label="anchor" href="#example7"></a>
+</h2>
+<p>Derived variables are variables that are not in the original dataset;
+rather they are created using variables from the original dataset.</p>
 <p>Descriptions of derived functions are in the article <a href="../articles/derived_variables.html">derived functions</a></p>
 <p>To recode a derived variable, you must:</p>
 <ul>
 <li>create a customized function,</li>
-<li>defined the derived variable on the worksheets <code>variables</code> and <code>variable_details</code>,</li>
+<li>defined the derived variable on the worksheets
+<code>variables</code> and <code>variable_details</code>,</li>
 <li>recode the variables that make up the derived variable.</li>
 </ul>
-<p>Our example derived variable <code>example_der</code> equals <code>chol</code> times <code>bili</code>.</p>
+<p>Our example derived variable <code>example_der</code> equals
+<code>chol</code> times <code>bili</code>.</p>
 <ol style="list-style-type: decimal">
-<li>Recode the underlying variables: <code>chol</code> and <code>bili</code> and the derived variable <code>example_der</code> for tester1 and tester2.</li>
-</ol>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">derived1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rec_with_table.html">rec_with_table</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tester1</span>,
-                          variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"chol"</span>, <span class="st">"bili"</span>,<span class="st">"example_der"</span><span class="op">)</span>,
-                          variable_details <span class="op">=</span> <span class="va">variable_details</span>,
-                          log <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="co">#&gt; Using the passed data variable name as database_name</span>
-<span class="co">#&gt; NOTE for bili: This is sample survival pbc data</span>
-<span class="co">#&gt; The variable bili was recoded into bili for the database tester1 the following recodes were made:</span>
-<span class="co">#&gt;   value_to   From rows_recoded</span>
-<span class="co">#&gt; 1     copy [0,28]          209</span>
-<span class="co">#&gt; 2     &lt;NA&gt;   else            0</span>
-<span class="co">#&gt; NOTE for chol: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for chol: This is sample survival pbc data</span>
-<span class="co">#&gt; The variable chol was recoded into chol for the database tester1 the following recodes were made:</span>
-<span class="co">#&gt;   value_to        From rows_recoded</span>
-<span class="co">#&gt; 1     copy [120, 1775]          186</span>
-<span class="co">#&gt; 2    Na::a          NA            0</span>
-<span class="co">#&gt; 3     &lt;NA&gt;        else           23</span>
-
-<span class="va">derived2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rec_with_table.html">rec_with_table</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tester2</span>,
-                          variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"chol"</span>, <span class="st">"bili"</span>,<span class="st">"example_der"</span><span class="op">)</span>,
-                          variable_details <span class="op">=</span> <span class="va">variable_details</span>,
-                          log <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="co">#&gt; Using the passed data variable name as database_name</span>
-<span class="co">#&gt; NOTE for bili: This is sample survival pbc data</span>
-<span class="co">#&gt; The variable bili was recoded into bili for the database tester2 the following recodes were made:</span>
-<span class="co">#&gt;   value_to   From rows_recoded</span>
-<span class="co">#&gt; 1     copy [0,28]          209</span>
-<span class="co">#&gt; 2     &lt;NA&gt;   else            0</span>
-<span class="co">#&gt; NOTE for chol: This is sample survival pbc data</span>
-<span class="co">#&gt; NOTE for chol: This is sample survival pbc data</span>
-<span class="co">#&gt; The variable chol was recoded into chol for the database tester2 the following recodes were made:</span>
-<span class="co">#&gt;   value_to        From rows_recoded</span>
-<span class="co">#&gt; 1     copy [120, 1775]           98</span>
-<span class="co">#&gt; 2    Na::a          NA            0</span>
-<span class="co">#&gt; 3     &lt;NA&gt;        else          111</span></code></pre></div>
-<ol start="2" style="list-style-type: decimal">
-<li>Combine the harmonized variables: <code>chol</code>, <code>bili</code>, and <code>exampler_der</code>
-</li>
+<li>Recode the underlying variables: <code>chol</code> and
+<code>bili</code> and the derived variable <code>example_der</code> for
+tester1 and tester2.</li>
 </ol>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">combined_der</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_rows</a></span><span class="op">(</span><span class="va">derived1</span>, <span class="va">derived2</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">derived1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rec_with_table.html">rec_with_table</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tester1</span>,</span>
+<span>                          variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"chol"</span>, <span class="st">"bili"</span>,<span class="st">"example_der"</span><span class="op">)</span>,</span>
+<span>                          variable_details <span class="op">=</span> <span class="fu">recodeflow</span><span class="fu">::</span><span class="va"><a href="../reference/tester_variable_details.html">tester_variable_details</a></span>,</span>
+<span>                          log <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                           database_name <span class="op">=</span> <span class="st">'tester1'</span><span class="op">)</span></span>
+<span><span class="co">#&gt; The variable bili was recoded into bili for the database tester1 the following recodes were made:</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 3</span></span></span>
+<span><span class="co">#&gt;   value_to From    rows_recoded</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> copy     [0,100]          209</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> <span style="color: #BB0000;">NA</span>       else               0</span></span>
+<span><span class="co">#&gt; The variable chol was recoded into chol for the database tester1 the following recodes were made:</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 3</span></span></span>
+<span><span class="co">#&gt;   value_to From       rows_recoded</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> copy     [100,2000]          186</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> NA::a    9999                  0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> <span style="color: #BB0000;">NA</span>       else                 23</span></span>
+<span></span>
+<span><span class="va">derived2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rec_with_table.html">rec_with_table</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tester2</span>,</span>
+<span>                          variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"chol"</span>, <span class="st">"bili"</span>,<span class="st">"example_der"</span><span class="op">)</span>,</span>
+<span>                          variable_details <span class="op">=</span> <span class="fu">recodeflow</span><span class="fu">::</span><span class="va"><a href="../reference/tester_variable_details.html">tester_variable_details</a></span>,</span>
+<span>                          log <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                           database_name <span class="op">=</span> <span class="st">'tester2'</span><span class="op">)</span></span>
+<span><span class="co">#&gt; The variable bili was recoded into bili for the database tester2 the following recodes were made:</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 3</span></span></span>
+<span><span class="co">#&gt;   value_to From    rows_recoded</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> copy     [0,100]          209</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> <span style="color: #BB0000;">NA</span>       else               0</span></span>
+<span><span class="co">#&gt; The variable chol was recoded into chol for the database tester2 the following recodes were made:</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 3</span></span></span>
+<span><span class="co">#&gt;   value_to From       rows_recoded</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> copy     [100,2000]           98</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> NA::a    9999                  0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> <span style="color: #BB0000;">NA</span>       else                111</span></span></code></pre></div>
+<ol start="2" style="list-style-type: decimal">
+<li>Combine the harmonized variables: <code>chol</code>,
+<code>bili</code>, and <code>exampler_der</code>
+</li>
+</ol>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">combined_der</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="va">derived1</span>, <span class="va">derived2</span><span class="op">)</span></span></code></pre></div>
 </div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
-        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
-    </nav>
-</div>
+
+      </div>
 
 </div>
 
 
 
       <footer><div class="copyright">
-  <p>Developed by Yulric Sequeira, Luke Bailey, Rostyslav Vyuha.</p>
+  <p></p>
+<p>Developed by Yulric Sequeira, Luke Bailey, Rostyslav.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
       </footer>
 </div>
 
-  
+
+
+
 
 
   </body>

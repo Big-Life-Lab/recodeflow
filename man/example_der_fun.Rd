@@ -14,3 +14,4 @@ example_der_fun(chol, bili)
 \description{
 example_der_fun caluclates chol*bili
 }
+\keyword{internal}

@@ -16,3 +16,4 @@ A boolean
 \description{
 Whether a variable in a variables details sheet is a derived variable
 }
+\keyword{internal}

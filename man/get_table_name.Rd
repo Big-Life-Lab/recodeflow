@@ -10,8 +10,14 @@ get_table_name(table_feeder_var)
 \item{table_feeder_var}{string The table variable start}
 }
 \value{
-string
+string The extracted table name
 }
 \description{
 Returns the name of the table for a table start variable
+}
+\examples{
+# Extract table names from table feeder variables
+get_table_name("$table:lookup_codes") # Returns "lookup_codes"
+get_table_name("$table:reference") # Returns "reference"
+get_table_name("$table:values") # Returns "values"
 }
