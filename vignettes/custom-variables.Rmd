@@ -3,6 +3,9 @@ title: "Template Variables"
 author: "Yulric Sequeira"
 date: "2022-10-28"
 output: html_document
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include=FALSE}
