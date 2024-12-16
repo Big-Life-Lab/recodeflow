@@ -16,7 +16,7 @@ knitr::opts_chunk$set(echo = TRUE)
 The role of a template variable is to avoid the duplication of work that can happen when recoding two variables with the same specification but that represent different information. For example, imagine a database with two columns called `PL` and `SL` that encodes the primary and secondary language that an individual speaks. Both columns are categorical with the same set of categories, **English**, **French**, **Mandarin**, **Hindi** and **N/A**. The last category represents a "not applicable" value, for example if an individual does not speak a second language. An example dataset is shown below,
 
 ```{r}
-example_dataset <- read.csv(file.path("../inst/example-dataset.csv"), fileEncoding = "UTF-8-BOM")
+example_dataset <- read.csv(system.file("example-dataset.csv", package="recodeflow"), fileEncoding = "UTF-8-BOM")
 
 DT::datatable(example_dataset)
 ```
@@ -24,7 +24,7 @@ DT::datatable(example_dataset)
 If we want to use these language variables in a study, we should probably assign a unique number to each category, effectively converting both variables to a numeric categorical variable. We want to **recode** the above example dataset to the one below,
 
 ```{r}
-example_dataset <- read.csv(file.path("../inst/recoded-dataset.csv"), fileEncoding = "UTF-8-BOM")
+example_dataset <- read.csv(system.file("recoded-dataset.csv", package="recodeflow"), fileEncoding = "UTF-8-BOM")
 
 DT::datatable(example_dataset)
 ```
@@ -43,7 +43,7 @@ DT::datatable(recoding_rules)
 The variable details sheet which encodes the recoding rules above is shown below,
 
 ```{r}
-variable_details <- read.csv(file.path("../inst/no-template-variable-variable-details.csv"), fileEncoding = "UTF-8-BOM")
+variable_details <- read.csv(system.file("no-template-variable-variable-details.csv", package="recodeflow"), fileEncoding = "UTF-8-BOM")
 
 DT::datatable(variable_details)
 ```
@@ -53,7 +53,7 @@ Both variables have the same specification (the same categories) but represent d
 The `templateVariable` column allows you to specify a "virtual variable", a variable that does not exist in the database, but whose specification can be used by other variables in the database. For example, we can rewrite the above variables details sheet using a template variable called `language`.
 
 ```{r}
-variable_details <- read.csv(file.path("../inst/template-variable-variable-details.csv"), fileEncoding = "UTF-8-BOM")
+variable_details <- read.csv(system.file("template-variable-variable-details.csv", package="recodeflow"), fileEncoding = "UTF-8-BOM")
 
 DT::datatable(variable_details)
 ```
