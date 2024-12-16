@@ -4,6 +4,7 @@ author: "Yulric Sequeira"
 date: "2022-10-28"
 output: html_document
 vignette: >
+  %\VignetteIndexEntry{Template variable}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
