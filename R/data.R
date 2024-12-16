@@ -78,7 +78,7 @@
 #' \item{recStart}{record start}
 #' \item{catLabel}{category label}
 #' \item{catLabelLong}{category long label}
-#' \item{nubValidCat}{number of valid categories (numeric)}
+#' \item{numValidCat}{number of valid categories (numeric)}
 #' \item{units}{logical indicating presence of units}
 #' \item{notes}{logical indicating presence of notes}
 #' \item{catStartLabel}{category start label}
