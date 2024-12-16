@@ -3,7 +3,8 @@ title: "How to install recodeflow"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{How to install recodeflow}     
-  %\VignetteEngine{knitr::rmarkdown}  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 

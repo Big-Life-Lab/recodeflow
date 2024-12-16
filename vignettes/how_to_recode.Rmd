@@ -3,7 +3,8 @@ title: "How to recode variables"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{How to recode variables}     
-  %\VignetteEngine{knitr::rmarkdown}  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include=FALSE}
