@@ -15,3 +15,4 @@ a list containing labels for the passed variable
 \description{
 A data labeling utility function for creating individual variable labels
 }
+\keyword{internal}

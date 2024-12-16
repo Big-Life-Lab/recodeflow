@@ -1,0 +1,69 @@
+variable,dummyVariable,typeEnd,typeStart,databaseStart,variableStart,variableStartLabel,numValidCat,recEnd,catLabel,catLabelLong,units,recStart,catStartLabel,variableStartShortLabel,notes
+age,NA,cont,cont,pbc,[age],age,NA,copy,NA,NA,NA,"[20,80]",NA,age,NA
+age,NA,cont,cont,pbc,[age],age,NA,NA::b,missing,missing,NA,else,NA,age,NA
+age,NA,cont,cont,pbc,[age],age,NA,NA::a,not applicable,not applicable,NA,999,NA,age,NA
+albumin,NA,cont,cont,pbc,[albumin],albumin,NA,copy,NA,NA,NA,"[1,5]",NA,albumin,NA
+albumin,NA,cont,cont,pbc,[albumin],albumin,NA,NA::b,missing,missing,NA,else,NA,albumin,NA
+albumin,NA,cont,cont,pbc,[albumin],albumin,NA,NA::a,not applicable,not applicable,NA,99,NA,albumin,NA
+alk.phos,NA,cont,cont,pbc,[alk.phos],alk.phos,NA,copy,NA,NA,NA,"[200,15000]",NA,alk.phos,NA
+alk.phos,NA,cont,cont,pbc,[alk.phos],alk.phos,NA,NA::b,missing,missing,NA,else,NA,alk.phos,NA
+ascites,ascites_cat3_1,cat,cat,pbc,[ascites],ascites,2,0,ascites 0,ascites 0,NA,0,ascites 0,ascites,NA
+ascites,ascites_cat3_2,cat,cat,pbc,[ascites],ascites,2,1,ascites 1,ascites 1,NA,1,ascites 1,ascites,NA
+ascites,ascites_cat3_NA::b,cat,cat,pbc,[ascites],ascites,2,NA::b,missing,missing,NA,else,ascites 0,ascites,NA
+ascites,ascites_cat3_NA::a,cat,cat,pbc,[ascites],ascites,2,NA::a,not applicable,not applicable,NA,9,not applicable,NA,NA
+alk.phos,NA,cont,cont,pbc,[alk.phos],alk.phos,NA,NA::a,not applicable,not applicable,NA,99999,NA,alk.phos,NA
+ast,NA,cont,cont,pbc,[ast],ast,NA,copy,NA,NA,NA,"[20,500]",NA,ast,NA
+ast,NA,cont,cont,pbc,[ast],ast,NA,NA::b,missing,missing,NA,else,NA,ast,NA
+ast,NA,cont,cont,pbc,[ast],ast,NA,NA::a,not applicable,not applicable,NA,9999,NA,ast,NA
+bili,NA,cont,cont,pbc,[bili],bili,NA,copy,NA,NA,NA,"[0,100]",NA,bili,NA
+bili,NA,cont,cont,pbc,[bili],bili,NA,NA::b,missing,missing,NA,else,NA,bili,NA
+chol,NA,cont,cont,pbc,[chol],chol,NA,copy,NA,NA,NA,"[100,2000]",NA,chol,NA
+chol,NA,cont,cont,pbc,[chol],chol,NA,NA::b,missing,missing,NA,else,NA,chol,NA
+chol,NA,cont,cont,pbc,[chol],chol,NA,NA::a,missing,missing,NA,9999,NA,chol,NA
+copper,NA,cont,cont,pbc,[copper],copper,NA,copy,NA,NA,NA,"[0,1000]",NA,copper,NA
+copper,NA,cont,cont,pbc,[copper],copper,NA,NA::b,missing,missing,NA,else,NA,copper,NA
+edema,edema_cat3_1,cat,cat,pbc,[edema],edema,3,0,edema 0.0,edema 0.0,NA,0,edema 0.0,edema,NA
+edema,edema_cat3_2,cat,cat,pbc,[edema],edema,3,0.5,edema 0.5,edema 0.5,NA,0.5,edema 0.5,edema,NA
+edema,edema_cat3_3,cat,cat,pbc,[edema],edema,3,1,edema 1.0,edema 1.0,NA,1,edema 1.0,edema,NA
+edema,edema_cat3_NA::b,cat,cat,pbc,[edema],edema,3,NA::b,missing,missing,NA,else,missing,edema,NA
+edema,edema_cat3_NA::a,cat,cat,pbc,[edema],edema,3,NA::a,not applicable,not applicable,NA,9,not applicable,edema,NA
+hepato,heapto_cat3_1,cat,cat,pbc,[hepato],hepato,2,0,hepato 0,hepato 0,NA,0,hepato 0,hepato,NA
+hepato,heapto_cat3_1,cat,cat,pbc,[hepato],hepato,2,1,hepato 1,hepato 1,NA,1,hepato 1,hepato,NA
+hepato,heapto_cat3_NA::a,cat,cat,pbc,[hepato],hepato,2,NA::b,missing,missing,NA,else,missing,hepato,NA
+copper,NA,cont,cont,pbc,[copper],copper,NA,NA::a,missing,missing,NA,9999,NA,copper,NA
+platelet,NA,cont,cont,pbc,[platelet],platelet,NA,copy,NA,NA,NA,"[0,1000]",NA,platelet,NA
+platelet,NA,cont,cont,pbc,[platelet],platelet,NA,NA::b,missing,missing,NA,else,NA,platelet,NA
+platelet,NA,cont,cont,pbc,[platelet],platelet,NA,NA::a,not applicable,not applicable,NA,9999,NA,platelet,NA
+protime,NA,cont,cont,pbc,[protime],protime,NA,copy,NA,NA,NA,"[5, 30]",NA,protime,NA
+protime,NA,cont,cont,pbc,[protime],protime,NA,NA::b,missing,missing,NA,else,NA,protime,NA
+hepato,heapto_cat3_NA::b,cat,cat,pbc,[hepato],hepato,2,NA::a,not applicable,not applicable,NA,9,not applicable,hepato,NA
+sex,sex_cat2_1,cat,cat,pbc,[sex],sex,2,m,sex m,sex m,NA,m,sex m,sex,NA
+sex,sex_cat2_2,cat,cat,pbc,[sex],sex,2,f,sex f,sex f,NA,f,sex f,sex,NA
+sex,sex_cat2_NA::b,cat,cat,pbc,[sex],sex,2,NA::b,missing,missing,NA,else,sex m,sex,NA
+sex,sex_cat2_NA::a,cat,cat,pbc,[sex],sex,2,NA::a,not applicable,not applicable,NA,9,sex m,sex,NA
+spiders,spiders0,cat,cat,pbc,[spiders],spiders,2,0,spiders 0,spiders 0,NA,0,spiders 0,spiders,NA
+spiders,spiders1,cat,cat,pbc,[spiders],spiders,2,1,spiders 1,spiders 1,NA,1,spiders 1,spiders,NA
+spiders,spiders_NA::b,cat,cat,pbc,[spiders],spiders,2,NA::b,missing,missing,NA,else,spiders 0,spiders,NA
+spiders,spiders_NA::a,cat,cat,pbc,[spiders],spiders,2,NA::a,not applicable,not applicable,NA,9,not applicable,spiders,NA
+stage,stage1,cat,cat,pbc,[stage],stage,4,1,stage 1,stage 1,NA,1,stage 1,stage,NA
+stage,stage2,cat,cat,pbc,[stage],stage,4,2,stage 2,stage 2,NA,2,stage 2,stage,NA
+stage,stage3,cat,cat,pbc,[stage],stage,4,3,stage 3,stage 3,NA,3,stage 3,stage,NA
+stage,stage4,cat,cat,pbc,[stage],stage,4,4,stage 4,stage 4,NA,4,stage 4,stage,NA
+stage,stage_NA::b,cat,cat,pbc,[stage],stage,4,NA::b,missing,missing,NA,else,missing,stage,NA
+stage,stage_NA::a,cat,cat,pbc,[stage],stage,4,NA::a,not applicable,not applicable,NA,9,not applicable,stage,NA
+status,status0,cat,cat,pbc,[status],status,3,0,status 0,status 0,NA,0,status 0,status,NA
+status,status1,cat,cat,pbc,[status],status,3,1,status 1,status 1,NA,1,status 1,status,NA
+status,status2,cat,cat,pbc,[status],status,3,2,status 2,status 2,NA,2,status 2,status,NA
+status,status_NA::b,cat,cat,pbc,[status],status,3,NA::b,missing,missing,NA,else,status 0,status,NA
+protime,NA,cont,cont,pbc,[protime],protime,NA,NA::a,not applicable,not applicable,NA,99,NA,protime,NA
+time,NA,cont,cont,pbc,[time],time,NA,copy,NA,NA,NA,"[0,5000]",NA,time,NA
+time,NA,cont,cont,pbc,[time],time,NA,NA::b,missing,missing,NA,else,NA,time,NA
+time,NA,cont,cont,pbc,[time],time,NA,NA::a,not applicable,not applicable,NA,9999,NA,time,NA
+trig,NA,cont,cont,pbc,[trig],trig,NA,copy,NA,NA,NA,"[0,1000]",NA,trig,NA
+trig,NA,cont,cont,pbc,[trig],trig,NA,NA::b,missing,missing,NA,else,NA,trig,NA
+status,status_NA::a,cat,cat,pbc,[status],status,3,NA::a,not applicable,not applicable,NA,9,not applicable,status,NA
+trt,trt1,cat,cat,pbc,[trt],trt,2,1,trt 1,trt 1,NA,1,trt 1,trt,NA
+trt,trt2,cat,cat,pbc,[trt],trt,2,2,trt 2,trt 2,NA,2,trt 2,trt,NA
+trt,trt_NA::b,cat,cat,pbc,[trt],trt,2,NA::b,missing,missing,NA,else,trt 1,trt,NA
+trt,trt_NA::a,cat,cat,pbc,[trt],trt,2,NA::a,not applicable,not applicable,NA,9,not applicable,trt,NA
+trig,NA,cont,cont,pbc,[trig],trig,NA,NA::a,missing,missing,NA,9999,NA,trig,NA

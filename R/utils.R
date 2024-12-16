@@ -1,3 +1,10 @@
+#' Utility functions for the recodeflow package
+#' 
+#' @name utils
+#' @description A collection of utility functions for the recodeflow package
+#' @keywords internal
+NULL
+
 #' ID role creation
 #'
 #' Creates ID row for rec_with_table
@@ -8,6 +15,7 @@
 #' @param variables variables sheet containing variable information
 #'
 #' @return data with the ID row attached
+#' @keywords internal
 create_id_row <- function(data, id_role_name, database_name, variables){
   # Flag to check for presence of data_name before execusion
   keep_data_name <- FALSE
@@ -46,6 +54,7 @@ create_id_row <- function(data, id_role_name, database_name, variables){
 #' @param variable_rows all variable details rows containing 1 variable information
 #'
 #' @return a list containing labels for the passed variable
+#' @keywords internal
 create_label_list_element <- function(variable_rows) {
   ret_list <- list(
     # Variable type

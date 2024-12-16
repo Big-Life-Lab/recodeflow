@@ -1,15 +1,16 @@
 Package: recodeflow
 Type: Package
 Title: Contains functions to interface with variable details sheets, including recoding variables and converting them to PMML
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: c(
-    person(given = "Yulric", family = "Sequeira", role = c("aut"), email = "ysequeira@ohri.ca"),
-    person(given = "Luke",family = "Bailey", email = "lbailey@toh.ca", role = c("aut")),
-    person(given = "Rostyslav", family = "Vyuha", role = c("aut","cre"), email = "rvyuha@toh.ca"))
-Maintainer: Rostyslav Vyuha <rvyuha@toh.ca>
+    person("Yulric", "Sequeira", email = "ysequeira@ohri.ca", role = c("aut", "cre")),
+    person("Luke", "Bailey", role = c("aut")),
+    person("Rostyslav", role = c("aut"))
+    )
+Maintainer: Yulric Sequeria <ysequeira@ohri.ca>
 Description: Recode and harmonize data using variable and details sheets.
 Depends:
-    R (>= 3.1.0)
+    R (>= 3.5)
 Imports:
     sjlabelled,
     stringr,
@@ -17,19 +18,19 @@ Imports:
     haven,
     dplyr,
     magrittr,
-    glue,
-    survival
 License: MIT + file LICENSE
 URL: https://github.com/Big-Life-Lab/recodeflow
 BugReports: https://github.com/Big-Life-Lab/recodeflow/issues
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.2
 Suggests: 
     DT,
     kableExtra,
     knitr,
     rmarkdown,
-    testthat (>= 3.0.0)
+    readr,
+    testthat (>= 3.0.0),
+    survival
 Config/testthat/edition: 3
 VignetteBuilder: knitr

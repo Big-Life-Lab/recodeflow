@@ -2,8 +2,8 @@
 title: "variables worksheet"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{variables.csv}     
-  %\VignetteEngine{knitr::rmarkdown} 
+  %\VignetteIndexEntry{variables worksheet}
+  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
@@ -12,7 +12,6 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
-source("../R/test_data_generator.R")
 ```
 
 ## Introduction
@@ -24,6 +23,7 @@ This vignette describes how the `variables` worksheet is organized and how to fi
 Read the `variables` worksheet
 
 ```{r Read variables.csv, echo=FALSE, message=FALSE, warning=FALSE}
+variables <- recodeflow::tester_variables
 cat("There are", nrow(variables), "variables, grouped in", sum(!duplicated(variables$section)), "sections and", sum(!duplicated(variables$subject)), "subjects that are available for transformation.")
 
 ```

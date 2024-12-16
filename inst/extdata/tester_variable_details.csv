@@ -1,0 +1,120 @@
+variable,dummyVariable,typeEnd,typeStart,databaseStart,variableStart,variableStartLabel,numValidCat,recEnd,catLabel,catLabelLong,units,recStart,catStartLabel,variableStartShortLabel,notes
+age,NA,cont,cont,tester1; tester2,[age],age,NA,copy,NA,NA,NA,"[20,80]",NA,age,NA
+age,NA,cont,cont,tester1; tester2,[age],age,NA,NA::b,missing,missing,NA,else,NA,age,NA
+age,NA,cont,cont,tester1; tester2,[age],age,NA,NA::a,not applicable,not applicable,NA,999,NA,age,NA
+albumin,NA,cont,cont,tester1; tester2,[albumin],albumin,NA,copy,NA,NA,NA,"[1,5]",NA,albumin,NA
+albumin,NA,cont,cont,tester1; tester2,[albumin],albumin,NA,NA::b,missing,missing,NA,else,NA,albumin,NA
+albumin,NA,cont,cont,tester1; tester2,[albumin],albumin,NA,NA::a,not applicable,not applicable,NA,99,NA,albumin,NA
+alk.phos,NA,cont,cont,tester1; tester2,[alk.phos],alk.phos,NA,copy,NA,NA,NA,"[200,15000]",NA,alk.phos,NA
+alk.phos,NA,cont,cont,tester1; tester2,[alk.phos],alk.phos,NA,NA::b,missing,missing,NA,else,NA,alk.phos,NA
+ascites,ascites_cat3_1,cat,cat,tester1; tester2,[ascites],ascites,2,0,ascites 0,ascites 0,NA,0,ascites 0,ascites,NA
+ascites,ascites_cat3_2,cat,cat,tester1; tester2,[ascites],ascites,2,1,ascites 1,ascites 1,NA,1,ascites 1,ascites,NA
+ascites,ascites_cat3_NA::b,cat,cat,tester1; tester2,[ascites],ascites,2,NA::b,missing,missing,NA,else,ascites 0,ascites,NA
+ascites,ascites_cat3_NA::a,cat,cat,tester1; tester2,[ascites],ascites,2,NA::a,not applicable,not applicable,NA,9,not applicable,NA,NA
+alk.phos,NA,cont,cont,tester1; tester2,[alk.phos],alk.phos,NA,NA::a,not applicable,not applicable,NA,99999,NA,alk.phos,NA
+ast,NA,cont,cont,tester1; tester2,[ast],ast,NA,copy,NA,NA,NA,"[20,500]",NA,ast,NA
+ast,NA,cont,cont,tester1; tester2,[ast],ast,NA,NA::b,missing,missing,NA,else,NA,ast,NA
+ast,NA,cont,cont,tester1; tester2,[ast],ast,NA,NA::a,not applicable,not applicable,NA,9999,NA,ast,NA
+bili,NA,cont,cont,tester1; tester2,[bili],bili,NA,copy,NA,NA,NA,"[0,100]",NA,bili,NA
+bili,NA,cont,cont,tester1; tester2,[bili],bili,NA,NA::b,missing,missing,NA,else,NA,bili,NA
+chol,NA,cont,cont,tester1; tester2,[chol],chol,NA,copy,NA,NA,NA,"[100,2000]",NA,chol,NA
+chol,NA,cont,cont,tester1; tester2,[chol],chol,NA,NA::b,missing,missing,NA,else,NA,chol,NA
+chol,NA,cont,cont,tester1; tester2,[chol],chol,NA,NA::a,missing,missing,NA,9999,NA,chol,NA
+copper,NA,cont,cont,tester1; tester2,[copper],copper,NA,copy,NA,NA,NA,"[0,1000]",NA,copper,NA
+copper,NA,cont,cont,tester1; tester2,[copper],copper,NA,NA::b,missing,missing,NA,else,NA,copper,NA
+edema,edema_cat3_1,cat,cat,tester1; tester2,[edema],edema,3,0,edema 0.0,edema 0.0,NA,0,edema 0.0,edema,NA
+edema,edema_cat3_2,cat,cat,tester1; tester2,[edema],edema,3,0.5,edema 0.5,edema 0.5,NA,0.5,edema 0.5,edema,NA
+edema,edema_cat3_3,cat,cat,tester1; tester2,[edema],edema,3,1,edema 1.0,edema 1.0,NA,1,edema 1.0,edema,NA
+edema,edema_cat3_NA::b,cat,cat,tester1; tester2,[edema],edema,3,NA::b,missing,missing,NA,else,missing,edema,NA
+edema,edema_cat3_NA::a,cat,cat,tester1; tester2,[edema],edema,3,NA::a,not applicable,not applicable,NA,9,not applicable,edema,NA
+hepato,heapto_cat3_1,cat,cat,tester1; tester2,[hepato],hepato,2,0,hepato 0,hepato 0,NA,0,hepato 0,hepato,NA
+hepato,heapto_cat3_1,cat,cat,tester1; tester2,[hepato],hepato,2,1,hepato 1,hepato 1,NA,1,hepato 1,hepato,NA
+hepato,heapto_cat3_NA::a,cat,cat,tester1; tester2,[hepato],hepato,2,NA::b,missing,missing,NA,else,missing,hepato,NA
+copper,NA,cont,cont,tester1; tester2,[copper],copper,NA,NA::a,missing,missing,NA,9999,NA,copper,NA
+platelet,NA,cont,cont,tester1; tester2,[platelet],platelet,NA,copy,NA,NA,NA,"[0,1000]",NA,platelet,NA
+platelet,NA,cont,cont,tester1; tester2,[platelet],platelet,NA,NA::b,missing,missing,NA,else,NA,platelet,NA
+platelet,NA,cont,cont,tester1; tester2,[platelet],platelet,NA,NA::a,not applicable,not applicable,NA,9999,NA,platelet,NA
+protime,NA,cont,cont,tester1; tester2,[protime],protime,NA,copy,NA,NA,NA,"[5, 30]",NA,protime,NA
+protime,NA,cont,cont,tester1; tester2,[protime],protime,NA,NA::b,missing,missing,NA,else,NA,protime,NA
+hepato,heapto_cat3_NA::b,cat,cat,tester1; tester2,[hepato],hepato,2,NA::a,not applicable,not applicable,NA,9,not applicable,hepato,NA
+sex,sex_cat2_1,cat,cat,tester1; tester2,[sex],sex,2,m,sex m,sex m,NA,m,sex m,sex,NA
+sex,sex_cat2_2,cat,cat,tester1; tester2,[sex],sex,2,f,sex f,sex f,NA,f,sex f,sex,NA
+sex,sex_cat2_NA::b,cat,cat,tester1; tester2,[sex],sex,2,NA::b,missing,missing,NA,else,sex m,sex,NA
+sex,sex_cat2_NA::a,cat,cat,tester1; tester2,[sex],sex,2,NA::a,not applicable,not applicable,NA,9,sex m,sex,NA
+spiders,spiders0,cat,cat,tester1; tester2,[spiders],spiders,2,0,spiders 0,spiders 0,NA,0,spiders 0,spiders,NA
+spiders,spiders1,cat,cat,tester1; tester2,[spiders],spiders,2,1,spiders 1,spiders 1,NA,1,spiders 1,spiders,NA
+spiders,spiders_NA::b,cat,cat,tester1; tester2,[spiders],spiders,2,NA::b,missing,missing,NA,else,spiders 0,spiders,NA
+spiders,spiders_NA::a,cat,cat,tester1; tester2,[spiders],spiders,2,NA::a,not applicable,not applicable,NA,9,not applicable,spiders,NA
+stage,stage1,cat,cat,tester1; tester2,[stage],stage,4,1,stage 1,stage 1,NA,1,stage 1,stage,NA
+stage,stage2,cat,cat,tester1; tester2,[stage],stage,4,2,stage 2,stage 2,NA,2,stage 2,stage,NA
+stage,stage3,cat,cat,tester1; tester2,[stage],stage,4,3,stage 3,stage 3,NA,3,stage 3,stage,NA
+stage,stage4,cat,cat,tester1; tester2,[stage],stage,4,4,stage 4,stage 4,NA,4,stage 4,stage,NA
+stage,stage_NA::b,cat,cat,tester1; tester2,[stage],stage,4,NA::b,missing,missing,NA,else,missing,stage,NA
+stage,stage_NA::a,cat,cat,tester1; tester2,[stage],stage,4,NA::a,not applicable,not applicable,NA,9,not applicable,stage,NA
+status,status0,cat,cat,tester1; tester2,[status],status,3,0,status 0,status 0,NA,0,status 0,status,NA
+status,status1,cat,cat,tester1; tester2,[status],status,3,1,status 1,status 1,NA,1,status 1,status,NA
+status,status2,cat,cat,tester1; tester2,[status],status,3,2,status 2,status 2,NA,2,status 2,status,NA
+status,status_NA::b,cat,cat,tester1; tester2,[status],status,3,NA::b,missing,missing,NA,else,status 0,status,NA
+protime,NA,cont,cont,tester1; tester2,[protime],protime,NA,NA::a,not applicable,not applicable,NA,99,NA,protime,NA
+time,NA,cont,cont,tester1; tester2,[time],time,NA,copy,NA,NA,NA,"[0,5000]",NA,time,NA
+time,NA,cont,cont,tester1; tester2,[time],time,NA,NA::b,missing,missing,NA,else,NA,time,NA
+time,NA,cont,cont,tester1; tester2,[time],time,NA,NA::a,not applicable,not applicable,NA,9999,NA,time,NA
+trig,NA,cont,cont,tester1; tester2,[trig],trig,NA,copy,NA,NA,NA,"[0,1000]",NA,trig,NA
+trig,NA,cont,cont,tester1; tester2,[trig],trig,NA,NA::b,missing,missing,NA,else,NA,trig,NA
+status,status_NA::a,cat,cat,tester1; tester2,[status],status,3,NA::a,not applicable,not applicable,NA,9,not applicable,status,NA
+trt,trt1,cat,cat,tester1; tester2,[trt],trt,2,1,trt 1,trt 1,NA,1,trt 1,trt,NA
+trt,trt2,cat,cat,tester1; tester2,[trt],trt,2,2,trt 2,trt 2,NA,2,trt 2,trt,NA
+trt,trt_NA::b,cat,cat,tester1; tester2,[trt],trt,2,NA::b,missing,missing,NA,else,trt 1,trt,NA
+trt,trt_NA::a,cat,cat,tester1; tester2,[trt],trt,2,NA::a,not applicable,not applicable,NA,9,not applicable,trt,NA
+trig,NA,cont,cont,tester1; tester2,[trig],trig,NA,NA::a,missing,missing,NA,9999,NA,trig,NA
+example_der,NA,cont,cont,tester1; tester2,"DerivedVar::[chol, bili]",example_der,NA,Func::example_der_fun,N/A,N/A,NA,else,N/A,example_der,A test derived variable
+agegrp10,agegrp10_cat6_1,cat,cat,tester2,tester2::agegrp,grouped age,6,1,20-29,20-29,years,1,20-29,grouped age,NA
+agegrp10,agegrp10_cat6_2,cat,cat,tester2,tester2::agegrp,grouped age,6,2,30-39,30-39,years,2,30-39,grouped age,NA
+agegrp10,agegrp10_cat6_3,cat,cat,tester2,tester2::agegrp,grouped age,6,3,40-49,40-49,years,3,40-49,grouped age,NA
+agegrp10,agegrp10_cat6_4,cat,cat,tester2,tester2::agegrp,grouped age,6,4,50-59,50-59,years,4,50-59,grouped age,NA
+agegrp10,agegrp10_cat6_5,cat,cat,tester2,tester2::agegrp,grouped age,6,5,60-69,60-69,years,5,60-69,grouped age,NA
+agegrp10,agegrp10_cat6_6,cat,cat,tester2,tester2::agegrp,grouped age,6,6,70-79,70-79,years,6,70-79,grouped age,NA
+agegrp10,agegrp10_cat6_NA::b,cat,cat,tester2,tester2::agegrp,grouped age,6,NA::b,missing,missing,years,else,missing,grouped age,NA
+agegrp5,agegrp5_cat11_1,cat,cat,tester1,tester1::agegrp,grouped age,11,1,25-29,25-29,years,1,20-29,grouped age,NA
+agegrp5,agegrp5_cat11_2,cat,cat,tester1,tester1::agegrp,grouped age,11,2,30-34,30-34,years,2,30-39,grouped age,NA
+agegrp5,agegrp5_cat11_3,cat,cat,tester1,tester1::agegrp,grouped age,11,3,35-39,35-39,years,3,30-39,grouped age,NA
+agegrp5,agegrp5_cat11_4,cat,cat,tester1,tester1::agegrp,grouped age,11,4,40-44,40-44,years,4,40-49,grouped age,NA
+agegrp5,agegrp5_cat11_5,cat,cat,tester1,tester1::agegrp,grouped age,11,5,45-49,45-49,years,5,40-49,grouped age,NA
+agegrp5,agegrp5_cat11_6,cat,cat,tester1,tester1::agegrp,grouped age,11,6,50-54,50-54,years,6,50-59,grouped age,NA
+agegrp5,agegrp5_cat11_7,cat,cat,tester1,tester1::agegrp,grouped age,11,7,55-59,55-59,years,7,50-59,grouped age,NA
+agegrp5,agegrp5_cat11_8,cat,cat,tester1,tester1::agegrp,grouped age,11,8,60-64,60-64,years,8,60-69,grouped age,NA
+agegrp5,agegrp5_cat11_9,cat,cat,tester1,tester1::agegrp,grouped age,11,9,65-69,65-69,years,9,60-69,grouped age,NA
+agegrp5,agegrp5_cat11_10,cat,cat,tester1,tester1::agegrp,grouped age,11,10,70-74,70-74,years,10,70-79,grouped age,NA
+agegrp5,agegrp5_cat11_11,cat,cat,tester1,tester1::agegrp,grouped age,11,11,75-79,75-79,years,11,70-79,grouped age,NA
+agegrp5,agegrp5_cat11_NA::b,cat,cat,tester1,tester1::agegrp,grouped age,11,Na::b,missing,missing,years,else,missing,grouped age,NA
+age_cont,NA,cont,cat,tester1,tester1::agegrp,grouped age,NA,27,NA,NA,years,1,20-29,grouped age,NA
+age_cont,NA,cont,cat,tester1,tester1::agegrp,grouped age,NA,32,NA,NA,years,2,30-39,grouped age,NA
+age_cont,NA,cont,cat,tester1,tester1::agegrp,grouped age,NA,37,NA,NA,years,3,30-39,grouped age,NA
+age_cont,NA,cont,cat,tester1,tester1::agegrp,grouped age,NA,42,NA,NA,years,4,40-49,grouped age,NA
+age_cont,NA,cont,cat,tester1,tester1::agegrp,grouped age,NA,47,NA,NA,years,5,40-49,grouped age,NA
+age_cont,NA,cont,cat,tester1,tester1::agegrp,grouped age,NA,52,NA,NA,years,6,50-59,grouped age,NA
+age_cont,NA,cont,cat,tester1,tester1::agegrp,grouped age,NA,57,NA,NA,years,7,50-59,grouped age,NA
+age_cont,NA,cont,cat,tester1,tester1::agegrp,grouped age,NA,62,NA,NA,years,8,60-69,grouped age,NA
+age_cont,NA,cont,cat,tester1,tester1::agegrp,grouped age,NA,67,NA,NA,years,9,60-69,grouped age,NA
+age_cont,NA,cont,cat,tester1,tester1::agegrp,grouped age,NA,72,NA,NA,years,10,70-79,grouped age,NA
+age_cont,NA,cont,cat,tester1,tester1::agegrp,grouped age,NA,77,NA,NA,years,11,70-79,grouped age,NA
+age_cont,NA,cont,cat,tester1,tester1::agegrp,grouped age,NA,NA::b,NA,NA,years,else,missing,grouped age,NA
+age_cont,NA,cont,cat,tester2,tester2::agegrp,grouped age,NA,25,NA,NA,years,1,20-29,grouped age,NA
+age_cont,NA,cont,cat,tester2,tester2::agegrp,grouped age,NA,35,NA,NA,years,2,30-39,grouped age,NA
+age_cont,NA,cont,cat,tester2,tester2::agegrp,grouped age,NA,45,NA,NA,years,3,40-49,grouped age,NA
+age_cont,NA,cont,cat,tester2,tester2::agegrp,grouped age,NA,55,NA,NA,years,4,50-59,grouped age,NA
+age_cont,NA,cont,cat,tester2,tester2::agegrp,grouped age,NA,65,NA,NA,years,5,60-69,grouped age,NA
+age_cont,NA,cont,cat,tester2,tester2::agegrp,grouped age,NA,75,NA,NA,years,6,70-79,grouped age,NA
+age_cont,NA,cont,cat,tester2,tester2::agegrp,grouped age,6,NA::b,NA,NA,years,else,missing,grouped age,NA
+agegrp10,agegrp10_cat6_1,cat,cat,tester1,tester1::agegrp,grouped age,6,1,20-29,20-29,years,1,20-29,grouped age,NA
+agegrp10,agegrp10_cat6_2,cat,cat,tester1,tester1::agegrp,grouped age,6,2,30-39,30-39,years,2,30-39,grouped age,NA
+agegrp10,agegrp10_cat6_2,cat,cat,tester1,tester1::agegrp,grouped age,6,2,30-39,30-39,years,3,30-39,grouped age,NA
+agegrp10,agegrp10_cat6_3,cat,cat,tester1,tester1::agegrp,grouped age,6,3,40-49,40-49,years,4,40-49,grouped age,NA
+agegrp10,agegrp10_cat6_3,cat,cat,tester1,tester1::agegrp,grouped age,6,3,40-49,40-49,years,5,40-49,grouped age,NA
+agegrp10,agegrp10_cat6_4,cat,cat,tester1,tester1::agegrp,grouped age,6,4,50-59,50-59,years,6,50-59,grouped age,NA
+agegrp10,agegrp10_cat6_4,cat,cat,tester1,tester1::agegrp,grouped age,6,4,50-59,50-59,years,7,50-59,grouped age,NA
+agegrp10,agegrp10_cat6_5,cat,cat,tester1,tester1::agegrp,grouped age,6,5,60-69,60-69,years,8,60-69,grouped age,NA
+agegrp10,agegrp10_cat6_5,cat,cat,tester1,tester1::agegrp,grouped age,6,5,60-69,60-69,years,9,60-69,grouped age,NA
+agegrp10,agegrp10_cat6_6,cat,cat,tester1,tester1::agegrp,grouped age,6,6,70-79,70-79,years,10,70-79,grouped age,NA
+agegrp10,agegrp10_cat6_6,cat,cat,tester1,tester1::agegrp,grouped age,6,6,70-79,70-79,years,11,70-79,grouped age,NA
+agegrp10,agegrp10_cat6_NA::b,cat,cat,tester1,tester1::agegrp,grouped age,6,NA::b,missing,missing,years,else,missing,grouped age,NA

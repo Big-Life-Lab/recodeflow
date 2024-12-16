@@ -44,7 +44,7 @@ is_equal <- function(v1, v2) {
 #' Creates new variables by recoding variables in a dataset using the rules
 #' specified in a variables details sheet
 #'
-#' The \href{https://github.com/Big-Life-Lab/recodeflow/blob/master/inst/extdata/PBC-variableDetails.csv}{variable_details}
+#' The \href{https://github.com/Big-Life-Lab/recodeflow/blob/master/inst/extdata/pbc_variable_details.csv}{variable_details}
 #'  dataframe needs the following columns:
 #'  \describe{
 #'   \item{variable}{Name of the new variable created. The name of the new
@@ -523,6 +523,7 @@ recode_call <-
 #' @param variable_being_checked the name of the recoded variable
 #'
 #' @return the data equivalent of variable_being_checked
+#' @keywords internal
 get_data_variable_name <-
   function(data_name,
            data,
@@ -586,6 +587,7 @@ get_data_variable_name <-
 #' @param tables A list of reference tables
 #'
 #' @return Returns recoded and labeled data
+#' @keywords internal
 recode_columns <-
   function(data,
            variables_details_rows_to_process,
@@ -979,7 +981,7 @@ recode_non_derived_variables <- function(
       )
       if (length(else_value) > 0) {
         extra_row <- nrow(log_table) + 1
-        log_table[extra_row , "value_to"] <- else_value
+        log_table[extra_row , "value_to"] <- as.character(else_value)
         log_table[extra_row , "From"] <-
           "else"
         log_table[extra_row , "rows_recoded"] <-
@@ -1009,6 +1011,7 @@ recode_non_derived_variables <- function(
 #'
 #' @return a boolean vector containing true for rows where the
 #' comparison is true
+#' @keywords internal
 compare_value_based_on_interval <-
   function(left_boundary,
            right_boundary,
@@ -1101,6 +1104,7 @@ update_variable_details_based_on_variable_sheet <-
 #' @param var_type the toType of a variable
 #'
 #' @return an appropriately coded tagged NA
+#' @keywords internal
 format_recoded_value <- function(cell_value, var_type) {
   recode_value <- NULL
   if (grepl("NA", cell_value)) {
@@ -1370,6 +1374,7 @@ calculate_custom_function_row_value <-
 #' @param variable_details_row A data frame with a single row which will be
 #' checked
 #' @return A boolean
+#' @keywords internal
 is_derived_var <- function(variable_details_row) {
   derived_var_regex <- "DerivedVar::\\[(.+?)\\]|DerivedVar::\\[\\]"
   return(length(grep(

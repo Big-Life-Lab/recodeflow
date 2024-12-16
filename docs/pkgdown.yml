@@ -1,14 +1,14 @@
-pandoc: 2.9.1.1
-pkgdown: 1.6.1
+pandoc: '3.5'
+pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
+  custom-variables: custom-variables.html
   derived_variables: derived_variables.html
   how_to_install: how_to_install.html
   how_to_recode: how_to_recode.html
   how_to_use_recodeflow_with_your_data: how_to_use_recodeflow_with_your_data.html
-  missing_data_(tagged_na): missing_data_(tagged_na).html
+  missing_data_tagged_na: missing_data_tagged_na.html
   rec_with_table: rec_with_table.html
-  variables_sheet: variables_sheet.html
   variable_details: variable_details.html
-last_built: 2021-04-07T03:13Z
-
+  variables_sheet: variables_sheet.html
+last_built: 2024-12-16T19:07Z

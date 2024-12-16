@@ -48,4 +48,19 @@ reference:
     desc: Other useful functions
     contents:
     - set_data_labels
-
+    - select_vars_by_role
+    - get_table_name
+    - label_data
+    - is_equal
+  - title: "Example worksheets"
+    desc: Examples of worksheets for databases
+    contents:
+    - pbc_variables
+    - pbc_variable_details
+    - tester_variables
+    - tester_variable_details
+  - title: "Example data"
+    desc: Data for examples
+    contents:
+    - pbc
+    - pbc_metadata

@@ -6,12 +6,6 @@
 
 <!-- badges: end -->
 
-```{=html}
-<!-- 
-![](https://img.shields.io/github/v/release/big-life-lab/recodeflow?color=green&label=GitHub)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
--->
-```
 # Introduction
 
 ## What is `recodeflow`?

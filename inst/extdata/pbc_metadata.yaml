@@ -1,0 +1,76 @@
+# Dublin Core Metadata
+
+# Title
+title: Primary Biliary Cirrhosis (PBC) Data Set
+
+# Creator
+creator:
+  - name: Mayo Clinic
+
+# Subject
+subject:
+  - primary biliary cirrhosis
+  - clinical study
+  - medical research
+
+# Description: |
+description: |
+  Primary biliary cholangitis is an autoimmune disease leading to
+  destruction of the small bile ducts in the liver.  Progression is
+  slow but inexhortable, eventually leading to cirrhosis and liver
+  decompensation.
+  The condition has been recognised since at least 1851 and was named
+  "primary biliary cirrhosis" in 1949.
+  Because cirrhosis is a feature only of advanced disease, a change of
+  its name to "primary biliary cholangitis" was proposed by patient
+  advocacy groups in 2014.
+  This data is from the Mayo Clinic trial in PBC conducted between 1974
+  and 1984.
+  A total of 424 PBC patients, referred to Mayo Clinic during that ten-year
+  interval, met eligibility criteria for the randomized placebo controlled
+  trial of the drug D-penicillamine.  The first 312 cases in the data set
+  participated in the randomized trial and contain largely complete data.  The
+  additional 112 cases did not participate in the clinical trial, but consented
+  to have basic measurements recorded and to be followed for survival.  Six of
+  those cases were lost to follow-up shortly after diagnosis, so the data here
+  are on an additional 106 cases as well as the 312 randomized participants.
+
+# Publisher
+publisher: Mayo Clinic
+
+# Date
+date:
+  issued: 1997
+
+# Type
+type: Dataset
+
+# Format
+format: Tabular data
+
+# Identifier
+identifier:
+  - type: Package
+    value: survival
+
+# Source
+source: https://cran.r-project.org/package=survival
+
+# Language
+language: en
+
+# Relation
+relation:
+  - type: IsPartOf
+    identifier: survival
+
+# Rights
+rights: Open Source
+
+# References
+references:
+  - identifier:
+      type: Citation
+      value: |
+        Therneau T., Atkinson E., (1997), An Introduction to Recursive
+        Partitioning Using the RPART Routines.

@@ -11,7 +11,6 @@ vignette: |
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, collapse = TRUE, comment = "#>")
-source("../R/test_data_generator.R")
 ```
 
 
@@ -24,9 +23,9 @@ source("../R/test_data_generator.R")
 
 ```{r}
 library(recodeflow)
-status <- rec_with_table(data = tester1, 
+status <- rec_with_table(data = recodeflow::pbc, 
                          variables = "status", 
-                         variable_details = variable_details,
+                         variable_details = recodeflow::pbc_variable_details,
                          log = TRUE,
                          var_labels = c(status = "Status"))
 ```
@@ -60,15 +59,15 @@ The notes output is from the column *notes* in `variable_details`
 
 ```{r, eval=FALSE}
 #To recode only a few variables
-age_sex_1 <- rec_with_table(data = tester1, 
+age_sex_1 <- rec_with_table(data = recodeflow::pbc, 
                          variables = c("age","sex"),
-                         variable_details = variable_details)
+                         variable_details = recodeflow::pbc_variable_details)
 
 
 #To recode all variables listed on the variable worksheet
-recoded1 <- rec_with_table(data = tester1,
-                          variables = variables,
-                          variable_details = variable_details)
+recoded1 <- rec_with_table(data = recodeflow::pbc,
+                           variables = recodeflow::pbc_variables,
+                           variable_details = recodeflow::pbc_variable_details)
 ```
 
 # Arguments - Default 
