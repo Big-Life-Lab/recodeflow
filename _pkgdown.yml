@@ -56,6 +56,8 @@ reference:
     contents:
     - pbc_variables
     - pbc_variable_details
+    - tester_variables
+    - tester_variable_details
   - title: "Example data"
     desc: Data for examples
     contents:
