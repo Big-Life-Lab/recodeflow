@@ -18,8 +18,6 @@ Imports:
     haven,
     dplyr,
     magrittr,
-    glue,
-    survival
 License: MIT + file LICENSE
 URL: https://github.com/Big-Life-Lab/recodeflow
 BugReports: https://github.com/Big-Life-Lab/recodeflow/issues
@@ -32,6 +30,7 @@ Suggests:
     knitr,
     rmarkdown,
     readr,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    survival
 Config/testthat/edition: 3
 VignetteBuilder: knitr
