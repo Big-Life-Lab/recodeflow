@@ -29,7 +29,7 @@
 #'
 #' is_equal(NA,NA)
 #' # TRUE
-#' @keywords internal
+#' @export
 is_equal <- function(v1, v2) {
   same <- (v1 == v2) | (is.na(v1) & is.na(v2))
   # anything compared to NA equals NA

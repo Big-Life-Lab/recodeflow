@@ -51,6 +51,7 @@ reference:
     - select_vars_by_role
     - get_table_name
     - label_data
+    - is_equal
   - title: "Example worksheets"
     desc: Examples of worksheets for databases
     contents:
