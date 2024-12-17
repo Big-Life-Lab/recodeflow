@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Remove rules</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Remove rules</h1>
+
+
+
+<p>If you want to change the behavior of styler to match your desired
+style, there are multiple ways:</p>
+<ul>
+<li><p>Use the tidyverse style guide, but not with the default options.
+Starting point for this approach is the
+<code>help(&quot;tidyverse_style&quot;)</code> for the function
+<code>tidyverse_style()</code>, which returns the transformer functions
+that prettify your code. Most of these options are explained in
+<code>vignette(&quot;styler&quot;)</code>.</p></li>
+<li><p>If you can’t get styler behaving the way you want using the
+arguments of <code>tidyverse_style()</code>, you have another option,
+which is described in a <code>vignette(&quot;customizing_styler&quot;)</code>:
+Creating your own style guide from scratch. Yes, I admit, it’s pretty
+long and if you don’t want to become a <em>styler expert</em>, it may be
+a little bit overwhelming.</p></li>
+<li><p>If you don’t care about how to create new rules but you simply
+want to <em>remove</em> a rule, I have good news for you: There is a
+quick way to do it. And that’s what the remainder of this vignette
+focuses on.</p></li>
+</ul>
+<p>Once you are happy with your style guide, you might want to have a
+look at how to distribute it, which is described in
+<code>vignette(&quot;distribute_custom_style_guides&quot;)</code>.</p>
+<div id="theory" class="section level1">
+<h1>Theory</h1>
+<p>Here are the steps required to deactivate a rule you don’t like</p>
+<ul>
+<li><p>Figure out which transformer function in the transformers
+returned by <code>tidyerse_style()</code> corresponds to the rule you
+want to remove.</p></li>
+<li><p>Set that element in the list to <code>NULL</code>, which is
+equivalent to removing it.</p></li>
+<li><p>Pass the list to <code>style_text</code> as a
+transformer.</p></li>
+</ul>
+</div>
+<div id="practice" class="section level1">
+<h1>Practice</h1>
+<p>Lets assume you want to remove the rule that turns <code>=</code>
+into <code>&lt;-</code> for assignment. That means you want</p>
+<pre><code>string = &quot;hi there&quot; </code></pre>
+<p>to remain unchanged after applying styler. This is not the case if
+you use the default style guide of styler:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">library</span>(styler)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="fu">style_text</span>(<span class="st">&quot;string = &#39;hi there&#39;&quot;</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>string <span class="ot">&lt;-</span> <span class="st">&quot;hi there&quot;</span></span></code></pre></div>
+<p>So you need to figure out which rule is responsible for this. Let’s
+check the transformer categories used with the tidyverse style
+guide.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>transformers <span class="ot">&lt;-</span> <span class="fu">tidyverse_style</span>()</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="fu">names</span>(transformers)</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="co">#&gt;  [1] &quot;initialize&quot;             &quot;line_break&quot;             &quot;space&quot;                 </span></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co">#&gt;  [4] &quot;token&quot;                  &quot;indention&quot;              &quot;use_raw_indention&quot;     </span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="co">#&gt;  [7] &quot;reindention&quot;            &quot;style_guide_name&quot;       &quot;style_guide_version&quot;   </span></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="co">#&gt; [10] &quot;more_specs_style_guide&quot; &quot;transformers_drop&quot;      &quot;indent_character&quot;</span></span></code></pre></div>
+<p>From the aforementioned <a href="https://styler.r-lib.org/articles/customizing_styler.html">vignette</a>:</p>
+<blockquote>
+<p>We note that there are different types of transformer functions.
+initialize initializes some variables in the nested parse table (so it
+is not actually a transformer), and the other elements modify either
+spacing, line breaks or tokens. use_raw_indention is not a function, it
+is just an option.</p>
+</blockquote>
+<p>Now, we can look at the names of the rules that are sub-elements of
+the transformer categories.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">library</span>(magrittr)</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>levels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;space&quot;</span>, <span class="st">&quot;line_break&quot;</span>, <span class="st">&quot;indention&quot;</span>, <span class="st">&quot;token&quot;</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>purrr<span class="sc">::</span><span class="fu">map</span>(</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>  levels,</span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>  <span class="sc">~</span> <span class="fu">names</span>(transformers[[.x]])</span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>  purrr<span class="sc">::</span><span class="fu">set_names</span>(levels)</span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a><span class="co">#&gt; $space</span></span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a><span class="co">#&gt;  [1] &quot;remove_space_before_closing_paren&quot;  &quot;remove_space_before_opening_paren&quot; </span></span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a><span class="co">#&gt;  [3] &quot;add_space_after_for_if_while&quot;       &quot;remove_space_before_comma&quot;         </span></span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a><span class="co">#&gt;  [5] &quot;style_space_around_math_token&quot;      &quot;style_space_around_tilde&quot;          </span></span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a><span class="co">#&gt;  [7] &quot;spacing_around_op&quot;                  &quot;remove_space_after_opening_paren&quot;  </span></span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a><span class="co">#&gt;  [9] &quot;remove_space_after_excl&quot;            &quot;set_space_after_bang_bang&quot;         </span></span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a><span class="co">#&gt; [11] &quot;remove_space_before_dollar&quot;         &quot;remove_space_after_fun_dec&quot;        </span></span>
+<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a><span class="co">#&gt; [13] &quot;remove_space_around_colons&quot;         &quot;start_comments_with_space&quot;         </span></span>
+<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a><span class="co">#&gt; [15] &quot;remove_space_after_unary_pm_nested&quot; &quot;spacing_before_comments&quot;           </span></span>
+<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a><span class="co">#&gt; [17] &quot;set_space_between_levels&quot;           &quot;set_space_between_eq_sub_and_comma&quot;</span></span>
+<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a><span class="co">#&gt; [19] &quot;set_space_in_curly_curly&quot;          </span></span>
+<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a><span class="co">#&gt; $line_break</span></span>
+<span id="cb4-21"><a href="#cb4-21" tabindex="-1"></a><span class="co">#&gt;  [1] &quot;set_line_break_around_comma_and_or&quot;                </span></span>
+<span id="cb4-22"><a href="#cb4-22" tabindex="-1"></a><span class="co">#&gt;  [2] &quot;set_line_break_after_assignment&quot;                   </span></span>
+<span id="cb4-23"><a href="#cb4-23" tabindex="-1"></a><span class="co">#&gt;  [3] &quot;set_line_break_before_curly_opening&quot;               </span></span>
+<span id="cb4-24"><a href="#cb4-24" tabindex="-1"></a><span class="co">#&gt;  [4] &quot;remove_line_break_before_round_closing_after_curly&quot;</span></span>
+<span id="cb4-25"><a href="#cb4-25" tabindex="-1"></a><span class="co">#&gt;  [5] &quot;remove_line_breaks_in_fun_dec&quot;                     </span></span>
+<span id="cb4-26"><a href="#cb4-26" tabindex="-1"></a><span class="co">#&gt;  [6] &quot;style_line_break_around_curly&quot;                     </span></span>
+<span id="cb4-27"><a href="#cb4-27" tabindex="-1"></a><span class="co">#&gt;  [7] &quot;set_line_break_around_curly_curly&quot;                 </span></span>
+<span id="cb4-28"><a href="#cb4-28" tabindex="-1"></a><span class="co">#&gt;  [8] &quot;set_line_break_before_closing_call&quot;                </span></span>
+<span id="cb4-29"><a href="#cb4-29" tabindex="-1"></a><span class="co">#&gt;  [9] &quot;set_line_break_after_opening_if_call_is_multi_line&quot;</span></span>
+<span id="cb4-30"><a href="#cb4-30" tabindex="-1"></a><span class="co">#&gt; [10] &quot;remove_line_break_in_fun_call&quot;                     </span></span>
+<span id="cb4-31"><a href="#cb4-31" tabindex="-1"></a><span class="co">#&gt; [11] &quot;add_line_break_after_pipe&quot;                         </span></span>
+<span id="cb4-32"><a href="#cb4-32" tabindex="-1"></a><span class="co">#&gt; [12] &quot;set_line_break_after_ggplot2_plus&quot;                 </span></span>
+<span id="cb4-33"><a href="#cb4-33" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-34"><a href="#cb4-34" tabindex="-1"></a><span class="co">#&gt; $indention</span></span>
+<span id="cb4-35"><a href="#cb4-35" tabindex="-1"></a><span class="co">#&gt; [1] &quot;indent_braces&quot;                &quot;unindent_fun_dec&quot;            </span></span>
+<span id="cb4-36"><a href="#cb4-36" tabindex="-1"></a><span class="co">#&gt; [3] &quot;indent_op&quot;                    &quot;indent_eq_sub&quot;               </span></span>
+<span id="cb4-37"><a href="#cb4-37" tabindex="-1"></a><span class="co">#&gt; [5] &quot;indent_without_paren&quot;         &quot;update_indention_ref_fun_dec&quot;</span></span>
+<span id="cb4-38"><a href="#cb4-38" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-39"><a href="#cb4-39" tabindex="-1"></a><span class="co">#&gt; $token</span></span>
+<span id="cb4-40"><a href="#cb4-40" tabindex="-1"></a><span class="co">#&gt; [1] &quot;fix_quotes&quot;                                    </span></span>
+<span id="cb4-41"><a href="#cb4-41" tabindex="-1"></a><span class="co">#&gt; [2] &quot;force_assignment_op&quot;                           </span></span>
+<span id="cb4-42"><a href="#cb4-42" tabindex="-1"></a><span class="co">#&gt; [3] &quot;resolve_semicolon&quot;                             </span></span>
+<span id="cb4-43"><a href="#cb4-43" tabindex="-1"></a><span class="co">#&gt; [4] &quot;add_brackets_in_pipe&quot;                          </span></span>
+<span id="cb4-44"><a href="#cb4-44" tabindex="-1"></a><span class="co">#&gt; [5] &quot;wrap_if_else_while_for_fun_multi_line_in_curly&quot;</span></span></code></pre></div>
+<p>Spotted the rule we want to get rid of? It’s under <code>token</code>
+and it’s called <code>force_assignment_op</code>. I agree, we could have
+chosen a better name. If you are not sure if you can guess from the name
+of the rule what it does you can also have a look at the function
+declaration of this (unexported) function.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>styler<span class="sc">:::</span>force_assignment_op</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="co">#&gt; function (pd) </span></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="co">#&gt; {</span></span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="co">#&gt;     to_replace &lt;- pd$token == &quot;EQ_ASSIGN&quot;</span></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a><span class="co">#&gt;     pd$token[to_replace] &lt;- &quot;LEFT_ASSIGN&quot;</span></span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a><span class="co">#&gt;     pd$text[to_replace] &lt;- &quot;&lt;-&quot;</span></span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a><span class="co">#&gt;     pd</span></span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a><span class="co">#&gt; }</span></span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a><span class="co">#&gt; &lt;bytecode: 0x14b9fb4c0&gt;</span></span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a><span class="co">#&gt; &lt;environment: namespace:styler&gt;</span></span></code></pre></div>
+<p>Next, you simply set that element to <code>NULL</code>.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>transformers<span class="sc">$</span>token<span class="sc">$</span>force_assignment_op <span class="ot">&lt;-</span> <span class="cn">NULL</span></span></code></pre></div>
+<p>And you can use the modified transformer list as input to
+<code>style_text()</code></p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">style_text</span>(<span class="st">&quot;string = &#39;hi there&#39;&quot;</span>, <span class="at">transformers =</span> transformers)</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="co">#&gt; string = &quot;hi there&quot;</span></span></code></pre></div>
+<p>If you want to use it the same way as <code>tidyverse_style()</code>,
+here’s the last step:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>eq_assign_style <span class="ot">&lt;-</span> <span class="cf">function</span>(...) {</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>  transformers <span class="ot">&lt;-</span> <span class="fu">tidyverse_style</span>(...)</span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>  transformers<span class="sc">$</span>token<span class="sc">$</span>force_assignment_op <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>  transformers</span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>}</span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a><span class="fu">style_text</span>(<span class="st">&quot;string = &#39;hi there&#39;&quot;</span>, <span class="at">style =</span> eq_assign_style)</span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a><span class="co">#&gt; string = &quot;hi there&quot;</span></span></code></pre></div>
+<p>That’s it. Note that the transformer functions and how they are
+returned by <code>tidyverse_style()</code> is not part of the exposed
+API. This means that the order, the naming etc. may change. Also,
+remember we did not add a rule to replace <code>&lt;-</code> with
+<code>=</code>, but we only removed a rule to replace <code>=</code>
+with <code>&lt;-</code>, so <code>&lt;-</code> won’t be touched:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">style_text</span>(<span class="st">&quot;string &lt;- &#39;hi there&#39;&quot;</span>, <span class="at">style =</span> eq_assign_style)</span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="co">#&gt; string &lt;- &quot;hi there&quot;</span></span></code></pre></div>
+<p>If you want to turn <code>&lt;-</code> into <code>=</code>, you need
+to add a rule as described in
+<code>vignette(&quot;customizing_styler&quot;)</code>.</p>
+<p>If you have trouble identifying a rule based on rule names,</p>
+<ul>
+<li>First write an example whose results is not the one you wanted,
+e.g.</li>
+</ul>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>code <span class="ot">&lt;-</span> <span class="st">&quot;</span></span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a><span class="st">f &lt;- function () {</span></span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a><span class="st">return (1)</span></span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a><span class="st">}&quot;</span></span></code></pre></div>
+<p>is code that will have the first empty line in the function body
+removed by styler.</p>
+<ul>
+<li>Then pinpoint the probable rule type (e.g. line breaks if you want
+less new lines).</li>
+<li>In a local styler clone, add e.g. a <code>return(pd)</code> at the
+top of the body to deactivate the rule quickly, or add a
+<code>print(pd)</code> or <code>browser()</code> call in the functions
+of that type (e.g. the different functions of
+<code>R/rules-line-breaks.R</code>), <code>load_all()</code>, run your
+example, see if that function made the change. move the
+<code>print(pd)</code> or <code>browser()</code> call to another
+function if not.</li>
+<li>Once you’ve identified the culprit (in this case
+<code>style_line_break_around_curly</code>), set it to <code>NULL</code>
+as shown earlier.</li>
+</ul>
+</div>
+<div id="some-other-rules-and-their-transformers" class="section level1">
+<h1>Some other rules and their transformers</h1>
+<ul>
+<li><p>You don’t like multi-line ifelse statements getting wrapped
+around curly braces:
+<code>transformers$token$wrap_if_else_multi_line_in_curly</code>.</p></li>
+<li><p>You don’t like multi-line calls to be broken before the first
+named argument:
+<code>transformers$line_break$set_line_break_after_opening_if_call_is_multi_line</code>
+(interacting with
+<code>transformers$line_break$set_line_break_before_closing_call</code>).</p></li>
+<li><p>You don’t like the line being broken after the pipe:
+<code>transformers$line_break$add_line_break_after_pipe</code></p></li>
+<li><p>You don’t like single quotes to be replaced by double quotes:
+<code>transformers$space$fix_quotes</code>.</p></li>
+<li><p>You don’t like comments to start with one space:
+<code>transformers$space$start_comments_with_space</code></p></li>
+</ul>
+<p>I think you get the idea. I nevertheless recommend using the <a href="https://style.tidyverse.org/">tidyverse style guide</a> as is
+since</p>
+<ul>
+<li><p>it is a well-established, thought-through style.</p></li>
+<li><p>using a consistent style (no matter which) reduces friction in
+the community.</p></li>
+</ul>
+<p>If you have questions, don’t hesitate to create an issue in the
+GitHub repo.</p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
