@@ -136,63 +136,51 @@ probably be used in another libraries and functions, the library should to its
 best ability try to allow the missing values to be propoagates in other parts 
 of the code.
 
-### Additional metadata
+### Additional Metadata
 
-### Import/Export
 
-"It should be easy import and export metadata from/to other sources, or add
-metadata."
 
-Doug I'm not sure what you meant by the import part. Did you mean:
 
-1. Import the metadata from an external data source into the variables 
-   and variable details sheets. For example, a user would be able to update the 
-   label column with the metadata from a DDI format.
-2. Import and tag the harmonized dataset with metadata from an external file. 
-   This doesn't make much sense to me since all the variables in the harmonized 
-   dataset are created by us so there should not be any metadata out there for it.
+#### Import/Export Capabilities
+- Support importing metadata from CSV files (catalog, variables, variable_details).
+- Import labeled data from statistical software (SAS, Stata) via haven. 
+- Future support for other metadata formats (DDI, LinkML, PMML)
+- Export capabilities to preserve metadata across projects.
 
-For exporting you meant the library should be able to export the metadata from 
-the variables and variable details sheet into another format like DDI.
+#### Usability Features
+- Integration with R's native variable attributes system
+- Helper functions for accessing metadata (var_labels(), val_labels())
+- Support for tagged NA values
+- Ability to generate data dictionaries at any point in the project
 
-### Easy to use
 
-"Metadata should be easy to use. You should, for example, be able to make data
-dictionaries at any point in your project"
 
-Did you envision that the library would have functions to create a data dictionary 
-or would have helper functions for it?
 
-I think the first point make sense.
 
-### No duplicates
 
-"You should be able to, “type {metadata} once and use many times” including
-maintaining metadata in machine-actionable form in other projects (journal
-figures, predictive algorithm deployment, etc.)"
 
-I assume you mean helper functions here like get the label for a variable, 
-get the labels for a category etc. Perhaps a internal data format for what is 
-in the variables and variable details sheet that is easier to navigate using code?
 
-### Variables transformation information
+## Out of Scope
 
-"Metadata includes data transformation information (i.e. the variable is a
-spline, dummy variable, interaction, etc.)"
+### Variable Transformations and Modeling
+The library intentionally excludes certain types of variable transformations and modeling-related features:
 
-I see this as being in another library for developing predictive algorithms. 
-The other library can build on whats in the variables and variable details sheet 
-to accomplish this purpose.
+1. **Complex Transformations**
+   - Spline transformations
+   - Creation of dummy variables
+   - Variable interactions
+   - Other modeling-specific transformations
 
-### Roles
+   These transformations belong in dedicated modeling libraries that can build upon the metadata structure provided by recodeflow.
 
-"Building on the above, identify potential ‘roles’ of variables in the project.
-Roles are similar to the same as for tidymodels. An example role are variables
-used in table 1, or variables used as explanatory variables in a model."
+2. **Variable Roles**
+   - Assignment of variables to specific analytical roles (e.g., predictors, outcomes)
+   - Table 1 variable designation
+   - Model-specific variable groupings
+   
+   This functionality is better handled by specialized libraries like tidymodels that can consume the metadata provided by recodeflow.
 
-Look at the above point I made.
-
-## Out of scope
+The separation of these concerns allows recodeflow to focus on its core purpose of metadata management while enabling other libraries to build upon its foundation for specific analytical needs.
 
 ### Multiple table datasets
 
