@@ -116,13 +116,3 @@ Our design prioritizes harmony with existing R workflows:
 #### External logging libraries
 While we acknowledge the existence of established logging libraries like futile.logger and logger, our current focus is on providing essential logging capabilities without introducing additional dependencies. Users who prefer these libraries can integrate them through our custom logging function parameter.
 [Example implementation section remains the same as before]
-### Next steps
-
-Review and refine specifications with team
-Develop prototype implementations
-Test with existing transformation functions
-Gather user feedback on basic logging needs
-Create documentation and examples
-Plan phased rollout of enhancements
-
-We should focus initially on implementing and testing the basic logging capabilities, ensuring they meet our core requirements before considering any advanced features or integrations.
