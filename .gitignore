@@ -6,5 +6,6 @@
 .DS_Store
 
 *.code-workspace
+.codegpt
 
 docs/.$recodeflow.drawio.bkp
