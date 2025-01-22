@@ -1,0 +1,172 @@
+# Scope and specifications document
+
+## Title
+Development of derived functions to handle scalar, vector, and data frame inputs
+
+## Objective
+The objective of this document is to define the scope and specifications for the development of recodeflow derived functions capable of executing on scalar and vector data, including columns within data frames. These functions will incorporate conditional logic (e.g., `if-then` statements) to address a range of data input scenarios and ensure robust error handling.
+
+## Scope
+
+### Functional requirements
+1. **Input types**:
+   - Support scalar inputs (e.g., single numeric values).
+   - Support vector inputs (e.g., numeric vectors of length greater than 1).
+   - Support data frame inputs by referencing specific columns.
+
+2. **Functionality**:
+   - Perform calculations based on provided scalar or vector logic.
+   - Handle data frame inputs by applying operations across columns row-wise.
+   - Use conditional logic (e.g., `if`, `else`, `ifelse`, `if_else2`, `if_else`, or `case_when`) to process inputs depending on their type or value.
+
+3. **Output types**:
+   - Return a single value for scalar inputs.
+   - Return a vector for vector inputs.
+   - Add a new column to a data frame for data frame inputs, without modifying the original columns.
+
+4. **Tagged NA handling**:
+   - Ensure robust accommodation of tagged `NA` values, including logical operations and conditional statements.
+   - Functions should handle `tagged_NA` gracefully across scalar, vector, and data frame inputs without breaking workflows.
+
+### Non-functional requirements
+1. **Performance**:
+   - Ensure efficient execution on large vectors and data frames (up to 1 million rows).
+   
+2. **Scalability**:
+   - Functions should be reusable and adaptable for similar use cases beyond the initial implementation (e.g., calculating BMI, financial ratios, etc.).
+
+3. **Error handling**:
+   - Return `NA` or meaningful error messages for invalid inputs (e.g., negative values, missing columns).
+
+4. **Documentation**:
+   - Include comments and examples in the function definitions.
+   - Provide clear error messages for invalid inputs.
+
+5. **Testing**:
+   - Implement test cases for scalar, vector, and data frame inputs.
+   - Test edge cases such as empty vectors, missing data, tagged NAs, and extreme values.
+
+## Specifications
+
+### Input types
+1. Scalars: Single numeric values.
+   - Example: `weight_kg = 70`, `height_m = 1.75`
+
+2. Vectors: Numeric vectors.
+   - Example: `weight_kg = c(70, 80, 60)`, `height_m = c(1.75, 1.80, 1.60)`
+
+3. Data frames: Contain columns of numeric values.
+   - Example:
+     ```
+     data.frame(
+       weight_kg = c(70, 80, 60),
+       height_m = c(1.75, 1.80, 1.60)
+     )
+     ```
+
+### Conditional logic
+- Use `if-then` statements to handle scalars.
+- Use `ifelse`, `if_else2`, or `if_else` for vectorized operations.
+- Use `case_when` for handling multiple conditions in a clean and readable manner.
+- Include validation checks:
+  - Input type checks (e.g., `is.numeric`, `is.data.frame`).
+  - Range checks (e.g., positive values).
+  - Special handling for `tagged_NA` values to ensure they are treated appropriately.
+
+#### Example: Using `if_else` and `case_when`
+```r
+library(dplyr)
+
+# Example using if_else
+age <- c(12, 19, tagged_na("a"))
+status <- if_else(
+  age < 18, "child", "adult", missing = "unknown"
+)
+
+# Example using case_when
+status <- case_when(
+  is.na(age) ~ "unknown",
+  age < 18 ~ "child",
+  age >= 18 ~ "adult"
+)
+```
+
+### Output types
+1. Scalars: A single numeric value.
+2. Vectors: A numeric vector of the same length as the input.
+3. Data frames: A new column added to the data frame containing computed results.
+
+### Example Implementation
+
+#### Scalar and vector function
+```r
+calculate_bmi <- function(weight_kg, height_m) {
+  ifelse(
+    weight_kg > 0 & height_m > 0,
+    weight_kg / (height_m^2),
+    NA
+  )
+}
+```
+
+#### Wrapper for data frames
+```r
+apply_function <- function(fun, data, ...) {
+  if (is.data.frame(data)) {
+    args <- list(...)
+    data$Result <- mapply(fun, data[[args[[1]]]], data[[args[[2]]]])
+    return(data)
+  } else {
+    stop("Unsupported input type. Use vectors or data frames.")
+  }
+}
+```
+
+#### Custom if_else2 function
+```r
+#' @title if_else2
+#'
+#' @description Custom ifelse function that evaluates missing (NA) values. If
+#'  the logical argument (x) compares to a value that is `NA`, it is set to
+#'  `FALSE`
+#'
+#' @details Unlike the base ifelse() function, if_else2() is able to evaluate NA
+#'  as either a or b. In base ifelse(), anything compared to NA will produce
+#'  NA, which can break a function. When dealing with large datasets like the
+#'  CCHS, there are many missing (NA) values. That means a special ifelse
+#'  function like if_else2() is needed in order for other functions to not break.
+#'
+#' @param x A logical argument
+#'
+#' @param a Value if `x` is `TRUE`
+#'
+#' @param b Value if `x` is `FALSE`
+#'
+#' @return a or b based on the evaluation of x
+#'
+#' @examples
+#' age <- 12
+#' status <- if_else2((age < 18), "child", "invalid age")
+#' print(status)
+#'
+#' age <- NA
+#' status <- if_else2((age < 18), "child", "invalid age")
+#' print(status)
+#' @export
+if_else2 <- function(x, a, b) {
+  falseifNA <- function(x) {
+    ifelse(is.na(x), FALSE, x)
+  }
+  ifelse(falseifNA(x), a, b)
+}
+```
+
+## Assumptions
+- Inputs will primarily be numeric and non-missing (e.g., no characters or logicals).
+- Functions should support NA handling for missing data where relevant.
+- Functions should robustly accommodate tagged `NA` values (`tagged_na`) for logical and conditional operations.
+- Users will specify appropriate columns when applying functions to data frames.
+
+---
+
+
