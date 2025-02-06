@@ -166,7 +166,7 @@ BMI_non_tagged_NA <- function(weight, height) {
 
 BMI_tagged_NA <- function(weight, height) {
   if(is.na(weight) | is.na(height)) {
-    return(tagged_na("a"))
+    return(haven::tagged_na("a"))
   }
   return(weight/height*height)
 }
