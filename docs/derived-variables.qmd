@@ -1,0 +1,190 @@
+---
+title: Derived Variables Scope 
+---
+
+## Objective
+
+The objective of this document is to define the scope and specifications for 
+derived variables in the library.
+
+## Context
+
+The variable details sheet within the recodeflow library enables a user
+to encode the rules to create a new variable from one or more starting variables.
+Broadly, any rule that maps the values of one variable into another can be encoded in the variable details sheet. Examples include rules that 
+map one or more categories of a variable into a new category or a rule that 
+maps an interval of a continuous variable into a category. Variables that cannot be created with simple mapping rules can be recoded by using a 
+function. Examples include variables that require mathematical operations  
+or conditional logic.
+
+Any variable that requires a function for its creation is considered a derived variable. A good example of this is BMI which requires mathematical operations
+for its calculation and optionally conditional logic to validate its inputs. This document will go over the scope and specifications
+for such derived variables and the functions used to derive them.
+
+## Scope
+
+### Function Language
+
+The library should support only functions written in R. The R ecosystem is moving 
+towards allowing its users to execute code from other statistical languages. An 
+example is the [reticulate](https://rstudio.github.io/reticulate/index.html)
+package which enables the execution of arbitrary 
+Python code within a .R file. Example below,
+
+```{r, python-in-R}
+# Python code that creates a function to calculate BMI
+BMI_python_code <- "def BMI(weight, height): 
+  return weight/(height*height)
+" 
+# Run reticulate to bring the Python function over to the R environment enabling
+# us to call it using R code
+reticulate_output <- reticulate::py_run_string(BMI_python_code)
+# Calculate BMI using the created Python function
+BMI_python <- reticulate_output$BMI(25, 5)
+# Expect the calculated BMI to be 1
+stopifnot(BMI_python == 1)
+print(paste("Calculated BMI:", BMI_python))
+```
+
+To reduce the library scope, currently only R functions will be allowed.
+
+### Function Inputs and Outputs
+
+The function inputs and output should be standardized to accept either scalar
+or vector values.
+
+For example, a function that calculates BMI will take as input height and 
+weight. The library should make a decision on whether the inputs can be scalar values
+for example 80 and 180 or vector values for example c(80) and c(180).
+
+This decision will have implications on the performance, user experience, 
+and portability of the function as described below.
+
+R being a statistical language is optimized to run on vectors. However, a function 
+accepting scalar inputs can be easily vectorized using the
+[Vectorize](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Vectorize.html)
+function available in base R.
+
+The code below displays a table that compares the performance of calculating BMI 
+using:
+
+1. Scalar inputs 
+2. Vector inputs 
+3. A vectorized version of 1 created using the `Vectorize` function 
+
+```{r}
+scalar_BMI <- function(weight, height) {
+  bmi <- NA
+  if(is.na(weight) | is.na(height)) {
+    bmi <- NA
+  }
+  bmi <- weight/(height*height)
+}
+
+vector_BMI <- function(weight, height) {
+    bmi <- ifelse(
+      is.na(weight) | is.na(height),
+      NA,
+      weight/(height*height)
+    )
+}
+
+vectorized_BMI <- Vectorize(scalar_BMI)
+
+test_data <- data.frame(
+  weight = sample(1:100, 1000, replace = TRUE),
+  height = sample(1:100, 1000, replace = TRUE)
+)
+
+# In milliseconds
+get_func_perf <- function(func) {
+  start_time <- Sys.time()
+  func()
+  end_time <- Sys.time()
+  run_time <- end_time - start_time
+  return(as.numeric(run_time)*1000)
+}
+
+scalar_run_time <- get_func_perf(function() {
+  bmi <- c()
+  for(i in 1:nrow(test_data)) {
+    bmi <- c(bmi, scalar_BMI(test_data[i, "weight"], test_data[i, "height"]))
+  }
+})
+
+vector_run_time <- get_func_perf(function() {
+  vector_BMI(test_data$weight, test_data$height)
+})
+
+vectorized_run_time <- get_func_perf(function() {
+  vectorized_BMI(test_data$weight, test_data$height)
+})
+
+calculate_percent_diff <- function(num1, num2) {
+  return((abs(num1 - num2)/((num1 + num2)/2))*100)
+}
+run_time_table <- data.frame(
+  "Type" = c("Scalar", "Vector", "Vectorized"),
+  "Run Time in ms" = c(scalar_run_time, vector_run_time, vectorized_run_time),
+  "Percent Difference" = c("Reference", calculate_percent_diff(scalar_run_time, vector_run_time), calculate_percent_diff(scalar_run_time, vectorized_run_time))
+)
+knitr::kable(run_time_table)
+```
+
+In summary, in the order from slowest to fastest we have scalar, vectorized, and 
+vector.
+
+Ergonomically, users within R may be more comfortable with vectors since datasets 
+are usually in data.frames and individual columns can be plucked out as vectors 
+using the $ operator. Users of non-statistical languages will be more comfortable 
+with scalars since they usually deal with scalar values.
+
+Scalar values are more easily portable to non-statistical languages which 
+becomes a concern if the recoding rules need to be run for example in a web 
+browser where Javascript is the programming language of choice.
+
+### Supported Operations
+
+The library should allow the user to user to use any R code within the function.
+For example, code that uses external libraries, sources other R files etc.
+
+### Tagged NA
+
+The need for tagged NA values has been described elsewhere. An issue with derived 
+functions is that users can easily return NA values that are not tagged. The
+library should provide appropriate warnings 
+to users when an NA value is not tagged or tagged with an un-recognized value. For
+example,
+
+```{r}
+BMI_non_tagged_NA <- function(weight, height) {
+  if(is.na(weight) | is.na(height)) {
+    return(NA)
+  }
+  return(weight/height*height)
+}
+
+BMI_tagged_NA <- function(weight, height) {
+  if(is.na(weight) | is.na(height)) {
+    return(tagged_na("a"))
+  }
+  return(weight/height*height)
+}
+```
+
+The BMI_non_tagged_NA function when run by the library should warn the user that they 
+have returned an NA value that is not tagged. The BMI_tagged_NA function should 
+pass with no issues since the user is returning a tagged NA value.
+
+### Best practices
+
+Keeping in mind that users will be writing derived functions on their own, 
+the library should provide guidance on how to write good functions. This can include 
+but is not limited to:
+
+* Properly documenting the function behaviour, inputs, and outputs
+* Providing examples of running the function using different input types like 
+   scalars, vectors, data frames etc.
+* Providing test cases for the functions
+* Handling invalid input values
+
