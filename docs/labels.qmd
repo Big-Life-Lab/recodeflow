@@ -7,28 +7,111 @@ format:
 
 ## Scope and specifications for labels and metadata
 
-Adding support for labels in recodeflow will enhance data clarity and usability by providing descriptive metadata for variables, ensuring consistent interpretation across analyses. This feature will require implementing a standardized system for label management, including functions for adding, modifying, and retrieving labels within the recodeflow framework. There are two primary uses of variable and value labels: 
+Adding support for labels in recodeflow will enhance data clarity and usability by providing descriptive metadata for variables. The package will provide functions for managing labels in both the metadata worksheets and the data itself, including adding new labels, modifying existing ones, and retrieving labels for use in analysis. This feature will integrate variable and value labels through two complementary approaches:
 
-1. To provide more meaningful tables and figures, where labels replace variable names and factor levels. 
-2. To generate a data dictionary that describes the data used. 
+1.  Storage of metadata in `recodeflow`'s `variables` and `variable_details` worksheets.
+
+2.  Integration with `haven` and `labelled` objects for direct use in analysis workflows.
+
+The primary goals are to ensure consistent interpretation of variables across analyses and to support automated documentation. Detailed specifications for label management and implementation follow in subsequent sections.
+
+*Variable labels* are human-readable text descriptions of the variable.
+
+*Value labels* are text descriptions of the coded values within a variable, making categorical data easier to understand.
+
+## Example using PBC data
+
+The PBC dataset includes a `status` variable indicating a patient's endpoint status:
+
+-   `0`: "Censored"
+
+-   `1`: "Transplant"
+
+-   `2`: "Dead"
+
+### Applying labels in base R and `labelled` package
+
+#### Base R approach
+
+```         
+# Sample PBC dataset
+data <- data.frame(
+  id = 1:5,
+  status = c(0, 1, 2, 0, 2)
+)
+
+# Assign variable label as an attribute
+attr(data$status, "label") <- "Patient Status"
+
+# Assign value labels using a named vector
+status_labels <- c("Censored" = 0, "Transplant" = 1, "Dead" = 2)
+attr(data$status, "labels") <- status_labels
+
+# Check variable label
+attr(data$status, "label")
+
+# Check value labels
+attr(data$status, "labels")
+```
+
+#### Using the `labelled` package
+
+```         
+library(labelled)
+
+# Assign variable label
+data <- set_variable_labels(data, status = "Patient Status")
+
+# Assign value labels
+data$status <- set_value_labels(data$status, `Censored` = 0, `Transplant` = 1, `Dead` = 2)
+
+# Check labels
+var_label(data$status)
+val_labels(data$status)
+```
+
+#### Labels in tibble-based workflows
+
+Packages like `tibble` retain labels as attributes but do not print them by default. Labels are primarily used for metadata storage and retrieval, ensuring clarity in automated documentation and reporting workflows.
+
+```         
+library(tibble)
+
+# Convert to tibble
+data_tbl <- as_tibble(data)
+
+# View table, but labeles are displayed
+head(data_tbl)
+```
+
+There are two primary uses of variable and value labels:
+
+1.  To provide more meaningful tables and figures, where labels replace variable names and factor levels.
+2.  To generate a data dictionary that describes the data used.
+
+including functions for adding, modifying, and retrieving labels within the recodeflow framework.
 
 Other uses include:
 
-1. Facilitating data sharing and collaboration by providing clear documentation of variable meanings and valid values.
-1. Enabling automated report generation with human-readable variable descriptions.
-1. Supporting data validation by documenting expected values and ranges.
-1. Maintaining consistency across different versions of a dataset or related datasets.
-1. Simplifying the creation of codebooks and technical documentation.
-1. Enabling integration with external metadata systems and data catalogs.
-1. Supporting internationalization by allowing labels in multiple languages.
+1.  Facilitating data sharing and collaboration by providing clear documentation of variable meanings and valid values.
+2.  Enabling automated report generation with human-readable variable descriptions.
+3.  Supporting data validation by documenting expected values and ranges.
+4.  Maintaining consistency across different versions of a dataset or related datasets.
+5.  Simplifying the creation of codebooks and technical documentation.
+6.  Enabling integration with external metadata systems and data catalogs.
+7.  Supporting internationalization by allowing labels in multiple languages.
 
 ## Existing libraries and solutions
 
-The R ecosystem has seen a growing adoption of consistent label handling over the past several years, particularly through the tidyverse-adjacent package, haven, which provides robust support for variable and value labels when importing data from statistical formats like SPSS, SAS, and Stata. This standardization has made it easier for R users to work with labeled data across different packages and workflows while maintaining compatibility with other statistical software. The labelled package extends haven's functionality with additional features for managing and manipulating labels, including tools for converting between labeled vectors and factors, copying labels between variables, and working with multiple languages. Other established solutions include Hmisc, which not only provides similar labeling capabilities but also introduces the concept of units for variables, making it particularly useful for scientific and medical data analysis. These packages demonstrate the R community's commitment to robust metadata handling and provide proven patterns for implementing label support in new tools.
+The R ecosystem has seen a growing adoption of consistent label handling over the past several years, particularly through the tidyverse-adjacent package, `haven`, which provides robust support for variable and value labels when importing data from statistical formats like SPSS, SAS, and Stata. This standardization has made it easier for R users to work with labeled data across different packages and workflows while maintaining compatibility with other statistical software.
+
+The `labelled` package extends `haven` with additional features for managing and manipulating labels, including tools for converting between labeled vectors and factors, copying labels between variables, and working with multiple languages.
+
+Other established solutions include `Hmisc`, which not only provides similar labeling capabilities but also introduces the concept of units for variables, making it particularly useful for scientific and medical data analysis.
 
 ## Challenges with labels
 
-Working with labels in R presents several technical challenges, particularly around maintaining label consistency through data transformations. A key challenge is the "round trip" problem: when data is imported with labels, transformed, and then exported, labels can be lost or become inconsistent with the data. This is especially evident when working with factor variables, where the underlying values and their labels need careful handling during recoding operations. The figure below illustrates the complexity of label transformations, showing how labels must be maintained through various data operations:
+Working with labels in R presents several technical challenges, particularly maintaining label consistency through data transformations. A key challenge is the "round trip" problem: when data is imported with labels, transformed, and then exported, labels can be lost or become inconsistent with the data. This is especially true when working with factor variables, where the underlying values and their labels need careful handling during recoding operations. The figure below illustrates the complexity of label transformations, showing how labels must be maintained through various data operations:
 
 ```{mermaid}
 graph LR
@@ -41,23 +124,24 @@ graph LR
     F --> G[Export]
 ```
 
-Another significant challenge is maintaining label consistency across different representations of the same data. For example, a variable might need to be represented as both a labeled numeric vector and a factor, depending on the analysis context. Each transformation between these representations requires careful handling of both the values and their associated labels to ensure that the semantic meaning of the data is preserved. Additional challenges include handling missing values and their labels consistently, supporting multiple languages or label variants for the same variable, maintaining label integrity during data reshaping operations, ensuring labels remain synchronized when subsetting or filtering data, and managing the memory overhead of storing extensive label metadata.
+Another challenge is maintaining label consistency across different representations of the same data. For example, depending on the context of the analysis, a variable might be labeled a numeric vector and a factor. Each transformation between these representations requires careful handling of both the values and their associated labels to ensure that the semantic meaning of the data is preserved.
 
 Additional challenges include:
 
-1. Handling missing values and their labels consistently.
-2. Supporting multiple languages or label variants for the same variable.
-3. Maintaining label integrity during data reshaping operations.
-4. Ensuring labels remain synchronized when subsetting or filtering data.
+1.  Handling missing values and their labels consistently.
+2.  Supporting multiple languages or label variants for the same variable.
+3.  Maintaining label integrity during data reshaping operations.
+4.  Ensuring labels remain synchronized when subsetting or filtering data.
+5.  Managing the memory overhead of storing extensive label metadata.
 
-`recodeflow` supports tagged NA for missing data. This topic is covered seperaraly. Of note, `haven`, `labelled`, and `hmisc` all support tagged NA using a consistent approach.
+`recodeflow` supports tagged NA for missing data. This topic is covered separately. Of note, `haven`, `labelled`, and `hmisc` all support tagged NA using a consistent approach.
 
 ## Label specifications
 
-- Follow the labelled library approach. All labelled functions should work with recodeflow.
-- Extend labelled within recodeflow to support metadata in tables (`variables` and `variable_details`).
+-   Follow the `labelled` library approach. All `labelled` functions should work with `recodeflow`.
+-   Extend `labelled` within `recodeflow` to support table metadata (`variables` and `variable_details`).
 
-### Example from the labelled library
+### Example from the `labelled` library
 
 ```{r}
 
@@ -85,14 +169,13 @@ var_label(iris_labelled)
 
 In this example,
 
-- `species` has no label in the `description` file; therefore it is labelled with the variable name (i.e. 'species')
-- There is no variable `something` in the `iris` database. .strict is set to FALSE. The set_variable_labels() runs without errors.
+-   `species` has no label in the `description` file; therefore it is labelled with the variable name (i.e. 'species')
+-   There is no variable `something` in the `iris` database. .strict is set to FALSE. The set_variable_labels() runs without errors.
 
-## Two approaches to use labbelled library in recodeflow
+## Two approaches to use `labbelled` library in `recodeflow`
 
-
-1) Wappers for `labelled` functions. This approach is similar how we extended simple variable recoding from `memisc` library with `rec_with_table` that recodes rules for the entire database using rules in `variables` and `variable_details`. 
-2) Helper functions. This approach has functions to help get or process information from `variables` and `variable_details` which can then be passed into `labelled` functions as attributes.
+1)  Wappers for `labelled` functions. This approach is similar to how we extended simple variable recoding from the `memisc` library with `rec_with_table`, which recodes rules for the entire database using `variables` and `variable_details`.
+2)  Helper functions. This approach has functions to help get or process information from `variables` and `variable_details` which can then be passed into `labelled` functions as attributes.
 
 ### 1) Wrapper function for setting variable labels in recodeflow
 
@@ -119,7 +202,7 @@ set_recodeflow_labels <- function(data,
 }
 ```
 
-### Example: Adding Labels to PBC Data
+### Example: ading labels to PBC data
 
 First, ensure you have the necessary packages:
 
@@ -176,4 +259,5 @@ variables <- tibble(
   units = c(NA, "years", "mg/dL", NA)
 )
 ```
+
 to be continued...
