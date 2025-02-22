@@ -1,4 +1,0 @@
-diagnostics             diagnostics
-languageserver-package
-                        languageserver: Language Server Protocol
-run                     Run the R language server
