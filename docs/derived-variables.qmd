@@ -254,7 +254,8 @@ BMI_tagged_NA <- function(weight, height) {
 
 The BMI_non_tagged_NA function when run by the library should warn the user that
 they have returned an NA value that is not tagged. The BMI_tagged_NA function
-should pass with no issues since the user is returning a tagged NA value. œ
+should pass with no issues since the user is returning a tagged NA value.
+
 ### Best practices
 
 Keeping in mind that users will be writing derived functions on their own, the
