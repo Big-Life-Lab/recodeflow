@@ -41,6 +41,18 @@ variables and the functions used to derive them.
 
 ## Scope
 
+### Function Usage
+
+Users should be able to use any derived functions without needing to install 
+recodeflow. The library should not force users to write functions in any way 
+that prevents them from for example being copy-pasted and easily used in an R
+environment where recodeflow is not installed. A number of organizations host 
+personal data and thus impose restrictions on the use of external libraries. 
+Allowing derived functions to be used without recodeflow enables the analysts 
+within these organizations to use derived functions defined in flow universe 
+packages like [cchsflow](https://big-life-lab.github.io/cchsflow/) enabling
+collaboration. 
+
 ### Function Language
 
 The library should support only functions written in R. The R ecosystem is
