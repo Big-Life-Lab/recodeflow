@@ -265,4 +265,5 @@ but is not limited to:
 -   Providing examples of running the function using different input types like
     scalars, vectors, data frames etc.
 -   Providing test cases for the functions
--   Handling invalid input values
+-   Handling invalid input values and making validations like mins and maxes
+    easily customizable by other users by including them as function parameters
