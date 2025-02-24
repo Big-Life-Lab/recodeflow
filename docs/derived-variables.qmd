@@ -31,7 +31,7 @@ encoded in the variable details sheet. Examples include rules that map one or
 more categories of a variable into a new category or a rule that maps an
 interval of a continuous variable into a category. Variables that cannot be
 created with simple mapping rules can be recoded by using a function. Examples
-include variables that require mathematical operations or conditional logic.
+include variables that require mathematical operations and conditional logic.
 
 Any variable that requires a function for its creation is considered a derived
 variable. A good example of this is BMI which requires mathematical operations
