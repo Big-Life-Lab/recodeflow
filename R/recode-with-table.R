@@ -323,7 +323,7 @@ rec_with_table <-
     # If the passed data parameter is a list, then make sure that the
     # each data in the list has a database name in the database_name parameter
     # by checking their length
-    if (class(data) == "list" &&
+    if ("list" %in% class(data) &&
         length(database_name) == length(data)) {
       # Iterate through each database name and recode the corresponding
       # data
