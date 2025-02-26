@@ -31,6 +31,7 @@ Suggests:
     rmarkdown,
     readr,
     testthat (>= 3.0.0),
-    survival
+    survival,
+    tibble
 Config/testthat/edition: 3
 VignetteBuilder: knitr

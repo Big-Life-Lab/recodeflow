@@ -505,3 +505,37 @@ test_that("Correctly recodes derived variable that depends on a derived variable
   on.exit(rm("func_1", envir = .GlobalEnv))
   on.exit(rm("func_2", envir = .GlobalEnv))
 })
+
+test_that("The function should not error when a tibble is passed in", {
+  data <- tibble::as_tibble(data.frame(
+    a = c(1)
+  ))
+  variables <- data.frame(
+    variable = c("b"),
+    label = c(""),
+    labelLong = c(""),
+    units = c("N/A"),
+    variableType = c("Continuous"),
+    databaseStart = c("database_one"),
+    variableStart = c("[a]")
+  )
+  database_name <- "database_one"
+  variable_details <- data.frame(
+    variable = c("b"),
+    typeEnd = c("cont"),
+    databaseStart = c("database_one"),
+    variableStart = c("[a]"),
+    typeStart = c("cont"),
+    recEnd = c("copy"),
+    numValidCategories = c("N/A"),
+    recStart = c("else"),
+    catLabel = c(""),
+    catLabelLong = c("")
+  )
+  recoded_data <- rec_with_table(
+    data, variables, database_name, variable_details)
+  expected_data <- tibble::as_tibble(data.frame(b = c(1)))
+  attr(expected_data$b, "label_long") <- ""
+  attr(expected_data$b, "unit") <- "N/A"
+  expect_equal(recoded_data, expected_data)
+})
