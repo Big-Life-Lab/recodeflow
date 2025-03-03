@@ -1,7 +1,7 @@
 Package: recodeflow
 Type: Package
 Title: Contains functions to interface with variable details sheets, including recoding variables and converting them to PMML
-Version: 0.1.1
+Version: 0.1.2
 Authors@R: c(
     person("Yulric", "Sequeira", email = "ysequeira@ohri.ca", role = c("aut", "cre")),
     person("Luke", "Bailey", role = c("aut")),
