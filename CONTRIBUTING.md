@@ -1,5 +1,28 @@
 # Contributing to recodeflow
 
+## Installation
+
+1. [Install R](https://www.r-project.org/) 
+
+   This package uses R version 4.3.2. If you have another version of R installed
+   on your system, we recommend using [rig](https://github.com/r-lib/rig) which
+   allows you to install and manage multiple versions of R. Use the commands
+   `rig add 4.3.2` and `rig default 4.3.2` to install and use the required R
+   version.
+2. Install dependencies
+
+   This package uses [renv](https://rstudio.github.io/renv/articles/renv.html)
+   to manage its dependencies. Start an R session within the project root and
+   renv should bootstrap itself. You can then run the command `renv::restore()`
+   to install the dependencies.
+
+You should now be ready to start working on the package
+
+## Running tests
+
+[Install the dependencies](#Installation)
+
+Run the command `devtools::test()` within the R session to run the tests.
 
 ## Filing an issue
 
