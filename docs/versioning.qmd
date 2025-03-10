@@ -1,0 +1,63 @@
+---
+title: Versioning Scope 
+---
+
+## Context
+
+Versioning within a software system refers to the act of
+attaching a unique identifier to different releases of the system. Within 
+recodeflow, a release refers to a new distribution of the package due to 
+a change in some entity within it. The entities being changed can be R code,
+documentation, datasets, worksheets etc.
+
+Versioning a software system is a vital step in the distribution 
+process that enables its users to identify the release they're 
+using. This in turn makes it easy for developers to reproduce any issues or 
+bugs that users may encounter.
+
+The remainder of this document will go over the scope and goals for versioning 
+within recodeflow and flow universe packages.
+
+## Scope
+
+Any versioning system developed will need to be applied to the following 
+entities:
+
+1. The different packages including recodeflow and flow universe packages like 
+   cchsflow
+3. The variables and variable details sheet within the flow universe packages 
+4. The variables within the sheets 
+
+Regarding worksheet versioning, the user should be able to distinguish 
+between an update of a flow universe package and an update of the worksheets within the 
+package. An update of the package may not necessarily be due to an update of 
+the worksheet or its related entities (derived functions for example) but could
+be due to a change in the package documentation. By decoupling the flow universe 
+package versions and the worksheets within them, the user can easily know if an
+update to the package involves 
+an update to the worksheets within it. 
+
+Variable versioning follows the same reasoning. Users normally only use a 
+subset of the variables within a sheet. When a new worksheet version is released
+its important for them to know whether any of their study variables have 
+been changed. Decoupling the versioning 
+between a worksheet and the variables within it accomplishes this purpose. 
+
+The versioning system for all three entities should allow:
+
+* Users to identify and distinguish between different releases
+* Users to know at a glance if a release could potentially result in an error if
+  they decide to update to it (breaking changes)
+* Recodeflow functions to extract the version identifier so that it can be 
+  for example attached to a recoded dataset as metadata
+
+Keeping in mind [Hyrum's law](https://www.hyrumslaw.com/) which in summary 
+states that given enough users of a system, even small un-remarkable changes
+within it can be breaking, developers should a-priori decide what 
+is considered a breaking change for each of the three entities. For example, is
+removing a log statement considered breaking? Or changing the name of a
+function? By being explicit about this beforehand users can
+know what to expect when a new version of the entity is released. Breaking changes 
+should be minimized but if they do occur users should be provided with a 
+way to migrate from their current version to the new breaking version.
+
