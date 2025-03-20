@@ -59,34 +59,33 @@ The `recodeflow` packages must continue to enable reproducible data transformati
 
 ##### Variable SMKDVSTY: Smoking Status (Type 2)
 
-- **01** = Current daily smoker  
-- **02** = Current occasional smoker  
-- **03** = Former daily smoker (non-smoker now)  
-- **04** = Former occasional smoker (non-smoker now)  
-- **05** = Experimental smoker (at least 1 cigarette, non-smoker now)  
-- **06** = Lifetime abstainer (never smoked a whole cigarette)  
-- **96** = Valid skip  
-- **97** = Don't know  
-- **98** = Refusal  
-- **99** = Not stated  
+-   **01** = Current daily smoker\
+-   **02** = Current occasional smoker\
+-   **03** = Former daily smoker (non-smoker now)\
+-   **04** = Former occasional smoker (non-smoker now)\
+-   **05** = Experimental smoker (at least 1 cigarette, non-smoker now)\
+-   **06** = Lifetime abstainer (never smoked a whole cigarette)\
+-   **96** = Valid skip\
+-   **97** = Don't know\
+-   **98** = Refusal\
+-   **99** = Not stated
 
 ##### Derived Variable: BMI (Body Mass Index)
 
-- **Height** = Numeric value of height in meters, with a plausible range of **0.50 to 2.50 meters**.
-- **Weight** = Numeric value of weight in kilograms, with a plausible range of **10 to 300 kg**.
-- **BMI Calculation**: `BMI = weight (kg) / height (m)^2`
+-   **Height** = Numeric value of height in meters, with a plausible range of **0.50 to 2.50 meters**.
+-   **Weight** = Numeric value of weight in kilograms, with a plausible range of **10 to 300 kg**.
+-   **BMI Calculation**: `BMI = weight (kg) / height (m)^2`
 
 #### Logging Examples
 
 | **Log Level** | **BMI (Derived Variable)** | **SMKDVSTY (Smoking Status Variable)** |
-|--------------|----------------------------|----------------------------------------|
+|------------------|-----------------------|-------------------------------|
 | **FATAL** *(No clear example)* | *(No example where execution must stop entirely—handled as errors instead.)* | *(No example where execution must stop entirely—handled as errors instead.)* |
 | **ERROR** | Height or weight missing; function to derive BMI not found; wrong data type (e.g., categorical instead of numeric). | *(No critical errors that would stop processing—handled as warnings instead.)* |
-| **WARN** | Input values outside valid range (e.g., height < 50 cm or > 250 cm, weight < 10 kg or > 300 kg); derived BMI outside plausible range (e.g., BMI > 70). | Value is outside the expected enum list (e.g., SMKDVSTY = 07, which is not a defined category). |
+| **WARN** | Input values outside valid range (e.g., height \< 50 cm or \> 250 cm, weight \< 10 kg or \> 300 kg); derived BMI outside plausible range (e.g., BMI \> 70). | Value is outside the expected enum list (e.g., SMKDVSTY = 07, which is not a defined category). |
 | **INFO** | Number of individuals with valid BMI calculations; count of errors and warnings encountered. | Number of harmonized records; frequency of invalid smoking status values (warnings). |
 | **DEBUG** | Logging unique values and ranges of height and weight before BMI calculation; checking if all input values are numeric. | Checking the distribution of SMKDVSTY values before and after harmonization. |
 | **TRACE** | Step-by-step breakdown of BMI calculation: verifying inputs, intermediate steps, and final output. | Detailed breakdown of harmonization: mapping of SMKDVSTY values across cycles, recoding logic, and final value assignment. |
-
 
 ### Advanced logging features
 
@@ -140,6 +139,116 @@ Copyresult <- standardize_age(age_vector, units_vector,
 #### Observer pattern
 
 This pattern separates the core transformation logic from logging, allowing users to "observe" the process without changing it. This separation means we can enhance logging without touching the core transformation code.
+
+Example:
+
+The observer pattern 'observes' the **execution of calculate_BMI() but does not interfere with the core process**. If `calculate_BMI()` fails, the observer captures the error and logs it, while `rec_with_table()` continues processing other variables.
+
+**Subject (Core Process):** `rec_with_table()` calls the derived function `calculate_BMI()`.
+
+**Observer (Event Listener):** Captures any errors and logs them without stopping execution.
+
+**Event:** Failure of `calculate_BMI()`, which triggers the observer to log an error.
+
+**Decoupling:** The observer captures failures but does not modify the function execution—allowing the process to continue.
+
+Two pseudo code examples of potential implementation.
+
+```{r}
+library(logger)
+
+# Observer function for logging
+log_observer <- function(event_type, details) {
+  if (event_type == "ERROR") {
+    log_error(paste("[Derived Variable Error]", details))
+  } else {
+    log_info(paste("[Event]", event_type, "-", details))
+  }
+}
+
+# User-defined function for BMI calculation (without explicit type check)
+calculate_BMI <- function(height, weight) {
+  # This function is deliberately missing type checks to simulate an unanticipated failure
+  return(weight / (height^2))  # This can fail if height or weight are not numeric
+}
+
+# Main recodeflow function that calls user-defined function
+rec_with_table <- function(data) {
+  for (var in colnames(data)) {
+    tryCatch({
+      if (var == "BMI") {
+        data[[var]] <- calculate_BMI(data$height, data$weight)
+      }
+      log_observer("INFO", paste("Successfully processed", var))
+    }, error = function(e) {
+      log_observer("ERROR", paste("Failed to process", var, ":", conditionMessage(e)))
+    })
+  }
+  return(data)
+}
+
+# Example dataset with an unanticipated issue
+data <- data.frame(
+  height = c(1.75, 1.80, "wrong_type", 1.68),
+  weight = c(70, 80, 65, 60),
+  BMI = NA
+)
+
+# Run processing function
+rec_with_table(data)
+```
+
+Or, if the user includes a `stop` for the same error.
+
+```{r}
+library(logger)
+
+# Observer function to handle logging
+log_observer <- function(event_type, details) {
+  if (event_type == "ERROR") {
+    log_error(paste("[Derived Variable Error]", details))
+  } else {
+    log_info(paste("[Event]", event_type, "-", details))
+  }
+}
+
+# User-defined function for BMI calculation
+calculate_BMI <- function(height, weight) {
+  if (is.na(height) || is.na(weight)) {
+    stop("Missing height or weight values")
+  }
+  if (!is.numeric(height) || !is.numeric(weight)) {
+    stop("Height and weight must be numeric")
+  }
+  return(weight / (height^2))
+}
+
+# Main recodeflow function that calls user-defined function
+rec_with_table <- function(data) {
+  for (var in colnames(data)) {
+    tryCatch({
+      if (var == "BMI") {
+        data[[var]] <- calculate_BMI(data$height, data$weight)
+      }
+      log_observer("INFO", paste("Successfully processed", var))
+    }, error = function(e) {
+      log_observer("ERROR", paste("Failed to process", var, ":", e$message))
+    })
+  }
+  return(data)
+}
+
+# Example dataset
+data <- data.frame(
+  height = c(1.75, NA, 1.68, 1.80),
+  weight = c(70, 65, "wrong_type", 80),
+  BMI = NA
+)
+
+# Run processing function
+rec_with_table(data)
+```
+
 
 #### Strategy pattern
 
