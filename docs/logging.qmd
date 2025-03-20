@@ -9,179 +9,158 @@ format:
 
 ## Summary
 
-This document outlines plans to enhance logging
-capabilities in cchsflow and recodeflow while
-maintaining their core mission of enabling
-transparent and reproducible data transformations.
-The proposed enhancements will support better
-error reporting and debugging while preserving the
-packages' accessibility for new users.
+This document outlines plans to enhance logging in cchsflow and `recodeflow` to support the core principle of transparent and reproducible data transformations. The proposed enhancements will support better error reporting and debugging while preserving the packages' accessibility for new users.
 
 ## Scope
 
 ### Core requirements
 
-Our packages must continue to enable reproducible
-data transformations through clear, self-contained
-functions. The logging system should enhance, not
-complicate, this primary goal.
+The `recodeflow` packages must continue to enable reproducible data transformations through clear, self-contained functions. The logging system should enhance, not complicate, this primary goal.
 
-1.  Maintain simple usage of transformation
-    functions without mandatory logging
-2.  Provide clear error messages and warnings for
-    common issues
-3.  Support advanced logging capabilities for
-    power users
-4.  Ensure compatibility with existing R workflows
-    and tools
-5.  Preserve compatibility with existing metadata
-    management features
+1.  Maintain simple usage of transformation functions without mandatory logging.
+2.  Provide clear error messages and warnings for common issues.
+3.  Support advanced logging capabilities for power users.
+4.  Ensure compatibility with existing R workflows and tools.
+5.  Preserve compatibility with existing metadata management features.
 
 ### Out of scope
 
-1.  Direct integration with external pipeline
-    tools
-2.  Real-time log monitoring capabilities
-3.  GUI-based log viewing tools
-4.  Automatic metadata generation from logs
+1.  Direct integration with external pipeline tools.
+2.  Real-time log monitoring capabilities.
+3.  GUI-based log viewing tools.
+4.  Automatic metadata generation from logs.
 
 ## Specifications
 
 ### Basic logging requirements
 
-1.  Warning generation
-    - Clear, actionable warning messages that help
-      users understand and fix issues
-    - Row-specific error identification where
-      applicable, making debugging easier
-    - Basic error categorization that
-      distinguishes between data validity, range
-      violations, and other common issues
-2.  Error handling
-    - Non-stopping error management that allows
-      processing to continue
-    - Consistent use of tagged_na values for
-      invalid results
-    - Preservation of data frame integrity during
-      transformations
-3.  Warning aggregation
-    - Clear summary of warning types and
-      frequencies
-    - Identification of systematic issues across
-      the dataset
-    - Optional detailed row-level reporting for
-      debugging
+1.  There will be support for the common logging levels, as follows:
+
+    1.  FATAL – Indicates a severe failure that will cause the application to terminate immediately.
+    2.  ERROR – Represents serious issues that may not stop the program but indicate failures.
+    3.  WARN (Warning) – Flags potential problems or unexpected situations that do not immediately affect execution.
+    4.  INFO – Provides general runtime information about the application’s normal operation.
+    5.  DEBUG – Gives detailed diagnostic information, typically used during development or troubleshooting.
+    6.  TRACE – The most granular level, showing detailed step-by-step execution, often useful for deep debugging.
+
+2.  Where possible, do not terminate the process (FATAL log), rather generate an error that allows processes to continue.
+
+3.  Support consistent error categorization that data validity, range violations, and other common issues.
+
+4.  Clear, actionable log messages that help users understand what processes are being performed. WARN, ERROR, and FATAL should provide information to help a use debug and fix issues.
+
+5.  Row-specific logging, where applicable, making debugging easier.
+
+6.  Logging aggregation for ERROR, WARN, and INFO. Logging aggregation assists in the identification of systematic issues across the dataset. Provide a clear summary of warning types and frequencies.
+
+#### Basic logging examples:
+
+#### Basic Logging Examples
+
+##### Variable SMKDVSTY: Smoking Status (Type 2)
+
+- **01** = Current daily smoker  
+- **02** = Current occasional smoker  
+- **03** = Former daily smoker (non-smoker now)  
+- **04** = Former occasional smoker (non-smoker now)  
+- **05** = Experimental smoker (at least 1 cigarette, non-smoker now)  
+- **06** = Lifetime abstainer (never smoked a whole cigarette)  
+- **96** = Valid skip  
+- **97** = Don't know  
+- **98** = Refusal  
+- **99** = Not stated  
+
+##### Derived Variable: BMI (Body Mass Index)
+
+- **Height** = Numeric value of height in meters, with a plausible range of **0.50 to 2.50 meters**.
+- **Weight** = Numeric value of weight in kilograms, with a plausible range of **10 to 300 kg**.
+- **BMI Calculation**: `BMI = weight (kg) / height (m)^2`
+
+#### Logging Examples
+
+| **Log Level** | **BMI (Derived Variable)** | **SMKDVSTY (Smoking Status Variable)** |
+|--------------|----------------------------|----------------------------------------|
+| **FATAL** *(No clear example)* | *(No example where execution must stop entirely—handled as errors instead.)* | *(No example where execution must stop entirely—handled as errors instead.)* |
+| **ERROR** | Height or weight missing; function to derive BMI not found; wrong data type (e.g., categorical instead of numeric). | *(No critical errors that would stop processing—handled as warnings instead.)* |
+| **WARN** | Input values outside valid range (e.g., height < 50 cm or > 250 cm, weight < 10 kg or > 300 kg); derived BMI outside plausible range (e.g., BMI > 70). | Value is outside the expected enum list (e.g., SMKDVSTY = 07, which is not a defined category). |
+| **INFO** | Number of individuals with valid BMI calculations; count of errors and warnings encountered. | Number of harmonized records; frequency of invalid smoking status values (warnings). |
+| **DEBUG** | Logging unique values and ranges of height and weight before BMI calculation; checking if all input values are numeric. | Checking the distribution of SMKDVSTY values before and after harmonization. |
+| **TRACE** | Step-by-step breakdown of BMI calculation: verifying inputs, intermediate steps, and final output. | Detailed breakdown of harmonization: mapping of SMKDVSTY values across cycles, recoding logic, and final value assignment. |
+
 
 ### Advanced logging features
 
 1.  Custom logging function support
-    - Optional log_fn parameter that defaults to
-      R's warning function
-    - Consistent logging function interface for
-      standardization
-    - Support for different logging levels while
-      maintaining simplicity
+    -   Optional log_fn parameter that defaults to R's warning function
+    -   Consistent logging function interface for standardization
+    -   Support for different logging levels while maintaining simplicity
 2.  Metadata integration
-    - Clear connection between logs and variable
-      metadata
-    - Documentation of transformation rules and
-      their effects
-    - Support for existing label management system
+    -   Clear connection between logs and variable metadata
+    -   Documentation of transformation rules and their effects
+    -   Support for existing label management system
 
 ### Implementation requirements
 
 1.  Function design
-    - Clean, understandable default behavior
-    - Optional parameters for advanced logging
-      that don't complicate basic usage
-    - Consistent interface across all
-      transformation functions
+    -   Clean, understandable default behavior
+    -   Optional parameters for advanced logging that don't complicate basic usage
+    -   Consistent interface across all transformation functions
 2.  Performance considerations
-    - Minimal overhead for basic usage scenarios
-    - Efficient handling of large datasets without
-      memory issues
-    - Memory-efficient log storage for extended
-      processing
+    -   Minimal overhead for basic usage scenarios
+    -   Efficient handling of large datasets without memory issues
+    -   Memory-efficient log storage for extended processing
 3.  Documentation requirements
-    - Clear examples showing basic usage patterns
-    - Progressive documentation that introduces
-      advanced features naturally
-    - Examples showing how logging fits into
-      typical workflows
+    -   Clear examples showing basic usage patterns
+    -   Progressive documentation that introduces advanced features naturally
+    -   Examples showing how logging fits into typical workflows
 
 ## Context and considerations
 
 ### Design patterns and principles
 
-The logging system follows established software
-design patterns that promote maintainability and
-flexibility while keeping the code accessible to R
-users who may not be familiar with formal design
-patterns.
+The logging system follows established software design patterns that promote maintainability and flexibility while keeping the code accessible to R users who may not be familiar with formal design patterns.
 
 #### Progressive disclosure
 
-This pattern reveals complexity only as needed,
-making our functions approachable while supporting
-advanced use cases. For example, a new user might
-start with basic function calls:
+This pattern reveals complexity only as needed, making our functions approachable while supporting advanced use cases. For example, a new user might start with basic function calls:
 
-> update the example below for a derived function
-> like BMI.
+> update the example below for a derived function like BMI.
 
-```r
+``` r
 result <- standardize_age(age_vector, units_vector)
 ```
 
 As their needs grow, they can add custom logging:
 
-```r
+``` r
 Copyresult <- standardize_age(age_vector, units_vector,
                          log_fn = my_custom_logger)
 ```
 
 #### Observer pattern
 
-This pattern separates the core transformation
-logic from logging, allowing users to "observe"
-the process without changing it. This separation
-means we can enhance logging without touching the
-core transformation code.
+This pattern separates the core transformation logic from logging, allowing users to "observe" the process without changing it. This separation means we can enhance logging without touching the core transformation code.
 
 #### Strategy pattern
 
-This pattern allows different logging approaches
-through a consistent interface. Users can plug in
-their preferred logging strategy while our
-functions remain unchanged.
+This pattern allows different logging approaches through a consistent interface. Users can plug in their preferred logging strategy while our functions remain unchanged.
 
 ### R ecosystem compatibility
 
-Our design prioritizes harmony with existing R
-workflows:
+Our design prioritizes harmony with existing R workflows:
 
 #### Base R compatibility
 
-- Uses familiar warning() mechanism by default
-- Follows R's standard approaches to error
-  handling
-- Maintains consistent behavior with base R
-  functions
+-   Uses familiar warning() mechanism by default
+-   Follows R's standard approaches to error handling
+-   Maintains consistent behavior with base R functions
 
 #### Tidyverse alignment
 
-- Supports typical tidyverse programming patterns
-- Maintains pipe-friendly interfaces
-- Follows tidyverse naming conventions
+-   Supports typical tidyverse programming patterns
+-   Maintains pipe-friendly interfaces
+-   Follows tidyverse naming conventions
 
 #### External logging libraries
 
-(For consideration or not sure about this.) While
-we acknowledge the existence of established
-logging libraries like futile.logger and logger,
-our current focus is on providing essential
-logging capabilities without introducing
-additional dependencies. Users who prefer these
-libraries can integrate them through our custom
-logging function parameter. [Example
-implementation section remains the same as before]
+(For consideration or not sure about this.) While we acknowledge the existence of established logging libraries like futile.logger and logger, our current focus is on providing essential logging capabilities without introducing additional dependencies. Users who prefer these libraries can integrate them through our custom logging function parameter. \[Example implementation section remains the same as before\]
