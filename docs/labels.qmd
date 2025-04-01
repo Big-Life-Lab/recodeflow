@@ -129,7 +129,7 @@ This ensures that data frames processed by `recodeflow` remain fully compatible 
 
 ## 2. Support for variable and value labels
 
-Both variable and value labels will be fully supported, as each serves a different purpose in data documentation. A variable label is a short description of the meaning of a column (variable), whereas value labels provide descriptive text for the coded values that a variable can take (especially important for categorical or factor-like variables) ￼. `recodeflow` will implement systems for both:
+Both variable and value labels will be fully supported, as each serves a different purpose in data documentation. A variable label is a short description of the meaning of a column (variable), whereas value labels provide descriptive text for the coded values that a variable can take (especially important for categorical or factor-like variables). `recodeflow` will implement systems for both:
 
 - **Variable Labels:** Each variable can have a single descriptive label (and potentially a longer description or definition separately). For example, a column age might have a variable label "Age of respondent (years)". These will be stored as an attribute (e.g., `attr(da$age, "label") = "Age of respondent (years)"`) and also recorded in the metadata files (the variables sheet) so that the information is centralized. User-friendly functions will be provided to set and get these labels (e.g., `set_variable_label(data, var, label) and get_variable_label(data, var)`), likely as wrappers around existing functions for convenience. This ensures that assigning a label updates both the R object and the metadata files for consistency.
 
@@ -167,9 +167,9 @@ This approach strikes a balance between maintaining authoritative metadata and p
 
 Handling labels should not significantly degrade performance, even for large datasets. Optimizations will be built into label storage and manipulation to minimize memory and CPU overhead:
 
-- **Memory efficiency:** Storing labels as attributes (which are essentially small vectors or strings attached to each column) is generally lightweight. A variable label is just a single string, and value labels are a vector of label mappings which, in most cases, is much smaller than the data itself (since it only has one entry per unique code). We will ensure that these attributes are only as large as necessary and avoid duplicating data. For example, if a variable has 100 possible values but only 5 are actually labeled, we will only store those 5 label pairs, not all 100 values. This is consistent with how `haven`\_`labelled` works (labels need not be exhaustive) ￼. For extremely large taxonomies or code lists, we will document best practices (such as using factors or reference tables) to avoid enormous in-memory label vectors.
+**Memory efficiency:** Storing labels as attributes (which are essentially small vectors or strings attached to each column) is generally lightweight. A variable label is just a single string, and value labels are a vector of label mappings which, in most cases, is much smaller than the data itself (since it only has one entry per unique code). We will ensure that these attributes are only as large as necessary and avoid duplicating data. For example, if a variable has 100 possible values but only 5 are actually labeled, we will only store those 5 label pairs, not all 100 values. This is consistent with how `haven_labelled` works, where labels need not be exhaustive (Wickham, 2021).
 
-- **Avoiding data copies:** In R, adding or modifying attributes to a vector can sometimes trigger a copy of that vector in memory. To mitigate this, `recodeflow` will try to set labels at the time of variable creation or recoding (so that attributes are added before the variable is used widely, reducing duplication in memory). Bulk operations will be used where possible – for instance, applying variable labels to all data frame columns in a single function call, rather than iterating over columns in R, to leverage vectorized internal operations. The set_data_labels() function (or its improved equivalent) will label an entire dataset in one go, which is more efficient than labeling column-by-column in a loop ￼.
+**Avoiding data copies:** In R, adding or modifying attributes to a vector can sometimes trigger a copy of that vector in memory (Wickham, 2019). To mitigate this, `recodeflow` will implement efficient label operations, such as applying variable labels to all data frame columns in a single function call rather than iterating over columns individually. This approach leverages vectorized operations, which are more memory-efficient in R.
 
 - **Efficient lookup and manipulation:** Functions to get or set labels will be optimized to avoid unnecessary data scanning. Retrieving a label should be near O(1) (constant time) since it can directly fetch the attribute or look up in a keyed sidecar table. Setting a label will typically be O(1) for a variable label (assign an attribute) or O(m) for m labels in a value labels vector (which is usually small). We will also consider using `data.table` or keyed `tibbles` for the metadata files to allow fast joins or lookups by variable name when applying labels to data, ensuring that even if there are thousands of variables, the labeling operation remains fast.
 
@@ -207,7 +207,32 @@ In summary, `recodeflow`'s labeling system will be highly interoperable. By usin
 
 In summary, tagged NA support and labeling will be harmonized. A labeled dataset in `recodeflow` can cleanly include multiple types of missing values with their own labels, without conflict. The label implementation will not preclude any planned missing data features; rather, it will complement them by providing the human-readable descriptors of what those missing codes mean. This ensures that when the separate missing data handling is introduced, it plugs into the labeling system effortlessly. (For example, a function to convert user-missing codes to NA could automatically carry over the label to the tagged NA value using our label assignment functions.) Even though tagged NA is specified separately, this document acknowledges its relevance so that we design labels with missing data in mind from the start.
 
-## 7.  Versioning strategy
+## 7. Extensibility for additional metadata
+
+While the primary focus is on labels, the design will allow extensibility to other metadata fields such as short vs. long labels, descriptions, and notes. We will incorporate these to complement the existing variables and variable_details structure, rather than overloading the R objects with extra attributes.
+
+- **Short and long variable labels:** Many datasets distinguish between a short label (a brief name) and a longer description. For example, a variable BMI might have a short label "Body Mass Index" and a long description "BMI, calculated as weight (kg) / height (m)^2". In `recodeflow`, we plan to support storing both. The variables sheet can have separate columns, e.g., label_short and label_long (or description). The short label would be what we treat as the "label" attribute in R (concise enough to show in a data viewer), while the long label/description would be stored only in the metadata files (and used for documentation generation like codebooks or when someone needs more context). This aligns with practices in codebook standards and IPUMS-like metadata, where variable labels and descriptions are distinct fields. We will ensure the functions allow access to both (e.g., **get_variable_description(name)** might retrieve the long description). However, to keep the R object lightweight, we will not attach the full long description as an attribute to every vector (which could be quite large text). Instead, the long descriptions live in `variable_details` or variables files and can be queried on demand.
+
+- **Additional fields (notes, sources, etc.):** The variable_details file already supports a Notes column (used to convey special instructions or cautions about the variable). We will continue to support this and similar fields. Notes are typically free-form text explaining quirks in recoding or definitions. Other metadata we may consider: data source, survey question text, units of measurement, allowed ranges, etc., depending on user needs. Our principle is to house this information in the metadata files rather than in the main data structure. This is because the metadata files can be easily extended with new columns without affecting how the data frame operates in R. If we were to add every piece of metadata as an attribute to the data frame, it would become cumbersome to manage. It might bloat the object (and many R functions would ignore or drop those attributes anyway). Using the metadata files approach, we can add as many fields as needed (within reason) to variables.csv/variable_details.csv. For example, adding a units column for variables that have units (like "kg" for weight) could be done in the CSV, and `recodeflow` can have a function get_units(var) to retrieve it.
+
+- **Integration with visualization and reporting:** The metadata stored in the central repository will be accessible for creating tables and visualizations, ensuring that variable and value labels are consistently used throughout the analysis workflow. By providing helper functions that access the metadata repository, users can automatically use the correct labels in plots (e.g., axis titles in ggplot2) and tables (e.g., variable names and value labels in gt tables) without manually copying or redefining them. This maintains the single source of truth principle and ensures that when labels are updated in the metadata files, all outputs automatically reflect these changes.
+
+- **Maintaining compatibility with metadata structure:** We will not create a complex S3 class to hold all metadata in R at this time. Instead, the metadata files (likely tibbles read from CSV) will remain the primary carriers of extensive metadata. This decision is due to resource constraints and also to maintain clarity – the `recodeflow` workflow already expects these files, so expanding them is natural. We will, however, provide convenient R accessors. Perhaps we will have an internal list or environment where the metadata tables are stored when loaded (for quick lookup), and methods to query them. But the raw storage stays as two data frames with defined columns. This also makes it easy to export the entire metadata in one go (since it's basically those two tables).
+
+- **Functions for setting/getting metadata:** To manage these metadata fields, we'll implement functions akin to:
+
+    - `set_variable_metadata(var, short_label=NULL, long_label=NULL, description=NULL, notes=NULL, ...)` that can take one or more metadata pieces and assign them (updating the metadata files and any relevant attribute, like the short label to the data).
+
+    - `get_variable_metadata(var)` which returns a list or tibble of all stored metadata for that variable (name, labels, description, etc.).
+
+    - Specific helpers like `set_notes(var, text)` or `get_notes(var)` for the Notes field, to encourage documentation of variables within R. These functions will abstract the underlying data structure (CSV or tibble), giving the user a clear API. Internally, they manipulate the variables/variable_details files and possibly attributes. By doing this, we ensure efficiency (directly editing a data frame in memory and then writing out to CSV when needed) and reduce user error (it's safer than manually editing the files without guidance).
+
+- **Ensuring minimal coupling to data object:** Because we are not embedding all metadata in the data frame, we avoid issues with large attributes. The only attribute attached by default will be the short variable label and the value labels. Everything else (notes, long descriptions, etc.) stays in the metadata files. This keeps the data frame S3 object clean and focused, which is important given that some R functions drop unknown attributes. We will document that the full metadata is always available via `recodeflow`'s metadata files and functions, even if not attached to the data frame.
+
+In summary, the label functionality is built with extensibility in mind: today it's labels, tomorrow it could be definitions, provenance, etc. The design relies on the flexible metadata files approach, avoiding heavy modifications to the core data object. This allows `recodeflow` to grow in metadata scope without large refactoring. We will maintain backward compatibility with projects that might not use new fields (extra columns can be optional), and ensure that any additional metadata fields do not break existing functions. By doing so, we keep `recodeflow` lean yet ready to capture rich data documentation as needed.
+
+
+## 8.  Versioning strategy
 
 `recodeflow` will continue to use GitHub-based versioning for the package to manage releases of the labeling functionality, and we will consider mechanisms for tracking changes to labels over time as part of metadata version control.
 
@@ -221,7 +246,7 @@ In summary, tagged NA support and labeling will be harmonized. A labeled dataset
 
 In conclusion, the versioning strategy for labeling is two-fold: maintaining package versions via GitHub (ensuring users know which features are available in their version of `recodeflow`), and planning for future metadata version tracking as an enhancement. We will continue with GitHub for the immediate needs (including possibly GitHub's Projects or issues to track progress of the labeling feature ￼) and keep an eye on how to implement more granular label version tracking in a user-friendly way later on. Proper versioning guarantees that improvements to labeling are delivered in a clear timeline and that users can refer to documentation appropriate for their version of `recodeflow`.
 
-## 8. Extensibility for additional metadata
+## 9. Extensibility for additional metadata
 
 While the primary focus is on labels, the design will allow extensibility to other metadata fields such as short vs. long labels, descriptions, and notes. We will incorporate these to complement the existing variables and variable_details structure, rather than overloading the R objects with extra attributes.
 
@@ -245,7 +270,7 @@ While the primary focus is on labels, the design will allow extensibility to oth
 
 In summary, the label functionality is built with extensibility in mind: today it's labels, tomorrow it could be definitions, provenance, etc. The design relies on the flexible metadata files approach, avoiding heavy modifications to the core data object. This allows `recodeflow` to grow in metadata scope without large refactoring. We will maintain backward compatibility with projects that might not use new fields (extra columns can be optional), and ensure that any additional metadata fields do not break existing functions. By doing so, we keep `recodeflow` lean yet ready to capture rich data documentation as needed.
 
-## 9. Technical documentation and usability
+## 10. Technical documentation and usability
 
 Clear documentation and sensible behavior are critical for user adoption of the new labeling features. We will provide comprehensive technical documentation and define how labels behave under various data transformations to ensure the feature is both machine-actionable and human-readable in practice.
 
@@ -285,7 +310,7 @@ Clear documentation and sensible behavior are critical for user adoption of the 
 
 By thoroughly documenting these behaviors and providing best practice tips, we aim to make the labeling feature both powerful and approachable. We will likely include an FAQ section in the vignette for questions like "Why did my labels disappear after using X function?" and answer that with explanations (often pointing out it's how base R or dplyr works) and solutions (like reapply the labels or use `recodeflow` functions that preserve them). The combination of clear documentation, examples, and consistent function design will ensure that users can confidently apply and maintain labels through all stages of their data processing.
 
-## 10. Potential challenges and open questions
+## 11. Potential challenges and open questions
 
 Implementing the above functionalities comes with some challenges and open questions. We identify these potential issues and outline how we plan to address or investigate them:
 
@@ -302,39 +327,67 @@ In conclusion, while the label functionality will greatly enhance `recodeflow`, 
 # References
 
 1.  **Wickham, H., & Bryan, J.** (2019). *R packages (2nd edition)*. O'Reilly Media.
+
     - This resource covers best practices for developing and maintaining R packages, including documentation conventions and metadata handling.
+
     - Link: <https://r-pkgs.org/>
+
 2.  **Lüdecke, D.** (2018). *sjlabelled: Labelled data utility functions (R package)*.
+
     - Discusses utility functions for working with labelled data in R, including setting and retrieving value/variable labels.
+
     - Available on CRAN: <https://CRAN.R-project.org/package=sjlabelled>
+
 3.  **Haven package**.
+
     - Offers functions for reading and writing data from SAS, SPSS, and Stata, preserving labeled data structures. Also includes `tagged_na()` for multiple missing value categories.
+
     - CRAN: <https://CRAN.R-project.org/package=haven>
+
     - GitHub: <https://github.com/tidyverse/haven>
+
 4.  **Labelled package**.
+
     - Provides a framework for working with labelled data in R, including `var_label()` and `val_labels()` functions.
+
     - CRAN: <https://CRAN.R-project.org/package=labelled>
+
 5.  **Tidy data principles**:
+
     - Hadley Wickham (2014). *Tidy Data*. *Journal of Statistical Software, 59*(10). DOI: [10.18637/jss.v059.i10](https://doi.org/10.18637/jss.v059.i10)
+
     - Explains the fundamentals of organizing data for analysis, relevant to how labels may be preserved or lost during reshaping operations (e.g., pivoting).
+
 6.  **DDI Alliance**. (2022). *Data Documentation Initiative (DDI) Codebook Specification*.
+
     - Official specification for describing and documenting survey data, covering variable-level and value-level metadata.
+
     - Link: <https://ddialliance.org/Specification/Codebook>
+
 7.  **LinkML**: *Linked Modeling Language*.
+
     - A schema language for creating data models that can be translated into various formats (YAML, JSON, JSON-Schema, etc.), useful for advanced metadata interoperability.
+
     - GitHub: <https://github.com/linkml/linkml>
+
 8.  **IPUMS Metadata**.
+
     - IPUMS data projects (e.g., IPUMS International) provide highly structured metadata including variable labels, value labels, and detailed survey documentation.
+
     - Link: <https://international.ipums.org/international/>
+
 9.  **Van den Broeck, J., Cunningham, S. A., Eeckels, R., & Herbst, K.** (2005). *Data cleaning: Detecting, diagnosing, and editing data abnormalities*. *PLoS Medicine, 2*(10), e267. DOI: [10.1371/journal.pmed.0020267](https://doi.org/10.1371/journal.pmed.0020267)
+
     - Highlights the importance of thorough data documentation, including clear label definitions, for data cleaning and validation in epidemiological research.
+
 10. **Peng, R. D.** (2011). *Reproducible research in computational science*. *Science, 334*(6060), 1226–1227. DOI: [10.1126/science.1213847](https://doi.org/10.1126/science.1213847)
 
 - Argues that clear, labeled data is critical to reproducibility, emphasizing the need for machine-readable metadata.
 
-11. **Friedman, J., Hastie, T., & Tibshirani, R.** (2001). *The elements of statistical learning*. Springer.\
+11. **Friedman, J., Hastie, T., & Tibshirani, R.** (2001). *The elements of statistical learning*. Springer.
 
 - Although primarily about predictive modeling, stresses the importance of clear, interpretable data (including labels) in applied statistical and machine learning contexts.
+
 - Link: <https://web.stanford.edu/~hastie/ElemStatLearn/>
 
 12. **Grolemund, G., & Wickham, H.** (2017). *R for data science*. O'Reilly Media. DOI: [10.5281/zenodo.1287633](https://doi.org/10.5281/zenodo.1287633)
@@ -344,108 +397,123 @@ In conclusion, while the label functionality will greatly enhance `recodeflow`, 
 13. **SAS Institute Inc.**
 
 - SAS has longstanding practices for labeling variables and values within data sets, which heavily influenced the design of `haven`.
+
 - Documentation link: <https://documentation.sas.com/>
 
 14. **StataCorp LLC**
 
 - Stata label definitions similarly inform how `haven` works with labeled data, especially value labels and user-defined missing values.
+
 - Documentation link: <https://www.stata.com/features/documentation/>
 
 15. **ISO 11179**
 
 - An international standard for metadata registries, relevant for conceptual guidance on naming and labeling variables.
+
 - Link: <https://metadata-standards.org/11179/>
 
 ## References on handling variable labels in R
 
-1.  **Leveraging Labelled Data in R**
+1.  **Leveraging labelled data in R**
 
     This article discusses the characteristics of labelled data and provides practical tips for analyzing such data in R. It emphasizes the use of the `haven`, `labelled`, and `sjlabelled` packages to import and manage data from SPSS, SAS, and Stata, preserving variable and value labels.
 
     *Link:* <https://www.pipinghotdata.com/posts/2020-12-23-leveraging-labelled-data-in-r/>
 
-2.  **The Case for Variable Labels in R**
+2.  **The case for variable labels in R**
 
     This post advocates for the integration of variable labels into R workflows, highlighting their benefits in enhancing data understanding and collaboration. It demonstrates how to assign and utilize variable labels using various R packages, and how these labels can improve the clarity of data summaries and visualizations.
 
     *Link:* <https://www.pipinghotdata.com/posts/2022-09-13-the-case-for-variable-labels-in-r/>
 
-3.  **Working with SPSS Labels in R**
+3.  **Working with SPSS labels in R**
 
     This blog post provides an overview of functions in R for handling survey data labels, particularly focusing on data imported from SPSS. It covers practical aspects of managing variable and value labels to facilitate data analysis.
 
     *Link:* <https://martinctc.github.io/blog/working-with-spss-labels-in-r/>
 
-4.  **Haven 1.0.0 Release Notes**
+4.  **Haven 1.0.0 release notes**
 
     The release notes for `haven` version 1.0.0 detail enhancements in handling variable formats and labels. The update includes improved support for reading and writing variable labels and formats, which are stored as attributes on vectors.
 
     *Link:* <https://posit.co/blog/haven-1-0-0/>
 
-5.  **Variable and Value Labels Support in Base R and Other Packages**
+5.  **Variable and value labels support in base R and other packages**
 
     This vignette from the `expss` package discusses the support for variable and value labels in base R and other packages. It explains how variable labels provide descriptive metadata for variables, aiding in data interpretation and analysis.
 
     *Link:* <https://cran.r-project.org/web/packages/expss/vignettes/labels-support.html>
 
-6.  **Assigning Variable Labels to Data Frame Columns in R**
+6.  **Assigning variable labels to data frame columns in R**
 
     This Stack Overflow discussion addresses methods for assigning variable labels to data frame columns in R, particularly using the `Hmisc` package. It provides practical solutions for managing variable labels in data frames.
 
     *Link:* <https://stackoverflow.com/questions/27347548/r-assign-variable-labels-of-data-frame-columns>
 
-7.  **Displaying Variable Labels Instead of Variable Names**
+7.  **Displaying variable labels instead of variable names**
 
     This Stack Overflow thread explores ways to display variable labels in a data frame instead of variable names, which can enhance the readability of data summaries and outputs.
 
     *Link:* <https://stackoverflow.com/questions/49694612/displaying-variable-label-instead-of-variable-names>
 
-8.  **Adopting Standard Variable Labels Solves Many Problems**
+8.  **Adopting standard variable labels solves many problems**
 
     This journal article discusses how adopting standard variable labels can address various issues in data analysis and sharing. It emphasizes the importance of setting labels at the time of data publication to enhance clarity and reproducibility.
 
     *DOI:* [10.1177/20597991211026616](https://doi.org/10.1177/20597991211026616)
 
-9.  **Dealing with Messy Data**
+9.  **Dealing with messy data**
 
     Chapter 5 of "Modern Statistics with R" focuses on handling messy data, including techniques for managing and cleaning data to prepare it for analysis. While not exclusively about labels, it provides essential practices for data preprocessing.
 
     *Link:* <https://modernstatisticswithr.com/messychapter.html>
 
-10. **Tidy Data**
+10. **Tidy data**
 
     Chapter 12 of "R for Data Science" introduces the concept of tidy data, a consistent way of organizing data in R. Tidy data principles facilitate easier manipulation and analysis, which can be complemented by the use of variable labels for clarity.
 
     *Link:* <https://r4ds.had.co.nz/tidy-data.html>
 
-11. **Dealing with Difficult Minority Labels in Imbalanced Multilabel Data Sets**
+11. **Dealing with difficult minority labels in imbalanced multilabel data sets**
 
     This research paper delves into the challenges of handling imbalanced multilabel datasets, proposing methods to address difficulties associated with minority labels. It provides insights into advanced data labeling issues in complex datasets.
 
     *DOI:* [10.48550/arXiv.1802.05033](https://doi.org/10.48550/arXiv.1802.05033)
 
+12. **haven: Import and export 'SPSS', 'Stata' and 'SAS' files** 
+
+    The `haven` package documentation provides details on how labels are handled when importing and exporting data between R and other statistical software formats.
+    
+    *Link:* <https://CRAN.R-project.org/package=haven>
+
+13. **Advanced R**
+
+    This book provides in-depth coverage of R's memory management and how operations like attribute modification can trigger copying of data objects in memory.
+    
+    *Link:* <https://adv-r.hadley.nz/>
+
 ## Best practices in data science for handling variable labels
 
-1.  **Consistent Use of Variable Labels**
+1.  **Consistent use of variable labels**
 
     Incorporate variable labels consistently throughout your data analysis workflow to enhance clarity and maintain context, especially when dealing with large or complex datasets.
 
-2.  **Utilizing Appropriate R Packages**
+2.  **Utilizing appropriate R packages**
 
     Leverage R packages such as `haven`, `labelled`, `sjlabelled`, and `Hmisc` to import, manage, and export data with variable labels effectively. These packages offer functions to assign, retrieve, and manipulate labels seamlessly.
 
-3.  **Creating and Maintaining Data Dictionaries**
+3.  **Creating and maintaining data dictionaries**
 
     Develop comprehensive data dictionaries that document variable names, labels, and descriptions. This practice facilitates better understanding among collaborators and aids in maintaining consistent data documentation.
 
-4.  **Preserving Labels During Data Transformation**
+4.  **Preserving labels during data transformation**
 
     Ensure that variable labels are retained during data transformation and manipulation processes. Some functions may drop attributes, so it's crucial to verify and reassign labels as needed after such operations.
 
-5.  **Incorporating Labels in Data Output**
+5.  **Incorporating labels in data output**
 
     When generating reports, tables, or visualizations, utilize variable labels to produce more interpretable and user-friendly outputs. This approach enhances communication of results to stakeholders who may not be familiar with the underlying variable names.
 
-6.  **Standardizing Labeling Conventions**
+6.  **Standardizing labeling conventions**
 
     Adopt standard conventions for variable labeling, including consistent naming schemes and descriptive labels
