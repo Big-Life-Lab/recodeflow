@@ -17,10 +17,10 @@ title: "Scope and specifications for labels and metadata in `recodeflow`" format
 
 This document outlines the scope and key technical requirements for improving how **`recodeflow`** handles variable and value labels (metadata). The primary objectives are:
 
-- **Enable reproducible, standardized metadata**: Use proven conventions from `` `haven` `` and `` `labelled` `` so that data analysts can apply labels consistently in R.
+- **Enable reproducible, standardized metadata**: Use established conventions from `` `haven` `` and `` `labelled` `` so data analysts can apply labels consistently in R.
 - **Facilitate collaboration**: Store metadata in human-readable CSV files (`variables` and `variable_details`) for project teams, including those who are not R users.
 - **Support data transformations**: Preserve labels as data is pivoted, joined, or subsetted, while respecting the changing context of variables.
-- **Plan for future needs**: Align with existing R ecosystem packages and keep open the possibility of supporting DDI, LinkML, or extended role-based metadata in subsequent releases.
+- **Plan for future needs**: Align with existing R ecosystem packages and keep the possibility of supporting standards such as DDI and LinkML open.
 
 ## 1. Integration with the R ecosystem
 
