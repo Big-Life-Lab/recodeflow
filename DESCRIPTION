@@ -26,6 +26,7 @@ LazyData: true
 RoxygenNote: 7.3.2
 Suggests:
     DT,
+    devtools,
     kableExtra,
     knitr,
     readr,
