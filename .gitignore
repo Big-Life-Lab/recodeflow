@@ -4,3 +4,7 @@
 
 # Mac
 .DS_Store
+
+*.code-workspace
+
+docs/.$recodeflow.drawio.bkp
