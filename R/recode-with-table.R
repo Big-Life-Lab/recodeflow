@@ -1366,8 +1366,6 @@ calculate_custom_function_row_value <-
 #' @return A boolean
 #' @keywords internal
 is_derived_var <- function(variable_details_row) {
-  derived_var_regex <- "DerivedVar::\\[(.+?)\\]|DerivedVar::\\[\\]"
-  return(length(grep(
-    derived_var_regex, variable_details_row[1, pkg.env$columns.variableStart]
-  )) > 0)
+  value = variable_details_row[1, pkg.env$columns.variableStart]
+  return(grepl("DerivedVar::\\[", value))
 }
