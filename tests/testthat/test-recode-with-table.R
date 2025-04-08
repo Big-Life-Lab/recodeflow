@@ -4,6 +4,12 @@ test_that("strip_prefix removes the prefix", {
   expect_equal(strip_prefix("p::[x, y]"), "[x, y]")
 })
 
+test_that("strip_brackets removes the brackets", {
+  expect_equal(strip_brackets("x"), "x")
+  expect_equal(strip_brackets("[x]"), "x")
+  expect_equal(strip_brackets("[x, y]"), "x, y")
+})
+
 test_that("When the start variable is a derived variable, it should correctly recode", {
   data <- data.frame(
     start_variable_one = c(1)
