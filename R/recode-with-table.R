@@ -208,6 +208,10 @@ rec_with_table <-
            name_of_environment_to_load = NULL,
            append_non_db_columns = FALSE,
            tables = list()) {
+
+    # parameters aliases
+    env_name = name_of_environment_to_load
+
     # If custom_function_path is passed, source it to load all the custom
     # functions in the file into the R environment
     if (!is.null(custom_function_path)) {
@@ -216,43 +220,23 @@ rec_with_table <-
 
     # If the user passed the name_of_environment_to_load parameter and the
     # variables_details or variables parameters are NULL, load them from the
-    # environment they passed in
-    if (!is.null(name_of_environment_to_load)) {
-      if (is.null(variable_details)) {
-        message(
-          paste0(
-            "No variable_details detected.
-              Loading",
-            name_of_environment_to_load,
-            "variable_details"
-          )
-        )
-        data(variable_details,
-             package = name_of_environment_to_load,
-             envir = environment())
-      }
-
+    # environment they passed in.
+    #
+    # Otherwise if either variables or the variable_details is NULL and they
+    # did not pass in an environment to load them from, throw an error
+    if (!is.null(env_name)) {
       if (is.null(variables)) {
-        message(
-          paste0(
-            "No variables detected.
-              Loading" ,
-            name_of_environment_to_load,
-            "variables"
-          )
-        )
-        data(variables, package = name_of_environment_to_load,
-             envir = environment())
+        message(paste0("Loading variables from " , env_name))
+        data(variables, package = env_name, envir = environment())
       }
-
-    }
-    # Otherwise if either variables or the variable_details is NULL and they did
-    # not pass in an environment to load them from, throw an error
-    else if (is.null(variables) || is.null(variable_details)) {
-      stop(
-        "No name_of_environment_to_load was passed to load variables and variable details from,
-           as well as no variables or variable details was passed. Stopping execution"
-      )
+      if (is.null(variable_details)) {
+        message(paste0("Loading variable_details from ", env_name))
+        data(variable_details, package = env_name, envir = environment())
+      }
+    } else if (is.null(variables) || is.null(variable_details)) {
+      stop("No name_of_environment_to_load was passed to load variables and
+           variable details from, and either variables or variable_details are
+           unassigned. Stopping execution")
     }
 
     # If the user did not pass in a database_name parameter, then use the name
@@ -1375,4 +1359,3 @@ is_derived_var <- function(variable_details_row) {
     derived_var_regex, variable_details_row[1, pkg.env$columns.VariableStart]
   )) > 0)
 }
-
