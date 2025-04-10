@@ -2,6 +2,9 @@
 # in the magritr package for piping however it is not exported so cran check throws a note.
 . <- NULL
 
+# stdext
+`%notin%` <- Negate(`%in%`)
+
 #' @title Checks whether two values are equal including NA
 #' @description Compared to the base "==" operator in R, this function returns true if the two values are NA
 #' whereas the base "==" operator returns NA
