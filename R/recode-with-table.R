@@ -249,57 +249,8 @@ rec_with_table <-
       database_name <- deparse(substitute(data))
     }
 
-    # The next code chunk will create the variable details file that does not
-    # have any template variables. All variables which implement a template
-    # variable will have their specifications replaced by those of the template
-    # variable.
-    # This is the variable details sheet that should be used for the
-    # rest of the program.
-    no_template_variables_variable_details <- variable_details
-    # If the template variable isn't in the variable details sheet then this
-    # is a pre template variable sheet. Don't run the code.
-    if(variable_details_columns$template_variable$name %in% colnames(variable_details)) {
-      no_template_variables_variable_details <- variable_details[
-        variable_details[[variable_details_columns$template_variable$name]] == variable_details_columns$template_variable$values$no,
-      ]
-      template_variable_names <- unique(variable_details[
-        variable_details[[variable_details_columns$template_variable$name]] == variable_details_columns$template_variable$values$yes,
-        pkg.env$columns.Variable
-      ])
-      for(template_variable_name in template_variable_names)
-      {
-        template_variable_rows <- variable_details[
-          variable_details[[pkg.env$columns.Variable]] == template_variable_name,
-        ]
-        # All variables which implement this template variable
-        template_variable_variable_names <- variable_details[
-          variable_details[[variable_details_columns$template_variable$name]] == template_variable_name,
-          pkg.env$columns.Variable
-        ]
-        for(template_variable_variable_name in template_variable_variable_names)
-        {
-          template_variable_variable_rows <- variable_details[
-            variable_details[[pkg.env$columns.Variable]] == template_variable_variable_name,
-          ]
-          updated_template_variable_variable_rows <- data.frame(
-            template_variable_rows
-          )
-          updated_template_variable_variable_rows[[pkg.env$columns.Variable]]  <- rep(
-            template_variable_variable_rows[1, pkg.env$columns.Variable],
-            nrow(template_variable_rows)
-          )
-          updated_template_variable_variable_rows[[pkg.env$columns.VariableStart]] <- rep(
-            template_variable_variable_rows[1, pkg.env$columns.VariableStart],
-            nrow(template_variable_rows)
-          )
-
-          no_template_variables_variable_details <- rbind(
-            no_template_variables_variable_details,
-            updated_template_variable_variable_rows
-          )
-        }
-      }
-    }
+    # expand templates
+    variable_details <- expand_template_variables(variable_details)
 
     # If the passed data parameter is a list, then make sure that the
     # each data in the list has a database name in the database_name parameter
@@ -317,7 +268,7 @@ rec_with_table <-
             database_name = database_name,
             print_note = notes,
             else_value = else_value,
-            variable_details = no_template_variables_variable_details,
+            variable_details = variable_details,
             append_to_data = append_to_data,
             append_non_db_columns = append_non_db_columns,
             log = log,
@@ -346,7 +297,7 @@ rec_with_table <-
         database_name = database_name,
         print_note = notes,
         else_value = else_value,
-        variable_details = no_template_variables_variable_details,
+        variable_details = variable_details,
         append_to_data = append_to_data,
         append_non_db_columns = append_non_db_columns,
         log = log,
@@ -373,6 +324,68 @@ rec_with_table <-
 
     return(data)
   }
+
+expand_template_variables <- function(variable_details) {
+  vd <- variable_details
+
+  var_col <- pkg.env$columns.Variable
+  varstart_col <- pkg.env$columns.VariableStart
+
+  tmplvar <- variable_details_columns$template_variable
+  tmplvar_col <- tmplvar$name
+  yes <- tmplvar$values$yes
+  no <- tmplvar$values$no
+
+  # if the templateVariable column isn't in the variable details sheet, then
+  # there are no templates and nothing more to do here
+  if (tmplvar_col %notin% colnames(vd))
+    return (vd)
+
+  # assign all rows not using templates
+  result <- vd[
+    vd[[tmplvar_col]] == no,
+  ]
+
+  # XXX: "yes" means that it's the actual template variable definition itself
+  template_variable_names <- unique(vd[
+    vd[[tmplvar_col]] == yes,
+    var_col
+  ])
+
+  # iterate templates
+  for (tmpl_name in template_variable_names) {
+
+    rows_using_tmpl <- vd[
+      vd[[var_col]] == tmpl_name,
+    ]
+    rowcount = nrow(rows_using_tmpl)
+
+    # all variables that implement this template variable
+    # ex: primary_lang, secondary_lang
+    tmpl_vars <- vd[
+      vd[[tmplvar_col]] == tmpl_name,
+      var_col
+    ]
+
+    # iterate template variables, meaning the variables the template consists
+    # of
+    for (tmpl_var in tmpl_vars) {
+      tmpl_var_rows = vd[
+        vd[[var_col]] == tmpl_var,
+      ]
+      var1 = tmpl_var_rows[1, var_col]
+      startvar1 = tmpl_var_rows[1, varstart_col]
+
+      expanded <- data.frame(rows_using_tmpl)
+      expanded[[var_col]] <- rep(var1, rowcount)
+      expanded[[varstart_col]] <- rep(startvar1, rowcount)
+
+      result <- rbind(result, expanded)
+    }
+  }
+
+  return (result)
+}
 
 # Creates inputs and runs recode functions
 recode_call <-
