@@ -208,12 +208,6 @@ rec_with_table <-
            name_of_environment_to_load = NULL,
            append_non_db_columns = FALSE,
            tables = list()) {
-    # Convert passed id_role_name to list in case its a string.
-    # This makes it work with the select_vars_by_role function.
-    # if (!is.list(id_role_name)) {
-    #   id_role_name <- list(id_role_name)
-    # }
-
     # If custom_function_path is passed, source it to load all the custom
     # functions in the file into the R environment
     if (!is.null(custom_function_path)) {
