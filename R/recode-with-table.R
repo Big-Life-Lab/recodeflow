@@ -252,45 +252,37 @@ rec_with_table <-
     # expand templates
     variable_details <- expand_template_variables(variable_details)
 
-    # If the passed data parameter is a list, then make sure that the
-    # each data in the list has a database name in the database_name parameter
-    # by checking their length
-    if ("list" %in% class(data) &&
-        length(database_name) == length(data)) {
-      # Iterate through each database name and recode the corresponding
-      # data
+    # If the passed data parameter is a list, then make sure that each data in
+    # the list has a database name in the database_name parameter by checking
+    # their length
+    #
+    # Otherwise, if the data is a dataframe then the user only wants to recode
+    # one dataset. Make sure theres only one database name passed in.
+    if ("list" %in% class(data) && length(database_name) == length(data)) {
+      # Iterate through each database name and recode the corresponding data
       for (data_name in database_name) {
         # Verify that the passed name exists in the passed data
-        if (!is.null(data[[data_name]])) {
-          data[[data_name]] <- recode_call(
-            variables = variables,
-            data = data[[data_name]],
-            database_name = database_name,
-            print_note = notes,
-            else_value = else_value,
-            variable_details = variable_details,
-            append_to_data = append_to_data,
-            append_non_db_columns = append_non_db_columns,
-            log = log,
-            var_labels = var_labels,
-            tables = tables
-          )
-        } else {
+        if (is.null(data[[data_name]])) {
           stop(
             paste(
-              "The data",
-              data_name,
-              "is missing from the passed list please verify the names are
-              correct in the data list and the database_name list"
-            )
-          )
+              "The data", data_name, "is missing from the passed list, please
+              verify the names are correct in the data list and the
+              database_name list"))
         }
+        data[[data_name]] <- recode_call(
+          variables = variables,
+          data = data[[data_name]],
+          database_name = database_name,
+          print_note = notes,
+          else_value = else_value,
+          variable_details = no_template_variables_variable_details,
+          append_to_data = append_to_data,
+          append_non_db_columns = append_non_db_columns,
+          log = log,
+          var_labels = var_labels,
+          tables = tables)
       }
-    }
-    # If the data is a dataframe then the user only wants to recode one dataset.
-    # Make sure theres only one database name passed in.
-    else if ("data.frame" %in% class(data) &&
-               length(database_name) == 1) {
+    } else if ("data.frame" %in% class(data) && length(database_name) == 1) {
       data <- recode_call(
         variables = variables,
         data = data,
@@ -312,12 +304,9 @@ rec_with_table <-
       }
     } else {
       stop(
-        paste(
-          "The passed number of data does not match the passed number of
-          data_names. Please verify that the number of databases matches the number
-          of passed names.
-          Aborting operation!"
-        ),
+        "The passed number of data does not match the passed number of
+        data_names. Please verify that the number of databases matches the
+        number of passed names. Aborting operation!",
         call. = FALSE
       )
     }
