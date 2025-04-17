@@ -1,11 +1,9 @@
 ---
-title: Scoping Labels
+title: Labels
 format:
   html:
     embed-resources: true
 ---
-
-## Context
 
 Labels are vital pieces of metadata in any study that requires the use of a
 statistical program, especially those that use large datasets with numerous
@@ -50,9 +48,9 @@ level objectives:
 - **Plan for future needs**: Align with existing R ecosystem packages and keep
   the possibility of supporting standards such as DDI and LinkML open.
 
-## Scope
+The next few sections goes through the scope for labels within the library.
 
-### Variable and value labels
+## Variable and value labels
 
 There are many entities within a study that can be labelled (variables, columns, 
 column values, datasets etc.) and numerous label metadata that can be attached.
@@ -76,7 +74,7 @@ users to attach labels to these special values within continuous variables
 without needing to convert them to categorical i.e. to apply labels to only
 certain values in a column.
 
-### Variables and variable details 
+## Variables and variable details 
 
 The label metadata for variables and values should come from the variables and
 variable details sheets. Using CSV files as the storage format allows
@@ -91,7 +89,7 @@ sheet.
 The library should assume that the sheets are the source of truth for all label 
 metadata and enable its users to label any dataset using this information. 
 
-### R ecosystem 
+## R ecosystem 
 
 The library should follow best practices and guidelines from the R community for
 labelling data. This includes using any existing labelling libraries like
@@ -106,14 +104,14 @@ their labels to be exported to [SAS](https://haven.tidyverse.org/reference/read_
 and [Stata](https://haven.tidyverse.org/reference/read_dta.html) formats using
 the functions provided by these libraries.
 
-### Separation of concerns
+## Separation of concerns
 
 The library should separate the process of recoding and labels attachment. This
 provides maximum flexibility to the users who may wish to use a different
 framework for attaching labels, a different data source for the labels, or an
 unsupported label source.
 
-### Preserving Labels
+## Preserving Labels
 
 The labels that are attached to a dataset should be preserved regardless of the
 transformations applied to the dataset. Examples of transformations include
@@ -125,7 +123,7 @@ libraries like [dplyr](https://dplyr.tidyverse.org/) and
 [tidyr](https://tidyr.tidyverse.org/). Any code that could affect the label
 integrity should be documented. 
 
-### Other Metadata Standards
+## Other Metadata Standards
 
 Metadata for labels can exist in other formats like
 [DDI](https://ddialliance.org/) and [LinkML](https://linkml.io/). Manually 
@@ -134,7 +132,7 @@ be error prone and cumbersome. The library should provide functionality that
 enables users to use this metadata for example by automatically importing them
 into the sheets.
 
-### Performance
+## Performance
 
 Attaching labels should be performant, should not slow down the recoding process
 or any future operations on the data. The memory footprint of the labels should
@@ -142,16 +140,16 @@ be low for example by storing the variable labels only once per column rather
 than on all rows. The library should ensure performance by running tests against
 large datasets.
 
-### Tagged NA
+## Tagged NA
 
 The library should enable users to label the different missing values that can
-exist in each column of a dataset. Information about these tagged NA values
-(TODO add link) is described elsewhere. The sheets already allow 
+exist in each column of a dataset. Information about these [tagged 
+NA values](missing-data.qmd) is described elsewhere. The sheets already allow 
 users to encode the different missing values that can exist for a column as well 
 as provide label metadata for them. The library should use this metadata to
 properly label missing values.
 
-### Additional labels
+## Additional labels
 
 The sheets contain a number of additional label metadata that users may be
 interested in like variable short labels, category short labels, notes etc. As
@@ -159,7 +157,7 @@ mentioned previously the library should focus on variable and value labels, it
 should also provide functionality to enable users to optionally import and
 attach these additional metadata fields as attributes on the dataset.
 
-### Utility functionality 
+## Utility functionality 
 
 The library should provide utility functionality to aid with labels, for
 example, 

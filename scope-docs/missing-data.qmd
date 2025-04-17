@@ -1,0 +1,56 @@
+---
+title: Missing data 
+format:
+    html:
+        embed-resources: true
+---
+
+Most datasets have missing data that will need to be handled in the study.
+Missing data can occur due to a variety of reasons, for 
+example, the variable may not be applicable to an individual (for e.g., the 
+number of cigarettes smoked in a month is not applicable to a non-smoker), 
+the individual may refuse to answer the question, the individual may not know 
+the answer the question etc. Keeping the above in mind, the library should at minimum 
+enable its users to distinguish between missing and non-missing values as well as 
+between the different types of missing values. The next few
+sections goes through scope for missing data within 
+the library.
+
+## Encoding missing
+
+The library currently enables its users to tag different values in a dataset 
+as missing. Values in the original dataset are set to missing in the 
+variable details sheet using the standard `NA::<type>` where type can any 
+lowercase character. The recoding function in the library then uses this 
+information to correctly set the missing values in the recoded dataset.
+For example, the categorical variable 
+`SMKA_01B` has 4 types of missing values in the Canadian Community Health 
+Survey (CCHS), `Not Applicable`, `Don't Know`, `Refusal`, and `Not Stated` which are 
+mapped to values `6`, `7`, `8`, and `9` respectively in the dataset.
+A user could decide to recode `Not Applicable` to `NA::a` and the remaining values 
+to `NA::b` to represent `Non-response`. The library then applies these recoding 
+rules to the original dataset. This behavior should be maintained in the next 
+version of the library.
+
+## Best practices 
+
+The library currently uses the haven library to encode missing in the recoded 
+dataset. This has two advantages: **1.** It enables the library to encode 
+different types of missing in the recoded dataset which is not a feature in 
+base R. Base R has only one type of missing, NA; and 
+**2.** Haven has functions to convert R data to their equivalent SAS and Stata 
+formats. By using haven's tagged NA feature, recodeflow ensures that missing 
+values in the recoded dataset are correctly converted. The library should continue 
+to use haven to encode missing values.
+
+## Continuous missing
+
+Datasets use a set of abnormal numeric values to represent missing within 
+a continuous variable. For example, the CCHS uses 996 and 999 to represent 
+missing in the `ALCADWKY` variable which is the total number of alcoholic drinks
+in the 
+past week. When recoding these missing values, the library currently not only ensures 
+that the missing tags set up by the user are properly set but 
+also that the continuous variable is not converted to categorical to accommodate 
+the non-numeric values. This behaviour should be maintained in
+the next version of the library.

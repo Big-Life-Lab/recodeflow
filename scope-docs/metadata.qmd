@@ -1,0 +1,65 @@
+---
+title: Metadata 
+format:
+  html:
+    embed-resources: true
+---
+
+Metadata refers to information that is not strictly required in order to run 
+a study but is used to annotate the data within it. Succinctly, metadata is
+data about data. Variable and value labels are examples of perhaps one 
+of the most commonly used metadata in a study.
+
+The recodeflow library aims to enable its users to include as much metadata 
+as deemed necessary into the recoded dataset while also providing support for 
+commonly used metadata fields like variable and value labels mentioned 
+above. The next few sections goes through the scope and requirements of the
+library from a metadata perspective.
+
+## Variable metadata
+
+As the name suggests, variable metadata refers to metadata that is used to 
+annotate a variable and the values that it contains. 
+
+All variable metadata used by the library is currently stored in the variable 
+and variable details sheets. Both sheets are CSV files and use a pre-defined 
+set of columns that the library recognizes and supports. This does not preclude 
+users from adding additional columns for any custom metadata that 
+they may want to include. Using a CSV file which is an open standard that is
+supported by popular spreadsheet programs like Excel allows non-R users to contribute 
+and make changes to the metadata. At the same time, making the sheet machine 
+actionable by standardizing its structure allows the metadata to be easily read
+and used by software.
+
+The recodeflow library currently uses these sheets as the source of truth for 
+all variable metadata and should continue to do so. As much as possible, any 
+new metadata that the library wishes to support should be added to the sheets 
+rather than for example being hardcoded in the library.
+
+## Dataset metadata
+
+Dataset metadata sits on top of variable metadata and is used to annotate an 
+entire dataset and study. This can include information like the title of the 
+study, the researchers involved in it, the study start date etc.
+
+The library currently does not but should support this type of metadata. Existing 
+standards should be adopted/extended like
+`Dublin Core` or `DCAT`. In keeping with the theme of the rest of the library, 
+any metadata standard chosen should be encoded in an open and machine actionable 
+format to enable non-R and R users alike to use the information.
+
+The library should allow users to import and annotate their dataset with the 
+metadata. 
+
+## Data dictionary
+
+A data dictionary is a document that gives its readers information about a 
+particular dataset like a description, how it should be used, the variables
+contained within it, 
+how they were derived etc. It is the first resource that users look to 
+when exploring a dataset, acting as both an introduction and a reference
+document.
+
+The library should enable users to easily create a data dictionary including 
+information from the variable and dataset metadata mentioned above.
+

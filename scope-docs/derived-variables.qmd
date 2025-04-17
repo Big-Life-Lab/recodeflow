@@ -1,5 +1,8 @@
 ---
-title: Derived Variables Scope 
+title: Derived Variables 
+format:
+  html:
+    embed-resources: true
 ---
 
 ```{r setup, include=FALSE}
@@ -17,13 +20,6 @@ library(knitr)
 library(magrittr)
 ```
 
-## Objective
-
-The objective of this document is to define the scope and specifications for
-derived variables in the library.
-
-## Context
-
 The variable details sheet within the recodeflow library enables a user to
 encode the rules to create a new variable from one or more starting variables.
 Broadly, any rule that maps the values of one variable into another can be
@@ -39,9 +35,7 @@ for its calculation and optionally conditional logic to validate its inputs.
 This document will go over the scope and specifications for such derived
 variables and the functions used to derive them.
 
-## Scope
-
-### Function Usage
+## Function Usage
 
 Users should be able to use any derived functions without needing to install 
 recodeflow. The library should not force users to write functions in any way 
@@ -53,7 +47,7 @@ within these organizations to use derived functions defined in flow universe
 packages like [cchsflow](https://big-life-lab.github.io/cchsflow/) enabling
 collaboration. 
 
-### Function Language
+## Function Language
 
 The library should support only functions written in R. The R ecosystem is
 moving towards allowing its users to execute code from other statistical
@@ -78,7 +72,7 @@ print(paste("Calculated BMI:", BMI_python))
 
 To reduce the library scope, currently only R functions will be allowed.
 
-### Function Inputs and Outputs
+## Function Inputs and Outputs
 
 The function inputs and output should be standardized to accept either scalar or
 vector values.
@@ -204,12 +198,12 @@ Scalar values are more easily portable to non-statistical languages which
 becomes a concern if the recoding rules need to be run for example in a web
 browser where Javascript is the programming language of choice.
 
-### Supported Operations
+## Supported Operations
 
 The library should allow the user to user to use any R code within the function.
 For example, code that uses external libraries, sources other R files etc.
 
-### Tagged NA
+## Tagged NA
 
 The need for tagged NA values has been described elsewhere. An issue with
 derived functions is that users can easily return NA values that are not tagged.
@@ -236,7 +230,7 @@ The BMI_non_tagged_NA function when run by the library should warn the user that
 they have returned an NA value that is not tagged. The BMI_tagged_NA function
 should pass with no issues since the user is returning a tagged NA value.
 
-### Best practices
+## Best practices
 
 Keeping in mind that users will be writing derived functions on their own, the
 library should provide guidance on how to write good functions. This can include
