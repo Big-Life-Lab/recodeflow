@@ -9,4 +9,5 @@ inst/doc
 *.code-workspace
 .codegpt
 
-docs/.$recodeflow.drawio.bkp
+# Python
+.env

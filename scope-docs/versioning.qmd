@@ -1,8 +1,9 @@
 ---
-title: Versioning Scope 
+title: Versioning 
+format:
+  html:
+    embed-resources: true
 ---
-
-## Context
 
 Versioning within a software system refers to the act of
 attaching a unique identifier to different releases of the system. Within 

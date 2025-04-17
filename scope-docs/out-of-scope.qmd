@@ -1,0 +1,28 @@
+---
+title: Out of Scope
+format:
+    html:
+        embed-resources: true
+---
+
+## Variable Transformations and Modeling
+
+The library intentionally excludes certain types of variable transformations and modeling-related features:
+
+1. **Complex Transformations**
+   - Spline transformations
+   - Creation of dummy variables
+   - Variable interactions
+   - Other modeling-specific transformations
+
+   These transformations belong in dedicated modeling libraries that can build upon the metadata structure provided by recodeflow.
+
+2. **Variable Roles**
+   - Assignment of variables to specific analytical roles (e.g., predictors, outcomes)
+   - Table 1 variable designation
+   - Model-specific variable groupings
+   
+   This functionality is better handled by specialized libraries like tidymodels that can consume the metadata provided by recodeflow.
+
+The separation of these concerns allows recodeflow to focus on its core purpose of metadata management while enabling other libraries to build upon its foundation for specific analytical needs.
+
