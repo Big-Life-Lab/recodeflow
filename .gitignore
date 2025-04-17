@@ -9,3 +9,5 @@ inst/doc
 *.code-workspace
 .codegpt
 
+# Python
+.env

@@ -1,0 +1,23 @@
+project:
+  type: website
+  output-dir: ./dist
+
+website:
+  title: v2.0 Scope 
+  sidebar:
+    style: docked
+    search: true
+    contents:
+      - section: Scope
+        contents:
+          - metadata.qmd
+          - labels.qmd
+          - missing-data.qmd
+          - derived-variables.qmd
+          - logging.qmd
+          - versioning.qmd
+      - out-of-scope.qmd
+format:
+  html:
+    theme: cosmo
+    toc: true
