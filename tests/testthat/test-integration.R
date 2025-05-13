@@ -1,7 +1,7 @@
 test_that("Integration test", {
  create_study_data <- function(variables_sheet, variables_details_sheet, huiport_config) {
   harmonized_data <- NULL
-  
+
   # The environment in which we will load all the data to ensure it does not
   # pollute the global environment
   data_env <- new.env()
@@ -9,7 +9,7 @@ test_that("Integration test", {
   # SurveyCycle is manually derived since recodeflow does not support
   # the data_name argument in a derived function
   unsupported_variables <- c('SurveyCycle')
-  untransformed_variables <- variables_sheet %>% 
+  untransformed_variables <- variables_sheet %>%
     dplyr::filter(transformationType == "N/A") %>%
     dplyr::filter(!variable %in% unsupported_variables)
   # The vector of cchs database names
@@ -21,10 +21,10 @@ test_that("Integration test", {
     data_name <- data_names[[data_index]]
 
     print(paste("Start harmonization for", data_name))
-    # Load the dataset into the created `data_env` environment getting its 
+    # Load the dataset into the created `data_env` environment getting its
     # name.
     loaded_data_name <- load(huiport_config$data[[data_name]], env = data_env)
-    
+
     current_harmonized_data <- rec_with_table(
       get(loaded_data_name, envir = data_env),
       variables = untransformed_variables,
@@ -47,9 +47,9 @@ test_that("Integration test", {
       harmonized_data <-
         dplyr::bind_rows(harmonized_data, current_harmonized_data)
     }
-    
+
     rm(list = loaded_data_name, envir = data_env)
-    
+
     print(paste("Done harmonization for", data_name))
   }
 
@@ -63,7 +63,7 @@ test_that("Integration test", {
       harmonized_data[[variable_name]] <- as.numeric(harmonized_data[[variable_name]])
     }
   }
-  
+
   return(harmonized_data)
  }
   fix_na_c <- function(data) {
@@ -72,7 +72,7 @@ test_that("Integration test", {
     }
     data <- data %>%
       dplyr::mutate(dplyr::across(
-        where(is.factor), 
+        where(is.factor),
         ~ dplyr::case_when(
           is_regular_na(.x) ~ add_na_c_level(.x),
           TRUE ~ .x
