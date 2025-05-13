@@ -1,7 +1,5 @@
-adl_score_5_fun <- cchsflow:::adl_score_5_fun
-binge_drinker_fun <- cchsflow::binge_drinker_fun
-diet_score_fun <- cchsflow::diet_score_fun
-bmi_fun <- cchsflow::bmi_fun
+source("./integration-assets/cchsflow-functions.R")
+
 pack_years_fun <-
   function(SMKDSTY_A, DHHGAGE_cont, time_quit_smoking, SMKG203_cont,
            SMKG207_cont, SMK_204, SMK_05B,
@@ -54,21 +52,6 @@ pack_years_fun <-
       )
     return(pack_years)
   }
-
-pct_time_fun <- cchsflow::pct_time_fun
-if_else2 <- cchsflow::if_else2
-RACDPAL_fun <- cchsflow::RACDPAL_fun
-time_quit_smoking_fun <- cchsflow::time_quit_smoking_fun
-smoke_simple_fun <- cchsflow::smoke_simple_fun
-diet_score_fun_cat <- cchsflow::diet_score_fun_cat
-bmi_fun_cat <- cchsflow::bmi_fun_cat
-low_drink_score_fun <- cchsflow::low_drink_score_fun
-pct_time_fun_cat <- cchsflow::pct_time_fun_cat
-age_cat_fun <- cchsflow::age_cat_fun
-pct_time_fun_cat <- cchsflow::pct_time_fun_cat
-low_drink_long_fun <- cchsflow::low_drink_long_fun
-low_drink_short_fun <- cchsflow::low_drink_short_fun
-immigration_fun <- cchsflow::immigration_fun
 
 SurveyCycle.fun <- function(data_name) {
   switch(
@@ -155,8 +138,6 @@ hui_arc_sine_back_transformed <- function(hui_arc_sine) {
   fifth_step <- fourth_step - 0.36
   return(fifth_step)
 }
-
-pack_years_fun_cat <- cchsflow:::pack_years_fun_cat
 
 ALWDWKY_HUI <- function(ALCDTTM, ALWDWKY) {
   return(ifelse(ALCDTTM == 3, 0, ALWDWKY))

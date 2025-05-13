@@ -33,7 +33,6 @@ Suggests:
     rmarkdown,
     survival,
     testthat (>= 3.0.0),
-    tibble,
-    cchsflow
+    tibble
 Config/testthat/edition: 3
 VignetteBuilder: knitr
