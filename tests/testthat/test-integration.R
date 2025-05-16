@@ -1,3 +1,9 @@
+write_temp_csv <- function(x) {
+  path <- tempfile(fileext = ".csv")
+  write.csv(x, path)
+  return(path)
+}
+
 test_that("Integration test", {
  create_study_data <- function(variables_sheet, variables_details_sheet, huiport_config) {
   harmonized_data <- NULL
@@ -113,4 +119,6 @@ test_that("Integration test", {
     )
   )
   actual_data <- create_study_data(variables_sheet, variable_details_sheet, huiport_config)
+
+  expect_snapshot_file(write_temp_csv(actual_data), "integration.csv")
 })
