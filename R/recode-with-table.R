@@ -536,7 +536,7 @@ get_data_variable_name <-
         paste(
           "The row
           ",
-          row,
+          row_being_checked,
           "for the variable",
           variable_being_checked,
           "
