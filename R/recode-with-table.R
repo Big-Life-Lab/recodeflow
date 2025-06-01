@@ -5,6 +5,16 @@
 # stdext
 `%notin%` <- Negate(`%in%`)
 
+# removes the variable prefix (<something>::), if any
+strip_prefix <- function(varnames) {
+  stopifnot(is.character(varnames))
+  values <- strsplit(varnames, "::")[[1]]
+  if (length(values) == 1) {
+    return(values)
+  }
+  return(values[[2]])
+}
+
 #' @title Checks whether two values are equal including NA
 #' @description Compared to the base "==" operator in R, this function returns true if the two values are NA
 #' whereas the base "==" operator returns NA
@@ -501,58 +511,55 @@ recode_call <-
 #'
 #' @param data_name name of the database being checked
 #' @param data database being checked
-#' @param row_being_checked the row from variable details that contains
+#' @param row the row from variable details that contains
 #' information on this variable
-#' @param variable_being_checked the name of the recoded variable
+#' @param recoded_varname the name of the recoded variable
 #'
-#' @return the data equivalent of variable_being_checked
+#' @return the data equivalent of var_name
 #' @keywords internal
 get_data_variable_name <-
-  function(data_name,
-           data,
-           row_being_checked,
-           variable_being_checked) {
-    data_variable_being_checked <- character()
-    var_start_names <-
-      as.character(row_being_checked[[pkg.env$columns.variableStart]])
+  function(data_name, data, row, recoded_varname) {
+    varstart_col <- pkg.env$columns.variableStart
+    result <- character()
 
-    if (grepl(data_name, var_start_names)) {
-      var_start_names_list <- as.list(strsplit(var_start_names, ",")[[1]])
-      # Find exact var Name
-      for (var_name in var_start_names_list) {
-        if (grepl(data_name, var_name)) {
-          # seperate dataname from the var name
-          data_variable_being_checked <-
-            as.list(strsplit(var_name, "::")[[1]])[[2]]
+    # a comma-delimited string of variable names
+    varstart_names <- as.character(row[[varstart_col]])
+
+    has_db_var <- grepl(data_name, varstart_names)
+    has_default_var <- grepl("\\[", varstart_names)
+
+    if (has_db_var) {
+      varstart_names_list <- strsplit(varstart_names, ",")[[1]]
+
+      # find exact var name
+      for (name in varstart_names_list) {
+        if (grepl(data_name, name)) {
+          result <- strip_prefix(name)
         }
       }
-      # Check for default variable name
-    } else if (grepl("\\[", var_start_names)) {
-      # Strip default var name tags: []
-      data_variable_being_checked <-
-        stringr::str_match(var_start_names, "\\[(.*?)\\]")[, 2]
+
+    } else if (has_default_var) {
+      # At this point there are no db-vars for `data_name`, but there may be
+      # variables for unknown databases. Now we'll check for default vars, and
+      # take the first one.
+      result <- stringr::str_match(varstart_names, "\\[(.*?)\\]")[, 2]
+
     } else {
+      # no db-vars and no default-vars
       stop(
         paste(
-          "The row
-          ",
-          row_being_checked,
-          "for the variable",
-          variable_being_checked,
-          "
-          Does not contain the database being checked(",
-          data_name,
-          ") in its variable start the default is also missing.
-          Please double check if this variable should have this",
-          data_name,
-          "included in its databaseStart"
+          "The row", row, "for the variable", recoded_varname,
+          "does not contain the database being checked (", data_name, ")",
+          "in its variable start. The default is also missing.",
+          "Please double check if this variable should have",
+          data_name, "included in its databaseStart"
         )
       )
     }
-    data_variable_being_checked <-
-      trimws(data_variable_being_checked)
+    result <- trimws(result)
+    stopifnot(is.vector(result))
 
-    return(data_variable_being_checked)
+    return(result)
   }
 
 #' recode_columns
@@ -759,8 +766,8 @@ recode_non_derived_variables <- function(
   data_variable_being_checked <-
     get_data_variable_name(
       data_name = data_name,
-      row_being_checked = first_row,
-      variable_being_checked = variable_to_recode,
+      row = first_row,
+      recoded_varname = variable_to_recode,
       data = data
     )
   if (is.null(data[[data_variable_being_checked]])) {
@@ -855,8 +862,8 @@ recode_non_derived_variables <- function(
       data_variable_being_checked <-
         get_data_variable_name(
           data_name = data_name,
-          row_being_checked = row_being_checked,
-          variable_being_checked = variable_to_recode,
+          row = row_being_checked,
+          recoded_varname = variable_to_recode,
           data = data
         )
 
