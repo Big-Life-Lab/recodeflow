@@ -123,22 +123,6 @@ hui_beta_back_transformed <- function(hui_beta_transformed, n) {
   return(fifth_step)
 }
 
-hui_arc_sine_transform <- function(huidhsi) {
-  first_term <- 2
-  second_term <- (huidhsi + 0.36)/(1 + 0.36)
-  third_term <- 1
-  return(asin(first_term * second_term - third_term))
-}
-
-hui_arc_sine_back_transformed <- function(hui_arc_sine) {
-  first_step <- sin(hui_arc_sine)
-  second_step <- first_step + 1
-  third_step <-  second_step * (1 + 0.36)
-  fourth_step <- third_step/2
-  fifth_step <- fourth_step - 0.36
-  return(fifth_step)
-}
-
 ALWDWKY_HUI <- function(ALCDTTM, ALWDWKY) {
   return(ifelse(ALCDTTM == 3, 0, ALWDWKY))
 }
