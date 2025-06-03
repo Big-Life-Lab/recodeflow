@@ -1,6 +1,6 @@
-write_temp_csv <- function(x) {
-  path <- tempfile(fileext = ".csv")
-  write.csv(x, path)
+write_temp_rdata <- function(x) {
+  path <- tempfile(fileext = ".RData")
+  save(x, file = path)
   return(path)
 }
 
@@ -34,5 +34,5 @@ test_that("Integration test", {
     }) %>%
     purrr::list_rbind()
 
-  expect_snapshot_file(write_temp_csv(actual_data), "integration.csv")
+  expect_snapshot_file(write_temp_rdata(actual_data), "integration.RData")
 })
