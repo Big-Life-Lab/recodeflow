@@ -58,7 +58,7 @@ variable_details <- read.csv(system.file("template-variable-variable-details.csv
 DT::datatable(variable_details)
 ```
 
-In the above sheet we have defined a new template variable called `language` (rows 1 to 6) which provides the reusable specifications for other languages in the database. The template variable can now be reused in other concrete variables in the database like the `primary_language` and `secondary_language` variables as defined in rows 7 and 8. To use a template variable, simply set the `templateVariable` column to the name of the template variable.
+In the above sheet we have defined a new template variable called `language` (rows 1 to 6) which provides the reusable specifications for other languages in the database. The template variable can now be reused in other concrete variables in the database like the `primary_lang` and `secondary_lang` variables as defined in rows 7 and 8. To use a template variable, simply set the `templateVariable` column to the name of the template variable.
 
 As we can see, by creating a template variable we can reduce the number of rows in our variable details sheet but more importantly reduce the duplication of rows, which in turn increases maintainability of our sheet.
 
