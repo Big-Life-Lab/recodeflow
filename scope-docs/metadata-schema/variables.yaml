@@ -1,0 +1,296 @@
+schema_version: "0.1"
+schema_date: "2025-01-01"
+description: "Core variables schema describing the format and specifications of variables (variables.csv) within the recodeflow package."
+
+# CSV file format specification
+csv_format:
+  encoding: "UTF-8"              # Character encoding
+  bom: false                     # No UTF-8 BOM (Byte Order Mark)
+  delimiter: ","                 # Field delimiter
+  quote_char: '"'                # Character used to quote fields
+  escape_char: '"'               # Escape character (doubled quotes)
+  line_terminator: "\n"          # Unix-style line endings (LF)
+  header_required: true          # First row must contain column names
+  header_case_sensitive: true    # Column names must match exactly
+  quote_when_needed: true        # Quote fields containing delimiter, quotes, or newlines
+  trailing_delimiter: false      # No comma after last field
+  blank_lines: "skip"            # Skip blank lines
+  comment_char: null             # No comment lines allowed
+
+variables_schema:
+  title: "cchsflow variables configuration"
+  description: "Schema for variables.csv, defining master variable attributes, types, and labels. Used for data processing and metadata generation within the cchsflow project."
+  version: "0.1"
+  
+  id_column_name: "fileRowId"
+  expected_column_order:
+    - "fileRowId"
+    - "variable"
+    - "label"
+    - "labelLong"          
+    - "subject"
+    - "section"
+    - "variableType"         
+    - "databaseStart"      
+    - "units"
+    - "variableStart"
+    - "notes"
+    - "description"      
+    - "version"
+    - "lastUpdated"
+    - "harmonizationStatus"
+    - "reviewNotes"
+
+  fields:
+    - name: "fileRowId"
+      title: "File row identifier"
+      description: "Unique identifier for the row within this CSV file. Generated using format: var_{variable_name}"
+      type: "string" 
+      constraints:
+        required: true
+        unique: true
+        pattern: "^var_[a-zA-Z0-9_.]+$"  # Semantic ID pattern
+    - name: "variable"
+      title: "Variable name"
+      description: "Canonical and unique name of the variable being described. Used as a key."
+      type: "string"
+      constraints:
+        required: true
+        unique: true
+        pattern: "^[a-zA-Z_][a-zA-Z0-9_.]*$" 
+    - name: "label"
+      title: "Short label"
+      description: "A concise, human-readable label for the variable (eg, for chart axes, short displays)."
+      type: "string"
+      constraints:
+        required: true
+    - name: "labelLong"
+      title: "Long label"
+      description: "A longer, more descriptive human-readable label for the variable (eg, for full descriptions, codebook)."
+      type: "string"
+      constraints:
+        required: true
+    - name: "subject"
+      title: "Subject area"
+      description: "The general subject or thematic area the variable belongs to (eg, demographics, health behaviours)."
+      type: "string"
+      constraints:
+        required: false
+    - name: "section"
+      title: "Survey section"
+      description: "Specific section or module of the survey/dataset where the variable originates."
+      type: "string"
+      constraints:
+        required: false
+    - name: "variableType"
+      title: "Variable type"
+      description: "The nature or type of the variable indicating how it should be analyzed and processed."
+      type: "string"
+      constraints:
+        required: true
+        enum:
+          - "Continuous"
+          - "Categorical"
+    - name: "databaseStart"
+      title: "Original database name"
+      description: "Name of the original database or data source from which this variable was derived or sourced."
+      type: "string"
+      constraints:
+        required: true
+    - name: "units"
+      title: "Measurement units"
+      description: "Units of measurement for the variable, if applicable (eg, kg, years, minutes/day)."
+      type: "string"
+      constraints:
+        required: false
+    - name: "variableStart"
+      title: "Source variables and transformation rules"
+      description: |
+        Specifies the source variable(s) used to create this variable.
+        This field supports multiple patterns for mapping source data to harmonized variables,
+        including simple references, database mappings, and derived variable calculations.
+        See patterns section below for formal specifications.
+      type: "string"
+      constraints:
+        required: true
+      patterns:
+        - name: "simple_reference"
+          pattern: "^\\[[A-Z][A-Z0-9_]*\\]$"
+          description: "Default pattern - references variable from any unspecified source"
+          example: "[ADL_005]"
+        - name: "database_mapping"
+          pattern: "^[a-zA-Z0-9_]+::[A-Z][A-Z0-9_]*$"
+          description: "Explicit database::variable mapping"
+          example: "cchs2001_p::RACA_6A"
+        - name: "derived_variable"
+          pattern: "^DerivedVar::\\[([A-Z][A-Z0-9_]*(,\\s*[A-Z][A-Z0-9_]*)*)\\]$"
+          description: "Derived variable calculation from multiple sources"
+          example: "DerivedVar::[HEIGHT, WEIGHT]"
+        - name: "multiple_sources"
+          pattern: "^([a-zA-Z0-9_]+::[A-Z][A-Z0-9_]*(,\\s*)?)+$"
+          description: "Multiple database::variable mappings"
+          example: "cchs2001_p::RACA_6A, cchs2003_p::RACC_6A"
+        - name: "combined_pattern"
+          pattern: "^([a-zA-Z0-9_]+::[A-Z][A-Z0-9_]*(,\\s*)?)+(,\\s*)?\\[[A-Z][A-Z0-9_]*\\]$"
+          description: "Multiple sources with default reference"
+          example: "cchs2001_p::RACA_6A, cchs2003_p::RACC_6A, [ADL_01]"
+    - name: "notes"
+      title: "Notes"
+      description: "General notes, comments, or annotations about the variable."
+      type: "string" 
+      constraints:
+        required: false
+    - name: "description"
+      title: "Detailed description"
+      description: "A more detailed textual description or definition of the variable, potentially including operationalisation."
+      type: "string"
+      constraints:
+        required: false
+    - name: "version"
+      title: "Variable version"
+      description: "Semantic version of this variable definition (e.g., 1.0.0)"
+      type: "string"
+      constraints:
+        required: true
+        pattern: "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    - name: "lastUpdated"
+      title: "Last updated date"
+      description: "Date when this variable definition was last modified (ISO format: YYYY-MM-DD)"
+      type: "string"
+      format: "date"
+      constraints:
+        required: true
+    - name: "harmonizationStatus"
+      title: "Harmonization status"
+      description: "Current status of the variable in the harmonization process"
+      type: "string"
+      constraints:
+        required: true
+        enum:
+          - "development"
+          - "active"
+          - "not_harmonizable"
+          - "pending_review"
+    - name: "reviewNotes"
+      title: "Review notes"
+      description: "Brief notes about harmonization decisions, links to GitHub issues/discussions, or references to external documentation"
+      type: "string"
+      constraints:
+        required: false
+  
+  missingValues: ["", "NA", "N/A"]
+
+    # Validation rules for cross-field dependencies
+  validation_rules:
+    cross_field:
+      - rule: "units_required_for_continuous"
+        condition: "variableType == 'Continuous'"
+        requirement: "units != null"
+        level: "warning"
+        message: "Continuous variable '{variable}' should have units specified"
+      - rule: "review_notes_for_not_harmonizable"
+        condition: "harmonizationStatus == 'not_harmonizable'"
+        requirement: "reviewNotes != null"
+        level: "warning"
+        message: "Variable '{variable}' marked as not_harmonizable should have reviewNotes explaining why"
+      - rule: "subject_section_mutual_exclusive"
+        condition: "subject != null AND section != null"
+        requirement: "section == 'N/A'"
+        level: "info"
+        message: "Variable '{variable}' has both subject and section; typically these are mutually exclusive"
+    
+    pattern_validation:
+      # Note: variableStart can contain mixed patterns (e.g., database::var + [var])
+      # Pattern precedence to be determined in future versions
+      mixed_patterns_allowed: true
+      validation_message: "variableStart for '{variable}' does not match any known pattern: {value}"
+  
+  # Permissive for v0.1 - coordinate with recodeflow development
+  allow_additional_columns: true   # Allow development flexibility
+  extension_schema: null
+
+  # ============================================================================
+# PROJECT-SPECIFIC METADATA: CCHS (Canadian Community Health Survey)
+# ============================================================================
+cchs_metadata:
+  title: "CCHS-specific configuration"
+  description: "Metadata specific to the Canadian Community Health Survey harmonization project"
+  version: "0.1"
+  
+  # Source database naming conventions
+  source_databases:
+    pattern: "cchs{YEAR}_{TYPE}"
+    description: "CCHS database naming convention"
+    year_formats:
+      - "YYYY"        # e.g., cchs2001
+      - "YYYY_YYYY"   # e.g., cchs2007_2008
+    type_suffixes:
+      - code: "p"
+        description: "Public Use Microdata File (PUMF)"
+      - code: "i" 
+        description: "ICES data (temporary reference to institute)"
+      - code: "s"
+        description: "Shared file (contains variables)"
+      - code: "m"
+        description: "Master file"
+    examples:
+      - "cchs2001_p"
+      - "cchs2017_2018_i"
+      - "cchs2015_2016_s"
+      - "cchs2015_2016_m"
+  
+  # Field-specific enumerations for CCHS
+  field_enums:
+    subject:
+      description: "CCHS subject areas"
+      values:
+        - "ADL"
+        - "Age"
+        - "Alcohol"
+        - "BMI"
+        - "Chronic condition"
+        - "Diet"
+        - "Education"
+        - "Ethnicity"
+        - "Exercise"
+        - "Food security"
+        - "Health behaviour"
+        - "Health care use"
+        - "Health status"
+        - "Height"
+        - "Home ownership"
+        - "Household type"
+        - "Immigration"
+        - "Income"
+        - "Indigenous"
+        - "Life satisfaction"
+        - "Marital status"
+        - "Need"
+        - "Number"
+        - "Oral health"
+        - "Province"
+        - "Proxy"
+        - "Race"
+        - "Rec"
+        - "Sample"
+        - "Sex"
+        - "Sleep"
+        - "Smoking"
+        - "Vaccination"
+        - "Weight"
+    
+    section:
+      description: "CCHS survey sections"
+      values:
+        - "Demographics"
+        - "Health behaviour"
+        - "Health care use"
+        - "Health status"
+        - "N/A"
+        - "Sociodemographics"
+  
+  # Additional CCHS-specific metadata
+  notes:
+    - "Variables with '_A' suffix - To be confirmed (may be newer CCHS variable naming convention)"
+    - "DerivedVar patterns often combine multiple survey waves or create composite scores"
+    - "Some variables may not have entries from all survey years due to questionnaire changes"

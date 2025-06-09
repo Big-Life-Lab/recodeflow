@@ -1,0 +1,204 @@
+schema_version: "0.1"
+schema_date: "2025-01-01"
+description: "Core variable details schema including active templateVariable development"
+
+variable_details_schema:
+  title: "CCHSFlow Variable Details Configuration"
+  description: "Schema for variable_details.csv, defining value-level attributes, recoding logic, and categorical value labels for variables."
+  version: "0.1"
+  id_column_name: "file_row_id"
+  expected_column_order:
+    - "file_row_id"
+    - "variable"
+    - "templateVariable"    # Active field - currently in development
+    - "dummyVariable"
+    - "typeEnd"
+    - "typeStart"
+    - "databaseStart"       # camelCase convention
+    - "variableStart"       # camelCase convention
+    - "variableStartLabel"  # camelCase convention
+    - "numValidCat"
+    - "recEnd"
+    - "catLabel"
+    - "catLabelLong"
+    - "units"
+    - "recStart"
+    - "variableStartShortLabel"  # camelCase convention
+    - "notes"
+
+  fields:
+    - name: "file_row_id"
+      title: "File Row Identifier"
+      description: "Unique identifier for the row within this CSV file. Generated using format: detail_{variable_name}_{sequence}"
+      type: "string"
+      constraints:
+        required: true
+        unique: true
+        pattern: "^detail_[a-zA-Z0-9_.]+_[0-9]{3}$"  # Semantic ID pattern with sequence
+    - name: "variable"
+      title: "Variable Name"
+      description: "Canonical name of the variable this detail row pertains to. Foreign key to variables.csv."
+      type: "string"
+      constraints:
+        required: true
+    - name: "templateVariable"
+      title: "Template Variable Indicator"
+      description: "Indicates if this variable follows a template pattern or references another template variable"
+      type: "string"
+      constraints:
+        required: false
+        # Permissive validation - allowing both "Yes"/"No" and template variable names
+    - name: "dummyVariable"
+      title: "Dummy Variable Indicator"
+      description: "Indicates if this row defines a dummy variable created during recoding (eg, for a category of a categorical variable)."
+      type: "string"
+      constraints:
+        required: false
+    - name: "typeEnd"
+      title: "Target Data Type"
+      description: "The data type of the variable *after* recoding or as its final representation (eg, categorical, numeric)."
+      type: "string"
+      constraints:
+        required: false
+    - name: "typeStart"
+      title: "Source Data Type"
+      description: "The data type of the variable *before* recoding or in its original form."
+      type: "string"
+      constraints:
+        required: false
+    - name: "databaseStart"
+      title: "Original Database Name"
+      description: "Name of the original database or data source for this variable detail."
+      type: "string"
+      constraints:
+        required: false
+    - name: "variableStart"
+      title: "Original Variable Name or Source Value"
+      description: "Name of the original variable or specific source value being recoded."
+      type: "string"
+      constraints:
+        required: false
+    - name: "variableStartLabel"
+      title: "Original Variable Label"
+      description: "Label of the original variable in the source database."
+      type: "string"
+      constraints:
+        required: false
+    - name: "numValidCat"
+      title: "Number of Valid Categories"
+      description: "For categorical variables, the number of distinct valid categories."
+      type: "integer"
+      constraints:
+        required: false
+        minimum: 0
+    - name: "recEnd"
+      title: "Recoded Value (Target)"
+      description: "The target value after recoding. For categorical variables, this is the value being labelled."
+      type: "string"
+      constraints:
+        required: false
+    - name: "catLabel"
+      title: "Category Label (Short)"
+      description: "Short label for a specific category of a categorical variable."
+      type: "string"
+      constraints:
+        required: false
+    - name: "catLabelLong"
+      title: "Category Label (Long)"
+      description: "Long, descriptive label for a specific category of a categorical variable."
+      type: "string"
+      constraints:
+        required: false
+    - name: "units"
+      title: "Units"
+      description: "Units of measurement, if applicable to this specific variable detail or category."
+      type: "string"
+      constraints:
+        required: false
+    - name: "recStart"
+      title: "Recode From Value (Source)"
+      description: "The original value or range that is being recoded to 'recEnd'."
+      type: "string"
+      constraints:
+        required: false
+    - name: "variableStartShortLabel"
+      title: "Original Variable Short Label"
+      description: "Short label of the original variable in the source database."
+      type: "string"
+      constraints:
+        required: false
+    - name: "notes"
+      title: "Notes"
+      description: "Specific notes or comments related to this variable detail or recoding rule."
+      type: "string"
+      constraints:
+        required: false
+
+  missingValues: ["", "NA", "N/A"]
+  allow_additional_columns: true    # Permissive during recodeflow development
+  extension_schema: null
+
+---
+
+# Template System Schema (inst/metadata/schemas/core/templates.yaml)
+schema_version: "0.1"
+schema_date: "2025-01-01"
+description: "Template variable system documentation and validation rules"
+
+template_system_schema:
+  title: "Template Variable System"
+  description: "Schema for template variable inheritance and validation in recodeflow development"
+  version: "0.1"
+  
+  # How to identify template definitions
+  template_definitions:
+    marker_field: "templateVariable"
+    marker_values: ["Yes"]
+    required_fields:
+      - "variable"        # Template must have a name (serves as template identifier)
+      - "typeEnd"         # Template must define output type
+      - "recStart"        # Template must define source values  
+      - "recEnd"          # Template must define target values
+    
+  # How template inheritance works
+  template_inheritance:
+    reference_field: "templateVariable"
+    reference_pattern: "template_name"  # References existing template by variable name
+    required_fields:
+      - "variable"        # Using variable must have unique name
+      - "variableStart"   # Using variable must define source mapping
+    inheritance_rules:
+      - "Template recoding rules (recStart/recEnd) are inherited"
+      - "Using variable defines its own source mapping (variableStart)"
+      - "Type information (typeEnd/typeStart) can be inherited or overridden"
+  
+  # Validation rules for template system
+  validation_rules:
+    template_existence:
+      description: "Referenced templates must exist in the same variable_details file"
+      rule: "If templateVariable != 'Yes' and templateVariable != 'No', then variable with that name and templateVariable = 'Yes' must exist"
+    
+    circular_references:
+      description: "Templates cannot reference other templates"
+      rule: "If templateVariable = 'Yes', then variable cannot reference another template"
+    
+    consistent_typing:
+      description: "Template usage should maintain type consistency"
+      rule: "Variables using templates should have compatible typeEnd values"
+
+  # Examples for documentation
+  examples:
+    simple_template:
+      description: "Basic language template example"
+      template_definition:
+        variable: "lang"
+        templateVariable: "Yes"
+        typeEnd: "cat"
+        recStart: ["english", "french"]
+        recEnd: ["1", "2"]
+      
+      template_usage:
+        variable: "primary_lang"
+        templateVariable: "lang"
+        variableStart: "[PL]"
+        # Inherits: typeEnd="cat", recStart/recEnd mappings

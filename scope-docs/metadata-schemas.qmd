@@ -1,0 +1,104 @@
+---
+title: Metadata 
+format:
+  html:
+    embed-resources: true
+---
+
+# YAML Metadata Schema Specifications
+
+## Purpose & Rationale
+
+The YAML metadata schemas define the structure, constraints, and documentation for harmonized research data within the recodeflow ecosystem. These schemas serve as the single source of truth for data structure, enabling:
+
+- **Version control optimization**: Semantic row IDs and consistent column ordering minimize git diff noise
+- **Data quality assurance**: Formal validation rules catch errors before data processing
+- **Interoperability**: LinkML-ready structure supports future integration with semantic web standards
+- **Documentation generation**: Schemas serve as both machine-readable specifications and human documentation
+
+Draft versions of the yamls are in the metadata-schema folder.
+
+- [variables.yaml](/scope-docs/metadata-schema/variables.yaml)
+- [variable_details.yaml](/scope-docs/metadata-schema/variable_details.yaml)
+
+## Core Schema Architecture
+
+### 1. **variables.yaml** (Variable Catalog)
+Defines the master registry of harmonized variables with:
+- Semantic row identifiers: `var_{variable_name}`
+- Variable metadata: labels, types, units, harmonization status
+- Transformation patterns: formal regex specifications for source mappings
+- Version tracking: semantic versioning at row level
+
+### 2. **variable_details.yaml** (Value Mappings)  
+Specifies value-level transformations and recoding rules with:
+- Hierarchical row identifiers: `detail_{variable_name}_{sequence}`
+- Recoding specifications: interval notation `[a,b]`, NA categories `NA::a`
+- Template system: reusable transformation patterns
+- Conditional validation: context-aware rules (e.g., dummy variables for categoricals)
+
+## Key Design Principles
+
+### Schema-Driven Development
+- **Declarative specifications**: Define what, not how
+- **Progressive validation**: From permissive (development) to strict (production)
+- **Extensibility**: Project-specific metadata sections (e.g., `cchs_metadata`)
+
+### Git-Native Architecture
+- **Clean filenames**: No version numbers in files
+- **Semantic versioning**: Git tags (v0.1, v1.0, v2.1.0)
+- **Stable identifiers**: Prevent row reordering in diffs
+
+### Standards Alignment
+- **Frictionless Data**: Table Schema-inspired field definitions
+- **LinkML-ready**: Structured for future semantic web integration
+- **DDI/Dublin Core**: Metadata elements align with established standards
+
+## Schema Components
+
+```yaml
+# Core structure for both schemas
+csv_format:           # Explicit CSV specifications
+variables_schema:     # Main schema definition
+  fields:            # Column definitions with types & constraints
+  validation_rules:  # Cross-field dependencies
+  patterns:          # Formal specifications (regex)
+cchs_metadata:       # Project-specific extensions
+```
+
+## Primary Use Cases
+
+### 1. **Data Validation**
+- Pre-commit hooks validate CSV structure
+- Type checking and constraint enforcement
+- Pattern matching for complex fields
+
+### 2. **Documentation Generation**
+- Automated codebooks from schema definitions
+- API documentation for data access
+- Variable catalogs for researchers
+
+### 3. **Transformation Specifications**
+- Formal recoding rules for reproducibility
+- Template-based transformations
+- Traceable data lineage
+
+### 4. **Tool Integration**
+- R package functions consume schemas directly
+- Validation tools parse YAML specifications
+- Future LinkML converters for RDF generation
+
+## Implementation Status
+
+- **Current**: v2.1.0 schemas in production for cchsflow
+- **Active**: Template system development for reusable patterns
+- **Planned**: LinkML conversion tools, multi-project inheritance
+
+## Benefits
+
+- **Reproducibility**: Versioned schemas ensure consistent data interpretation
+- **Collaboration**: Clear specifications reduce miscommunication
+- **Quality**: Automated validation catches errors early
+- **Efficiency**: Reusable patterns reduce duplication
+- **Governance**: Formal metadata supports compliance requirements
+

@@ -36,6 +36,8 @@ all variable metadata and should continue to do so. As much as possible, any
 new metadata that the library wishes to support should be added to the sheets 
 rather than for example being hardcoded in the library.
 
+The sheets themselves 
+
 ## Dataset metadata
 
 Dataset metadata sits on top of variable metadata and is used to annotate an 
@@ -62,4 +64,25 @@ document.
 
 The library should enable users to easily create a data dictionary including 
 information from the variable and dataset metadata mentioned above.
+### Metadata Schema Architecture
 
+To support the metadata requirements outlined above, recodeflow implements 
+a YAML-based schema architecture that:
+
+- **Defines structure**: Formal specifications for variable and variable_details 
+  CSV files including column names, types, constraints, and validation rules
+- **Enables validation**: Schema-driven validation ensures data quality before 
+  processing
+- **Supports extensibility**: Project-specific metadata sections allow custom 
+  fields while maintaining core compatibility
+- **Facilitates interoperability**: LinkML-ready structure enables future 
+  integration with semantic web standards and metadata exchange
+- **Provides documentation**: Schemas serve as both machine specifications 
+  and human documentation
+
+This architecture ensures that metadata remains the "source of truth" as 
+specified, while providing the structure needed for reliable software 
+implementation.
+
+For detailed specifications of the YAML metadata schemas, see 
+[Metadata Schema Specifications](metadata-schemas.qmd).
