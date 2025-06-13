@@ -28,10 +28,10 @@ compare_snapshot <- function() {
 # dataset from it
 test_that("Integration test", {
   variables_sheet <- read.csv(
-    "./integration-assets/variables.csv", fileEncoding = "UTF-8-BOM")
+    "./integration-assets/variables.csv", fileEncoding = "UTF-8")
   variable_details_sheet <- read.csv(
     "./integration-assets/variable-details-sheet.csv",
-    fileEncoding = "UTF-8-BOM"
+    fileEncoding = "UTF-8"
   )
   raw_data_paths <- list.files(
     "./integration-assets/data", pattern = ".RData", full.names = TRUE)
