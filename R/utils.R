@@ -36,7 +36,7 @@ create_id_row <- function(data, id_role_name, database_name, variables){
     data[["data_name"]] <- database_name
   }
   # tmp_column is a column name it cannot be passed as a string as it breaks the unite function
-  tmp_data <- tidyr::unite(data = data, tmp_column, sep = "_", id_cols)
+  tmp_data <- tidyr::unite(data = data, tmp_column, sep = "_", all_of(id_cols))
   data[[id_role_name$var_name]] <- tmp_data$tmp_column
 
   # Remove data_name if it was generated and not present before
