@@ -9,7 +9,7 @@ langmap <- c(
 
 readfile <- function(name) {
   p <- "recodeflow"
-  fe <- "UTF-8-BOM"
+  fe <- "UTF-8"
   return (read.csv(system.file(name, package = p), fileEncoding = fe))
 }
 
