@@ -72,26 +72,26 @@ create_label_list_element <- function(variable_rows) {
   )
   first_row <- variable_rows[1, ]
   ret_list$type <-
-    as.character(first_row[[pkg.env$columns.ToType]])
+    as.character(first_row[[pkg.env$columns.toType]])
   ret_list$unit <-
-    as.character(first_row[[pkg.env$columns.Units]])
+    as.character(first_row[[pkg.env$columns.units]])
   ret_list$label_long <-
-    as.character(first_row[[pkg.env$columns.VariableLabel]])
+    as.character(first_row[[pkg.env$columns.variableLabel]])
   ret_list$label <-
     as.character(first_row[[pkg.env$columns.label]])
-  if (is_equal(ret_list$type, pkg.env$columns.value.CatType)) {
+  if (is_equal(ret_list$type, pkg.env$columns.value.catType)) {
     for (row_index in seq_len(nrow(variable_rows))) {
       single_row <- variable_rows[row_index, ]
       # Verify type stays the same
       if (!is_equal(
         ret_list$type,
-        as.character(single_row[[pkg.env$columns.ToType]])
+        as.character(single_row[[pkg.env$columns.toType]])
       )) {
         stop(
           paste(
-            as.character(single_row[[pkg.env$columns.Variable]]),
+            as.character(single_row[[pkg.env$columns.variable]]),
             "does not contain all identical",
-            pkg.env$columns.ToType,
+            pkg.env$columns.toType,
             "variable cant change variable type for different values"
           )
         )
@@ -99,13 +99,13 @@ create_label_list_element <- function(variable_rows) {
       # Verify unit is identical
       if (!is_equal(
         ret_list$unit,
-        as.character(single_row[[pkg.env$columns.Units]])
+        as.character(single_row[[pkg.env$columns.units]])
       )) {
         stop(
           paste(
-            as.character(single_row[[pkg.env$columns.Variable]]),
+            as.character(single_row[[pkg.env$columns.variable]]),
             "does not contain all identical",
-            pkg.env$columns.Units,
+            pkg.env$columns.units,
             "variable cant change unit type for different values"
           )
         )
@@ -113,17 +113,17 @@ create_label_list_element <- function(variable_rows) {
       # Verify variable label is identical
       if (!is_equal(
         ret_list$label_long,
-        as.character(single_row[[pkg.env$columns.VariableLabel]])
+        as.character(single_row[[pkg.env$columns.variableLabel]])
       )) {
         stop(
           paste(
-            as.character(single_row[[pkg.env$columns.Variable]]),
+            as.character(single_row[[pkg.env$columns.variable]]),
             "does not contain all identical",
-            pkg.env$columns.VariableLabel,
+            pkg.env$columns.variableLabel,
             "variable cant change variableLabel for different values. VAL1:",
             ret_list$label_long,
             "VAL2:",
-            as.character(single_row[[pkg.env$columns.VariableLabel]])
+            as.character(single_row[[pkg.env$columns.variableLabel]])
           )
         )
       }
@@ -132,10 +132,10 @@ create_label_list_element <- function(variable_rows) {
       value_being_labeled <-
         format_recoded_value(value_being_labeled, ret_list$type)
       ret_list$values[[as.character(single_row[[
-        pkg.env$columns.CatLabel]])]] <-
+        pkg.env$columns.catLabel]])]] <-
         value_being_labeled
       ret_list$values_long[[as.character(single_row[[
-        pkg.env$columns.CatLabelLong]])]] <-
+        pkg.env$columns.catLabelLong]])]] <-
         value_being_labeled
     }
   }
@@ -165,7 +165,7 @@ label_data <- function(label_list, data_to_label) {
       )
       next()
     }
-    if (label_list[[variable_name]]$type == pkg.env$columns.value.CatType) {
+    if (label_list[[variable_name]]$type == pkg.env$columns.value.catType) {
       if (class(data_to_label[[variable_name]]) != "factor") {
         data_to_label[[variable_name]] <-
           factor(data_to_label[[variable_name]])
@@ -210,7 +210,7 @@ label_data <- function(label_list, data_to_label) {
 #' @return a vector containing the variable names that match the passed roles
 select_vars_by_role  <- function(roles, variables){
   # Reduce row looping by only looping over only unique combinations
-  unique_roles <- unique(variables[[pkg.env$columns.Role]])
+  unique_roles <- unique(variables[[pkg.env$columns.role]])
   valid_patern <- c()
   for (role_patern in unique_roles) {
     # Split by commas to avoid partial matches being false positives
@@ -227,9 +227,9 @@ select_vars_by_role  <- function(roles, variables){
   if(length(valid_patern)<1){
     stop(paste0(roles, " is not present in variabes"))
   }
-  ret <- variables[variables[[pkg.env$columns.Role]] %in% valid_patern, pkg.env$columns.Variable]
+  ret <- variables[variables[[pkg.env$columns.role]] %in% valid_patern, pkg.env$columns.variable]
   if(is.data.frame(ret)){
-    ret <- as.character(ret[[pkg.env$columns.Variable]])
+    ret <- as.character(ret[[pkg.env$columns.variable]])
   }else{
     ret <- as.character(ret)
   }
@@ -257,22 +257,22 @@ set_data_labels <-
     variable_names <- unique(colnames(data_to_label))
     # extract only relevant variable info
     if (!is.null(variable_details)) {
-      variable_details[[pkg.env$columns.Variable]] <- sapply(
-        variable_details[[pkg.env$columns.Variable]], trimws)
+      variable_details[[pkg.env$columns.variable]] <- sapply(
+        variable_details[[pkg.env$columns.variable]], trimws)
       variable_details <-
-        variable_details[variable_details[[pkg.env$columns.Variable]]
+        variable_details[variable_details[[pkg.env$columns.variable]]
                          %in% variable_names, ]
       if (is.null(variables_sheet)) {
         variable_details[[pkg.env$columns.label]] <- NA
-        variable_details[[pkg.env$columns.VariableLabel]] <-
+        variable_details[[pkg.env$columns.variableLabel]] <-
           NA
       }
     }
     if (!is.null(variables_sheet)) {
-      variables_sheet[[pkg.env$columns.Variable]] <- sapply(
-        variables_sheet[[pkg.env$columns.Variable]], trimws)
+      variables_sheet[[pkg.env$columns.variable]] <- sapply(
+        variables_sheet[[pkg.env$columns.variable]], trimws)
       variables_sheet <-
-        variables_sheet[variables_sheet[[pkg.env$columns.Variable]] %in%
+        variables_sheet[variables_sheet[[pkg.env$columns.variable]] %in%
                           variable_names, ]
       variable_details <-
         update_variable_details_based_on_variable_sheet(
@@ -284,7 +284,7 @@ set_data_labels <-
     for (variable_name in variable_names) {
       rows_to_process <-
         variable_details[variable_details[[
-          pkg.env$columns.Variable]] == variable_name, ]
+          pkg.env$columns.variable]] == variable_name, ]
       label_list[[variable_name]] <-
         create_label_list_element(rows_to_process)
     }
