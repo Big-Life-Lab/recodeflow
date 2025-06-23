@@ -47,100 +47,66 @@ create_id_row <- function(data, id_role_name, database_name, variables){
   return(data)
 }
 
-#' Create label list element
+#' Creates a list of variable labels
 #'
-#' A data labeling utility function for creating individual variable labels
-#'
-#' @param variable_rows all variable details rows containing 1 variable information
+#' @param var_rows all variable-details' rows containing a single variable's
+#' information
 #'
 #' @return a list containing labels for the passed variable
 #' @keywords internal
-create_label_list_element <- function(variable_rows) {
-  ret_list <- list(
-    # Variable type
-    type = NULL,
-    # Variable value units
-    unit = NULL,
-    # variable label long
-    label_long = NULL,
-    # variable label
-    label = NULL,
-    # Variable value label
-    values = c(),
-    # Variable value label long
-    values_long = c()
+create_var_labels <- function(var_rows) {
+  catlabel_col <- pkg.env$columns.catLabel
+  catlabellong_col <- pkg.env$columns.catLabelLong
+  label_col <- pkg.env$columns.label
+  totype_col <- pkg.env$columns.toType
+  recto_col <- pkg.env$columns.recTo
+  var_col <- pkg.env$columns.variable
+  varlabel_col <- pkg.env$columns.variableLabel
+  units_col <- pkg.env$columns.units
+
+  first_row <- var_rows[1, ]
+  var_name <- as.character(first_row[[var_col]])
+
+  # init result
+  result <- list(
+    type = as.character(first_row[[totype_col]]),
+    unit = as.character(first_row[[units_col]]),
+    label_long = as.character(first_row[[varlabel_col]]),
+    label = as.character(first_row[[label_col]]),
+    values = c(), # value labels
+    values_long = c() # value labels (long)
   )
-  first_row <- variable_rows[1, ]
-  ret_list$type <-
-    as.character(first_row[[pkg.env$columns.toType]])
-  ret_list$unit <-
-    as.character(first_row[[pkg.env$columns.units]])
-  ret_list$label_long <-
-    as.character(first_row[[pkg.env$columns.variableLabel]])
-  ret_list$label <-
-    as.character(first_row[[pkg.env$columns.label]])
-  if (is_equal(ret_list$type, pkg.env$columns.value.catType)) {
-    for (row_index in seq_len(nrow(variable_rows))) {
-      single_row <- variable_rows[row_index, ]
-      # Verify type stays the same
-      if (!is_equal(
-        ret_list$type,
-        as.character(single_row[[pkg.env$columns.toType]])
-      )) {
-        stop(
-          paste(
-            as.character(single_row[[pkg.env$columns.variable]]),
-            "does not contain all identical",
-            pkg.env$columns.toType,
-            "variable cant change variable type for different values"
-          )
-        )
-      }
-      # Verify unit is identical
-      if (!is_equal(
-        ret_list$unit,
-        as.character(single_row[[pkg.env$columns.units]])
-      )) {
-        stop(
-          paste(
-            as.character(single_row[[pkg.env$columns.variable]]),
-            "does not contain all identical",
-            pkg.env$columns.units,
-            "variable cant change unit type for different values"
-          )
-        )
-      }
-      # Verify variable label is identical
-      if (!is_equal(
-        ret_list$label_long,
-        as.character(single_row[[pkg.env$columns.variableLabel]])
-      )) {
-        stop(
-          paste(
-            as.character(single_row[[pkg.env$columns.variable]]),
-            "does not contain all identical",
-            pkg.env$columns.variableLabel,
-            "variable cant change variableLabel for different values. VAL1:",
-            ret_list$label_long,
-            "VAL2:",
-            as.character(single_row[[pkg.env$columns.variableLabel]])
-          )
-        )
-      }
-      value_being_labeled <-
-        as.character(single_row[[pkg.env$columns.recTo]])
-      value_being_labeled <-
-        format_recoded_value(value_being_labeled, ret_list$type)
-      ret_list$values[[as.character(single_row[[
-        pkg.env$columns.catLabel]])]] <-
-        value_being_labeled
-      ret_list$values_long[[as.character(single_row[[
-        pkg.env$columns.catLabelLong]])]] <-
-        value_being_labeled
-    }
+
+  # verify type, or return without value labels
+  if (!is_equal(result$type, pkg.env$columns.value.catType)) {
+    return(result)
   }
 
-  return(ret_list)
+  # set value labels
+  for (row_index in seq_len(nrow(var_rows))) {
+    row <- var_rows[row_index, ]
+    stopifnot(as.character(row[[var_col]]) == var_name)
+
+    # verify identical type/unit/label values, or abort
+    verify <- function(col_name, expected) {
+      actual <- as.character(row[[col_name]])
+      if (!is_equal(actual, expected)) {
+        stop(
+          paste(
+            var_name, "does not contain all identical ", col_name,
+            "-- variable can't change", col_name, " for different values"))
+      }
+    }
+    verify(totype_col, result$type)
+    verify(units_col, result$unit)
+    verify(varlabel_col, result$label_long)
+
+    value <- format_recoded_value(as.character(row[[recto_col]]), result$type)
+    result$values[[as.character(row[[catlabel_col]])]] <- value
+    result$values_long[[as.character(row[[catlabellong_col]])]] <- value
+  }
+
+  return(result)
 }
 
 #' @title label_data
@@ -285,8 +251,7 @@ set_data_labels <-
       rows_to_process <-
         variable_details[variable_details[[
           pkg.env$columns.variable]] == variable_name, ]
-      label_list[[variable_name]] <-
-        create_label_list_element(rows_to_process)
+      label_list[[variable_name]] <- create_var_labels(rows_to_process)
     }
     data_to_label <- label_data(label_list, data_to_label)
 

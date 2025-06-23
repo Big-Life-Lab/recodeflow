@@ -805,8 +805,7 @@ recode_non_derived_variables <- function(
   }
 
   # Set factor for all recode values
-  label_list[[variable_to_recode]] <-
-    create_label_list_element(rows_being_checked)
+  label_list[[variable_to_recode]] <- create_var_labels(rows_being_checked)
   else_value <-
     as.character(rows_being_checked[rows_being_checked[[pkg.env$columns.recFrom]] == "else",
                                     pkg.env$columns.recTo])
@@ -1238,7 +1237,7 @@ recode_derived_variables <-
       }
 
       # Obtain the function for each row
-      append(label_list, create_label_list_element(variable_rows))
+      append(label_list, create_var_labels(variable_rows))
 
       row_being_checked <- variable_rows[row_num,]
       func_cell <-
