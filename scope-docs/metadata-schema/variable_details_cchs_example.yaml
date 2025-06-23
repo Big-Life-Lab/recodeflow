@@ -1,0 +1,148 @@
+schema_version: "2.2.0"
+schema_date: "2025-06-22"
+description: "CCHS example showing project-specific extensions to variable_details schema."
+registry_file: "metadata_registry.yaml"
+
+# Example: Canadian Community Health Survey (CCHS) project-specific metadata
+# This demonstrates how projects can extend the core variable_details schema
+# with specialized transformation patterns and validation rules.
+
+cchs_project_metadata:
+  title: "CCHS variable details configuration example"
+  description: "Project-specific metadata for CCHS transformation rules and recoding patterns."
+
+  # Enhanced missing data categories for CCHS
+  missing_data_categories:
+    description: "CCHS-specific missing data patterns with haven::tagged_na() integration."
+    categories:
+      - code: "NA::a"
+        description: "Valid skip due to survey logic."
+        haven_equivalent: "haven::tagged_na('a')"
+        context: "Conditional questions, routing logic"
+        frequency: "Common"
+        
+      - code: "NA::b"
+        description: "Don't know, refusal, not stated."
+        haven_equivalent: "haven::tagged_na('b')"
+        context: "Missing responses, participant refusal"
+        frequency: "Common"
+        
+      - code: "NA::c"
+        description: "Not applicable (specific conditions)."
+        haven_equivalent: "haven::tagged_na('c')"
+        context: "Condition-specific non-applicability"
+        frequency: "Rare"
+
+  # Real-world interval notation examples
+  interval_notation_examples:
+    description: "Complex interval patterns validated with 3,577 CCHS records."
+    
+    standard_intervals:
+      - pattern: "[18.5,24.9]"
+        description: "BMI normal weight range (closed interval)."
+        
+      - pattern: "(0,18.5)"
+        description: "BMI underweight range (open interval)."
+        
+      - pattern: "[25,30)"
+        description: "BMI overweight range (half-open interval)."
+
+    complex_decimal_intervals:
+      - pattern: "[-0.359,1]"
+        description: "Health Utility Index range with negative decimals."
+        context: "Utility-based health status measurement"
+        
+      - pattern: "[0.0487,0.1846)"
+        description: "Complex calculated score range."
+        context: "Derived health indicators with high precision"
+
+  # CCHS function patterns for derived variables
+  function_patterns:
+    description: "Common function naming patterns in CCHS recoding."
+    examples:
+      - pattern: "Func::{variable}_fun"
+        description: "Simple transformation function."
+        example: "Func::bmi_cat_fun"
+        
+      - pattern: "Func::{variable}_der_fun{n}"
+        description: "Derived variable function with sequence number."
+        example: "Func::smoking_der_fun2"
+
+  # CCHS-specific validation rules
+  validation_rules:
+    recStart:
+      description: "CCHS interval notation must use validated patterns."
+      constraint: "required"
+      validation: "pattern_reference"
+      pattern_reference: "metadata_registry.yaml interval_notation"
+      additional_patterns:
+        cchs_complex_decimals: "^\\[[-]?[0-9]*\\.[0-9]+,\\s*[-]?[0-9]*\\.[0-9]+[\\)\\]]$"
+      error_message: "recStart must use valid CCHS interval notation"
+      
+    databaseStart:
+      description: "Database naming must follow CCHS pattern."
+      constraint: "required"
+      validation: "pattern"
+      pattern: "^cchs[0-9]{4}(_[0-9]{4})?_[pism]$"
+      error_message: "databaseStart must follow cchs{YEAR}_{TYPE} pattern"
+      
+    missing_data_codes:
+      description: "Missing data must use CCHS haven::tagged_na() integration."
+      validation: "enum"
+      allowed_values: ["NA::a", "NA::b", "NA::c", "NA::d"]
+      error_message: "Use CCHS-approved missing data codes with haven::tagged_na()"
+
+# ============================================================================
+# COMPLETE VARIABLE DETAIL EXAMPLES - Using CCHS extensions
+# ============================================================================
+
+example_variable_details:
+  age_group_example:
+    - variable: "age_group"
+      dummyVariable: "age_group_cat4_1"
+      typeEnd: "cat"
+      databaseStart: "cchs2017_p"
+      variableStart: "[AGE_12]"
+      typeStart: "cont"
+      recEnd: "1"
+      numValidCat: "4"
+      catLabel: "18-34 years"
+      catLabelLong: "Young adults aged 18 to 34 years"
+      units: ""
+      recStart: "[18,35)"
+      catStartLabel: "Age 18-34"
+      notes: "Standard CCHS age grouping for young adults"
+      
+  bmi_category_example:
+    - variable: "bmi_category"
+      dummyVariable: "bmi_cat4_1"
+      typeEnd: "cat"
+      databaseStart: "cchs2017_p"
+      variableStart: "DerivedVar::[HEIGHT_M, WEIGHT_KG]"
+      typeStart: "cont"
+      recEnd: "1"
+      numValidCat: "4"
+      catLabel: "Underweight"
+      catLabelLong: "Body mass index less than 18.5 (underweight)"
+      units: "kg/m²"
+      recStart: "(0,18.5)"
+      catStartLabel: "BMI < 18.5"
+      notes: "WHO classification for underweight BMI category"
+      
+    - variable: "bmi_category"
+      dummyVariable: "bmi_cat4_NA_a"
+      typeEnd: "cat"
+      databaseStart: "cchs2017_p"
+      variableStart: "DerivedVar::[HEIGHT_M, WEIGHT_KG]"
+      typeStart: "cont"
+      recEnd: "NA::a"
+      numValidCat: "4"
+      catLabel: "Valid skip"
+      catLabelLong: "BMI calculation not applicable - valid skip"
+      units: "kg/m²"
+      recStart: "NA::a"
+      catStartLabel: "Missing - valid skip"
+      notes: "Height or weight missing due to survey logic"
+
+# Note: This file demonstrates project-specific extensions.
+# Core schema specifications are defined in metadata_registry.yaml

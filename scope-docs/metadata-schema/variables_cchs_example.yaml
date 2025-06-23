@@ -1,0 +1,109 @@
+schema_version: "2.2.0"
+schema_date: "2025-06-22"
+description: "CCHS example showing project-specific extensions to variables schema."
+registry_file: "metadata_registry.yaml"
+
+# Example: Canadian Community Health Survey (CCHS) project-specific metadata
+# This demonstrates how projects can extend the core variables schema with
+# specialized metadata while maintaining compatibility with recodeflow.
+
+cchs_project_metadata:
+  title: "CCHS variables configuration example"
+  description: "Project-specific metadata for Canadian Community Health Survey harmonization."
+  
+  # Source database naming conventions specific to CCHS
+  source_databases:
+    pattern: "cchs{YEAR}_{TYPE}"
+    description: "CCHS database naming convention for survey cycles."
+    examples:
+      - "cchs2017_p"  # Public Use Microdata File
+      - "cchs2019_i"  # ICES data
+      - "cchs2021_s"  # Shared file
+    
+    year_formats:
+      - "YYYY"        # Single year: cchs2017
+      - "YYYY_YYYY"   # Multi-year: cchs2007_2008
+    
+    type_suffixes:
+      - code: "p"
+        description: "Public Use Microdata File (PUMF)"
+      - code: "i" 
+        description: "ICES data (continuous variables)"
+      - code: "s"
+        description: "Shared file"
+      - code: "m"
+        description: "Master file"
+
+  # CCHS-specific validation rules
+  validation_rules:
+    subject:
+      description: "CCHS subject areas - mandatory enumeration for all variables."
+      constraint: "required"
+      validation: "enum"
+      allowed_values:
+        - "Demographics"
+        - "Health status"
+        - "Health behaviors"
+        - "Health care use"
+        - "Chronic conditions"
+        - "Physical measures"
+        - "Mental health"
+        - "Social determinants"
+      error_message: "subject must be one of the CCHS-approved subject areas"
+      
+    section:
+      description: "CCHS survey modules - mandatory for organization."
+      constraint: "required"
+      validation: "enum"
+      allowed_values:
+        - "Core demographics"
+        - "General health"
+        - "Chronic conditions"
+        - "Health behaviors"
+        - "Optional content"
+      error_message: "section must specify CCHS survey module"
+      
+    databaseStart:
+      description: "Database naming must follow CCHS pattern."
+      constraint: "required"
+      validation: "pattern"
+      pattern: "^cchs[0-9]{4}(_[0-9]{4})?_[pism]$"
+      examples: ["cchs2017_p", "cchs2007_2008_i"]
+      error_message: "databaseStart must follow cchs{YEAR}_{TYPE} pattern"
+
+  # Missing data reference (detailed patterns in variable_details_cchs_example.yaml)
+  missing_data_reference:
+    description: "CCHS uses haven::tagged_na() integration."
+    reference_file: "variable_details_cchs_example.yaml"
+    standard_codes: ["NA::a", "NA::b"]
+    extended_codes: ["NA::c", "NA::d"]
+
+# ============================================================================
+# COMPLETE VARIABLE EXAMPLES - Using CCHS extensions
+# ============================================================================
+
+example_variables:
+  - variable: "age_group"
+    label: "Age group"
+    labelLong: "Age group categories based on CCHS standard groupings"
+    variableType: "Categorical"
+    databaseStart: "cchs2017_p"
+    variableStart: "[AGE_12]"
+    subject: "Demographics"  # Uses CCHS validation rule
+    section: "Core demographics"  # Uses CCHS validation rule
+    units: ""
+    notes: "Standard CCHS age grouping for demographic analysis"
+    
+  - variable: "bmi_category"
+    label: "BMI category"
+    labelLong: "Body mass index categories using WHO classification standards"
+    variableType: "Categorical"
+    databaseStart: "cchs2017_p"
+    variableStart: "DerivedVar::[HEIGHT_M, WEIGHT_KG]"
+    subject: "Physical measures"  # Uses CCHS validation rule
+    section: "General health"  # Uses CCHS validation rule
+    units: ""
+    notes: "Derived from height and weight measurements using standard BMI formula"
+
+# Note: This file demonstrates project-specific extensions.
+# Core schema specifications are defined in metadata_registry.yaml

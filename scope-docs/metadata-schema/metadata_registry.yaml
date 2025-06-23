@@ -140,6 +140,11 @@ schema_registry:
       file: "variable_details.yaml"
       purpose: "Define value-level transformations, recoding logic, and categorical mappings."
       target_csv: "variable_details.csv"
+      
+  cross_validation_requirements:
+    variable_consistency: "variable_details.variable must exist in variables.variable"
+    database_consistency: "databaseStart values must match between schemas"
+    template_consistency: "templateVariable references must be valid"
 
 # ============================================================================
 # EXTENSION REGISTRY - Current extensions
@@ -152,64 +157,37 @@ extension_registry:
     field_location: "templateVariable field in variable_details.csv"
     status: "active"
     values: ["Yes", "No", null, "", "<template_name>"]
-    usage_notes: |
-      Production-tested functionality since 2022. Reduces duplication significantly:
-      - 8 variables × 132 categories = 1,056 rows reduced to 138 rows (87% reduction)
-      - Template definition: templateVariable = "Yes"
-      - Template usage: templateVariable = "<template_name>"
+  
+  tagged_missing_data:
+    description: "Integration with haven::tagged_na() for survey missing data patterns."
+    affects_schemas: ["variables", "variable_details"]
+    field_location: "recEnd, recStart fields"
+    status: "active"
+    standard_codes: ["NA::a", "NA::b", "NA::c", "NA::d"]
 
 # ============================================================================
-# USAGE GUIDANCE
+# DATABASE-SPECIFIC EXTENSIONS - Project-specific metadata
 # ============================================================================
 
-usage_guidance:
-  validation_workflow:
-    description: "How validation tools should use these specifications."
-    csv_import_validation: "Use shared_specifications for format requirements and validation rules"
-    schema_validation: "Use individual schema files for field-specific validation"
-    cross_validation: "Check variables referenced in variable_details exist in variables.csv"
+database_specific_extensions:
+  description: "Framework for database/project-specific schema extensions and validation rules."
+  versioning_strategy: |
+    Database-specific extensions use independent versioning from core schemas:
+    - Core schemas (variables.yaml, variable_details.yaml): version 1.0.0
+    - Database extensions (e.g., variables_cchs.yaml): version 2.2.0+
+    - Registry coordination: metadata_registry.yaml version 1.0.0
     
-  file_relationships:
-    description: "How the three files work together."
-    registry_first: "Start with metadata_registry.yaml to understand shared specifications"
-    schema_specific: "Use variables.yaml or variable_details.yaml for detailed field requirements"
-    
-  task_specific_usage:
-    csv_validation: "metadata_registry.yaml + relevant schema file"
-    layout_assessment: "relevant schema file (variables.yaml or variable_details.yaml)"
-    extension_discovery: "metadata_registry.yaml extension_registry section"
-    pattern_validation: "Use transformation_patterns and interval_notation from registry"
-    
-  cross_validation_rules:
-    variable_references:
-      description: "Variables in variable_details must exist in variables.csv"
-      validation: "Check variable_details.variable against variables.variable"
+  extension_mechanism:
+    description: "Projects can create database-specific extensions as separate YAML files."
+    note: "Implementation patterns may vary based on project needs and validation tool requirements."
       
-    database_consistency:
-      description: "Database references should be consistent"
-      validation: "Check databaseStart values match across files"
-      
-    template_references:
-      description: "Template usage must reference existing template definitions"
-      validation: "templateVariable values must reference defined templates or be 'Yes'/'No'"
-      
-  implementation_examples:
-    dummyVariable_creation:
-      categorical: |
-        For age categories: age_cat4_1, age_cat4_2, age_cat4_3, age_cat4_4
-        Pattern: {variable}_{cat|cont}{num_categories}_{category_number}
-      continuous: |
-        For BMI: bmi_cont1, height_cont1, weight_cont1
-        Pattern: {variable}_{cat|cont}{transformation_number}
-        
-    variableStart_usage:
-      simple: "[HEIGHT] - references HEIGHT variable from any database"
-      database_specific: "cchs2017_p::HWT_2 - specific database and variable"
-      derived: "DerivedVar::[HEIGHT_CM, WEIGHT_KG] - calculated from multiple variables"
-      complex: "cchs2001_p::VAR1, cchs2003_p::VAR2, [VAR3] - mixed sources"
-      
-    recStart_patterns:
-      categorical: "English, French, 1, 2, NA::a"
-      numeric_ranges: "[18.5,24.9], (0,18), [-0.359,1]"
-      missing_data: "NA::a (valid skip), NA::b (don't know/refusal)"
+  supported_databases:
+    cchs:
+      description: "Canadian Community Health Survey extensions"
+      files: ["variables_cchs_example.yaml", "variable_details_cchs_example.yaml"]
+      version: "2.2.0"
+      status: "production"
+
+# Note: Usage guidance and implementation examples are documented separately
+# in the metadata schema documentation and individual schema files.
 
