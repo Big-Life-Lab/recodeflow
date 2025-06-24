@@ -871,7 +871,7 @@ recode_non_derived_variables <- function(
       from_values <- list()
       # Check for presence of interval in the recFrom column
       # Catches any values as long as they are surrounded by the specific intervals
-      if (grepl("\\[*\\]|\\[*\\)|\\(*\\]|\\(*\\)",
+      if (grepl("\\[.+\\]|\\[.+\\)|\\(.+\\]|\\(.+\\)",
                 as.character(row_being_checked[[pkg.env$columns.recFrom]]))) {
         # This splits the value in 2 parts [1] being first half the interval and value and [2] being second half and closing interval
         from_values <-
