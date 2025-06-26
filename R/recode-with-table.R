@@ -806,8 +806,8 @@ recode_non_derived_vars <- function(
         # rows that have not been recoded.
         recoding_result$recoded_data_rows == FALSE
       } else {
-        compare_value_based_on_interval(
-          compare_columns = start_var,
+        check_interval(
+          column = start_var,
           data = data,
           left_boundary = parsed_from_value$from_values[[1]],
           right_boundary = parsed_from_value$from_values[[2]],
@@ -935,53 +935,42 @@ write_note <- function(note) {
   }
 }
 
-#' Compare Value Based On Interval
+#' Check interval
 #'
-#' Compare values on the scientific notation interval
+#' Checks if the values are inside the scientific-notation interval
 #'
 #' @param left_boundary the min value
 #' @param right_boundary the max value
-#' @param data the data that contains values being compared
-#' @param compare_columns The columns inside data being checked
-#' @param interval The scientific notation interval
+#' @param data the data that contains values being checked
+#' @param column The column inside data being checked
+#' @param interval The scientific notation interval (without values)
 #'
-#' @return a boolean vector containing true for rows where the
-#' comparison is true
+#' @return a logical vector with the comparison result
 #' @keywords internal
-compare_value_based_on_interval <-
-  function(left_boundary,
-           right_boundary,
-           data,
-           compare_columns,
-           interval) {
-    valid_row_index <- vector()
-    # In case of strings this handles it the suppress warnings is to get rid of the warning when string is checked as numeric
+check_interval <-
+  function(left_boundary, right_boundary, data, column, interval) {
+
+    # if the boundary is not a number, then just do a direct intersection
     if (suppressWarnings(is.na(as.numeric(left_boundary)))) {
-      valid_row_index <-
-        data[[compare_columns]] %in% data[[compare_columns]][which(left_boundary == data[[compare_columns]])]
-    } else {
-      if (interval == "[,]") {
-        valid_row_index <-
-          data[[compare_columns]] %in% data[[compare_columns]][which(as.numeric(left_boundary) <= as.numeric(data[[compare_columns]]) &
-                                                                       as.numeric(data[[compare_columns]]) <= as.numeric(right_boundary))]
-      } else if (interval == "[,)") {
-        valid_row_index <-
-          data[[compare_columns]] %in% data[[compare_columns]][which(as.numeric(left_boundary) <= as.numeric(data[[compare_columns]]) &
-                                                                       as.numeric(data[[compare_columns]]) < as.numeric(right_boundary))]
-      } else if (interval == "(,]") {
-        valid_row_index <-
-          data[[compare_columns]] %in% data[[compare_columns]][which(as.numeric(left_boundary) < as.numeric(data[[compare_columns]]) &
-                                                                       as.numeric(data[[compare_columns]]) <= as.numeric(right_boundary))]
-      } else if (interval == "(,)") {
-        valid_row_index <-
-          data[[compare_columns]] %in% data[[compare_columns]][which(as.numeric(left_boundary) < as.numeric(data[[compare_columns]]) &
-                                                                       as.numeric(data[[compare_columns]]) < as.numeric(right_boundary))]
-      } else {
-        stop("Invalid Argument was passed")
-      }
+      return(data[[column]] %in% left_boundary)
     }
 
-    return(valid_row_index)
+    v <- as.numeric(data[[column]]) # vector of numeric column values
+    min <- as.numeric(left_boundary)
+    max <- as.numeric(right_boundary)
+
+    result <- if (interval == "[,]") {
+      min <= v & v <= max
+    } else if (interval == "[,)") {
+      min <= v & v < max
+    } else if (interval == "(,]") {
+      min < v & v <= max
+    } else if (interval == "(,)") {
+      min < v & v < max
+    } else {
+      stop("Invalid Argument was passed")
+    }
+    return(result)
   }
 
 # Does the following updates on the passed variable details sheet:
