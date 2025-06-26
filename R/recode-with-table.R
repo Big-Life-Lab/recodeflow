@@ -558,9 +558,8 @@ get_data_variable_name <-
         )
       )
     }
-    result <- trimws(result)
-    stopifnot(is.vector(result))
 
+    result <- trimws(result)
     return(result)
   }
 
