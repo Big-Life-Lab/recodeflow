@@ -1347,7 +1347,7 @@ get_feeder_vars <- function(derived_start_variable, database_name) {
   if(is.na(feeder_var_string)) {
     return(NA)
   }
-  feeder_var_string <- gsub("\\[|\\]", "", feeder_var_string)
+  feeder_var_string <- strip_brackets(feeder_var_string)
 
   feeder_vars <- as.list(strsplit(feeder_var_string, ","))[[1]]
   feeder_vars <- sapply(feeder_vars, trimws)
