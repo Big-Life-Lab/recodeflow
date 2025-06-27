@@ -525,16 +525,18 @@ get_data_variable_name <-
     # a comma-delimited string of variable names
     varstart_names <- as.character(row[[varstart_col]])
 
-    has_db_var <- grepl(data_name, varstart_names)
+    db_prefix = paste0(data_name, "::")
+    has_db_var <- grepl(db_prefix, varstart_names)
     has_default_var <- grepl("\\[", varstart_names)
 
     if (has_db_var) {
-      varstart_names_list <- strsplit(varstart_names, ",")[[1]]
+      varstart_names_list <- trimws(strsplit(varstart_names, ",")[[1]])
 
       # find exact var name
       for (name in varstart_names_list) {
-        if (grepl(data_name, name)) {
+        if (startsWith(name, db_prefix)) {
           result <- strip_prefix(name)
+          break
         }
       }
 
@@ -556,9 +558,8 @@ get_data_variable_name <-
         )
       )
     }
-    result <- trimws(result)
-    stopifnot(is.vector(result))
 
+    result <- trimws(result)
     return(result)
   }
 
