@@ -125,14 +125,14 @@ test_that("Tables work with custom functions", {
     units = c("N/A", "N/A"),
     variableType = c("Continuous", "Continuous"),
     databaseStart = c("database_one", "database_one"),
-    variableStart = c("[start_var]", "DerivedVar::[derived_variable_one, tables::table_one]")
+    variableStart = c("[start_var]", "DerivedVar::[derived_variable_one, tables::table_one, tables::table_two]")
   )
   database_name <- "database_one"
   variable_details <- data.frame(
     variable = c("derived_variable_one", "derived_variable_two"),
     typeEnd = c("cont", "cont"),
     databaseStart = c("database_one", "database_one"),
-    variableStart = c("[start_var]", "DerivedVar::[derived_variable_one, tables::table_one]"),
+    variableStart = c("[start_var]", "DerivedVar::[derived_variable_one, tables::table_one, tables::table_two]"),
     typeStart = c("N/A", "N/A"),
     recEnd = c("copy", "Func::func_1"),
     numValidCategories = c("N/A", "N/A"),
@@ -144,10 +144,11 @@ test_that("Tables work with custom functions", {
     table_one = data.frame(
       derived_variable_one = c(1),
       derived_variable_two = c(2)
-    )
+    ),
+    table_two = data.frame()
   )
   # Custom function for the derived variable
-  func_1 <- function(derived_variable_one, table_one) {
+  func_1 <- function(derived_variable_one, table_one, table_two) {
     return(table_one[table_one$derived_variable_one == derived_variable_one,]$derived_variable_two)
   }
   .GlobalEnv[["func_1"]] <- func_1

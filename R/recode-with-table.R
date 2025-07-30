@@ -1250,7 +1250,7 @@ recode_derived_variables <-
         custom_function_args <- list()
         for(feeder_var in used_feeder_vars) {
           if(is_table_feeder_var(feeder_var)) {
-            table_name <- get_table_name(feeder_vars)
+            table_name <- get_table_name(feeder_var)
             custom_function_args[[table_name]] <- tables[[table_name]]
           } else {
             if(feeder_var %in% names(recoded_data)) {
