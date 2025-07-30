@@ -546,3 +546,166 @@ test_that("The function should not error when a tibble is passed in", {
   attr(expected_data$b, "unit") <- "N/A"
   expect_equal(recoded_data, expected_data)
 })
+
+test_that(
+  "derived variables work with constant numeric values as a dependency",
+  {
+    variables <- data.frame(
+      variable = c(
+        "num_hours_jogging",
+        "num_hours_basketball",
+        "mets_jogging",
+        "mets_basketball"
+      ),
+      label = c("", "", "", ""),
+      labelLong = c("", "", "", ""),
+      units = c("N/A", "N/A", "N/A", "N/A"),
+      variableType = c("Continuous", "Continuous", "Continuous", "Continuous"),
+      databaseStart = c("db_one", "db_one", "db_one", "db_one"),
+      variableStart = c(
+        "[num_hours_jogging]",
+        "[num_hours_basketball]",
+        "DerivedVar::[num_hours_jogging, 7]",
+        "DerivedVar::[num_hours_basketball, 6.5]"
+      )
+    )
+    variable_details <- data.frame(
+      variable = c(
+        "num_hours_jogging",
+        "num_hours_basketball",
+        "mets_jogging",
+        "mets_basketball"
+      ),
+      typeEnd = c("cont", "cont", "cont", "cont"),
+      databaseStart = c("db_one", "db_one", "db_one", "db_one"),
+      variableStart = c(
+        "[num_hours_jogging]",
+        "[num_hours_basketball]",
+        "DerivedVar::[num_hours_jogging, 7]",
+        "DerivedVar::[num_hours_basketball, 6.5]"
+      ),
+      typeStart = c("cont", "cont", "cont", "cont"),
+      recEnd = c("copy", "copy", "Func::get_mets", "Func::get_mets"),
+      numValidCategories = c("N/A", "N/A", "N/A", "N/A"),
+      recStart = c("else", "else", "N/A", "N/A"),
+      catLabel = c("", "", "", ""),
+      catLabelLong = c("", "", "", "")
+    )
+    data <- data.frame(
+      num_hours_jogging = c(2),
+      num_hours_basketball = c(5)
+    )
+    database_name <- "db_one"
+    tables <- list()
+    get_mets <- function(num_hours_activity, activity_met_value) {
+      return(num_hours_activity * activity_met_value)
+    }
+    setup_custom_function(get_mets)
+
+    actual_output <- recodeflow::rec_with_table(
+      data = data,
+      variables = variables$variable,
+      variable_details = variable_details,
+      database_name = database_name,
+      tables = tables
+    )
+
+    expected_output <- data.frame(
+      num_hours_jogging = c(2),
+      num_hours_basketball = c(5),
+      mets_jogging = c(14),
+      mets_basketball = c(32.5)
+    )
+    attr(expected_output$num_hours_jogging, "label_long") <- NA_character_
+    attr(expected_output$num_hours_jogging, "unit") <- character(0)
+    attr(expected_output$num_hours_basketball, "label_long") <- NA_character_
+    attr(expected_output$num_hours_basketball, "unit") <- character(0)
+
+    expect_equal(actual_output, expected_output)
+  }
+)
+
+test_that(
+  "derived variables work with constant string values as a dependency",
+  {
+    variables <- data.frame(
+      variable = c(
+        "num_hours_jogging",
+        "num_hours_basketball",
+        "mets_jogging",
+        "mets_basketball"
+      ),
+      label = c("", "", "", ""),
+      labelLong = c("", "", "", ""),
+      units = c("N/A", "N/A", "N/A", "N/A"),
+      variableType = c("Continuous", "Continuous", "Continuous", "Continuous"),
+      databaseStart = c("db_one", "db_one", "db_one", "db_one"),
+      variableStart = c(
+        "[num_hours_jogging]",
+        "[num_hours_basketball]",
+        "DerivedVar::[num_hours_jogging, 'jogging', tables::mets_map]",
+        "DerivedVar::[num_hours_basketball, \"basketball\", tables::mets_map]"
+      )
+    )
+    variable_details <- data.frame(
+      variable = c(
+        "num_hours_jogging",
+        "num_hours_basketball",
+        "mets_jogging",
+        "mets_basketball"
+      ),
+      typeEnd = c("cont", "cont", "cont", "cont"),
+      databaseStart = c("db_one", "db_one", "db_one", "db_one"),
+      variableStart = c(
+        "[num_hours_jogging]",
+        "[num_hours_basketball]",
+        "DerivedVar::[num_hours_jogging, 'jogging', tables::mets_map]",
+        "DerivedVar::[num_hours_basketball, \"basketball\", tables::mets_map]"
+      ),
+      typeStart = c("cont", "cont", "cont", "cont"),
+      recEnd = c("copy", "copy", "Func::get_mets", "Func::get_mets"),
+      numValidCategories = c("N/A", "N/A", "N/A", "N/A"),
+      recStart = c("else", "else", "N/A", "N/A"),
+      catLabel = c("", "", "", ""),
+      catLabelLong = c("", "", "", "")
+    )
+    data <- data.frame(
+      num_hours_jogging = c(2),
+      num_hours_basketball = c(5)
+    )
+    database_name <- "db_one"
+    tables <- list(
+      mets_map = data.frame(
+        activity = c("jogging", "basketball"),
+        mets = c(7, 6.5)
+      )
+    )
+    # Custom function for the derived variable
+    get_mets <- function(num_hours_activity, activity_type, mets_map) {
+      activity_met_value <- mets_map[mets_map$activity == activity_type, ]
+      return(num_hours_activity * activity_met_value$mets)
+    }
+    setup_custom_function(get_mets)
+
+    actual_output <- recodeflow::rec_with_table(
+      data = data,
+      variables = variables$variable,
+      variable_details = variable_details,
+      database_name = database_name,
+      tables = tables
+    )
+
+    expected_output <- data.frame(
+      num_hours_jogging = c(2),
+      num_hours_basketball = c(5),
+      mets_jogging = c(14),
+      mets_basketball = c(32.5)
+    )
+    attr(expected_output$num_hours_jogging, "label_long") <- NA_character_
+    attr(expected_output$num_hours_jogging, "unit") <- character(0)
+    attr(expected_output$num_hours_basketball, "label_long") <- NA_character_
+    attr(expected_output$num_hours_basketball, "unit") <- character(0)
+
+    expect_equal(actual_output, expected_output)
+  }
+)

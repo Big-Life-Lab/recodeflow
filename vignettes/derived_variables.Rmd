@@ -86,3 +86,74 @@ derived1 <- rec_with_table(
 print(head(derived1))
 ```
 
+## Start Variables
+
+In the example above the derived start variables were all variables themselves.
+However, the start variables strings for example 'en' or numbers for example 5.
+Strings should be surrounded by quotes, either single quotes (') or double
+quotes (").
+
+For example, consider the R function below that calculates BMI and truncates
+it so that its value cannot be higher than the `upper_bound` parameter.
+
+```{r}
+BMI.func <- function(height, weight, upper_bound) {
+  bmi <- weight / (height * height)
+
+  if(bmi > upper_bound) {
+    return(upper_bound)
+  }
+
+  return(bmi)
+}
+```
+
+The variable details sheet row for this variable is shown below,
+
+```{r}
+variable_details_sheet <- data.frame(
+  variable = c("BMI", "height", "weight"),
+  variableStart = c(
+   "DerivedVar::[height, weight, 35]", "[height]", "[weight]"
+  ),
+  recEnd = c("Func::BMI.func", "copy", "copy"),
+  typeEnd = c("cont", "cont", "cont"),
+  typeStart = c("cont", "cont", "cont"),
+  databaseStart = c("health", "health", "health"),
+  variableStartLabel = c("N/A", "height", "weight"),
+  numValidCate = c("N/A", "N/A", "N/A"),
+  catLabel = c("N/A", "N/A", "N/A"),
+  catLabelLong = c("N/A", "N/A", "N/A"),
+  units = c("kg/cm^2", "cm", "kg"),
+  recStart = c("N/A", "else", "else"),
+  catStartLabel = c("N/A", "N/A", "N/A"),
+  variableStartShortLabel = c("N/A", "height", "weight"),
+  notes = c("", "", "")
+)
+DT::datatable(variable_details_sheet)
+```
+
+The first row of the sheet contains the details for recoding the derived
+variable BMI. Its `variableStart` column value uses the previous notation
+but has a 35 as its value for the `upper_bound` parameter, effectively
+truncating the upper end to 35.
+
+The `rec_with_table` code using this sheet is shown below,
+
+```{r}
+data <- data.frame(
+  weight = c(100, 1000),
+  height = c(5, 5)
+)
+recoded_BMI <- rec_with_table(
+  data = data,
+  variables = c("height", "weight", "BMI"),
+  variable_details = variable_details_sheet,
+  database_name = 'health',
+  log = TRUE
+)
+print(recoded_BMI$BMI)
+```
+
+Notice how the second value is truncated to the value of 35 instead of its
+normaly calculated value of 40.

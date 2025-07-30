@@ -1164,7 +1164,9 @@ recode_derived_variables <-
           variables_details_rows_to_process[
             variables_details_rows_to_process[[pkg.env$columns.variable]] == feeder_var, ])
         ) {
-          if(!feeder_var %in% c(names(recoded_data), names(data))) {
+          if(!feeder_var %in% c(names(data), names(recoded_data)) &
+             !is_start_var_string(feeder_var) &
+             !is_start_var_numeric(feeder_var)) {
             non_func_missing_variables <- c(non_func_missing_variables, feeder_var)
           }
         }
@@ -1212,7 +1214,9 @@ recode_derived_variables <-
       for (one_feeder in feeder_vars) {
         if(!is_table_feeder_var(one_feeder)) {
           # Need to check recoded data again in case a recursion added it
-          if (!one_feeder %in% c(names(data), names(recoded_data))) {
+          if (!one_feeder %in% c(names(data), names(recoded_data)) &
+             !is_start_var_string(one_feeder) &
+             !is_start_var_numeric(one_feeder)) {
             derived_return <-
               recode_derived_variables(
                 data = data,
@@ -1256,8 +1260,17 @@ recode_derived_variables <-
             if(feeder_var %in% names(recoded_data)) {
               custom_function_args[[feeder_var]] <- recoded_data[recoded_data_row_index, feeder_var]
             }
-            else {
+            else if(feeder_var %in% names(data)) {
               custom_function_args[[feeder_var]] <- data[recoded_data_row_index, feeder_var]
+            }
+            else if(is_start_var_string(feeder_var)) {
+              string_constant_match <- stringr::str_match(
+                feeder_var, str_constant_regex)
+              string_constant <- string_constant_match[1, 2]
+              custom_function_args[[feeder_var]] <- string_constant
+            }
+            else {
+              custom_function_args[[feeder_var]] <- as.numeric(feeder_var)
             }
           }
         }
@@ -1371,3 +1384,23 @@ is_derived_var <- function(variable_details_row) {
     derived_var_regex, variable_details_row[1, pkg.env$columns.variableStart]
   )) > 0)
 }
+
+#' Check whether a start variable is a numeric constant
+#'
+#' @param x the string to be checked
+#' @returns boolean
+is_start_var_numeric <- function(x) {
+  return(!is.na(suppressWarnings(as.numeric(x))))
+}
+
+# Regex to check for a string constant
+str_constant_regex <- "(?:'|\")(.+)(?:'|\")"
+
+#' Checks whether a start variable is a string constant
+#'
+#' @param x the string to be checked
+#' @returns boolean
+is_start_var_string <- function(x) {
+  return(grepl(str_constant_regex, x))
+} 
+
