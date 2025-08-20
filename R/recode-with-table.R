@@ -515,67 +515,6 @@ recode_call <-
     return(rec_data)
   }
 
-#' @title Get Data Variable Name
-#'
-#' @name get_data_variable_name
-#'
-#' @description Retrieves the name of the column inside data to
-#' use for calculations
-#'
-#' @param data_name name of the database being checked
-#' @param data database being checked
-#' @param row the row from variable details that contains
-#' information on this variable
-#' @param recoded_varname the name of the recoded variable
-#'
-#' @return the data equivalent of var_name
-#' @keywords internal
-get_data_variable_name <-
-  function(data_name, data, row, recoded_varname) {
-    varstart_col <- pkg.env$columns.variableStart
-    result <- character()
-
-    # a comma-delimited string of variable names
-    varstart_names <- as.character(row[[varstart_col]])
-
-    db_prefix = paste0(data_name, "::")
-    has_db_var <- grepl(db_prefix, varstart_names)
-    has_default_var <- grepl("\\[", varstart_names)
-
-    if (has_db_var) {
-      varstart_names_list <- trimws(strsplit(varstart_names, ",")[[1]])
-
-      # find exact var name
-      for (name in varstart_names_list) {
-        if (startsWith(name, db_prefix)) {
-          result <- strip_prefix(name)
-          break
-        }
-      }
-
-    } else if (has_default_var) {
-      # At this point there are no db-vars for `data_name`, but there may be
-      # variables for unknown databases. Now we'll check for default vars, and
-      # take the first one.
-      result <- stringr::str_match(varstart_names, "\\[(.*?)\\]")[, 2]
-
-    } else {
-      # no db-vars and no default-vars
-      stop(
-        paste(
-          "The row", row, "for the variable", recoded_varname,
-          "does not contain the database being checked (", data_name, ")",
-          "in its variable start. The default is also missing.",
-          "Please double check if this variable should have",
-          data_name, "included in its databaseStart"
-        )
-      )
-    }
-
-    result <- trimws(result)
-    return(result)
-  }
-
 #' recode_columns
 #'
 #' Recodes columns from passed row and returns just table with those columns
@@ -1316,57 +1255,6 @@ recode_derived_vars <-
     )
   }
 
-get_feeder_vars <- function(derived_start_variable, database_name) {
-  feeder_vars_capture_group <- "(.{0,}?)"
-
-  # Regex for when the derived variable is the same for all databases
-  # For example, DerivedVar::[var_one]
-  single_derived_var_regex <- paste(
-    pkg.env$recode.key.derived.var, "\\[", feeder_vars_capture_group, "\\]",
-    sep = ""
-  )
-  # Regex to get the derived variables for a certain databases
-  # For example, database_one::DerivedVar::[var_one]
-  database_derived_var_regex <- paste(
-    database_name, "::", single_derived_var_regex,
-    sep = ""
-  )
-  # Regex to get the derived variables for the default derived variable
-  # For example, [DerivedVar::[var_one]]
-  default_derived_var_regex <- paste(
-    "\\[", single_derived_var_regex, "\\]",
-    sep = ""
-  )
-
-  feeder_var_string <- NA
-  if(grepl(database_derived_var_regex, derived_start_variable)) {
-    feeder_var_string <- regmatches(
-      derived_start_variable,
-      regexec(database_derived_var_regex, derived_start_variable)
-    )[[1]][2]
-  }
-  else if(grepl(default_derived_var_regex, derived_start_variable)) {
-    feeder_var_string <- regmatches(
-      derived_start_variable,
-      regexec(default_derived_var_regex, derived_start_variable)
-    )[[1]][2]
-  }
-  else if(grepl(single_derived_var_regex, derived_start_variable)) {
-    feeder_var_string <- regmatches(
-      derived_start_variable,
-      regexec(single_derived_var_regex, derived_start_variable)
-    )[[1]][2]
-  }
-  if(is.na(feeder_var_string)) {
-    return(NA)
-  }
-  feeder_var_string <- strip_brackets(feeder_var_string)
-
-  feeder_vars <- as.list(strsplit(feeder_var_string, ","))[[1]]
-  feeder_vars <- sapply(feeder_vars, trimws)
-  return(feeder_vars)
-}
-
 calculate_custom_function_row_value <-
   function(row_values,
            variable_names,
@@ -1376,19 +1264,6 @@ calculate_custom_function_row_value <-
 
     return(custom_function_return_value)
   }
-
-#' Whether a variable in a variables details sheet is a derived variable
-#'
-#' @param variable_details_row A data frame with a single row which will be
-#' checked
-#' @return A boolean
-#' @keywords internal
-is_derived_var <- function(variable_details_row) {
-  derived_var_regex <- "DerivedVar::\\[(.+?)\\]|DerivedVar::\\[\\]"
-  return(length(grep(
-    derived_var_regex, variable_details_row[1, pkg.env$columns.variableStart]
-  )) > 0)
-}
 
 #' Check whether a start variable is a numeric constant
 #'
@@ -1408,4 +1283,3 @@ str_constant_regex <- "(?:'|\")(.+)(?:'|\")"
 is_start_var_string <- function(x) {
   return(grepl(str_constant_regex, x))
 } 
-
