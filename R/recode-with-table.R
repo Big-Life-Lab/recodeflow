@@ -1,5 +1,6 @@
 # Removing Note for undeclared variable. This is necessary because it is used
-# in the magritr package for piping however it is not exported so cran check throws a note.
+# in the magritr package for piping however it is not exported so cran check
+# throws a note.
 . <- NULL
 
 # stdext
@@ -21,8 +22,8 @@ strip_brackets <- function(s) {
 }
 
 #' @title Checks whether two values are equal including NA
-#' @description Compared to the base "==" operator in R, this function returns true if the two values are NA
-#' whereas the base "==" operator returns NA
+#' @description Compared to the base "==" operator in R, this function returns
+#' true if the two values are NA whereas the base "==" operator returns NA
 #'
 #' @param v1 variable 1
 #' @param v2 variable 2
@@ -66,63 +67,64 @@ is_equal <- function(v1, v2) {
 #'  dataframe needs the following columns:
 #'  \describe{
 #'   \item{variable}{Name of the new variable created. The name of the new
-#'   variable can be the same as the original variable if it does not change the original variable definition}
-#'   \item{toType}{type the new variable
-#'   \emph{cat = categorical, cont = continuous}}
+#'     variable can be the same as the original variable if it does not change
+#'     the original variable definition}
+#'   \item{toType}{type the new variable \emph{cat = categorical, cont =
+#'     continuous}}
 #'   \item{databaseStart}{Names of the databases that the original variable can
-#'   come from. Each database name should be seperated by a comma. For eg.,
-#'   "cchs2001_p, cchs2003_p,cchs2005_p,cchs2007_p"}
+#'     come from. Each database name should be seperated by a comma. For eg.,
+#'     "cchs2001_p, cchs2003_p,cchs2005_p,cchs2007_p"}
 #'   \item{variableStart}{Names of the original variables within each database
-#'   specified in the databaseStart column. For eg. ,
-#'   "cchs2001_p::RACA_6A,cchs2003_p::RACC_6A,ADL_01". The final variable
-#'   specified is the name of the variable for all other databases specified in
-#'   databaseStart but not in this column. For eg., ADL_01 would be the original
-#'   variable name in the cchs2005_p and cchs2007_p databases.}
+#'     specified in the databaseStart column. For eg. ,
+#'     "cchs2001_p::RACA_6A,cchs2003_p::RACC_6A,ADL_01". The final variable
+#'     specified is the name of the variable for all other databases specified
+#'     in databaseStart but not in this column. For eg., ADL_01 would be the
+#'     original variable name in the cchs2005_p and cchs2007_p databases.}
 #'   \item{fromType}{variable type of start variable.
-#'   \emph{cat = categorical or factor variable}
-#'   \emph{cont = continuous variable (real number or integer)}}
+#'     \emph{cat = categorical or factor variable}
+#'     \emph{cont = continuous variable (real number or integer)}}
 #'   \item{recTo}{Value to recode to}
 #'   \item{recFrom}{Value/range being recoded from}
 #'  }
-#'  Each row in the \emph{variables details} sheet encodes the rule for recoding
-#'  value(s) of the original variable to a category in the new variable. The
-#'  categories of the new variable are encoded in the \emph{recTo} column and the
-#'  value(s) of the original variable that recode to this new value are encoded
-#'  in the \emph{recFrom} column. These recode columns follow a syntax
-#'  similar to the \emph{sjmisc::rec()} function. Whereas in the \emph{sjmisc::rec()}
-#'  function the recoding rules are in one string, in the variables details sheet
-#'  they are encoded over multiple rows and columns (recFrom an recTo). For eg.,
-#'  a recoding rule in the sjmisc function would like like "1=2;2=3" whereas
-#'  in the variables details sheet this would be encoded over two rows with
-#'  recFrom and recTo values of the first row being 1 and 2 and similarly for
-#'  the second row it would be 2 and 3. The rules for describing recoding
-#'  pairs are shown below:
+#'  Each row in the \emph{variables details} sheet encodes the rule for
+#'  recoding value(s) of the original variable to a category in the new
+#'  variable. The categories of the new variable are encoded in the
+#'  \emph{recTo} column and the value(s) of the original variable that recode
+#'  to this new value are encoded in the \emph{recFrom} column. These recode
+#'  columns follow a syntax similar to the \emph{sjmisc::rec()} function.
+#'  Whereas in the \emph{sjmisc::rec()} function the recoding rules are in one
+#'  string, in the variables details sheet they are encoded over multiple rows
+#'  and columns (recFrom an recTo). For eg., a recoding rule in the sjmisc
+#'  function would like like "1=2;2=3" whereas in the variables details sheet
+#'  this would be encoded over two rows with recFrom and recTo values of the
+#'  first row being 1 and 2 and similarly for the second row it would be 2 and
+#'  3. The rules for describing recoding pairs are shown below:
 #'   \describe{
 #'     \item{recode pairs}{Each recode pair is a row}
 #'     \item{multiple values}{Multiple values from the old variable that should
-#'     be recoded into a new category of the new variable should be separated
-#'     with a comma. e.g.,
-#'     \emph{recFrom = "1,2"; recTo = 1}} will recode values of 1 and 2 in the
-#'     original variable to 1 in the new variable
+#'       be recoded into a new category of the new variable should be separated
+#'       with a comma. e.g., \emph{recFrom = "1,2"; recTo = 1}} will recode
+#'       values of 1 and 2 in the original variable to 1 in the new variable
 #'     \item{value range}{A value range is indicated by a colon, e.g.
-#'     \emph{recFrom= "1:4"; recTo = 1} will recode all values from 1 to 4 into 1}
-#'     \item{\emph{min} and \emph{max}}{minimum and maximum values
-#'     are indicated by \emph{min} (or \emph{lo}) and \emph{max} (or \emph{hi}),
-#'      e.g. \emph{recFrom = "min:4"; recTo = 1} will recode all values from the
-#'      minimum value of the original variable to 4 into 1}
-#'     \item{\emph{"else"}}{All other values, which have not been specified yet,
-#'      are indicated by \emph{else}, e.g. \emph{recFrom = "else"; recTo = NA}
-#'      will recode all other values (not specified in other rows) of the
-#'      original variable to "NA")}
+#'       \emph{recFrom= "1:4"; recTo = 1} will recode all values from 1 to 4
+#'       into 1}
+#'     \item{\emph{min} and \emph{max}}{minimum and maximum values are
+#'       indicated by \emph{min} (or \emph{lo}) and \emph{max} (or \emph{hi}),
+#'       e.g. \emph{recFrom = "min:4"; recTo = 1} will recode all values from
+#'       the minimum value of the original variable to 4 into 1}
+#'     \item{\emph{"else"}}{All other values, which have not been specified
+#'       yet, are indicated by \emph{else}, e.g. \emph{recFrom = "else"; recTo
+#'       = NA} will recode all other values (not specified in other rows) of
+#'       the
+#'       original variable to "NA")}
 #'     \item{\emph{"copy"}}{the \emph{else} token can be combined with
-#'     \emph{copy}, indicating that all remaining, not yet recoded values should
-#'      stay the same (are copied from the original value), e.g.
-#'      \emph{recFrom = "else"; recTo = "copy"}}
+#'       \emph{copy}, indicating that all remaining, not yet recoded values
+#'       should stay the same (are copied from the original value), e.g.
+#'       \emph{recFrom = "else"; recTo = "copy"}}
 #'     \item{\emph{NA}'s}{\emph{NA} values are allowed both for the original
-#'     and the new variable, e.g.
-#'     \emph{recFrom "NA"; recTo = 1. or "recFrom = "3:5"; recTo = "NA"}
-#'     (recodes all NA into 1,
-#'     and all values from 3 to 5 into NA in the new variable)}
+#'     and the new variable, e.g. \emph{recFrom "NA"; recTo = 1. or "recFrom =
+#'     "3:5"; recTo = "NA"} (recodes all NA into 1, and all values from 3 to 5
+#'     into NA in the new variable)}
 #' }
 #'
 #' @param data A dataframe containing the variables to be recoded.
@@ -137,9 +139,9 @@ is_equal <- function(v1, v2) {
 #' variable details sheet.
 #' @param variable_details A dataframe containing the specifications
 #' for recoding.
-#' @param else_value Value (string, number, integer, logical or NA) that is used
-#' to replace any values that are outside the specified ranges
-#' (no rules for recoding).
+#' @param else_value Value (string, number, integer, logical or NA) that is
+#' used to replace any values that are outside the specified ranges (no rules
+#' for recoding).
 #' @param append_to_data Logical, if \code{TRUE} (default), the newly
 #' created variables will be appended to the original dataset.
 #' @param log Logical, if \code{FALSE} (default), a log containing information
@@ -152,9 +154,12 @@ is_equal <- function(v1, v2) {
 #' and its functions loaded into the R environment.
 #' @param attach_data_name logical to attach name of database to end table
 #' @param id_role_name name for the role to be used to generate id column
-#' @param name_of_environment_to_load Name of package to load variables and variable_details from
-#' @param append_non_db_columns boolean determening if data not present in this cycle should be appended as NA
-#' @param tables named list of data.frame A list of reference tables that can be passed as parameters into the function for a derived variable
+#' @param name_of_environment_to_load Name of package to load variables and
+#' variable_details from
+#' @param append_non_db_columns boolean determening if data not present in this
+#' cycle should be appended as NA
+#' @param tables named list of data.frame A list of reference tables that can
+#' be passed as parameters into the function for a derived variable
 #'
 #' @return a dataframe that is recoded according to rules in variable_details.
 #' @importFrom haven tagged_na
