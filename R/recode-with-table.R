@@ -15,9 +15,9 @@ strip_prefix <- function(varnames) {
   return(values[[2]])
 }
 
-# removes (all) square brackets
+# removes (all) brackets
 strip_brackets <- function(s) {
-  return(gsub("\\[|\\]", "", s))
+  return(gsub("\\[|\\]|\\(|\\)", "", s))
 }
 
 #' @title Checks whether two values are equal including NA
@@ -687,249 +687,247 @@ recode_columns <-
     return(recoded_data)
   }
 
+#' Recodes a non-derived variable
+#'
+#' @param var the name of the variable to recode
+#' @param variable_details a data.frame containing the variable details sheet
+#' with the recoding rules for the variable
+#' @param database the name of the database to recode
+#' @param data a data.frame containing the data to recode
 recode_non_derived_vars <- function(
-    variable_to_recode,
-    rec_variables_to_process,
-    data_name,
-    data,
-    label_list,
-    recoded_data,
-    else_default,
-    valid_intervals,
-    interval_default,
-    print_note,
-    log
-) {
-  variable_to_recode <-
-    as.character(rec_variables_to_process[1,
-                                          pkg.env$columns.variable])
-  rows_being_checked <-
-    rec_variables_to_process[rec_variables_to_process[[pkg.env$columns.variable]] == variable_to_recode,]
-  first_row <- rows_being_checked[1,]
-  # The name of the variable start
-  data_variable_being_checked <-
-    get_data_variable_name(
-      data_name = data_name,
-      row = first_row,
-      recoded_varname = variable_to_recode,
-      data = data
-    )
-  if (is.null(data[[data_variable_being_checked]])) {
-    warning(
-      paste(
-        "Data",
-        data_name,
-        "does not contain the variable",
-        data_variable_being_checked
-      )
-    )
+  var,
+  variable_details,
+  database,
+  data,
+  label_list,
+  recoded_data,
+  else_default,
+  valid_intervals,
+  default_interval,
+  print_note,
+  log) {
+  var_col <- pkg.env$columns.variable
+  recfrom_col <- pkg.env$columns.recFrom
+  recto_col <- pkg.env$columns.recTo
+  notes_col <- pkg.env$columns.notes
+  else_const_val <- pkg.env$variable_details$columns.recFrom.elseValue
+
+  #' Creates the object to return from the function
+  #'
+  #' @param recoded_values the vector of recoded values. Optional.
+  #' @param variable_label the label details for the recoded variable.
+  #' Optional.
+  #'
+  #' @returns the object to return
+  get_result <- function(recoded_values, variable_label) {
+    if(!is.null(recoded_values)) {
+      recoded_data[[var]] <- recoded_values
+    }
+    if(!is.null(variable_label)) {
+      label_list[[var]] <- variable_label
+    }
     return(list(
       label_list = label_list,
       recoded_data = recoded_data
     ))
   }
-  # Check for From column duplicates
-  all_from_values_for_variable <-
-    rows_being_checked[[pkg.env$columns.recFrom]]
-  if (length(unique(all_from_values_for_variable)) != length(all_from_values_for_variable)) {
-    for (single_from in all_from_values_for_variable) {
-      # Check if value is repeated more then once
-      if (sum(all_from_values_for_variable == single_from) > 1) {
-        stop(
-          paste(
-            single_from,
-            "was detected more then once in",
-            variable_to_recode,
-            "please make sure only one from value is being recoded"
-          )
-        )
-      }
-    }
+
+  details_rows_for_var <- variable_details[ variable_details[[var_col]] == var, ]
+
+  start_var <- get_data_variable_name(
+    data_name = database,
+    row = details_rows_for_var[1, ],
+    recoded_varname = var,
+    data = data
+  )
+  if(is.null(data[[start_var]])) {
+    warning(paste(
+      "data", database, "does not contain the variable", start_var
+    ))
+    return(get_result())
   }
 
-  # Set factor for all recode values
-  label_list[[variable_to_recode]] <- create_var_labels(rows_being_checked)
-  else_value <-
-    as.character(rows_being_checked[rows_being_checked[[pkg.env$columns.recFrom]] == "else",
-                                    pkg.env$columns.recTo])
-  if (length(else_value) == 1 &&
-      !is_equal(else_value, "character(0)")) {
-    else_value <-
-      format_recoded_value(else_value, label_list[[variable_to_recode]]$type)
-    if (is_equal(else_value, "copy")) {
-      # Convert to numeric in case the variable start is categorical
-      # to avoid any factor issues
-      recoded_data[[variable_to_recode]] <-
-        as.numeric(data[[data_variable_being_checked]])
-    } else {
-      recoded_data[variable_to_recode] <- else_value
-    }
-    # Catch multiple else rows
+  # check for from-column duplicates
+  recfrom_counts <- table(details_rows_for_var[[recfrom_col]])
+  recfrom_dups <- names(recfrom_counts[recfrom_counts > 1])
+  if (length(recfrom_dups) > 0) {
+    stop(paste(
+      "the following values were detected more then once in", var, ":",
+      recfrom_dups,
+      "-- please make sure only one from-value is being recoded"))
   }
-  else if (length(else_value) > 1) {
-    stop(
-      paste(
-        variable_to_recode,
-        " contains",
-        length(else_value),
-        "rows of else only one else value is allowed"
+
+  variable_label <- create_var_labels(details_rows_for_var)
+
+  found_else_detail_rows <- details_rows_for_var[
+    details_rows_for_var[[recfrom_col]] == else_const_val, ]
+  if (nrow(found_else_detail_rows) > 1) {
+    stop(paste(
+      var, "contains", nrow(found_else_detail_rows),
+      "rows of else-values, but only one else-value is allowed"))
+  }
+  else_detail_rows <- if(nrow(found_else_detail_rows) == 0) {
+    else_default_details_row <- details_rows_for_var[1, ]
+    else_default_details_row[[recfrom_col]] <- else_const_val
+    else_default_details_row[[recto_col]] <- else_default
+    else_default_details_row
+  } else {
+    found_else_detail_rows
+  }
+  non_else_details <- details_rows_for_var[
+    details_rows_for_var[[recfrom_col]] != else_const_val, ]
+  details_with_else_at_end <- rbind(non_else_details, else_detail_rows)
+
+  recoding_result <- purrr::reduce(
+    seq_len(nrow(details_with_else_at_end)),
+    function(recoding_result, row_ix) {
+      row <- details_with_else_at_end[row_ix, ]
+
+      from_val <- trimws(as.character(row[[recfrom_col]]))
+      to_val <- trimws(as.character(row[[recto_col]]))
+
+      parsed_from_value <- .parse_non_else_from_value(from_val)
+      interval <- if (parsed_from_value$interval %notin% valid_intervals) {
+        message(paste(
+          "variable", var, "has an invalid interval", parsed_from_value$interval,
+          ", defaulting to ", default_interval))
+        default_interval
+      } else {
+        parsed_from_value$interval
+      }
+
+      current_rows_to_recode <- if(from_val == else_const_val) {
+        # If this is else then this is the last recoding rule. Recode all the
+        # rows that have not been recoded.
+        recoding_result$recoded_data_rows == FALSE
+      } else {
+        compare_value_based_on_interval(
+          compare_columns = start_var,
+          data = data,
+          left_boundary = parsed_from_value$from_values[[1]],
+          right_boundary = parsed_from_value$from_values[[2]],
+          interval = interval
+        )
+      }
+
+      # check for range duplicates
+      if(any(recoding_result$recoded_data_rows[current_rows_to_recode])) {
+        stop(paste("overlapping ranges detected for variable", var))
+      }
+
+      new_recoded_data_rows <- replace(
+        recoding_result$recoded_data_rows,
+        current_rows_to_recode,
+        TRUE
       )
+
+      new_log_entry <- data.frame(
+        value_to = c(to_val),
+        From = c(from_val),
+        rows_recoded = sum(current_rows_to_recode, na.rm = TRUE)
+      )
+
+      formatted_to_val <- format_recoded_value(to_val, variable_label$type)
+      value_to_recode_to <- if (is_equal(formatted_to_val, "copy")) {
+        data[current_rows_to_recode, start_var]
+      } else {
+        formatted_to_val
+      }
+      new_recoded_var <- replace(
+        recoding_result$recoded_var,
+        current_rows_to_recode,
+        value_to_recode_to
+      )
+
+      if(print_note) {
+        write_note(row[[notes_col]])
+      }
+
+      return(list(
+        recoded_var = new_recoded_var,
+        log_data = rbind(
+          recoding_result$log_data,
+          new_log_entry
+        ),
+        recoded_data_rows = new_recoded_data_rows
+      ))
+    },
+    .init = list(
+      recoded_var = data[[var]],
+      log_data = data.frame(
+        value_to = c(NA),
+        From = c(NA),
+        rows_recoded = c(NA)
+      ),
+      # A vector of booleans that gives information about the rows that have
+      # been recoded. If TRUE then the row at the index has recoded and if
+      # FALSE then then not.
+      recoded_data_rows = rep(FALSE, nrow(data))
+    )
+  )
+
+  # finalize and print log
+  if (log) {
+    message(paste(
+      "The variable", start_var, "was recoded into", var,
+      "for the database", database,
+      "\nThe following recodes were made: "))
+
+    # reset rowCount to avoid confusion
+    rownames(recoding_result$log_data) <- NULL
+
+    print(recoding_result$log_data)
+  }
+
+  return(get_result(recoding_result$recoded_var, variable_label))
+}
+
+#' Parses the value of a recFrom column from the variable details sheet
+#'
+#' @param from_val the value to parse
+#'
+#' @returns a named list with the following fields:
+#' from_values: A 2 item list which contains the left and right boundaries of
+#' the interval. If this value is not an interval then they're both the same.
+#' interval: A string containing the left and right limit type for the
+#' interval, for example, (,] or [,). If this value is not an interval then
+#' [,] is returned.
+.parse_non_else_from_value <- function(from_val) {
+  # parse from-values
+  interval_regex <- r"{\[.+\]|\[.+\)|\(.+\]|\(.+\)}"
+  is_interval <- grepl(interval_regex, from_val)
+  parsed_from_value <- if (is_interval) {
+    # splits the interval into its two parts
+    split_from_values <- trimws(strsplit(from_val, ",")[[1]])
+
+    # extracts the interval-brackets themselves
+    second_len <- nchar(split_from_values[[2]])
+    interval_left <- substr(split_from_values[[1]], 1, 1)
+    interval_right <- substr(split_from_values[[2]], second_len, second_len)
+    interval <- paste0(interval_left, ",", interval_right)
+
+    list(
+      from_values = strip_brackets(split_from_values),
+      interval = interval
+    )
+  } else {
+    list(
+      from_values = list(from_val, from_val),
+      interval = "[,]"
     )
   }
-  else {
-    recoded_data[variable_to_recode] <- else_default
+  return(parsed_from_value)
+}
+
+#' Prints a note from the sheets if it exists
+#'
+#' @param note the value of the notes column to print
+write_note <- function(note) {
+  # FIXME: use `print` instead, for stdout output
+  has_note <- any(as.logical(note), na.rm = TRUE)
+  if (has_note) {
+    message(paste("NOTE for", var, ":", as.character(note)))
   }
-  num_else_rows <- nrow(recoded_data)
-  # Remove else rows from rows_being_checked
-  rows_being_checked <-
-    rows_being_checked[!rows_being_checked[[pkg.env$columns.recFrom]] == "else",]
-  if (nrow(rows_being_checked) > 0) {
-    log_table <- rows_being_checked[, 0]
-    log_table$value_to <- NA
-    log_table$From <- NA
-    log_table$rows_recoded <- NA
-    levels(recoded_data[[variable_to_recode]]) <-
-      c(levels(recoded_data[[variable_to_recode]]),
-        levels(rows_being_checked[[pkg.env$columns.recTo]]))
-
-    # Range overlap setup
-    checked_data_rows <- c(rep(FALSE, nrow(data)))
-
-    for (row in seq_len(nrow(rows_being_checked))) {
-      row_being_checked <- rows_being_checked[row,]
-      # If cat go check for label and obtain it
-
-      # regardless obtain unit and attach
-
-      # find var name for this database
-      data_variable_being_checked <-
-        get_data_variable_name(
-          data_name = data_name,
-          row = row_being_checked,
-          recoded_varname = variable_to_recode,
-          data = data
-        )
-
-      # Recode the variable
-      from_values <- list()
-      # Check for presence of interval in the recFrom column
-      # Catches any values as long as they are surrounded by the specific intervals
-      if (grepl("\\[.+\\]|\\[.+\\)|\\(.+\\]|\\(.+\\)",
-                as.character(row_being_checked[[pkg.env$columns.recFrom]]))) {
-        # This splits the value in 2 parts [1] being first half the interval and value and [2] being second half and closing interval
-        from_values <-
-          strsplit(as.character(row_being_checked[[pkg.env$columns.recFrom]]), ",")[[1]]
-        # This just trims white space from both in case a space is present before or after the ,
-        from_values[[1]] <- trimws(from_values[[1]])
-        from_values[[2]] <- trimws(from_values[[2]])
-        # Extracts the interval brackets themselves
-        interval_left <- substr(from_values[[1]], 1, 1)
-        interval_right <-
-          substr(from_values[[2]],
-                 nchar(from_values[[2]]),
-                 nchar(from_values[[2]]))
-        interval <- paste0(interval_left, ",", interval_right)
-        # Remove the interval leaving only values
-        from_values[[1]] <-
-          gsub("\\[|\\]|\\(|\\)", "", from_values[[1]])
-        from_values[[2]] <-
-          gsub("\\[|\\]|\\(|\\)", "", from_values[[2]])
-      } else {
-        temp_from <-
-          as.character(row_being_checked[[pkg.env$columns.recFrom]])
-        from_values[[1]] <- temp_from
-        from_values[[2]] <- from_values[[1]]
-      }
-      value_to_recode_to <-
-        as.character(row_being_checked[[pkg.env$columns.recTo]])
-      if (from_values[[1]] == from_values[[2]]) {
-        interval <- "[,]"
-      } else if (!interval %in% valid_intervals) {
-        message(
-          paste(
-            "For variable",
-            variable_to_recode,
-            "invalid interval was passed.\nDefault interval will be used:",
-            interval_default
-          )
-        )
-        interval <- interval_default
-      }
-
-      valid_row_index <- compare_value_based_on_interval(
-        compare_columns = data_variable_being_checked,
-        data = data,
-        left_boundary = from_values[[1]],
-        right_boundary = from_values[[2]],
-        interval = interval
-      )
-
-      # Check for range duplicates
-      if(all(!checked_data_rows[valid_row_index])){
-        checked_data_rows[valid_row_index] <- TRUE
-      }else{
-        stop(paste0("Overlapping ranges detected for variable", variable_to_recode))
-      }
-
-      # Start construction of dataframe for log
-      log_table[row, "value_to"] <- value_to_recode_to
-      log_table[row, "From"] <-
-        as.character(row_being_checked[[pkg.env$columns.recFrom]])
-      log_table[row, "rows_recoded"] <-
-        sum(valid_row_index, na.rm = TRUE)
-      num_else_rows <-
-        num_else_rows - log_table[row, "rows_recoded"]
-
-      value_to_recode_to <-
-        format_recoded_value(value_to_recode_to, label_list[[variable_to_recode]]$type)
-      if (is_equal(value_to_recode_to, "copy")) {
-        value_to_recode_to <-
-          data[valid_row_index, data_variable_being_checked]
-      }
-      recoded_data[valid_row_index, variable_to_recode] <-
-        value_to_recode_to
-      if (print_note &&
-          !is.null(row_being_checked[[pkg.env$columns.notes]]) &&
-          !is_equal(row_being_checked[[pkg.env$columns.notes]],
-                    "") &&
-          !is.na(row_being_checked[[pkg.env$columns.notes]])) {
-        message(
-          "NOTE for ",
-          variable_to_recode,
-          ": ",
-          as.character(row_being_checked[[pkg.env$columns.notes]])
-        )
-      }
-    }
-    # if log was requested print it
-    if (log) {
-      message(
-        "The variable ",
-        data_variable_being_checked,
-        " was recoded into ",
-        variable_to_recode,
-        " for the database ",
-        data_name,
-        " the following recodes were made: "
-      )
-      if (length(else_value) > 0) {
-        extra_row <- nrow(log_table) + 1
-        log_table[extra_row , "value_to"] <- as.character(else_value)
-        log_table[extra_row , "From"] <-
-          "else"
-        log_table[extra_row , "rows_recoded"] <-
-          num_else_rows
-      }
-      # Reset rowCount to avoid confusion
-      rownames(log_table) <- NULL
-
-      print(log_table)
-    }
-  }
-  return(list(
-    label_list = label_list,
-    recoded_data = recoded_data
-  ))
 }
 
 #' Compare Value Based On Interval
