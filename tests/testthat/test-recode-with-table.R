@@ -181,7 +181,7 @@ test_that("Recode correctly when the start variable for a database is a derived 
     labelLong = c("", "", ""),
     units = c("N/A", "N/A", "N/A"),
     variableType = c("Continuous", "Continuous", "Cotinuous"),
-    databaseStart = c("database_one", "database_two", "database_one;database_two"),
+    databaseStart = c("database_one", "database_two", "database_one, database_two"),
     variableStart = c("[start_variable_one]","[start_variable_two]", "database_one::DerivedVar::[variable_one], [DerivedVar::[variable_two]]")
   )
   variable_details <- data.frame(
@@ -234,13 +234,13 @@ test_that("Recode correctly when the start variable for a database is the defaul
     labelLong = c("", "", ""),
     units = c("N/A", "N/A", "N/A"),
     variableType = c("Continuous", "Continuous", "Continuous"),
-    databaseStart = c("database_one", "database_two", "database_one;database_two"),
+    databaseStart = c("database_one", "database_two", "database_one, database_two"),
     variableStart = c("[start_variable_one]","[start_variable_two]", "database_one::DerivedVar::[variable_one], [DerivedVar::[variable_two]]")
   )
   variable_details <- data.frame(
     variable = c("variable_one", "variable_two", "derived_variable_one"),
     typeEnd = c("cont", "cont", "cont"),
-    databaseStart = c("database_one", "database_two", "database_one;database_two"),
+    databaseStart = c("database_one", "database_two", "database_one, database_two"),
     variableStart = c("[start_variable_one]","[start_variable_two]", "database_one::DerivedVar::[variable_one], [DerivedVar::[variable_two]]"),
     typeStart = c("cont", "cont", "cont"),
     recEnd = c("copy", "copy", "Func::func_1"),
@@ -287,13 +287,13 @@ test_that("Correctly recodes when the start variable has only one derived var", 
     labelLong = c("", ""),
     units = c("N/A", "N/A"),
     variableType = c("Continuous", "Continuous"),
-    databaseStart = c("database_one;database_two", "database_one;database_two"),
+    databaseStart = c("database_one, database_two", "database_one, database_two"),
     variableStart = c("[start_variable_one]", "DerivedVar::[variable_one]")
   )
   variable_details <- data.frame(
     variable = c("variable_one", "derived_variable_one"),
     typeEnd = c("cont", "cont"),
-    databaseStart = c("database_one;database_two", "database_one;database_two"),
+    databaseStart = c("database_one, database_two", "database_one, database_two"),
     variableStart = c("[start_variable_one]", "DerivedVar::[variable_one]"),
     typeStart = c("cont", "cont"),
     recEnd = c("copy", "Func::func_1"),
