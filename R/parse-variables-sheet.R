@@ -20,7 +20,10 @@ parse_variables_sheet <- function(variables_sheet) {
     ))
   }
 
-  validation_errors <- .validate_derived_variables(variables_sheet)
+  validation_errors <- c(
+    .validate_derived_variables(variables_sheet),
+    .validate_database_references(variables_sheet)
+  )
   if (length(validation_errors) > 0) {
     return(list(
       success = FALSE,
@@ -46,7 +49,8 @@ parse_variables_sheet <- function(variables_sheet) {
 
   required_cols <- c(
     pkg.env$columns.variable,
-    pkg.env$columns.variableStart
+    pkg.env$columns.variableStart,
+    pkg.env$columns.databaseStart
   )
   variables_sheet_cols <- colnames(variables_sheet)
   required_cols_validation <- checkmate::test_names(
@@ -123,6 +127,39 @@ parse_variables_sheet <- function(variables_sheet) {
   ))
 }
 
+#' Create an invalid database reference error object
+#'
+#' @param row The row number in the variables sheet where the error occurred
+#' @param database The database name referenced in variableStart but not
+#' declared in databaseStart
+#' @param databases_in_start The list of databases declared in databaseStart
+#' for that row
+#'
+#' @return A list containing the error object with type, row, database,
+#' databases_in_start, and message fields
+#' @keywords internal
+.create_invalid_database_reference_error <- function(
+    row, database, databases_in_start) {
+  contents_msg <- if (length(databases_in_start) == 0) {
+    "databaseStart is empty"
+  } else {
+    paste0(
+      "databaseStart contains: ",
+      paste(databases_in_start, collapse = ", ")
+    )
+  }
+  return(list(
+    type = "invalid_database_reference",
+    row = row,
+    database = database,
+    databases_in_start = databases_in_start,
+    message = glue::glue(
+      "variableStart at row {row} references database '{database}' which ",
+      "is not declared in databaseStart. {contents_msg}"
+    )
+  ))
+}
+
 #' Validate the derived variables in a variables sheet
 #'
 #' @param variables_sheet A data frame containing the variables sheet
@@ -154,6 +191,92 @@ parse_variables_sheet <- function(variables_sheet) {
     purrr::compact() |>
     purrr::flatten()
   return(errors)
+}
+
+#' Validate that databases referenced in variableStart are declared in
+#' databaseStart for each row
+#'
+#' Database references inside `DerivedVar::[...]` blocks are ignored here
+#' since they are already caught by `.validate_derived_variables` as
+#' `invalid_dependency` errors. References checked include the top-level
+#' `db::col` form and the nested `db::[DerivedVar::[...]]` form.
+#'
+#' @param variables_sheet A data frame containing the variables sheet
+#'
+#' @return A list of errors (empty if no errors found)
+#' @keywords internal
+.validate_database_references <- function(variables_sheet) {
+  if (nrow(variables_sheet) == 0) {
+    return(list())
+  }
+
+  errors <- seq_len(nrow(variables_sheet)) |>
+    purrr::map(function(i) {
+      row <- variables_sheet[i, ]
+      variable_start <- row[[pkg.env$columns.variableStart]]
+      database_start <- row[[pkg.env$columns.databaseStart]]
+
+      referenced_dbs <- .extract_referenced_databases(variable_start)
+      if (length(referenced_dbs) == 0) {
+        return(NULL)
+      }
+
+      declared_dbs <- .parse_database_start(database_start)
+      missing_dbs <- referenced_dbs[!referenced_dbs %in% declared_dbs]
+
+      if (length(missing_dbs) == 0) {
+        return(NULL)
+      }
+
+      purrr::map(missing_dbs, function(db) {
+        .create_invalid_database_reference_error(i, db, declared_dbs)
+      })
+    }) |>
+    purrr::compact() |>
+    purrr::flatten()
+  return(errors)
+}
+
+#' Parse the databaseStart column value into a character vector of database
+#' names
+#'
+#' @param database_start The databaseStart string
+#'
+#' @return A character vector of database names (empty if NA or blank)
+#' @keywords internal
+.parse_database_start <- function(database_start) {
+  if (is.na(database_start) || nchar(trimws(database_start)) == 0) {
+    return(character(0))
+  }
+  return(trimws(strsplit(database_start, ",")[[1]]))
+}
+
+#' Extract database names referenced in a variableStart value, ignoring any
+#' references nested inside `DerivedVar::[...]` blocks
+#'
+#' @param variable_start The variableStart string
+#'
+#' @return A unique character vector of referenced database names
+#' @keywords internal
+.extract_referenced_databases <- function(variable_start) {
+  if (is.na(variable_start) || nchar(trimws(variable_start)) == 0) {
+    return(character(0))
+  }
+
+  # Strip DerivedVar::[...] blocks so refs inside them aren't counted; those
+  # are already covered by the invalid_dependency check.
+  derived_var_block_pattern <- paste0(
+    pkg.env$recode.key.derived.var, "\\[[^]]*\\]"
+  )
+  stripped <- gsub(derived_var_block_pattern, "", variable_start)
+
+  matches <- regmatches(stripped, gregexpr("\\w+::", stripped))[[1]]
+  if (length(matches) == 0) {
+    return(character(0))
+  }
+
+  dbs <- sub("::$", "", matches)
+  return(unique(dbs))
 }
 
 #' Extract start variables from a variableStart column value
