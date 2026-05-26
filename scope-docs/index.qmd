@@ -1,0 +1,63 @@
+---
+format:
+    html:
+        embed-resources: true
+---
+
+The goal of the recodeflow library is to enable the open, transparent, and
+reproducible creation of a study dataset.
+
+One of the first steps in any quantitative study is the selection and creation
+of variables that will be used to answer the research question. However, this
+process is rarely conducted transparently, resulting in studies that are:
+
+1.  **Inefficient**: Research teams' previous work is seldom transferable to new
+    studies, even if they use the same variables.
+
+2.  **Non-reproducible**: The lack of transparency makes it difficult to
+    reproduce a published study without extensive help from the original
+    authors. If enough time has passed since publication, even the original
+    authors may not remember how the study variables were created.
+
+Increasingly, studies use many variables and complex data transformations,
+making it difficult to reproduce findings and apply methodologies to new
+datasets.
+
+The recodeflow library addresses these issues by:
+
+**1.** Encoding all the recoding rules in a set of CSV sheets that are
+transparent and machine-actionable; and
+
+**2.** Providing software to create a study dataset using the CSV sheets.
+
+While the library meets its core objective, user feedback has identified several
+issues for improvement, including:
+
+- Users not knowing why a function failure has taken place (not enough logging).
+- The documentation not catering to different types of users (not using the
+  divio style of documentation).
+- The function having too many parameters (complex API) etc.
+
+As well, the version clarifies and expands the use of metadata within the data
+analyses workflow, including:
+
+- better support or using labels in tables and graphs;
+- updating the use of 'tagged_NAs' for missing data.
+
+This document contains the scope for the next version of the library that aims
+to address the above and other issues. Explore the scope for different parts of
+the library by clicking on one of links below.
+
+[Metadata](metadata.qmd)
+
+[Labels](labels.qmd)
+
+[Missing data](missing-data.qmd)
+
+[Derived Variables](derived-variables.qmd)
+
+[Logging](logging.qmd)
+
+[Versioning](versioning.qmd)
+
+[Out of Scope](out-of-scope.qmd)
