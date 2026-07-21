@@ -1,0 +1,19 @@
+## Abstract
+
+## Motivation
+
+Users of the `cchsflow` library, a child library of `recodeflow`, perform their
+recoding operations using data downloaded from Odesi. However, Odesi provides
+data in CSV and formats that work natively in statistical software like
+[Stata](https://www.stata.com/),
+[SPSS](https://www.ibm.com/products/spss-statistics), and
+[SAS](https://www.sas.com/en_ca/home.html), i.e., non-R-native formats. The
+unsupported formats contain label information for the variables and their
+categories, a big advantage over CSV files and one of the reasons that users may
+prefer them. [haven](https://haven.tidyverse.org/index.html) is an R library
+that ingests these data files into R while preserving all the label information
+from the original files. However, the data that `haven` outputs does not
+currently work with `recodeflow` as reported in
+[issue #159](https://github.com/Big-Life-Lab/cchsflow/issues/159) on `cchsflow`.
+`recodeflow` should add support for `haven` data to serve these users.
+
